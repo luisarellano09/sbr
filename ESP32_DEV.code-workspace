@@ -1,0 +1,25 @@
+{
+	"folders": [
+        {
+            "path": "sbr_esp32_sensors/SBR_ESP32_Sensors"
+        },
+        {
+            "name": "SBR_ESP32_MotionControl",
+            "path": "sbr_esp32_motioncontrol/SBR_ESP32_MotionControl"
+        },
+        {
+            "name": "SBR_ESP32_Util",
+            "path": "sbr_esp32_util/SBR_ESP32_Util"
+        },
+        {
+            "name": "SBR_ESP32_RemoteControl",
+            "path": "sbr_esp32_remotecontrol/SBR_ESP32_RemoteControl"
+        }
+    ],
+	"settings": {
+		"terminal.integrated.env.linux": {
+			"PATH": "/home/ubuntu/.platformio/penv/bin:/home/ubuntu/.platformio/penv:/opt/Qt5.13.0/5.13.0/gcc_64/bin:/opt/Qt5.13.0/5.13.0/gcc_64/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/lib/jvm/java-12-oracle/bin:/usr/lib/jvm/java-12-oracle/db/bin:/usr/lib/jvm/java-12-oracle/bin:/home/ubuntu/raspi/tools/arm-bcm2708/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin:/usr/lib/jvm/java-12-oracle/bin:/usr/lib/jvm/java-12-oracle/db/bin:/usr/lib/jvm/java-12-oracle/bin:/home/ubuntu/flutter/bin:/home/ubuntu/raspi/tools/arm-bcm2708/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin",
+			"PLATFORMIO_CALLER": "vscode"
+		}
+	}
+}

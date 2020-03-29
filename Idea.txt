@@ -1,0 +1,308 @@
+
+									ROBOT PROJECT:  SELF-BALANCE-ROBOT SBR
+
+http://roboticssamy.blogspot.com/
+https://www.youtube.com/watch?v=D7hvI_Tb0o4
+https://github.com/elkayem/ZippyTheBalancingRobot
+
+- Raspberry PI 3 (NodeJs , QT c++, Python comm websockets, PWA): WEB INTERFACES - MQTT - OPC UA - MODBUS TCP - Opencv (Raspi Cam v2) - ML Tensor Flow - Path planning
+- Motion Board (c++): ESP32 - Odometry - PID Motor - Servos
+- Sensor Board (c++): ESP32 - IMU, encoders, Fusion, kalman
+- Flutter      (Dart): Phone App, Text Comnads, chatbot
+
+		- ESP32: 
+				- OTA
+				- DNS
+				
+		- Raspberry
+				- DNS
+				- AP
+				- Merge AP - Client network
+				- Change Wifi credentials through code 
+			
+			 
+		
+- Consider program all in Docker
+	https://www.tensorflow.org/install
+
+CAN BUS
+	http://www.iotsharing.com/2017/09/how-to-use-arduino-esp32-can-interface.html
+	https://harrisonsand.com/can-on-the-raspberry-pi/
+	https://github.com/collin80/esp32_can/blob/master/examples/CANTestESP32_Both/CANTestESP32_Both.ino
+
+
+3d printer 
+	https://fablab.fau.de/en/
+
+SOCKETS
+	https://www.bogotobogo.com/cplusplus/sockets_server_client_QT.php
+	https://www.bogotobogo.com/Qt/Qt5_Asynchronous_QTcpServer_QThreadPool.php
+	https://gist.github.com/tedmiston/5935757
+	https://techtutorialsx.com/2017/11/01/esp32-arduino-websocket-client/
+	
+QT Threads Concurrent
+	https://www.youtube.com/watch?v=tvpC8UrPpZ4
+
+
+NodeJs Debbug
+	https://www.youtube.com/watch?v=Xb_0awoShR8
+	https://www.youtube.com/watch?v=2oFKNL7vYV8
+
+HighChartsJs
+	https://code.highcharts.com/highcharts.src.js
+
+IMU - BNO080
+	https://github.com/sparkfun/SparkFun_BNO080_Arduino_Library
+
+Materials:
+
+- Raspberry PI
+	https://www.reichelt.de/raspberry-pi-3-b-4x-1-4-ghz-1-gb-ram-wlan-bt-raspberry-pi-3b-p217696.html?utm_source=display&utm_medium=rsp-foundation&src=raspberrypi&&r=1#
+
+- SD
+	https://www.amazon.de/SanDisk-32-Speicherkarte-Zertifiziert-General%C3%BCberholt-Schwarz/dp/B07BSGHNNK/ref=pd_sbs_147_4/258-2714088-2251530?_encoding=UTF8&pd_rd_i=B07BSGHNNK&pd_rd_r=3dc0987e-702a-11e9-9a96-d95f0a414c28&pd_rd_w=trzHH&pd_rd_wg=HdUDH&pf_rd_p=74d946ea-18de-4443-bed6-d8837f922070&pf_rd_r=HWSJRNTZJRPKBPFR6XSA&psc=1&refRID=HWSJRNTZJRPKBPFR6XSA
+
+- Camera
+	https://www.amazon.de/Raspberry-Pi-V2-1-1080P-Kamera-Modul/dp/B01ER2SKFS/ref=pd_bxgy_147_img_2/258-2714088-2251530?_encoding=UTF8&pd_rd_i=B01ER2SKFS&pd_rd_r=9f2c9422-65dc-11e9-b2c0-9760af0625ea&pd_rd_w=sYiOj&pd_rd_wg=7ws2p&pf_rd_p=449f5fd6-8f81-46b7-aa57-ca96572671a1&pf_rd_r=ZYCNJV8JSEQ3P2YRB93T&psc=1&refRID=ZYCNJV8JSEQ3P2YRB93T
+
+- Motor
+	https://www.robotshop.com/de/en/pololu-12v-301-gear-motor-64-cpr-encoder.html#productsReviewBoxTitle
+	https://www.robotshop.com/de/en/pololu-12v-501-metal-gear-motor-w--64-cpr-encoder.html#Specifications
+	
+- Bracket
+	https://www.robotshop.com/de/en/pololu-37d-mm-metal-gearmotor-bracket.html
+
+- Wheel
+	https://www.robotshop.com/de/en/dfrobot-rubber-wheel-pair-blue.html
+	
+- Wheel Hub
+	https://www.robotshop.com/de/en/lynxmotion-mounting-hub-12.html
+
+- Driver
+	https://www.robotshop.com/de/en/cytron-10a-5-30v-dual-channel-dc-motor-driver.html
+	
+- Battery
+	https://www.robotshop.com/de/en/hyperion-g5-50c-4s-5000mah-lipo-battery.html
+	
+- Battery charger
+	https://www.robotshop.com/de/en/h450ac-lipo-life-nimh-battery-charger-50w-eu.html
+	
+- Battery connector
+	https://www.robotshop.com/de/en/xt90-connector-pair.html
+	
+- Regulator 5V
+	https://www.robotshop.com/de/en/5v-3a-step-down-voltage-regulator.html
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	=========================================================== SOCKET =================================================================
+	
+	
+		/*
+		In the node.js intro tutorial (http://nodejs.org/), they show a basic tcp 
+		server, but for some reason omit a client connecting to it.  I added an 
+		example at the bottom.
+		Save the following server in example.js:
+		*/
+
+		var net = require('net');
+
+		/*
+		var server = net.createServer(function(socket) {
+			socket.write('Echo server\r\n');
+			socket.pipe(socket);
+		});
+
+		server.listen(21, 'localhost');
+		*/
+
+		/*
+		And connect with a tcp client from the command line using netcat, the *nix 
+		utility for reading and writing across tcp/udp network connections.  I've only 
+		used it for debugging myself.
+		$ netcat 127.0.0.1 1337
+		You should see:
+		> Echo server
+		*/
+
+		/* Or use this example tcp client written in node.js.  (Originated with 
+		example code from 
+		http://www.hacksparrow.com/tcp-socket-programming-in-node-js.html.) */
+
+		var net = require('net');
+
+		var client = new net.Socket();
+		let connected = false;
+
+		client.on('data', function(data) {
+			console.log('Received: ' + data);
+			//client.write("Hey tu me enviaste: " + data);
+			//a = data;
+		});
+
+		client.on('close', function() {
+			console.log('Connection closed');
+			connected = false;
+		});
+
+		client.on('error', function() {
+			console.log('Connection error');
+			connected = false;
+		});
+
+		let connect = function(){
+			if (!connected)
+			{
+				client.connect(1234, '192.168.43.213', function() {
+					console.log('Connected');
+					connected = true;
+					client.write('Hello, server! Love, Client.');
+				});
+			}
+		}
+
+		let a = 0;
+		let sendData = function(){
+			if (connected)
+			{
+				client.write("Hey tu me enviaste: " + a++ + "\r\n");
+			}
+		}
+
+		setInterval(connect,1000);
+		setInterval(sendData, 1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+=========================================================== CHARTS =================================================================
+
+
+	HTML
+		
+		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
+		<script src="https://code.highcharts.com/modules/export-data.js"></script>
+		<script src="https://code.highcharts.com/maps/modules/map.js"></script>
+
+		<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+	
+	JS
+	
+		$.getJSON(
+			'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/usdeur.json',
+			function (data) {
+
+				Highcharts.chart('container', {
+					chart: {
+						zoomType: 'xy',
+										panning: true
+					},
+								mapNavigation: {
+						enabled: true,
+						enableButtons: false
+					},
+					title: {
+						text: 'USD to EUR exchange rate over time'
+					},
+					subtitle: {
+						text: document.ontouchstart === undefined ?
+							'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+					},
+					xAxis: {
+						type: 'datetime'
+					},
+					yAxis: {
+						title: {
+							text: 'Exchange rate'
+						}
+					},
+					legend: {
+						enabled: false
+					},
+					plotOptions: {
+						area: {
+							fillColor: {
+								linearGradient: {
+									x1: 0,
+									y1: 0,
+									x2: 0,
+									y2: 1
+								},
+								stops: [
+									[0, Highcharts.getOptions().colors[0]],
+									[1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+								]
+							},
+							marker: {
+								radius: 2
+							},
+							lineWidth: 1,
+							states: {
+								hover: {
+									lineWidth: 1
+								}
+							},
+							threshold: null
+						}
+					},
+
+					series: [{
+						type: 'area',
+						name: 'USD to EUR',
+						data: data
+					}]
+				});
+			}
+		);
+
+
+
