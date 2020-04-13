@@ -1,5 +1,6 @@
 #include <Arduino.h>
-#include "../lib/esp32_common/WifiManager/WifiManager.h"
+#include "../lib/SBR_Global/WifiManager/WifiManager.h"
+#include "../lib/SBR_Global/Definition/GlobalDef.h"
 
 WifiManager *myWifiManager; 
 
@@ -10,6 +11,8 @@ void setup() {
 
 
 void loop() {
+
+    int a = READ; 
 
 
     Serial.begin(115200);
