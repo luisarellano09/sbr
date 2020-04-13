@@ -6,25 +6,14 @@ WifiManager *myWifiManager;
 
 void setup() {
 
-}
+    Serial.begin(115200);
+    myWifiManager = new WifiManager("luiss10", "12345678", "SBR_ESP32_MotionControl");
 
+}
 
 
 void loop() {
 
-    int a = READ; 
-
-
-    Serial.begin(115200);
-    myWifiManager = new WifiManager("luiss10", "12345678", "SBR_ESP32_MotionControl");
-
+    myWifiManager->HandleOTA();
     
-    while(true)
-    {
-        myWifiManager->HandleOTA();
-        //Serial.println("handle");
-    }
-
-    return;
-
 }
