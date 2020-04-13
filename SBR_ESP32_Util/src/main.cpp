@@ -1,27 +1,35 @@
 #include <Arduino.h>
+#include "../lib/esp32_common/BluetoothManager/BluetoothManager.h"
 #include "../lib/esp32_common/WifiManager/WifiManager.h"
+#include "BluetoothSerial.h"
 
-WifiManager *myWifiManager; 
+#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
+#endif
+#define LED_BUILTIN 2
+
+#define NumbersOfBytes 4   
+
+//BluetoothSerial SerialBT;
+BluetoothManager *myBluetoothManager;
+char* buffer;
+
 
 void setup() {
-
+    //SerialBT.begin("ESP32_UTIL");       //name of device bluetooth
+    //SerialBT.setTimeout(100);           //100 miliseconds
+    pinMode(LED_BUILTIN, OUTPUT);       // Config Output LED on board ESP32
+    
 }
-
-
 
 void loop() {
 
+    myBluetoothManager = new BluetoothManager(buffer,NumbersOfBytes, "SBR_ESP32_Util", (int)1000);
+    while(1){
+         myBluetoothManager->updateBuffer();
+         delay(20);
+     }
 
-    Serial.begin(115200);
-    myWifiManager = new WifiManager("luiss10", "12345678", "SBR_ESP32_Util");
-
+    delay(20);
     
-    while(true)
-    {
-        myWifiManager->HandleOTA();
-        //Serial.println("handle");
-    }
-
-    return;
-
 }
