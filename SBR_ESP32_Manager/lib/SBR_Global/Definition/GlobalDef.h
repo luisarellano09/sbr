@@ -97,10 +97,10 @@ enum COM_FRAME_REG_ID_e{
  *******************************************************************************************************************************************/
 
 /** \brief Defines if a read or write operation shall be performed. */
-typedef enum {
+enum COM_FRAME_REQ_e{
 	READ							=0x0,							/**< \brief Read operation*/
 	WRITE							=0x1,							/**< \brief Write operation*/
-}COM_FRAME_REQ_e;
+};
 
 
 /** \brief Structure to define the communication frame. */
