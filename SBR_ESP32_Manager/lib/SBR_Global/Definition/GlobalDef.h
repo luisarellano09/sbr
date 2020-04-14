@@ -1,3 +1,16 @@
+/**
+ * \file GlobalDef.h
+ * \author Luis Arellano
+ * \date 13 Jun 2020
+ * \todo .
+ *
+ * \brief All globla definitions of SBR Project.
+ * 
+ * Changes
+ * V.1.0 -> 13.04.2020: [LA] Doc was created
+ * V.1.1 -> 14.04.2020: [JS] Comment header was added.
+ *
+ */
 #ifndef ENUMTEST_H
 #define ENUMTEST_H
 
