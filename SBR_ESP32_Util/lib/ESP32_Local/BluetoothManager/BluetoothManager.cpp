@@ -1,23 +1,19 @@
 #include "BluetoothManager.h"
 
-
 #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
 #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
 #endif
 
-/*instance*/
-BluetoothSerial SerialBT;
+
 
 //####################### class BluetoothManager
 /**
  * \brief Configuration the Bluetooth.
  */
-BluetoothManager::BluetoothManager( char* buffer,uint8_t SizeOfBuffer, const char* nameDevice, uint8_t timeout){
+BluetoothManager::BluetoothManager(const char* nameDevice){
     /*Set attributes*/
-    this->m_buffer = buffer;
-    this->m_SizeOfBuffer = SizeOfBuffer;
     this->m_nameDevice = nameDevice;
-    this->m_timeout = timeout;
+
 
     configBluetooth();
 
@@ -29,107 +25,104 @@ BluetoothManager::~BluetoothManager(){}
 
 void BluetoothManager::configBluetooth(){
 
-    SerialBT.begin(this->m_nameDevice);           //name of device bluetooth
-    SerialBT.setTimeout(this->m_timeout);         //100 miliseconds
+    m_SerialBT.begin(this->m_nameDevice);           //name of device bluetooth
+    m_SerialBT.setTimeout(TIME_OUT);                   //100 miliseconds
 }
 
+RC_e BluetoothManager::CheckFrameAvaible(){
+    
+    RC_e retCode = RC_e::ERROR;
 
+    if(m_SerialBT.available())
+    {
+        retCode = RC_e::SUCCESS;
+    }
+    return retCode;
+}
 
-boolean BluetoothManager::GetAllFrame(){
-    // buffer to know if get the number of bytes corrects
-    uint8_t BufferLocal[this->m_SizeOfBuffer+NumberOfBytesNewLine];    //Buffer with size of requested and 2 last characters \r\n
-    boolean returnValue;
+RC_e BluetoothManager::CheckFrame(uint8_t* _BufferLocal){
+    RC_e retCode;
 
     /*Initialize*/
-    returnValue = false;
+    retCode = RC_e::ERROR;
 
-    if(SerialBT.available()){                           //to know if get something from Register
-
-        /*Initialize the buffer to all zeros*/
-        for(int i= 0; i<this->m_SizeOfBuffer+NumberOfBytesNewLine; i++)
-        {
-            BufferLocal[i] = 0x00;
-        }
-
-        /* Read the buffer with the numers of bytes+2*/
-        SerialBT.readBytes(BufferLocal,this->m_SizeOfBuffer+NumberOfBytesNewLine);
-
-        /*Condition to valid the all frame -> the last 2 bytes shall be \r\n */
-        if((BufferLocal[this->m_SizeOfBuffer+NumberOfBytesNewLine-2] == '\r') || (BufferLocal[this->m_SizeOfBuffer+NumberOfBytesNewLine-1] == '\n')) // 0xD or 0xA
-        {
-            /*Copy the Buffer All Data from the buffer local to the Buffer General */
-            for(int j= 0; j<this->m_SizeOfBuffer; j++)
-            {
-                this->m_buffer[j] = (char)BufferLocal[j];
-            }
-            returnValue = true;         
-        }
-        else
-        {
-            
-        }
-        /*Clean all the register*/
-        SerialBT.flush();
-    }
-    else
+    /*Initialize the buffer to all zeros*/
+    for(int i= 0; i<FRAME_SIZE+NUMBER_BYTES_NEW_LINE; i++)
     {
-        
+        _BufferLocal[i] = 0x00;
     }
-    return returnValue;
+
+    /* Read the buffer with the numers of bytes+2*/
+    m_SerialBT.readBytes(_BufferLocal,FRAME_SIZE+NUMBER_BYTES_NEW_LINE);
+
+    /*Condition to valid the all frame -> the last 2 bytes shall be \r\n */
+    if((_BufferLocal[FRAME_SIZE+NUMBER_BYTES_NEW_LINE-2] != '\r') && (_BufferLocal[FRAME_SIZE+NUMBER_BYTES_NEW_LINE-1] != '\n')) // 0xD or 0xA
+    {
+        return RC_e::ERROR_SIZE_BUFFER;         
+    }
+    /*function to compute CRC*/
+    /*crc16 = computeCRC(_frame)  */
+
+    /*if((retCode=CheckCRC(_frame))!=RC_e::SUCCESS)
+    {
+        return retCode;         
+    }*/
+    /*Clean all the register*/
+    m_SerialBT.flush();
+
+    return retCode;
 }
 
-boolean BluetoothManager::CheckAllData(){
-    boolean ReturnValue;
-    char Byte0;
-    char Byte1;
-    char Byte2;
-    char Byte3;
-
+RC_e BluetoothManager::ExecuteFrame(uint8_t* _buffer){
+    RC_e retCode;
     /*initialize*/
-    ReturnValue = false;
-    Byte0 = (this->m_buffer[0]);
-    Byte1 = (this->m_buffer[1]);
-    Byte2 = (this->m_buffer[2]);
-    Byte3 = (this->m_buffer[3]);
+    retCode = RC_e::ERROR;
 
-    if((Byte0 == 'A')&&(Byte1 == 'B')&&(Byte2 == 'C')&&(Byte3 == 'A'))
+    if(_buffer == NULL)
     {
-         ReturnValue = true;  
+        return RC_e::ERROR_NULL_POINTER; 
+    }
+    
+    //_buffer[]
+    /*if()
+    {
+        ReturnValue = true;  
     }
     else
     {
         
-    }
+    }*/
+
+    /*Update*/
+
     
-    return ReturnValue; 
 }
 
-boolean BluetoothManager::Run(){
+RC_e BluetoothManager::Run(){
     
-    boolean validframe;
-    boolean validData;
-    boolean validRun;
-    
+    RC_e retCode;
+
     /*initialize variables*/
-    validframe = false;
-    validData = false;
-    validRun = false;
+    retCode = RC_e::ERROR;
 
-    /*check if the RX has the number of Byte configured in the frame received (NumberOfBytes)*/
-    validframe = GetAllFrame();
+    // buffer to know if get the number of bytes corrects
+    if((retCode=CheckFrameAvaible())!= RC_e::SUCCESS)
+    {
+        return retCode;
+    }
 
-    if(validframe == true)
-    {
-        /*check if the Frame has the Valid Data*/
-        validData = CheckAllData();
-        if(validData == true)
-        {
-            validRun = true;
-        }       
+    uint8_t BufferLocal[FRAME_SIZE];
+ 
+    if((retCode=CheckFrame(BufferLocal))!= RC_e::SUCCESS){
+        return retCode;
     }
-    else
+
+    /*check if the Frame has the Valid Data*/
+    /*validData = CheckAllData();
+    if(validData == true)
     {
-        /*Nothing to do*/
-    }
-    return validRun;
+        validRun = true;
+    }       */
+
+    return RC_e::SUCCESS;
 }

@@ -27,10 +27,11 @@
 #define BLUETOOTH_H
 
 #include "BluetoothSerial.h"
+#include "../SBR_Global/Definition/GlobalDef.h"
 
-
-#define NumberOfBytesNewLine 2                  //at the end always new line [0xD 0xA] or \r\n 
-
+#define NUMBER_BYTES_NEW_LINE   (uint8_t)2u                  //at the end always new line [0xD 0xA] or \r\n 
+#define FRAME_SIZE              (uint8_t)4u                 /*Number of Bytes of the Frame bluetooth*/
+#define TIME_OUT                (uint8_t)1000u                 /*Number of Bytes of the Frame bluetooth*/
 //####################### class
 /**
  * \brief The purpose as well as the members and methos of a class have to be documented.
@@ -41,23 +42,27 @@ class BluetoothManager{
 
 public:
     /*attributes*/   
-    char* m_buffer;
-    uint8_t m_SizeOfBuffer;
     const char* m_nameDevice;
-    uint8_t m_timeout;
+    
+    /*instance*/
+    BluetoothSerial m_SerialBT;
 
     /*****/
-    BluetoothManager(char*, uint8_t, const char*, uint8_t);     //constructor
+    BluetoothManager(const char*);     //constructor
     ~BluetoothManager();                                        //Destructor
     
     /*Methos*/
     void configBluetooth();
+   
+   
+    RC_e CheckFrameAvaible();
 
-    boolean GetAllFrame();
+   
+    RC_e CheckFrame(uint8_t*);
 
-    boolean CheckAllData();
+    RC_e ExecuteFrame(uint8_t*);
 
-    boolean Run();
+    RC_e Run();
     
 };
 

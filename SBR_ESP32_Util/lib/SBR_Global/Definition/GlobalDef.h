@@ -7,15 +7,15 @@
  * \brief All globla definitions of SBR Project.
  * 
  * Changes
- * V.1.0 -> 13.04.2020: [LA] Doc was created
+ * V.1.3 -> 14.04.2020: [JS] new ERRORS ENUM added 
+ * V.1.2 -> 13.04.2020: [LA] Communication enums and struct
  * V.1.1 -> 14.04.2020: [JS] Comment header was added.
+ * V.1.0 -> 13.04.2020: [LA] Doc was created
+ *
  *
  */
-#ifndef ENUMTEST_H
-#define ENUMTEST_H
-
-
-enum REQ { READ, WRITE };
+#ifndef GLOBALDEF_H
+#define GLOBALDEF_H
 
 
 
@@ -24,34 +24,21 @@ enum REQ { READ, WRITE };
  *******************************************************************************************************************************************/
 
 /** \brief  Enumeration for TLF errors.  */
-typedef enum{
-	SUCCESS						= 0,
-	ERROR,
-    ERROR_SPI_CB,													/**< \brief Error TLF SPI Callback. 						*/
-	ERROR_SPI_BYTE_SWAP,											/**< \brief Error TLF SPI Byte swap. 						*/
-	ERROR_SPINLOCK_WAIT,											/**< \brief Error TLF SPI Spinlock waiting. 				*/
-	ERROR_QUESTION_LIMIT,											/**< \brief Error TLF Functional Watchdog question Limit. 	*/
-	ERROR_RESPONSE_NUMBER_LIMIT										/**< \brief Error TLF Functional Watchdog response Limit.	*/
-} RC_t;
+enum RC_e{
+	SUCCESS						= 0,                                /**< \brief Operation Successful					*/
+	ERROR,                                                           /**< \brief Operation Error 						*/
+	ERROR_NULL_POINTER,                                              /**< \brief Operation Error						*/
+	ERROR_SIZE_BUFFER,                                             	/**< \brief Operation Error							*/
+	ERROR_CRC		                                             	/**< \brief Operation Error							*/
+} ;
 
 
 /*******************************************************************************************************************************************
- *  												REQUEST
+ *  												SBR REGISTER ID ADDRESSES
  *******************************************************************************************************************************************/
 
-/** \brief Defines if a read or write operation shall be performed on the TLF*/
-typedef enum{
-	TLF_READ							=0b0,							/**< \brief Read operation*/
-	TLF_WRITE							=0b1,							/**< \brief Write operation*/
-}TLF_CMD_BIT_t;
-
-
-/*******************************************************************************************************************************************
- *  												TLF REGISTER ADDRESSES
- *******************************************************************************************************************************************/
-
-/** \brief  Enumeration for TLF registers. The number defines the register offset */
-typedef enum{
+/** \brief  Enumeration for SBR registers IDs. The number defines the register offset */
+enum COM_FRAME_REG_ID_e{
 	TLF_DEVCFG0							=0x00,							/**< \brief Device configuration 0 *R2 (DEVCFG0) Register*/
 	TLF_DEVCFG1							=0x01,							/**< \brief Device configuration 1 *R0 (DEVCFG1) Register*/
 	TLF_DEVCFG2							=0x02,							/**< \brief Device configuration 2 *R2 (DEVCFG2) Register*/
@@ -105,10 +92,30 @@ typedef enum{
 	TLF_BCK_FRE_SPREAD					=0x32,							/**< \brief Buck Frequency spread *R2 (BCK_FRE_SPREAD) Register*/
 	TLF_BCK_MAIN_CTRL					=0x33,							/**< \brief Buck main control *R2 (BCK_MAIN_CTRL) Register*/
 	TLF_GTM								=0x3F,							/**< \brief Global testmode *R2 (GTM) Register*/
-	TLF_LENGTH_SEQUENCE					=-1
-}TLF_reg_t;
+	MAX_LENGTH					        =0x40
+};
 
 
+/*******************************************************************************************************************************************
+ *  												COMMUNICATION FRAME
+ *******************************************************************************************************************************************/
+
+/** \brief Defines if a read or write operation shall be performed. */
+enum COM_FRAME_REQ_e{
+	READ							=0x0,							/**< \brief Read operation*/
+	WRITE							=0x1,							/**< \brief Write operation*/
+};
 
 
-#endif // ENUMTEST_H
+/** \brief Structure to define the communication frame. */
+
+struct COM_FRAME_st
+{
+    uint8_t    comFrameReq;        /**< Some documentation for the member myStruct_t#a. */
+    uint8_t    comFrameRegId;      /**< Some documentation for the member myStruct_t#b. */
+    uint32_t   data;
+    uint16_t   CRC;                
+};
+
+
+#endif /* GLOBALDEF_H */

@@ -4,14 +4,10 @@
 #include "../lib/ESP32_Local/WifiManager/WifiManager.h"
 #include "../lib/SBR_Global/Definition/GlobalDef.h"
 /*======================================================= DEFINITION ========================================================================*/
-#define NumbersOfBytes (uint8_t)4u      /*Number of Bytes of the Frame bluetooth*/
 
 /*======================================================== GLOBAL VARIABLES =================================================================*/
 /* Bluetooth parameters*/
-char buffer[NumbersOfBytes];
 const char* hostname = "SBR_ESP32_Util";
-int timeout = 10000;
-
 
 /*Test [JSA] to remove*/
 #define LED_BUILTIN 2
@@ -51,14 +47,9 @@ void LoopCore0( void * parameter ){
         if (flagTimer0){
             flagTimer0 = false;
             // Code
-            returnvalue =  false; 
-            returnvalue = myBluetoothManager->Run();
-            if(returnvalue == true)
-            {
-                digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
-            }
             Serial.println("TIMER 0");
         }
+
 
         // Code for Timer 1 interruption
         if (flagTimer1){
@@ -66,7 +57,17 @@ void LoopCore0( void * parameter ){
             // Code   
             Serial.println("TIMER 1");
         }
+
+        
+            returnvalue =  false; 
+            returnvalue = myBluetoothManager->CheckFrameAvaible();
+            if(returnvalue == true)
+            {
+                digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+            }
+
         delay(1);
+
     }
 }
 
@@ -134,7 +135,7 @@ void setup() {
     // Serial Port
     Serial.begin(115200);
 
-    myBluetoothManager = new BluetoothManager(buffer,NumbersOfBytes, hostname, timeout);
+    myBluetoothManager = new BluetoothManager(hostname);
     
     /*Test [JSA] to remove*/
     pinMode(LED_BUILTIN, OUTPUT);       // Config Output LED on board ESP32
