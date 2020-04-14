@@ -38,7 +38,7 @@ RC_e BluetoothManager::CheckFrameAvaible(){
     return retCode;
 }
 
-RC_e BluetoothManager::ComputeCRC(COM_FRAME_st* _frame)
+RC_e BluetoothManager::ComputeCRC(const COM_FRAME_st* _frame)
 {
     if(_frame==NULL)
     {
@@ -55,6 +55,9 @@ RC_e BluetoothManager::CheckFrame(uint8_t* _BufferLocal, COM_FRAME_st* _FrameLoc
 
     if((_BufferLocal ==NULL) ||(_FrameLocal==NULL))
     {
+        Serial.println("CheckFrame() => ERROR_NULL_POINTER");
+        /*Clean all the register*/
+        m_SerialBT.flush();
         return RC_e::ERROR_NULL_POINTER;
     }
     /*Initialize the buffer to all zeros*/
@@ -69,6 +72,8 @@ RC_e BluetoothManager::CheckFrame(uint8_t* _BufferLocal, COM_FRAME_st* _FrameLoc
     /*Condition to valid the all frame -> the last 2 bytes shall be \r\n */
     if((_BufferLocal[FRAME_SIZE+NUMBER_BYTES_NEW_LINE-2] != '\r') && (_BufferLocal[FRAME_SIZE+NUMBER_BYTES_NEW_LINE-1] != '\n')) // 0xD or 0xA
     {
+        /*Clean all the register*/
+        m_SerialBT.flush();
         return RC_e::ERROR_SIZE_BUFFER;         
     }
     /*---------REQUEST--------*/
@@ -79,19 +84,22 @@ RC_e BluetoothManager::CheckFrame(uint8_t* _BufferLocal, COM_FRAME_st* _FrameLoc
 
     /*------------DATA----------*/
     _FrameLocal->data = (_BufferLocal[2]);
-    _FrameLocal->data |= (_BufferLocal[3])<<8;
-    _FrameLocal->data |= (_BufferLocal[4])<<16;
-    _FrameLocal->data |= (_BufferLocal[5])<<24;
+    _FrameLocal->data += (_BufferLocal[3])<<8;
+    _FrameLocal->data += (_BufferLocal[4])<<16;
+    _FrameLocal->data += (_BufferLocal[5])<<24;
 
     /*|-----------------CRC-------------------|*/ 
     _FrameLocal->CRC = _BufferLocal[6];
-    _FrameLocal->CRC |= (_BufferLocal[7])<<8;
+    _FrameLocal->CRC += (_BufferLocal[7])<<8;
     
     /*function to compute CRC*/
     if((retCode=ComputeCRC(_FrameLocal))!=RC_e::SUCCESS)
     {
+        /*Clean all the register*/
+        m_SerialBT.flush();
         return retCode;         
     }
+
     /*Clean all the register*/
     m_SerialBT.flush();
 
@@ -133,16 +141,20 @@ RC_e BluetoothManager::Run(){
         return retCode;
     }
 
+    uint8_t BufferLocal[FRAME_SIZE + NUMBER_BYTES_NEW_LINE];
+    COM_FRAME_st FrameLocal;
+
     /*initialize*/
     
     if((retCode=CheckFrame(BufferLocal, &FrameLocal))!= RC_e::SUCCESS){
+        Serial.println("Run() => Error at CheckFrame()");
         return retCode;
     }
 
     if((retCode=ExecuteFrame(&FrameLocal))!= RC_e::SUCCESS){
+        Serial.println("Run() => Error at ExecuteFrame()");
         return retCode;
     }
-
 
     return RC_e::SUCCESS;
 }

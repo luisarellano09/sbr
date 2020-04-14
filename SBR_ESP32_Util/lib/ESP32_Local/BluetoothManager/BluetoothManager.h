@@ -57,16 +57,13 @@ public:
    
     RC_e CheckFrameAvaible();
 
-    RC_e ComputeCRC(COM_FRAME_st*);
+    RC_e ComputeCRC(const COM_FRAME_st*);
    
     RC_e CheckFrame(uint8_t*, COM_FRAME_st*);
 
     RC_e ExecuteFrame(COM_FRAME_st*);
 
- 
-
-    RC_e Run();
-    
+    RC_e Run();  
 };
 
 
