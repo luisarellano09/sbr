@@ -28,6 +28,9 @@
 
 #include "BluetoothSerial.h"
 
+
+#define NumberOfBytesNewLine 2                  //at the end always new line [0xD 0xA] or \r\n 
+
 //####################### class
 /**
  * \brief The purpose as well as the members and methos of a class have to be documented.
@@ -38,14 +41,14 @@ class BluetoothManager{
 
 public:
     /*attributes*/   
-    char* buffer;
-    int SizeOfBuffer;
-    char* nameDevice;
-    int timeout;
+    char* m_buffer;
+    uint8_t m_SizeOfBuffer;
+    const char* m_nameDevice;
+    uint8_t m_timeout;
 
     /*****/
-    BluetoothManager(char*, int, char*, int);   //constructor
-    ~BluetoothManager();                        //Destructor
+    BluetoothManager(char*, uint8_t, const char*, uint8_t);     //constructor
+    ~BluetoothManager();                                        //Destructor
     
     /*Methos*/
     void configBluetooth();
@@ -53,6 +56,8 @@ public:
     boolean GetAllFrame();
 
     boolean CheckAllData();
+
+    boolean Run();
     
 };
 

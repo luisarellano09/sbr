@@ -1,7 +1,6 @@
 #include "WifiManager.h"
 
-WifiManager::WifiManager(char* ssid, char* password, char* hostName)
-{
+WifiManager::WifiManager(char* ssid, char* password, char* hostName){
     // Set attributes
     this->m_ssid = ssid;
     this->m_password = password;
@@ -9,18 +8,11 @@ WifiManager::WifiManager(char* ssid, char* password, char* hostName)
 
     // Configure Wifi
     ConfigureWifi();
-
-    // Connect to Wifi
-    ConnectWifi();
-
-    // Configure OTA
-    ConfigureOTA();
 }
 
 WifiManager::~WifiManager(){}
 
-void WifiManager::ConfigureWifi()
-{
+void WifiManager::ConfigureWifi(){
     // Station mode
     WiFi.mode(WIFI_STA);
 
@@ -31,27 +23,21 @@ void WifiManager::ConfigureWifi()
     });
 }
 
-void WifiManager::ConnectWifi()
-{
-    while (WiFi.begin(m_ssid, m_password))
+void WifiManager::ConnectWifi(){
+    WiFi.begin(m_ssid, m_password);
+   
+    if (WiFi.status() == WL_CONNECTED) 
     {
-        for(int checkCounter = 0; checkCounter < 3 ; checkCounter++)
-        {
-            if (WiFi.status() == WL_CONNECTED) 
-            {
-                MDNS.begin(this->m_hostName);
-                WiFi.setHostname(this->m_hostName);
-                return;
-            }
-
-            delay(1000);
-            Serial.println(".");
-        }
+        MDNS.begin(this->m_hostName);
+        WiFi.setHostname(this->m_hostName);
+        return;
     }
+    Serial.println(".");
+    
+    
 }
 
-void WifiManager::WiFiEvent(WiFiEvent_t event,system_event_info_t info)
-{
+void WifiManager::WiFiEvent(WiFiEvent_t event,system_event_info_t info){
     Serial.printf("[WiFi-event] event: %d\n", event);
 
     switch (event) 
@@ -139,8 +125,7 @@ void WifiManager::WiFiEvent(WiFiEvent_t event,system_event_info_t info)
     }
 }
 
-void WifiManager::ConfigureOTA()
-{
+void WifiManager::ConfigureOTA(){
     // Hostname defaults to esp3232-[MAC]
     ArduinoOTA.setHostname(this->m_hostName);
 
@@ -176,8 +161,18 @@ void WifiManager::ConfigureOTA()
     ArduinoOTA.begin();
 }
 
-void WifiManager::HandleOTA()
-{
+void WifiManager::HandleOTA(){
     ArduinoOTA.handle();
 }
 
+void WifiManager::Run(){
+
+    if (WiFi.status() != WL_CONNECTED) 
+    {
+        // Connect to Wifi
+        ConnectWifi();
+    } else{
+        // Configure OTA
+        ConfigureOTA();
+    }
+}

@@ -25,6 +25,10 @@ public:
 
     void ConfigureOTA();
     void HandleOTA();
+
+    //void ServerConfig(char* IP, char* PORT);
+
+    void Run();
    
 
 
