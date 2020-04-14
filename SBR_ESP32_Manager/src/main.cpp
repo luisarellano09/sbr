@@ -3,6 +3,12 @@
 #include "../lib/SBR_Global/WifiManager/WifiManager.h"
 #include "../lib/SBR_Global/Definition/GlobalDef.h"
 
+
+//======================================================== TEST =================================================================
+
+void test();
+
+
 //======================================================== GLOBAL VARIABLES =================================================================
 // Wifi parameters
 char* ssid = "luiss10";
@@ -119,6 +125,9 @@ void setup() {
     // Serial Port
     Serial.begin(115200);
 
+    // TEST
+    test();
+
     // Wifi Manager
     myWifiManager = new WifiManager(ssid, password, hostName);
 
@@ -169,10 +178,10 @@ void setup() {
     timerAlarmWrite(timer3, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Enable the timer alarms
-    timerAlarmEnable(timer0); // enable
-    timerAlarmEnable(timer1); // enable
-    timerAlarmEnable(timer2); // enable
-    timerAlarmEnable(timer3); // enable
+    //timerAlarmEnable(timer0); // enable
+    //timerAlarmEnable(timer1); // enable
+    //timerAlarmEnable(timer2); // enable
+    //timerAlarmEnable(timer3); // enable
 
 }
 
@@ -180,4 +189,42 @@ void setup() {
 // Loop not used
 void loop() {
     vTaskDelete(NULL);
+}
+
+void test(){
+
+    COM_FRAME_u data;
+
+    u8_t U8[8];
+
+    data.comFrameReq = (u8_t)COM_FRAME_REQ_e::WRITE;
+    data.comFrameRegId = (u8_t)COM_FRAME_REG_ID_e::TLF_DEVCFG2;
+    data.data = (u32_t) 0xBEAFDEAD;
+    data.CRC = (u16_t)0xCDEF;
+
+    U8[0] = data.comFrameReq;
+    U8[1] = data.comFrameRegId;
+ 
+
+
+
+    Serial.println("==== TEST TRAMA =====");
+    Serial.println(U8[0], HEX);
+    Serial.println(U8[1], HEX);
+    Serial.println(U8[2], HEX);
+    Serial.println(U8[3], HEX);
+    Serial.println(U8[4], HEX);
+    Serial.println(U8[5], HEX);
+    Serial.println(U8[6], HEX);
+    Serial.println(U8[7], HEX);
+    Serial.println("====================");
+
+    Serial.println("==== TEST TRAMA =====");
+    Serial.println(data.comFrameReq, HEX);
+    Serial.println(data.comFrameRegId, HEX);
+    Serial.println(data.data, HEX);
+    Serial.println(data.CRC, HEX);
+    Serial.println("====================");
+
+
 }
