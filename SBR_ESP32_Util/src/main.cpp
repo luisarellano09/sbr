@@ -41,7 +41,6 @@ bool flagTimer3 = false;
 
 // Loop of core 0
 void LoopCore0( void * parameter ){
-    boolean returnvalue;
     while(true) {
         // Code for Timer 0 interruption
         if (flagTimer0){

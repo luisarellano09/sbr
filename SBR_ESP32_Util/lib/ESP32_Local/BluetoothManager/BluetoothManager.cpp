@@ -129,8 +129,6 @@ RC_e BluetoothManager::ExecuteFrame(COM_FRAME_st* _frame){
 RC_e BluetoothManager::Run(){
     
     RC_e retCode;
-    uint8_t BufferLocal[FRAME_SIZE+NUMBER_BYTES_NEW_LINE];
-    COM_FRAME_st FrameLocal{.comFrameReq=0, .comFrameRegId = 0,.data = 0, .CRC =0};
 
     /*initialize variables*/
     retCode = RC_e::ERROR;
