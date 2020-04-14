@@ -57,14 +57,10 @@ void LoopCore0( void * parameter ){
             // Code   
             Serial.println("TIMER 1");
         }
-
         
-            returnvalue =  false; 
-            returnvalue = myBluetoothManager->CheckFrameAvaible();
-            if(returnvalue == true)
-            {
-                digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
-            }
+        myBluetoothManager->Run();
+        //digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+
 
         delay(1);
 

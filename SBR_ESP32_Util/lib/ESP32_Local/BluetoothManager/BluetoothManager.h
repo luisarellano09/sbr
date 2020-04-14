@@ -30,7 +30,7 @@
 #include "../SBR_Global/Definition/GlobalDef.h"
 
 #define NUMBER_BYTES_NEW_LINE   (uint8_t)2u                  //at the end always new line [0xD 0xA] or \r\n 
-#define FRAME_SIZE              (uint8_t)4u                 /*Number of Bytes of the Frame bluetooth*/
+#define FRAME_SIZE              (uint8_t)8u                 /*Number of Bytes of the Frame bluetooth*/
 #define TIME_OUT                (uint8_t)1000u                 /*Number of Bytes of the Frame bluetooth*/
 //####################### class
 /**
@@ -57,10 +57,13 @@ public:
    
     RC_e CheckFrameAvaible();
 
+    RC_e ComputeCRC(COM_FRAME_st*);
    
-    RC_e CheckFrame(uint8_t*);
+    RC_e CheckFrame(uint8_t*, COM_FRAME_st*);
 
-    RC_e ExecuteFrame(uint8_t*);
+    RC_e ExecuteFrame(COM_FRAME_st*);
+
+ 
 
     RC_e Run();
     

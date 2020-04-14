@@ -40,14 +40,23 @@ RC_e BluetoothManager::CheckFrameAvaible(){
     return retCode;
 }
 
-RC_e BluetoothManager::CheckFrame(uint8_t* _BufferLocal){
+RC_e ComputeCRC(COM_FRAME_st* _frame)
+{
+    return RC_e::SUCCESS;
+}
+
+RC_e BluetoothManager::CheckFrame(uint8_t* _BufferLocal, COM_FRAME_st* _FrameLocal){
     RC_e retCode;
 
     /*Initialize*/
     retCode = RC_e::ERROR;
 
+    if((_BufferLocal ==NULL) ||(_FrameLocal==NULL))
+    {
+        return RC_e::ERROR_NULL_POINTER;
+    }
     /*Initialize the buffer to all zeros*/
-    for(int i= 0; i<FRAME_SIZE+NUMBER_BYTES_NEW_LINE; i++)
+    for(int i= 0; i<(FRAME_SIZE + NUMBER_BYTES_NEW_LINE); i++)
     {
         _BufferLocal[i] = 0x00;
     }
@@ -60,42 +69,51 @@ RC_e BluetoothManager::CheckFrame(uint8_t* _BufferLocal){
     {
         return RC_e::ERROR_SIZE_BUFFER;         
     }
-    /*function to compute CRC*/
-    /*crc16 = computeCRC(_frame)  */
+    /*---------REQUEST--------*/
+    _FrameLocal->comFrameReq = _BufferLocal[0];
 
-    /*if((retCode=CheckCRC(_frame))!=RC_e::SUCCESS)
+    /*------------ID----------*/
+    _FrameLocal->comFrameRegId = _BufferLocal[1];
+
+    /*------------DATA----------*/
+    _FrameLocal->data = (_BufferLocal[2]);
+    _FrameLocal->data = (_BufferLocal[3])<<8;
+    _FrameLocal->data = (_BufferLocal[4])<<16;
+    _FrameLocal->data = (_BufferLocal[5])<<24;
+
+    /*|-----------------CRC-------------------|*/ 
+    _FrameLocal->CRC = _BufferLocal[6];
+    _FrameLocal->CRC = (_BufferLocal[7])<<8;
+    
+    /*function to compute CRC*/
+    if((retCode=ComputeCRC((COM_FRAME_st*)_FrameLocal))!=RC_e::SUCCESS)
     {
         return retCode;         
-    }*/
+    }
     /*Clean all the register*/
     m_SerialBT.flush();
 
     return retCode;
 }
 
-RC_e BluetoothManager::ExecuteFrame(uint8_t* _buffer){
+RC_e BluetoothManager::ExecuteFrame(COM_FRAME_st* _frame){
     RC_e retCode;
+
     /*initialize*/
     retCode = RC_e::ERROR;
 
-    if(_buffer == NULL)
+    if(_frame == NULL)
     {
         return RC_e::ERROR_NULL_POINTER; 
     }
     
-    //_buffer[]
-    /*if()
-    {
-        ReturnValue = true;  
-    }
-    else
-    {
-        
-    }*/
-
-    /*Update*/
-
-    
+    Serial.println("==== TEST TRAMA =====");
+    Serial.println(_frame->comFrameReq, HEX);
+    Serial.println(_frame->comFrameRegId, HEX);
+    Serial.println(_frame->data, HEX);
+    Serial.println(_frame->CRC, HEX);
+    Serial.println("====================");
+    return RC_e::SUCCESS;
 }
 
 RC_e BluetoothManager::Run(){
@@ -112,17 +130,19 @@ RC_e BluetoothManager::Run(){
     }
 
     uint8_t BufferLocal[FRAME_SIZE];
- 
-    if((retCode=CheckFrame(BufferLocal))!= RC_e::SUCCESS){
+    COM_FRAME_st FrameLocal{.comFrameReq=0, .comFrameRegId = 0,.data = 0, .CRC =0};
+
+    /*initialize*/
+    
+    if((retCode=CheckFrame(BufferLocal, &FrameLocal))!= RC_e::SUCCESS){
         return retCode;
     }
 
-    /*check if the Frame has the Valid Data*/
-    /*validData = CheckAllData();
-    if(validData == true)
-    {
-        validRun = true;
-    }       */
+    if((retCode=ExecuteFrame(&FrameLocal))!= RC_e::SUCCESS){
+        return retCode;
+    }
+
 
     return RC_e::SUCCESS;
 }
+
