@@ -14,11 +14,9 @@ BluetoothManager::BluetoothManager(const char* nameDevice){
     /*Set attributes*/
     this->m_nameDevice = nameDevice;
 
-
     configBluetooth();
 
 }
-
 
 BluetoothManager::~BluetoothManager(){}
 
@@ -26,7 +24,7 @@ BluetoothManager::~BluetoothManager(){}
 void BluetoothManager::configBluetooth(){
 
     m_SerialBT.begin(this->m_nameDevice);           //name of device bluetooth
-    m_SerialBT.setTimeout(TIME_OUT);                   //100 miliseconds
+    m_SerialBT.setTimeout(TIME_OUT);                
 }
 
 RC_e BluetoothManager::CheckFrameAvaible(){
@@ -40,8 +38,12 @@ RC_e BluetoothManager::CheckFrameAvaible(){
     return retCode;
 }
 
-RC_e ComputeCRC(COM_FRAME_st* _frame)
+RC_e BluetoothManager::ComputeCRC(COM_FRAME_st* _frame)
 {
+    if(_frame==NULL)
+    {
+        return RC_e::ERROR_NULL_POINTER;
+    }
     return RC_e::SUCCESS;
 }
 
@@ -77,16 +79,16 @@ RC_e BluetoothManager::CheckFrame(uint8_t* _BufferLocal, COM_FRAME_st* _FrameLoc
 
     /*------------DATA----------*/
     _FrameLocal->data = (_BufferLocal[2]);
-    _FrameLocal->data = (_BufferLocal[3])<<8;
-    _FrameLocal->data = (_BufferLocal[4])<<16;
-    _FrameLocal->data = (_BufferLocal[5])<<24;
+    _FrameLocal->data |= (_BufferLocal[3])<<8;
+    _FrameLocal->data |= (_BufferLocal[4])<<16;
+    _FrameLocal->data |= (_BufferLocal[5])<<24;
 
     /*|-----------------CRC-------------------|*/ 
     _FrameLocal->CRC = _BufferLocal[6];
-    _FrameLocal->CRC = (_BufferLocal[7])<<8;
+    _FrameLocal->CRC |= (_BufferLocal[7])<<8;
     
     /*function to compute CRC*/
-    if((retCode=ComputeCRC((COM_FRAME_st*)_FrameLocal))!=RC_e::SUCCESS)
+    if((retCode=ComputeCRC(_FrameLocal))!=RC_e::SUCCESS)
     {
         return retCode;         
     }
@@ -119,6 +121,8 @@ RC_e BluetoothManager::ExecuteFrame(COM_FRAME_st* _frame){
 RC_e BluetoothManager::Run(){
     
     RC_e retCode;
+    uint8_t BufferLocal[FRAME_SIZE+NUMBER_BYTES_NEW_LINE];
+    COM_FRAME_st FrameLocal{.comFrameReq=0, .comFrameRegId = 0,.data = 0, .CRC =0};
 
     /*initialize variables*/
     retCode = RC_e::ERROR;
@@ -128,9 +132,6 @@ RC_e BluetoothManager::Run(){
     {
         return retCode;
     }
-
-    uint8_t BufferLocal[FRAME_SIZE];
-    COM_FRAME_st FrameLocal{.comFrameReq=0, .comFrameRegId = 0,.data = 0, .CRC =0};
 
     /*initialize*/
     
