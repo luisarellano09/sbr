@@ -5,7 +5,6 @@
 #endif
 
 
-
 //####################### class BluetoothManager
 /**
  * \brief Configuration the Bluetooth.
@@ -49,33 +48,35 @@ RC_e BluetoothManager::ComputeCRC(const COM_FRAME_st* _frame)
 
 RC_e BluetoothManager::CheckFrame(uint8_t* _BufferLocal, COM_FRAME_st* _FrameLocal){
     RC_e retCode;
+    size_t retBt;
 
     /*Initialize*/
     retCode = RC_e::ERROR;
-
-    if((_BufferLocal ==NULL) ||(_FrameLocal==NULL))
+    if((_BufferLocal ==NULL) || (_FrameLocal==NULL))
     {
-        Serial.println("CheckFrame() => ERROR_NULL_POINTER");
         /*Clean all the register*/
         m_SerialBT.flush();
         return RC_e::ERROR_NULL_POINTER;
     }
-    /*Initialize the buffer to all zeros*/
-    for(int i= 0; i<(FRAME_SIZE + NUMBER_BYTES_NEW_LINE); i++)
-    {
-        _BufferLocal[i] = 0x00;
-    }
 
     /* Read the buffer with the numers of bytes+2*/
-    m_SerialBT.readBytes(_BufferLocal,FRAME_SIZE+NUMBER_BYTES_NEW_LINE);
+    retBt = m_SerialBT.readBytes(_BufferLocal,FRAME_SIZE+NUMBER_BYTES_NEW_LINE);
+    /*Clean all the register*/
+    m_SerialBT.flush();
 
-    /*Condition to valid the all frame -> the last 2 bytes shall be \r\n */
-    if((_BufferLocal[FRAME_SIZE+NUMBER_BYTES_NEW_LINE-2] != '\r') && (_BufferLocal[FRAME_SIZE+NUMBER_BYTES_NEW_LINE-1] != '\n')) // 0xD or 0xA
+    /*Check if the Frame has at least 8 byte + \r\n*/
+    if(retBt < (size_t)(FRAME_SIZE))
     {
-        /*Clean all the register*/
-        m_SerialBT.flush();
+        return RC_e::ERROR_SIZE_BUFFER;  
+    }
+
+    /*check if the Frame is too long*/
+    /*Condition to valid the all frame -> the last 2 bytes shall be \r\n */
+    if((_BufferLocal[FRAME_SIZE] != '\r') && (_BufferLocal[FRAME_SIZE+1] != '\n')) // 0xD or 0xA
+    {
         return RC_e::ERROR_SIZE_BUFFER;         
     }
+    
     /*---------REQUEST--------*/
     _FrameLocal->comFrameReq = _BufferLocal[0];
 
@@ -95,13 +96,8 @@ RC_e BluetoothManager::CheckFrame(uint8_t* _BufferLocal, COM_FRAME_st* _FrameLoc
     /*function to compute CRC*/
     if((retCode=ComputeCRC(_FrameLocal))!=RC_e::SUCCESS)
     {
-        /*Clean all the register*/
-        m_SerialBT.flush();
         return retCode;         
     }
-
-    /*Clean all the register*/
-    m_SerialBT.flush();
 
     return retCode;
 }
@@ -116,13 +112,14 @@ RC_e BluetoothManager::ExecuteFrame(COM_FRAME_st* _frame){
     {
         return RC_e::ERROR_NULL_POINTER; 
     }
-    
-    Serial.println("==== TEST TRAMA =====");
-    Serial.println(_frame->comFrameReq, HEX);
-    Serial.println(_frame->comFrameRegId, HEX);
-    Serial.println(_frame->data, HEX);
-    Serial.println(_frame->CRC, HEX);
-    Serial.println("====================");
+    #ifdef DEBUG
+        Serial.println("==== TEST TRAMA =====");
+        Serial.println(_frame->comFrameReq, HEX);
+        Serial.println(_frame->comFrameRegId, HEX);
+        Serial.println(_frame->data, HEX);
+        Serial.println(_frame->CRC, HEX);
+        Serial.println("====================");
+    #endif
     return RC_e::SUCCESS;
 }
 
@@ -136,21 +133,34 @@ RC_e BluetoothManager::Run(){
     // buffer to know if get the number of bytes corrects
     if((retCode=CheckFrameAvaible())!= RC_e::SUCCESS)
     {
+        #ifdef DEBUG
+        uint8_t toggle = 0;
+        if(toggle==0){
+            Serial.print("Run()::CheckFrameAvaible retCode:");
+            Serial.println(retCode,HEX);
+            toggle=1;
+        }
+        #endif
         return retCode;
     }
 
+   /*initialize*/
     uint8_t BufferLocal[FRAME_SIZE + NUMBER_BYTES_NEW_LINE];
     COM_FRAME_st FrameLocal;
-
-    /*initialize*/
     
     if((retCode=CheckFrame(BufferLocal, &FrameLocal))!= RC_e::SUCCESS){
-        Serial.println("Run() => Error at CheckFrame()");
+        #ifdef DEBUG
+            Serial.print("Run()::CheckFrame retCode:");
+            Serial.println(retCode,HEX);
+        #endif
         return retCode;
     }
 
     if((retCode=ExecuteFrame(&FrameLocal))!= RC_e::SUCCESS){
-        Serial.println("Run() => Error at ExecuteFrame()");
+        #ifdef DEBUG
+            Serial.print("Run()::ExecuteFrame retCode:");
+            Serial.println(retCode,HEX);
+        #endif
         return retCode;
     }
 
