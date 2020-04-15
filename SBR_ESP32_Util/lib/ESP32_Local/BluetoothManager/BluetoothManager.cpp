@@ -120,7 +120,7 @@ RC_e BluetoothManager::ExecuteFrame(COM_FRAME_st* _frame){
         Serial.println(_frame->CRC, HEX);
         Serial.println("====================");
     #endif
-    return RC_e::SUCCESS;
+    return retCode;
 }
 
 RC_e BluetoothManager::Run(){
@@ -140,7 +140,7 @@ RC_e BluetoothManager::Run(){
         return retCode;
     }
 
-   /*initialize*/
+    /*initialize*/
     uint8_t BufferLocal[FRAME_SIZE + NUMBER_BYTES_NEW_LINE];
     COM_FRAME_st FrameLocal;
     
