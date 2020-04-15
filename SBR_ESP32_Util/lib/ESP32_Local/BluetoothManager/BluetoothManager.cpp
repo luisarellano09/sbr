@@ -134,12 +134,8 @@ RC_e BluetoothManager::Run(){
     if((retCode=CheckFrameAvaible())!= RC_e::SUCCESS)
     {
         #ifdef DEBUG
-        uint8_t toggle = 0;
-        if(toggle==0){
-            Serial.print("Run()::CheckFrameAvaible retCode:");
-            Serial.println(retCode,HEX);
-            toggle=1;
-        }
+            //Serial.print("Run()::CheckFrameAvaible retCode:");
+            //Serial.println(retCode,HEX);
         #endif
         return retCode;
     }
