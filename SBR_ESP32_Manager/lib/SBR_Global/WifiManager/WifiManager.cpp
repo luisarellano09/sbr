@@ -1,4 +1,27 @@
+/**
+ * \file WifiManager.cpp
+ * \author Luis Arellano - luis.arellano09@gmail.com
+ * \date 16 April 2020
+ *
+ * \brief Class to Manage the Wifi
+ *
+ * 
+ * 
+ * Changes
+ * 16.04.2020: Class comments and RC_e concept
+ * 13.04.2020: Doc was created
+ * 
+ *
+ */
+
+/*******************************************************************************************************************************************
+ *  												INCLUDES
+ *******************************************************************************************************************************************/
 #include "WifiManager.h"
+
+/*******************************************************************************************************************************************
+ *  												Constructor
+ *******************************************************************************************************************************************/
 
 WifiManager::WifiManager(char* ssid, char* password, char* hostName){
     // Set attributes
@@ -8,33 +31,70 @@ WifiManager::WifiManager(char* ssid, char* password, char* hostName){
 
     // Configure Wifi
     ConfigureWifi();
+
+    // Configure OTA
+    ConfigureOTA();
 }
 
 WifiManager::~WifiManager(){}
 
-void WifiManager::ConfigureWifi(){
+/*******************************************************************************************************************************************
+ *  												Public Methods
+ *******************************************************************************************************************************************/
+
+RC_e WifiManager::Run(){
+    // Error code
+    RC_e retCode = RC_e::ERROR;
+
+    // Check if the Wifi is connected
+    if (WiFi.status() != WL_CONNECTED) 
+    {
+        // Connect to Wifi
+        if ((retCode = ConnectWifi()) != RC_e::SUCCESS){
+            return retCode;        
+        }
+    } else{
+        // Configure OTA
+        if ((retCode = HandleOTA()) != RC_e::SUCCESS){
+            return retCode;        
+        }
+    }
+
+    return RC_e::SUCCESS;
+}
+
+/*******************************************************************************************************************************************
+ *  												Private Methods
+ *******************************************************************************************************************************************/
+
+RC_e WifiManager::ConfigureWifi(){
     // Station mode
     WiFi.mode(WIFI_STA);
 
     // Define Event
     WiFi.onEvent(
         [this](WiFiEvent_t event,system_event_info_t info) {
-        this->WiFiEvent(event, info);
-    });
+            this->WiFiEvent(event, info);
+        });
+
+    return RC_e::SUCCESS;
 }
 
-void WifiManager::ConnectWifi(){
+RC_e WifiManager::ConnectWifi(){
+    // Start Wifi
     WiFi.begin(m_ssid, m_password);
-   
-    if (WiFi.status() == WL_CONNECTED) 
-    {
-        MDNS.begin(this->m_hostName);
-        WiFi.setHostname(this->m_hostName);
-        return;
+    
+    // Check if Wifi is connected
+    if (WiFi.status() != WL_CONNECTED) {
+        Serial.println(".");
+        return RC_e::ERROR_WIFI_CONNECTION;
     }
-    Serial.println(".");
-    
-    
+
+    // Set Hostname
+    MDNS.begin(this->m_hostName);
+    WiFi.setHostname(this->m_hostName);
+
+    return RC_e::SUCCESS;  
 }
 
 void WifiManager::WiFiEvent(WiFiEvent_t event,system_event_info_t info){
@@ -125,7 +185,7 @@ void WifiManager::WiFiEvent(WiFiEvent_t event,system_event_info_t info){
     }
 }
 
-void WifiManager::ConfigureOTA(){
+RC_e WifiManager::ConfigureOTA(){
     // Hostname defaults to esp3232-[MAC]
     ArduinoOTA.setHostname(this->m_hostName);
 
@@ -159,20 +219,13 @@ void WifiManager::ConfigureOTA(){
     });
 
     ArduinoOTA.begin();
+
+    return RC_e::SUCCESS;
 }
 
-void WifiManager::HandleOTA(){
+RC_e WifiManager::HandleOTA(){
     ArduinoOTA.handle();
+    return RC_e::SUCCESS;
 }
 
-void WifiManager::Run(){
 
-    if (WiFi.status() != WL_CONNECTED) 
-    {
-        // Connect to Wifi
-        ConnectWifi();
-    } else{
-        // Configure OTA
-        ConfigureOTA();
-    }
-}

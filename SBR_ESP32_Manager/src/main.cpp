@@ -1,22 +1,46 @@
-//======================================================== INCLUDES =========================================================================
+/**
+ * \file main.cpp
+ * \author Luis Arellano - luis.arellano09@gmail.com
+ * \date 16 April 2020
+ *
+ * \brief main class
+ *
+ * 
+ * 
+ * Changes
+ * 16.04.2020: Class comments and RC_e concept
+ * 13.04.2020: Doc was created
+ * 
+ *
+ */
+
+/*******************************************************************************************************************************************
+ *  												INCLUDES
+ *******************************************************************************************************************************************/
+
 #include <Arduino.h>
 #include "../lib/SBR_Global/WifiManager/WifiManager.h"
 #include "../lib/SBR_Global/Definition/GlobalDef.h"
 
 
-//======================================================== TEST =================================================================
+/*******************************************************************************************************************************************
+ *  												TEST
+ *******************************************************************************************************************************************/
 
 void test();
 
 
-//======================================================== GLOBAL VARIABLES =================================================================
+/*******************************************************************************************************************************************
+ *  												GLOBAL VARIABLES
+ *******************************************************************************************************************************************/
+
 // Wifi parameters
 char* ssid = "luiss10";
 char* password = "12345678";
 char* hostName = "SBR_ESP32_Manager";
 
 // Wifi instance
-WifiManager *myWifiManager; 
+WifiManager *wifiManager; 
 
 // Task declaration
 TaskHandle_t TaskCore0, TaskCore1;
@@ -37,7 +61,10 @@ bool flagTimer1 = false;
 bool flagTimer2 = false;
 bool flagTimer3 = false;
 
-//======================================================== CORE LOOPS =======================================================================
+
+/*******************************************************************************************************************************************
+ *  												CORE LOOPS
+ *******************************************************************************************************************************************/
 
 // Loop of core 0
 void LoopCore0( void * parameter ){
@@ -53,7 +80,7 @@ void LoopCore0( void * parameter ){
         if (flagTimer1){
             flagTimer1 = false;
             // Code 
-            myWifiManager->Run();
+            wifiManager->Run();
             Serial.println("TIMER 1");
         }
         delay(1);
@@ -80,7 +107,10 @@ void LoopCore1( void * parameter ){
     }
 }
 
-//======================================================== TIMERS ===========================================================================
+
+/*******************************************************************************************************************************************
+ *  												TIMERS
+ *******************************************************************************************************************************************/
 
 // TIMER 0
 void IRAM_ATTR onTimer0(){
@@ -118,7 +148,10 @@ void IRAM_ATTR onTimer3(){
     portEXIT_CRITICAL_ISR(&timerMux3);
 }
 
-//======================================================== SETUP ==============================================================================
+
+/*******************************************************************************************************************************************
+ *  												SETUP
+ *******************************************************************************************************************************************/
 
 void setup() {
 
@@ -129,7 +162,7 @@ void setup() {
     test();
 
     // Wifi Manager
-    myWifiManager = new WifiManager(ssid, password, hostName);
+    wifiManager = new WifiManager(ssid, password, hostName);
 
     // Task of core 0
     xTaskCreatePinnedToCore(
@@ -179,52 +212,21 @@ void setup() {
 
     // Enable the timer alarms
     //timerAlarmEnable(timer0); // enable
-    //timerAlarmEnable(timer1); // enable
+    timerAlarmEnable(timer1); // enable
     //timerAlarmEnable(timer2); // enable
     //timerAlarmEnable(timer3); // enable
 
 }
 
-//======================================================== MAIN LOOP ============================================================================
+/*******************************************************************************************************************************************
+ *  												Main Loop
+ *******************************************************************************************************************************************/
 // Loop not used
 void loop() {
     vTaskDelete(NULL);
 }
 
 void test(){
-
-    COM_FRAME_u data;
-
-    u8_t U8[8];
-
-    data.comFrameReq = (u8_t)COM_FRAME_REQ_e::WRITE;
-    data.comFrameRegId = (u8_t)COM_FRAME_REG_ID_e::TLF_DEVCFG2;
-    data.data = (u32_t) 0xBEAFDEAD;
-    data.CRC = (u16_t)0xCDEF;
-
-    U8[0] = data.comFrameReq;
-    U8[1] = data.comFrameRegId;
- 
-
-
-
-    Serial.println("==== TEST TRAMA =====");
-    Serial.println(U8[0], HEX);
-    Serial.println(U8[1], HEX);
-    Serial.println(U8[2], HEX);
-    Serial.println(U8[3], HEX);
-    Serial.println(U8[4], HEX);
-    Serial.println(U8[5], HEX);
-    Serial.println(U8[6], HEX);
-    Serial.println(U8[7], HEX);
-    Serial.println("====================");
-
-    Serial.println("==== TEST TRAMA =====");
-    Serial.println(data.comFrameReq, HEX);
-    Serial.println(data.comFrameRegId, HEX);
-    Serial.println(data.data, HEX);
-    Serial.println(data.CRC, HEX);
-    Serial.println("====================");
 
 
 }

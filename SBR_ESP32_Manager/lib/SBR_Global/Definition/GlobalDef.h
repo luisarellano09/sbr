@@ -7,7 +7,9 @@
  * \brief All globla definitions of SBR Project.
  * 
  * Changes
- * V.1.2 -> 13.04.2020: [LA] Communication enums and struct
+ * V.1.4 -> 16.04.2020: [LA] RC_e update 
+ * V.1.3 -> 14.04.2020: [JS] new ERRORS ENUM added 
+ * V.1.2 -> 14.04.2020: [LA] Communication enums and struct
  * V.1.1 -> 14.04.2020: [JS] Comment header was added.
  * V.1.0 -> 13.04.2020: [LA] Doc was created
  *
@@ -24,8 +26,12 @@
 
 /** \brief  Enumeration for TLF errors.  */
 enum RC_e{
-	SUCCESS						= 0,                                /**< \brief Operation Successful					*/
-	ERROR                                                           /**< \brief Operation Error 						*/
+	SUCCESS						= 0,                                /**< \brief Operation Successful				*/
+	ERROR,                                                          /**< \brief Error 						        */
+	ERROR_NULL_POINTER,                                             /**< \brief Error null pointer					*/
+	ERROR_SIZE_BUFFER,                                             	/**< \brief Error size buffer					*/
+	ERROR_CRC,		                                             	/**< \brief Error CRC Validation				*/
+    ERROR_WIFI_CONNECTION                                           /**< \brief Error Wifi connection   			*/
 } ;
 
 
@@ -105,12 +111,12 @@ enum COM_FRAME_REQ_e{
 
 /** \brief Structure to define the communication frame. */
 
-struct COM_FRAME_u
+struct COM_FRAME_st
 {
-    u8_t    comFrameReq;        /**< Some documentation for the member myStruct_t#a. */
-    u8_t    comFrameRegId;      /**< Some documentation for the member myStruct_t#b. */
-    u32_t   data;
-    u16_t   CRC;                
+    uint8_t    comFrameReq;        /**< Some documentation for the member myStruct_t#a. */
+    uint8_t    comFrameRegId;      /**< Some documentation for the member myStruct_t#b. */
+    uint32_t   data;
+    uint16_t   CRC;                
 };
 
 
