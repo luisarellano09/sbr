@@ -1,7 +1,7 @@
 /*======================================================== INCLUDES =========================================================================*/
 #include <Arduino.h>
-#include "../lib/ESP32_Local/BluetoothManager/BluetoothManager.h"
-#include "../lib/ESP32_Local/WifiManager/WifiManager.h"
+#include "../lib/SBR_GLOBAL/BluetoothManager/BluetoothManager.h"
+#include "../lib/SBR_GLOBAL/WifiManager/WifiManager.h"
 #include "../lib/SBR_Global/Definition/GlobalDef.h"
 /*======================================================= DEFINITION ========================================================================*/
 
