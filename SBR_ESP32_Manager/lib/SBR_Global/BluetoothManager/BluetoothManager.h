@@ -26,15 +26,15 @@
 #ifndef BLUETOOTH_H
 #define BLUETOOTH_H
 
-#include "BluetoothSerial.h"
-#include "../SBR_Global/Definition/GlobalDef.h"
+#include "../Definition/GlobalDef.h"
+#include <BluetoothSerial.h>
 
 #define NUMBER_BYTES_NEW_LINE   (uint8_t)2u                  /*at the end always new line [0xD 0xA] or \r\n */
 #define FRAME_SIZE              (uint8_t)8u                 /*Number of Bytes of the Frame bluetooth*/
 #define TIME_OUT                (uint16_t)100u              /*the timeout Bluetooth communication  */
 
 
-#define DEBUG
+//#define DEBUG
 //####################### class
 /**
  * \brief The purpose as well as the members and methos of a class have to be documented.

@@ -19,15 +19,25 @@
  *******************************************************************************************************************************************/
 
 #include <Arduino.h>
-#include "../lib/SBR_Global/WifiManager/WifiManager.h"
 #include "../lib/SBR_Global/Definition/GlobalDef.h"
-
+#include "../lib/SBR_Global/WifiManager/WifiManager.h"
+#include "../lib/SBR_Global/Logger/Logger.h"
 
 /*******************************************************************************************************************************************
  *  												TEST
  *******************************************************************************************************************************************/
 
-void test();
+#include <SPI.h>
+#define MO   22
+#define MI   23
+#define MCLK 19
+#define MS   18
+
+SPISettings spi_setting(1000000, MSBFIRST, 0);
+SPIClass master(VSPI);      // HSPI
+
+void test_setup();
+void test_run();
 
 
 /*******************************************************************************************************************************************
@@ -38,9 +48,14 @@ void test();
 char* ssid = "luiss10";
 char* password = "12345678";
 char* hostName = "SBR_ESP32_Manager";
+uint16_t logPort = 4000;
+char * logHost = "192.168.43.72"; //"ubuntudev.local";
 
 // Wifi instance
 WifiManager *wifiManager; 
+
+// Logger instance
+Logger *logger; 
 
 // Task declaration
 TaskHandle_t TaskCore0, TaskCore1;
@@ -72,17 +87,21 @@ void LoopCore0( void * parameter ){
         // Code for Timer 0 interruption
         if (flagTimer0){
             flagTimer0 = false;
-            // Code 
-            Serial.println("TIMER 0");
+
+            // ========== Code ==========
+                test_run();
+            // ==========================
         }
 
         // Code for Timer 1 interruption
         if (flagTimer1){
             flagTimer1 = false;
-            // Code 
-            wifiManager->Run();
-            Serial.println("TIMER 1");
+
+            // ========== Code ==========
+                wifiManager->Run();
+            // ==========================
         }
+
         delay(1);
     }
 }
@@ -93,16 +112,21 @@ void LoopCore1( void * parameter ){
         // Code for Timer 2 interruption
         if (flagTimer2){
             flagTimer2 = false;
-            // Code 
-            Serial.println("TIMER 2");
+
+            // ========== Code ==========
+
+            // ==========================
         }
 
         // Code for Timer 3 interruption
         if (flagTimer3){
             flagTimer3 = false;
-            // Code 
-            Serial.println("TIMER 3");
+
+            // ========== Code ==========
+
+            // ==========================
         }
+
         delay(1);
     }
 }
@@ -158,11 +182,29 @@ void setup() {
     // Serial Port
     Serial.begin(115200);
 
-    // TEST
-    test();
-
     // Wifi Manager
     wifiManager = new WifiManager(ssid, password, hostName);
+
+    // Logger
+    logger = new Logger(logHost, logPort);
+
+    // TEST
+    test_setup();
+        // digitalWrite(SS, HIGH); // disable Slave Select
+        // SPI.begin();
+        // SPI.setClockDivider(SPI_CLOCK_DIV4);//divide the clock by 4
+
+
+
+
+        // // Setup Master-SPI
+        // pinMode(MS, OUTPUT);
+        // digitalWrite(MS, HIGH);
+        // pinMode(MCLK, OUTPUT);
+        // digitalWrite(MCLK, LOW);  // Due to SPI_MODE0
+        // master.begin(MCLK, MI, MO);
+
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // Task of core 0
     xTaskCreatePinnedToCore(
@@ -190,7 +232,7 @@ void setup() {
     Serial.println("start timer 0");
     timer0 = timerBegin(0, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer0, &onTimer0, true); // edge (not level) triggered 
-    timerAlarmWrite(timer0, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
+    timerAlarmWrite(timer0, 100000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer1
     Serial.println("start timer 1");
@@ -211,7 +253,7 @@ void setup() {
     timerAlarmWrite(timer3, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Enable the timer alarms
-    //timerAlarmEnable(timer0); // enable
+    timerAlarmEnable(timer0); // enable
     timerAlarmEnable(timer1); // enable
     //timerAlarmEnable(timer2); // enable
     //timerAlarmEnable(timer3); // enable
@@ -226,7 +268,10 @@ void loop() {
     vTaskDelete(NULL);
 }
 
-void test(){
+void test_setup(){
 
+}
+
+void test_run(){
 
 }

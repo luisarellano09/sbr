@@ -1,32 +1,100 @@
+/**
+ * \file WifiManager.h
+ * \author Luis Arellano - luis.arellano09@gmail.com
+ * \date 16 April 2020
+ *
+ * \brief Class to Manage the Wifi
+ *
+ * 
+ * 
+ * Changes
+ * 16.04.2020: Class comments and RC_e concept
+ * 13.04.2020: Doc was created
+ * 
+ *
+ */
+
 #ifndef WIFIMANAGER_H
 #define WIFIMANAGER_H
+
+/*******************************************************************************************************************************************
+ *  												INCLUDES
+ *******************************************************************************************************************************************/
 
 #include <Arduino.h>
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
+#include "../Definition/GlobalDef.h"
 
+/*******************************************************************************************************************************************
+ *  												WifiManager Class
+ *******************************************************************************************************************************************/
 
+/**
+ * \brief Class to Manage the Wifi.
+ */
 class WifiManager
 {
+public:  
 
-public:
-    char* m_ssid;
-    char* m_password;
-    char* m_hostName;
-
+    /**
+     * \brief Constructor.
+     */
     WifiManager(char* ssid, char* password, char* hostName);
-    ~WifiManager();
 
-    void ConfigureWifi();
-    void ConnectWifi();
+    /**
+     * \brief Destructor.
+     */
+    ~WifiManager();
+    
+    /**
+     * \brief Function to execute the Manager.
+     *
+     * \return Error Code.
+     */  
+    RC_e Run();
+    
+private:
+    char* m_ssid;       /** Wifi router name */
+    char* m_password;   /** Wifi password */ 
+    char* m_hostName;   /** ESP32 Hostname */
+
+    /**
+     * \brief Function to Configure the Wifi.
+     *
+     * \return Error code.
+     */
+    RC_e ConfigureWifi();
+
+    /**
+     * \brief Function to connect to a Wifi.
+     *
+     * \return Error code.
+     */
+    RC_e ConnectWifi();
+
+    /**
+     * \brief Wifi Event handler.
+     *
+     * \return void
+     */
     void WiFiEvent(WiFiEvent_t event,system_event_info_t info);
 
-    void ConfigureOTA();
-    void HandleOTA();
-   
+    /**
+     * \brief Wifi Event handler.
+     *
+     * \return Error code.
+     */
+    RC_e ConfigureOTA();
 
+    /**
+     * \brief Function to Handle the OTA.
+     *
+     * \return Error Code.
+     */
+    RC_e HandleOTA();
 
 };
 
