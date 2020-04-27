@@ -18,7 +18,6 @@
  *  												INCLUDES
  *******************************************************************************************************************************************/
 #include "WifiManager.h"
-#include "../Logger/Logger.h"
 
 /*******************************************************************************************************************************************
  *  												Constructor
@@ -60,9 +59,6 @@ RC_e WifiManager::Run(){
             return retCode;        
         }
     }
-
-    //Serial.println(logger.m_port);
-    //logger->Write("From WifiManager");
 
     return RC_e::SUCCESS;
 }

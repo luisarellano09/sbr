@@ -41,8 +41,6 @@ class Logger
 {
 public:  
 
-    uint16_t m_port;                                    /** Socket server port */
-
     /**
      * \brief Constructor.
      * \param host Socket server hostname.
@@ -51,24 +49,12 @@ public:
     Logger(char* host, uint16_t port);
 
     /**
-     * \brief Constructor.
-     */
-    Logger();
-
-    /**
      * \brief Destructor.
      */
     ~Logger();
 
     /**
-     * \brief Function to setup the logger.
-     * \param host Socket server hostname.
-     * \param port Socket server port.
-     */  
-    RC_e Setup(char* host, uint16_t port);
-
-    /**
-     * \brief Function to send a meesage to the logger.
+     * \brief Function to execute the Manager.
      * \param msg Message to send.
      * \return Error Code.
      */  
@@ -76,7 +62,7 @@ public:
     
 private:
     char * m_host;                                      /** Socket server hostname */
-    //uint16_t m_port;                                    /** Socket server port */
+    uint16_t m_port;                                    /** Socket server port */
     WiFiClient m_client;                                /** Wifi Client used for socket connection */
 
     /**

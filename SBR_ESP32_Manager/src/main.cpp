@@ -27,14 +27,14 @@
  *  												TEST
  *******************************************************************************************************************************************/
 
-#include <SPI.h>
-#define MO   22
-#define MI   23
-#define MCLK 19
-#define MS   18
+// #include <SPI.h>
+// #define MO   22
+// #define MI   23
+// #define MCLK 19
+// #define MS   18
 
-SPISettings spi_setting(1000000, MSBFIRST, 0);
-SPIClass master(VSPI);      // HSPI
+// SPISettings spi_setting(1000000, MSBFIRST, 0);
+// SPIClass master(VSPI);      // HSPI
 
 void test_setup();
 void test_run();
@@ -48,14 +48,14 @@ void test_run();
 char* ssid = "luiss10";
 char* password = "12345678";
 char* hostName = "SBR_ESP32_Manager";
-uint16_t logPort = 4000;
-char * logHost = "192.168.43.72"; //"ubuntudev.local";
+uint16_t loggerPort = 4000;
+char * loggerHost = "192.168.43.72"; //"ubuntudev.local";
 
 // Wifi instance
-WifiManager *wifiManager; 
+WifiManager* wifiManager; 
 
 // Logger instance
-Logger *logger; 
+Logger* logger;
 
 // Task declaration
 TaskHandle_t TaskCore0, TaskCore1;
@@ -179,6 +179,8 @@ void IRAM_ATTR onTimer3(){
 
 void setup() {
 
+
+
     // Serial Port
     Serial.begin(115200);
 
@@ -186,7 +188,8 @@ void setup() {
     wifiManager = new WifiManager(ssid, password, hostName);
 
     // Logger
-    logger = new Logger(logHost, logPort);
+    logger = new Logger(loggerHost, loggerPort);
+    //logger.Setup(loggerHost, loggerPort);
 
     // TEST
     test_setup();
@@ -273,5 +276,5 @@ void test_setup(){
 }
 
 void test_run(){
-
+    logger->Write("Putos todos!!");
 }

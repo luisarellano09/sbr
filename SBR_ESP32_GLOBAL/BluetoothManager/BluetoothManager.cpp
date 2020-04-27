@@ -1,14 +1,35 @@
-#include "./BluetoothManager.h"
+/**
+ * \file BluetoothManager.cpp
+ * \author Luis Arellano - luis.arellano09@gmail.com
+ * \author Jorge SALGADO - jorgesalgado23@gmail.com
+ * \date 16 April 2020
+ *
+ * \brief Class to Manage the Bluetooth
+ *
+ * 
+ * 
+ * Changes
+ * 16.04.2020: Class comments and RC_e concept
+ * 13.04.2020: Doc was created
+ * 
+ *
+ */
+
+
+/*******************************************************************************************************************************************
+ *  												INCLUDES
+ *******************************************************************************************************************************************/
+#include "BluetoothManager.h"
 
 #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
 #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
 #endif
 
 
-//####################### class BluetoothManager
-/**
- * \brief Configuration the Bluetooth.
- */
+/*******************************************************************************************************************************************
+ *  												Constructor
+ *******************************************************************************************************************************************/
+
 BluetoothManager::BluetoothManager(const char* nameDevice){
     /*Set attributes*/
     this->m_nameDevice = nameDevice;
@@ -19,13 +40,58 @@ BluetoothManager::BluetoothManager(const char* nameDevice){
 
 BluetoothManager::~BluetoothManager(){}
 
-
+/*******************************************************************************************************************************************
+ *  												Public Methods
+ *******************************************************************************************************************************************/
 void BluetoothManager::configBluetooth(){
 
     m_SerialBT.begin(this->m_nameDevice);           //name of device bluetooth
     m_SerialBT.setTimeout(TIME_OUT);                
 }
 
+RC_e BluetoothManager::Run(){
+    
+    RC_e retCode;
+
+    /*initialize variables*/
+    retCode = RC_e::ERROR;
+
+    // buffer to know if get the number of bytes corrects
+    if((retCode=CheckFrameAvaible())!= RC_e::SUCCESS)
+    {
+        #ifdef DEBUG
+            //Serial.print("Run()::CheckFrameAvaible retCode:");
+            //Serial.println(retCode,HEX);
+        #endif
+        return retCode;
+    }
+
+    /*initialize*/
+    uint8_t BufferLocal[FRAME_SIZE + NUMBER_BYTES_NEW_LINE];
+    COM_FRAME_st FrameLocal;
+    
+    if((retCode=CheckFrame(BufferLocal, &FrameLocal))!= RC_e::SUCCESS){
+        #ifdef DEBUG
+            Serial.print("Run()::CheckFrame retCode:");
+            Serial.println(retCode,HEX);
+        #endif
+        return retCode;
+    }
+
+    if((retCode=ExecuteFrame(&FrameLocal))!= RC_e::SUCCESS){
+        #ifdef DEBUG
+            Serial.print("Run()::ExecuteFrame retCode:");
+            Serial.println(retCode,HEX);
+        #endif
+        return retCode;
+    }
+
+    return RC_e::SUCCESS;
+}
+
+/*******************************************************************************************************************************************
+ *  												Private Methods
+ *******************************************************************************************************************************************/
 RC_e BluetoothManager::CheckFrameAvaible(){
     
     RC_e retCode = RC_e::ERROR;
@@ -123,43 +189,5 @@ RC_e BluetoothManager::ExecuteFrame(COM_FRAME_st* _frame){
     return retCode;
 }
 
-RC_e BluetoothManager::Run(){
-    
-    RC_e retCode;
 
-    /*initialize variables*/
-    retCode = RC_e::ERROR;
-
-    // buffer to know if get the number of bytes corrects
-    if((retCode=CheckFrameAvaible())!= RC_e::SUCCESS)
-    {
-        #ifdef DEBUG
-            //Serial.print("Run()::CheckFrameAvaible retCode:");
-            //Serial.println(retCode,HEX);
-        #endif
-        return retCode;
-    }
-
-    /*initialize*/
-    uint8_t BufferLocal[FRAME_SIZE + NUMBER_BYTES_NEW_LINE];
-    COM_FRAME_st FrameLocal;
-    
-    if((retCode=CheckFrame(BufferLocal, &FrameLocal))!= RC_e::SUCCESS){
-        #ifdef DEBUG
-            Serial.print("Run()::CheckFrame retCode:");
-            Serial.println(retCode,HEX);
-        #endif
-        return retCode;
-    }
-
-    if((retCode=ExecuteFrame(&FrameLocal))!= RC_e::SUCCESS){
-        #ifdef DEBUG
-            Serial.print("Run()::ExecuteFrame retCode:");
-            Serial.println(retCode,HEX);
-        #endif
-        return retCode;
-    }
-
-    return RC_e::SUCCESS;
-}
 

@@ -29,22 +29,11 @@ Logger::Logger(char* host, uint16_t port){
     Configure();
 }
 
-Logger::Logger(){}
-
 Logger::~Logger(){}
 
 /*******************************************************************************************************************************************
  *  												Public Methods
  *******************************************************************************************************************************************/
-
-RC_e Logger::Setup(char* host, uint16_t port){
-    this->m_host = host;
-    this->m_port = port;
-
-    if(Configure() != RC_e::SUCCESS){
-        return RC_e::ERROR_WIFI_CONNECTION;
-    }
-}
 
 RC_e Logger::Write(char* msg){
     // Result code
