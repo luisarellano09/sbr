@@ -8,6 +8,7 @@
  * 
  * 
  * Changes
+ * 30.04.2020: Add Manager system.
  * 16.04.2020: Class comments and RC_e concept
  * 13.04.2020: Doc was created
  * 
@@ -19,43 +20,34 @@
  *******************************************************************************************************************************************/
 
 #include <Arduino.h>
-#include "../lib/SBR_Global/Definition/GlobalDef.h"
-#include "../lib/SBR_Global/WifiManager/WifiManager.h"
-#include "../lib/SBR_Global/Logger/Logger.h"
+#include "./Manager/Manager.h"
 
 /*******************************************************************************************************************************************
  *  												TEST
  *******************************************************************************************************************************************/
+#include "../lib/SBR_Global/SpiSlave/SlaveSPI.h"
+#include <SPI.h>
 
-// #include <SPI.h>
-// #define MO   22
-// #define MI   23
-// #define MCLK 19
-// #define MS   18
+#define MO   22     // verde
+#define MI   23     // azul
+#define MCLK 19     // morado
+#define MS   18     // plomo
 
-// SPISettings spi_setting(1000000, MSBFIRST, 0);
-// SPIClass master(VSPI);      // HSPI
+SPISettings spi_setting(8000000, MSBFIRST, SPI_MODE0);
+SPIClass master(VSPI);      // HSPI
 
 void test_setup();
 void test_run();
+
+u8_t count = 0;
 
 
 /*******************************************************************************************************************************************
  *  												GLOBAL VARIABLES
  *******************************************************************************************************************************************/
 
-// Wifi parameters
-char* ssid = "luiss10";
-char* password = "12345678";
-char* hostName = "SBR_ESP32_Manager";
-uint16_t loggerPort = 4000;
-char * loggerHost = "192.168.43.72"; //"ubuntudev.local";
-
-// Wifi instance
-WifiManager* wifiManager; 
-
-// Logger instance
-Logger* logger;
+// Manager Instance
+Manager* manager;
 
 // Task declaration
 TaskHandle_t TaskCore0, TaskCore1;
@@ -98,10 +90,9 @@ void LoopCore0( void * parameter ){
             flagTimer1 = false;
 
             // ========== Code ==========
-                wifiManager->Run();
+                manager->m_wifiManager->Run();
             // ==========================
         }
-
         delay(1);
     }
 }
@@ -126,7 +117,6 @@ void LoopCore1( void * parameter ){
 
             // ==========================
         }
-
         delay(1);
     }
 }
@@ -179,33 +169,14 @@ void IRAM_ATTR onTimer3(){
 
 void setup() {
 
-
-
     // Serial Port
     Serial.begin(115200);
 
-    // Wifi Manager
-    wifiManager = new WifiManager(ssid, password, hostName);
-
-    // Logger
-    logger = new Logger(loggerHost, loggerPort);
-    //logger.Setup(loggerHost, loggerPort);
+    // Manager
+    manager = new Manager();
 
     // TEST
     test_setup();
-        // digitalWrite(SS, HIGH); // disable Slave Select
-        // SPI.begin();
-        // SPI.setClockDivider(SPI_CLOCK_DIV4);//divide the clock by 4
-
-
-
-
-        // // Setup Master-SPI
-        // pinMode(MS, OUTPUT);
-        // digitalWrite(MS, HIGH);
-        // pinMode(MCLK, OUTPUT);
-        // digitalWrite(MCLK, LOW);  // Due to SPI_MODE0
-        // master.begin(MCLK, MI, MO);
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -232,25 +203,25 @@ void setup() {
         1);         /* Core where the task should run */
 
     // Timer0
-    Serial.println("start timer 0");
+    manager->m_logger->Write("start timer 0");
     timer0 = timerBegin(0, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer0, &onTimer0, true); // edge (not level) triggered 
-    timerAlarmWrite(timer0, 100000, true); // 1000000 * 1 us = 1 s, autoreload true
+    timerAlarmWrite(timer0, 5000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer1
-    Serial.println("start timer 1");
+    manager->m_logger->Write("start timer 1");
     timer1 = timerBegin(1, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer1, &onTimer1, true); // edge (not level) triggered 
     timerAlarmWrite(timer1, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer2
-    Serial.println("start timer 2");
+    manager->m_logger->Write("start timer 2");
     timer2 = timerBegin(2, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer2, &onTimer2, true); // edge (not level) triggered 
     timerAlarmWrite(timer2, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer3
-    Serial.println("start timer 3");
+    manager->m_logger->Write("start timer 3");
     timer3 = timerBegin(3, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer3, &onTimer3, true); // edge (not level) triggered 
     timerAlarmWrite(timer3, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
@@ -271,10 +242,43 @@ void loop() {
     vTaskDelete(NULL);
 }
 
+
+
+
 void test_setup(){
+
+    // Setup Master-SPI
+    pinMode(MS, OUTPUT);
+    digitalWrite(MS, HIGH);
+    pinMode(MCLK, OUTPUT);
+    digitalWrite(MCLK, LOW);  // Due to SPI_MODE0
+    master.begin(MCLK, MI, MO);
+
+    quick_fix_spi_timing(master.bus());
 
 }
 
 void test_run(){
-    logger->Write("Putos todos!!");
+
+    master.beginTransaction(spi_setting);
+    digitalWrite(MS, LOW);
+
+    if (count>=99) count = 0;
+
+master.transfer(count++);
+master.transfer(count++);
+master.transfer(count++);
+master.transfer(count++);
+master.transfer(count++);
+master.transfer(count++);
+master.transfer(count++);
+master.transfer(count++);
+master.transfer(count++);
+master.transfer(count++);
+
+    digitalWrite(MS, HIGH);
+    master.endTransaction();
+
+    //manager->m_logger->Write("SPI sent");
+
 }

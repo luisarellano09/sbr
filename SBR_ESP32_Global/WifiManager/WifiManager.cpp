@@ -8,6 +8,7 @@
  * 
  * 
  * Changes
+ * 30.04.2020: Logger reference
  * 16.04.2020: Class comments and RC_e concept
  * 13.04.2020: Doc was created
  * 
@@ -34,6 +35,9 @@ WifiManager::WifiManager(char* ssid, char* password, char* hostName){
 
     // Configure OTA
     ConfigureOTA();
+
+    // Run
+    Run();
 }
 
 WifiManager::~WifiManager(){}
@@ -60,7 +64,13 @@ RC_e WifiManager::Run(){
         }
     }
 
+    //LoggerWrite("From WifiManager");
+
     return RC_e::SUCCESS;
+}
+
+RC_e WifiManager::SetLogger(Logger* logger){
+    this->m_logger = logger;
 }
 
 /*******************************************************************************************************************************************
@@ -225,6 +235,14 @@ RC_e WifiManager::ConfigureOTA(){
 
 RC_e WifiManager::HandleOTA(){
     ArduinoOTA.handle();
+    return RC_e::SUCCESS;
+}
+
+RC_e WifiManager::LoggerWrite(char* msg){
+    if(m_logger != NULL){
+        m_logger->Write(msg);
+    }
+    
     return RC_e::SUCCESS;
 }
 

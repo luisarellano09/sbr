@@ -8,10 +8,12 @@
  * 
  * 
  * Changes
+ * 30.04.2020: Add Wifimanager and logger instances.
  * 26.04.2020: Create Class
  * 
  *
  */
+
 
 /*******************************************************************************************************************************************
  *  												INCLUDES
@@ -21,7 +23,18 @@
 /*******************************************************************************************************************************************
  *  												Constructor
  *******************************************************************************************************************************************/
-Manager::Manager(){}
+Manager::Manager(){
+
+    // Wifi Manager
+    m_wifiManager = new WifiManager(SSID, PASSWORD, HOSTNAME);
+
+    // Logger
+    m_logger = new Logger(LOGGERHOST, LOGGERPORT);
+
+    // Connect references
+    m_wifiManager->SetLogger(m_logger);
+
+}
 
 Manager::~Manager(){}
 

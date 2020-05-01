@@ -8,6 +8,7 @@
  * 
  * 
  * Changes
+ * 30.04.2020: Add Manager system.
  * 16.04.2020: Class comments and RC_e concept
  * 13.04.2020: Doc was created
  * 
@@ -19,34 +20,39 @@
  *******************************************************************************************************************************************/
 
 #include <Arduino.h>
-#include "../lib/SBR_Global/WifiManager/WifiManager.h"
-#include "../lib/SBR_Global/Definition/GlobalDef.h"
-
+#include "./Manager/Manager.h"
 
 /*******************************************************************************************************************************************
  *  												TEST
  *******************************************************************************************************************************************/
+#include "../lib/SBR_Global/SpiSlave/SlaveSPI.h"
+#include <SPI.h>
 
-#include "./driver/spi_slave.h"
-//  * SPI pin numbers:
-//  * SCK   13  // Serial Clock.
-//  * MISO  12  // Master In Slave Out.
-//  * MOSI  11  // Master Out Slave In.
-//  * SS    10  // Slave Select
-void test();
+#define SO   (gpio_num_t)22     // azul
+#define SI   (gpio_num_t)23     // verde
+#define SCLK (gpio_num_t)19     // morado
+#define SS   (gpio_num_t)18     // plomo
+
+SlaveSPI slave(HSPI_HOST);  // VSPI_HOST
+
+#include "../lib/SBR_Global/SpiSlave/SimpleArray.h"
+
+typedef SimpleArray<uint8_t, int> array_t;
+
+array_t master_msg(SPI_DEFAULT_MAX_BUFFER_SIZE);
+array_t slave_msg(SPI_DEFAULT_MAX_BUFFER_SIZE);
+
+
+void test_setup();
+void test_run();
 
 
 /*******************************************************************************************************************************************
  *  												GLOBAL VARIABLES
  *******************************************************************************************************************************************/
 
-// Wifi parameters
-char* ssid = "luiss10";
-char* password = "12345678";
-char* hostName = "SBR_ESP32_MotionControl";
-
-// Wifi instance
-WifiManager *wifiManager; 
+// Manager Instance
+Manager* manager;
 
 // Task declaration
 TaskHandle_t TaskCore0, TaskCore1;
@@ -78,17 +84,23 @@ void LoopCore0( void * parameter ){
         // Code for Timer 0 interruption
         if (flagTimer0){
             flagTimer0 = false;
-            // Code 
-            Serial.println("TIMER 0");
+
+            // ========== Code ==========
+                
+            // ==========================
         }
 
         // Code for Timer 1 interruption
         if (flagTimer1){
             flagTimer1 = false;
-            // Code 
-            wifiManager->Run();
-            Serial.println("TIMER 1");
+
+            // ========== Code ==========
+                manager->m_wifiManager->Run();
+            // ==========================
         }
+
+        test_run();
+        
         delay(1);
     }
 }
@@ -99,15 +111,19 @@ void LoopCore1( void * parameter ){
         // Code for Timer 2 interruption
         if (flagTimer2){
             flagTimer2 = false;
-            // Code 
-            Serial.println("TIMER 2");
+
+            // ========== Code ==========
+
+            // ==========================
         }
 
         // Code for Timer 3 interruption
         if (flagTimer3){
             flagTimer3 = false;
-            // Code 
-            Serial.println("TIMER 3");
+
+            // ========== Code ==========
+
+            // ==========================
         }
         delay(1);
     }
@@ -164,12 +180,13 @@ void setup() {
     // Serial Port
     Serial.begin(115200);
 
+    // Manager
+    manager = new Manager();
+
     // TEST
-    test();
+    test_setup();
 
-
-    // Wifi Manager
-    wifiManager = new WifiManager(ssid, password, hostName);
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // Task of core 0
     xTaskCreatePinnedToCore(
@@ -194,31 +211,31 @@ void setup() {
         1);         /* Core where the task should run */
 
     // Timer0
-    Serial.println("start timer 0");
+    manager->m_logger->Write("start timer 0");
     timer0 = timerBegin(0, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer0, &onTimer0, true); // edge (not level) triggered 
-    timerAlarmWrite(timer0, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
+    timerAlarmWrite(timer0, 100000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer1
-    Serial.println("start timer 1");
+    manager->m_logger->Write("start timer 1");
     timer1 = timerBegin(1, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer1, &onTimer1, true); // edge (not level) triggered 
     timerAlarmWrite(timer1, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer2
-    Serial.println("start timer 2");
+    manager->m_logger->Write("start timer 2");
     timer2 = timerBegin(2, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer2, &onTimer2, true); // edge (not level) triggered 
     timerAlarmWrite(timer2, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer3
-    Serial.println("start timer 3");
+    manager->m_logger->Write("start timer 3");
     timer3 = timerBegin(3, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer3, &onTimer3, true); // edge (not level) triggered 
     timerAlarmWrite(timer3, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Enable the timer alarms
-    //timerAlarmEnable(timer0); // enable
+    timerAlarmEnable(timer0); // enable
     timerAlarmEnable(timer1); // enable
     //timerAlarmEnable(timer2); // enable
     //timerAlarmEnable(timer3); // enable
@@ -233,7 +250,27 @@ void loop() {
     vTaskDelete(NULL);
 }
 
-void test(){
+void test_setup(){
+    slave.begin(SO, SI, SCLK, SS, 10);
+}
 
+void test_run(){
+    //manager->m_logger->Write("Putos todos!!");
+    if (slave.getInputStream()->length() > 0 && digitalRead(SS) == HIGH) {  // Slave SPI has got data in.
+        while (slave.getInputStream()->length()) {
+            slave.readToArray(slave_msg);  // Not the sample read() as Serial
+        }
+        //manager->m_logger->Write("slave input: ");
+        //printlnHex(slave_msg);
+        //for (int i = 0; i < slave_msg.length(); i++) {
+            int a = slave_msg[0] + slave_msg[1] + slave_msg[2] + slave_msg[3] + slave_msg[4] + slave_msg[5] + slave_msg[6] + slave_msg[7] + slave_msg[8] + slave_msg[9];
+            Serial.println(a);            
+            //manager->m_logger->WriteValue(slave_msg[i]);
+        //}
+        //Serial.println("================================");
+        slave_msg.clear();
+        slave.flushInputStream();
+    }
+    //Serial.println()
 
 }

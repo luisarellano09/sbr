@@ -18,7 +18,7 @@
 #ifndef GLOBALDEF_H
 #define GLOBALDEF_H
 
-
+#include <Arduino.h>
 
 /*******************************************************************************************************************************************
  *  												RESULT CODE
@@ -33,7 +33,7 @@ enum RC_e{
 	ERROR_CRC,		                                             	/**< \brief Error CRC Validation				*/
     ERROR_WIFI_CONNECTION                                           /**< \brief Error Wifi connection   			*/
 } ;
-
+ 
 
 /*******************************************************************************************************************************************
  *  												SBR REGISTER ID ADDRESSES

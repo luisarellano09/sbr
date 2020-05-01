@@ -32,8 +32,8 @@
 
 #define SSID "luiss10"
 #define PASSWORD "12345678"
-#define HOSTNAME "SBR_ESP32_Manager"
-#define LOGGERPORT (uint16_t)4000
+#define HOSTNAME "SBR_ESP32_MotionControl"
+#define LOGGERPORT (uint16_t)4001
 #define LOGGERHOST "ubuntudev"
 
 
