@@ -7,11 +7,12 @@
  * \brief All globla definitions of SBR Project.
  * 
  * Changes
- * V.1.4 -> 16.04.2020: [LA] RC_e update 
- * V.1.3 -> 14.04.2020: [JS] new ERRORS ENUM added 
- * V.1.2 -> 14.04.2020: [LA] Communication enums and struct
- * V.1.1 -> 14.04.2020: [JS] Comment header was added.
- * V.1.0 -> 13.04.2020: [LA] Doc was created
+ * 03.05.2020: [LA] 
+ * 16.04.2020: [LA] RC_e update 
+ * 14.04.2020: [JS] new ERRORS ENUM added 
+ * 14.04.2020: [LA] Communication enums and struct
+ * 14.04.2020: [JS] Comment header was added.
+ * 13.04.2020: [LA] Doc was created
  *
  *
  */
@@ -110,13 +111,12 @@ enum COM_FRAME_REQ_e{
 
 
 /** \brief Structure to define the communication frame. */
-
 struct COM_FRAME_st
 {
-    uint8_t    comFrameReq;        /**< Some documentation for the member myStruct_t#a. */
-    uint8_t    comFrameRegId;      /**< Some documentation for the member myStruct_t#b. */
-    uint32_t   data;
-    uint16_t   CRC;                
+    uint8_t    comFrameReq;         /**< Request type: Read or Write. */
+    uint8_t    comFrameRegId;       /**< Request ID. */
+    uint32_t   data;                /**< Data payload. */
+    uint16_t   CRC;                 /**< Frame consistency. */
 };
 
 

@@ -34,13 +34,19 @@
 #define MS   18     // plomo
 
 SPISettings spi_setting(8000000, MSBFIRST, SPI_MODE0);
-SPIClass master(VSPI);      // HSPI
+SPIClass master(HSPI);      // VSPI
 
 void test_setup();
 void test_run();
+void test_run_read();
 
-u8_t count = 0;
+void test_TX_frame();
+void test_RX_frame();
 
+#define FRAME_SIZE              (uint8_t)8u                 /*Number of Bytes of the Frame*/
+COM_FRAME_st localFrame;
+
+u32_t count = 0;
 
 /*******************************************************************************************************************************************
  *  												GLOBAL VARIABLES
@@ -81,7 +87,10 @@ void LoopCore0( void * parameter ){
             flagTimer0 = false;
 
             // ========== Code ==========
-                test_run();
+                //test_run();
+                //test_run_read();
+                //test_TX_frame();
+                test_RX_frame();
             // ==========================
         }
 
@@ -206,7 +215,7 @@ void setup() {
     manager->m_logger->Write("start timer 0");
     timer0 = timerBegin(0, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer0, &onTimer0, true); // edge (not level) triggered 
-    timerAlarmWrite(timer0, 5000, true); // 1000000 * 1 us = 1 s, autoreload true
+    timerAlarmWrite(timer0, 2000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer1
     manager->m_logger->Write("start timer 1");
@@ -258,6 +267,10 @@ void test_setup(){
 
 }
 
+
+
+
+
 void test_run(){
 
     master.beginTransaction(spi_setting);
@@ -265,20 +278,156 @@ void test_run(){
 
     if (count>=99) count = 0;
 
-master.transfer(count++);
-master.transfer(count++);
-master.transfer(count++);
-master.transfer(count++);
-master.transfer(count++);
-master.transfer(count++);
-master.transfer(count++);
-master.transfer(count++);
-master.transfer(count++);
-master.transfer(count++);
+    master.transfer(count++);
+    master.transfer(count++);
+    master.transfer(count++);
+    master.transfer(count++);
+    master.transfer(count++);
+    master.transfer(count++);
+    master.transfer(count++);
+    master.transfer(count++);
+    master.transfer(count++);
+    master.transfer(count++);
+
+    digitalWrite(MS, HIGH);
+    master.endTransaction();
+}
+
+void test_run_read(){
+    
+    // Read
+
+    uint32_t fb1 = 0;
+    uint8_t fb2 = 0;
+    uint8_t data[8] = {1u};
+
+    master.beginTransaction(spi_setting);
+    digitalWrite(MS, LOW);
+
+    //fb1 = master.transfer32(0) ;
+    //fb2 = master.transfer(0);
+    master.transferBytes(data, data, 8);
+
+    digitalWrite(MS, HIGH);
+    master.endTransaction();
+    Serial.println("================================");
+    // Serial.print("Byte1: ");
+    // Serial.println((byte)fb1);
+    // Serial.print("Byte2: ");
+    // Serial.println((byte)(fb1>>8));
+    // Serial.print("Byte3: ");
+    // Serial.println((byte)(fb1>>16));
+    // Serial.print("Byte4: ");
+    // Serial.println((byte)(fb1>>24));
+
+    Serial.print("Byte1: ");
+    Serial.println(data[0]);
+    Serial.print("Byte2: ");
+    Serial.println(data[1]);
+    Serial.print("Byte3: ");
+    Serial.println(data[2]);
+    Serial.print("Byte4: ");
+    Serial.println(data[3]);
+    Serial.print("Byte5: ");
+    Serial.println(data[4]);
+    Serial.print("Byte6: ");
+    Serial.println(data[5]);
+    Serial.print("Byte7: ");
+    Serial.println(data[6]);
+    Serial.print("Byte8: ");
+    Serial.println(data[7]);
+
+    //Serial.println(data[0]);
+    //Serial.println(data[1]);
+    
+
+}
+
+// void test_run_read(){
+    
+//     // Read
+
+//     uint8_t fb = 0;
+
+//     master.beginTransaction(spi_setting);
+//     digitalWrite(MS, LOW);
+
+//     fb = master.transfer(0);
+
+//     digitalWrite(MS, HIGH);
+//     master.endTransaction();
+//     Serial.println(fb);
+
+// }
+
+void test_TX_frame(){
+
+    localFrame.comFrameReq = COM_FRAME_REQ_e::WRITE;
+    localFrame.comFrameRegId = COM_FRAME_REG_ID_e::TLF_DEVCFG2;
+    localFrame.data = count++;
+    localFrame.CRC = 69;
+
+    uint8_t buffer[FRAME_SIZE];
+
+    buffer[0] = localFrame.comFrameReq;
+    buffer[1] = localFrame.comFrameRegId;
+    buffer[2] = (byte)localFrame.data;
+    buffer[3] = (byte)(localFrame.data>>8);
+    buffer[4] = (byte)(localFrame.data>>16);
+    buffer[5] = (byte)(localFrame.data>>24);
+    buffer[6] = (byte)localFrame.CRC;
+    buffer[7] = (byte)(localFrame.CRC>>8);
+    
+    master.beginTransaction(spi_setting);
+    digitalWrite(MS, LOW);
+
+    for(int i=0; i<FRAME_SIZE; i++){
+        master.transfer(buffer[i]);
+    }
+
+    digitalWrite(MS, HIGH);
+    master.endTransaction();
+}
+
+void test_RX_frame(){
+
+    uint8_t buffer[FRAME_SIZE] = {0};
+
+    master.beginTransaction(spi_setting);
+    digitalWrite(MS, LOW);
+
+    master.transferBytes(buffer, buffer, 8);
 
     digitalWrite(MS, HIGH);
     master.endTransaction();
 
-    //manager->m_logger->Write("SPI sent");
+    COM_FRAME_st localFrame;
+
+    /*---------REQUEST--------*/
+    localFrame.comFrameReq = buffer[0];
+
+    /*------------ID----------*/
+    localFrame.comFrameRegId = buffer[1];
+
+    /*------------DATA----------*/
+    localFrame.data = (buffer[2]);
+    localFrame.data += (buffer[3])<<8;
+    localFrame.data+= (buffer[4])<<16;
+    localFrame.data += (buffer[5])<<24;
+
+    /*|-----------------CRC-------------------|*/ 
+    localFrame.CRC = buffer[6];
+    localFrame.CRC += (buffer[7])<<8;
+
+    Serial.println("============== RX ==================");
+    Serial.print("Req: ");
+    Serial.println(localFrame.comFrameReq);
+    Serial.print("ReqID: ");
+    Serial.println(localFrame.comFrameRegId);
+    Serial.print("Data: ");
+    Serial.println(localFrame.data);
+    Serial.print("CRC: ");
+    Serial.println(localFrame.CRC);
+
 
 }

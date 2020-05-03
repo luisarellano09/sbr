@@ -30,7 +30,7 @@
  *  												DEFINE
  *******************************************************************************************************************************************/
 
-#define SSID "luiss10"
+#define SSID "ap01"
 #define PASSWORD "12345678"
 #define HOSTNAME "SBR_ESP32_Manager"
 #define LOGGERPORT (uint16_t)4000

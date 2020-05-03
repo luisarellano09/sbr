@@ -62,6 +62,7 @@ class SlaveSPI {
     
     inline array_t * getInputStream() { return &input_stream; }
     inline void      flushInputStream() { input_stream.clear(); }
+    inline void      flushOutputStream() { output_stream.clear(); } // LA
 };
 
 
