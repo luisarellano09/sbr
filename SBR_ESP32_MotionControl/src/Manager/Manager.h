@@ -21,9 +21,9 @@
  *  												INCLUDES
  *******************************************************************************************************************************************/
 
-#include "../../lib/SBR_Global/Definition/GlobalDef.h"
-#include "../../lib/SBR_Global/WifiManager/WifiManager.h"
-#include "../../lib/SBR_Global/Logger/Logger.h"
+#include "../../lib/Definition/GlobalDef.h"
+#include "../../lib/WifiManager/WifiManager.h"
+#include "../../lib/Logger/Logger.h"
 
 
 /*******************************************************************************************************************************************

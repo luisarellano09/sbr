@@ -7,7 +7,7 @@
  * \brief All globla definitions of SBR Project.
  * 
  * Changes
- * 03.05.2020: [LA] 
+ * 03.05.2020: [LA] RC_e update
  * 16.04.2020: [LA] RC_e update 
  * 14.04.2020: [JS] new ERRORS ENUM added 
  * 14.04.2020: [LA] Communication enums and struct
@@ -107,6 +107,7 @@ enum COM_FRAME_REG_ID_e{
 enum COM_FRAME_REQ_e{
 	READ							=0x0,							/**< \brief Read operation*/
 	WRITE							=0x1,							/**< \brief Write operation*/
+    STOP							=0x2,							/**< \brief STOP operation*/
 };
 
 

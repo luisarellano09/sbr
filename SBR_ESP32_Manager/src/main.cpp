@@ -25,16 +25,6 @@
 /*******************************************************************************************************************************************
  *  												TEST
  *******************************************************************************************************************************************/
-#include "../lib/SBR_Global/SpiSlave/SlaveSPI.h"
-#include <SPI.h>
-
-#define MO   22     // verde
-#define MI   23     // azul
-#define MCLK 19     // morado
-#define MS   18     // plomo
-
-SPISettings spi_setting(8000000, MSBFIRST, SPI_MODE0);
-SPIClass master(HSPI);      // VSPI
 
 void test_setup();
 void test_run();
@@ -43,10 +33,8 @@ void test_run_read();
 void test_TX_frame();
 void test_RX_frame();
 
-#define FRAME_SIZE              (uint8_t)8u                 /*Number of Bytes of the Frame*/
-COM_FRAME_st localFrame;
 
-u32_t count = 0;
+
 
 /*******************************************************************************************************************************************
  *  												GLOBAL VARIABLES
@@ -257,13 +245,7 @@ void loop() {
 void test_setup(){
 
     // Setup Master-SPI
-    pinMode(MS, OUTPUT);
-    digitalWrite(MS, HIGH);
-    pinMode(MCLK, OUTPUT);
-    digitalWrite(MCLK, LOW);  // Due to SPI_MODE0
-    master.begin(MCLK, MI, MO);
 
-    quick_fix_spi_timing(master.bus());
 
 }
 
@@ -273,6 +255,7 @@ void test_setup(){
 
 void test_run(){
 
+/*
     master.beginTransaction(spi_setting);
     digitalWrite(MS, LOW);
 
@@ -291,10 +274,12 @@ void test_run(){
 
     digitalWrite(MS, HIGH);
     master.endTransaction();
+
+    */
 }
 
 void test_run_read(){
-    
+    /*
     // Read
 
     uint32_t fb1 = 0;
@@ -340,7 +325,7 @@ void test_run_read(){
     //Serial.println(data[0]);
     //Serial.println(data[1]);
     
-
+*/
 }
 
 // void test_run_read(){
@@ -362,6 +347,8 @@ void test_run_read(){
 
 void test_TX_frame(){
 
+
+/*
     localFrame.comFrameReq = COM_FRAME_REQ_e::WRITE;
     localFrame.comFrameRegId = COM_FRAME_REG_ID_e::TLF_DEVCFG2;
     localFrame.data = count++;
@@ -387,9 +374,13 @@ void test_TX_frame(){
 
     digitalWrite(MS, HIGH);
     master.endTransaction();
+
+    */
 }
 
 void test_RX_frame(){
+
+    /*
 
     uint8_t buffer[FRAME_SIZE] = {0};
 
@@ -403,19 +394,19 @@ void test_RX_frame(){
 
     COM_FRAME_st localFrame;
 
-    /*---------REQUEST--------*/
+    //---------REQUEST--------
     localFrame.comFrameReq = buffer[0];
 
-    /*------------ID----------*/
+    //------------ID----------
     localFrame.comFrameRegId = buffer[1];
 
-    /*------------DATA----------*/
+    //------------DATA----------
     localFrame.data = (buffer[2]);
     localFrame.data += (buffer[3])<<8;
     localFrame.data+= (buffer[4])<<16;
     localFrame.data += (buffer[5])<<24;
 
-    /*|-----------------CRC-------------------|*/ 
+    //|-----------------CRC-------------------|
     localFrame.CRC = buffer[6];
     localFrame.CRC += (buffer[7])<<8;
 
@@ -428,6 +419,8 @@ void test_RX_frame(){
     Serial.println(localFrame.data);
     Serial.print("CRC: ");
     Serial.println(localFrame.CRC);
+
+*/
 
 
 }

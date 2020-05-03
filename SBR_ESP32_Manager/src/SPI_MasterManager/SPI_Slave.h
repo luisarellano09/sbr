@@ -1,31 +1,26 @@
 /**
- * \file Manager.cpp
+ * \file SPI_Slave.h
  * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 26 April 2020
+ * \date 03.05.2020
  *
- * \brief Class to Manager the ESP32.
+ * \brief Class to describe a SPI Slave.
  *
  * 
  * 
  * Changes
- * 30.04.2020: Add Wifimanager and logger instances.
- * 26.04.2020: Create Class.
+ * 03.05.2020: Class was created
  * 
  *
  */
 
-#ifndef MANAGER_H
-#define MANAGER_H
+#ifndef SPI_SLAVE_H
+#define SPI_SLAVE_H
 
 /*******************************************************************************************************************************************
- *  												INCLUDES
+ *  												Includes
  *******************************************************************************************************************************************/
-
 #include "../../lib/Definition/GlobalDef.h"
 #include "../Definition/LocalDef.h"
-#include "../../lib/WifiManager/WifiManager.h"
-#include "../../lib/Logger/Logger.h"
-#include "../SPI_MasterManager/SPI_MasterManager.h"
 
 
 /*******************************************************************************************************************************************
@@ -33,30 +28,45 @@
  *******************************************************************************************************************************************/
 
 /**
- * \brief Class to Manage the ESP32.
+ * \brief Class to describe a SPI Slave.
  */
-class Manager
+class SPI_Slave
 {
 public:  
-
-    WifiManager* m_wifiManager = NULL;              /** Instance for Wifimanager. */
-    SPI_MasterManager* m_SPI_MasterManager = NULL;  /** Instance for SPI Master Manager. */
-    Logger* m_logger = NULL;                        /** Instance for Logger. */
 
     /**
      * \brief Constructor.
      */
-    Manager();
+    SPI_Slave();
 
     /**
      * \brief Destructor.
      */
-    ~Manager();
+    ~SPI_Slave();
 
-   
+    /**
+     * \brief Function to set the Chip Select.
+     */
+    void SetCS(uint8_t _CS);
+
+
+    /**
+     * \brief Add frame to the buffer.
+     */
+    RC_e AddFrame(COM_FRAME_REQ_e _req, COM_FRAME_REG_ID_e _id, uint32_t _data);  
+
+    /**
+     * \brief Clean Buffer of frames.
+     */
+    RC_e CleanBuffer();  
+
+    uint8_t m_CS;                                           /** Chip Select Pin. */
+    COM_FRAME_st m_FrameBuffer[SPI_SLAVE_BUFFER_SIZE];      /** Array of frames. */
+    int8_t m_FrameBufferIndex;
+
 private:
 
 
 };
 
-#endif // LOGGER_H
+#endif // SPI_SLAVE_H

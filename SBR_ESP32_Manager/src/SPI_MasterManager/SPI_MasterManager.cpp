@@ -1,55 +1,83 @@
 /**
- * \file Manager.cpp
+ * \file SPI_MasterManager.cpp
  * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 26 April 2020
+ * \date 03.05.2020
  *
- * \brief Class to Manager the ESP32.
+ * \brief Class to Manage the SPI Master
  *
  * 
  * 
  * Changes
- * 30.04.2020: Add Wifimanager and logger instances.
- * 26.04.2020: Create Class
+ * 03.05.2020: Create Class
  * 
  *
  */
 
-
 /*******************************************************************************************************************************************
- *  												INCLUDES
+ *  												Includes
  *******************************************************************************************************************************************/
-#include "Manager.h"
+#include "SPI_MasterManager.h"
 
 /*******************************************************************************************************************************************
  *  												Constructor
  *******************************************************************************************************************************************/
-Manager::Manager(){
 
-    // Wifi Manager
-    m_wifiManager = new WifiManager(WIFI_SSID, WIFI_PASSWORD, ESP32_HOSTNAME);
+SPI_MasterManager::SPI_MasterManager(uint32_t _clock, uint8_t _MO, uint8_t _MI, uint8_t _MCLK){
 
-    // SPI Master Manager
-    m_SPI_MasterManager = new SPI_MasterManager(SPI_CLOCK, MO, MI, MCLK);
-    m_SPI_MasterManager->SetSlave(ESP32_Slave_e::MOTION, MOTION_CS);   // ESP32 - Motion Control
-
-    // Logger
-    m_logger = new Logger(LOGGER_HOST, LOGGER_PORT);
-
-    // Connect references
-    m_wifiManager->SetLogger(m_logger);
+    SPIConfigure(_clock, _MO, _MI, _MCLK);
 
 }
 
-Manager::~Manager(){}
+SPI_MasterManager::~SPI_MasterManager(){}
 
 /*******************************************************************************************************************************************
  *  												Public Methods
  *******************************************************************************************************************************************/
 
+RC_e SPI_MasterManager::SetSlave(ESP32_Slave_e slave, uint8_t _CS){
 
+    this->m_SPI_Slaves[slave].m_CS = _CS;
+    this->m_SPI_Slaves[slave].CleanBuffer();
+    
+    return RC_e::SUCCESS;
+}
 
+RC_e SPI_MasterManager::Run(){
+    // Error code
+    RC_e retCode = RC_e::ERROR;
 
+    return RC_e::SUCCESS;
+}
+
+RC_e SPI_MasterManager::SetLogger(Logger* logger){
+    this->m_logger = logger;
+}
 
 /*******************************************************************************************************************************************
  *  												Private Methods
  *******************************************************************************************************************************************/
+
+RC_e SPI_MasterManager::SPIConfigure(uint32_t _clock, uint8_t _MO, uint8_t _MI, uint8_t _MCLK){
+    this->m_spi_setting = SPISettings(_clock, MSBFIRST, SPI_MODE0);
+    this->m_master = SPIClass(HSPI);  
+
+    pinMode(MS, OUTPUT);
+    digitalWrite(MS, HIGH);
+
+    pinMode(_MCLK, OUTPUT);
+    digitalWrite(_MCLK, LOW);  // Due to SPI_MODE0
+    m_master.begin(_MCLK, _MI, _MO);
+
+    quick_fix_spi_timing(m_master.bus()); 
+
+    return RC_e::SUCCESS;
+}
+
+RC_e SPI_MasterManager::LoggerWrite(char* msg){
+    if(m_logger != NULL){
+        m_logger->Write(msg);
+    }
+    
+    return RC_e::SUCCESS;
+}
+

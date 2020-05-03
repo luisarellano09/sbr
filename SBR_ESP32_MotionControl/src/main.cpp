@@ -25,7 +25,7 @@
 /*******************************************************************************************************************************************
  *  												TEST
  *******************************************************************************************************************************************/
-#include "../lib/SBR_Global/SpiSlave/SlaveSPI.h"
+#include "../lib/SlaveSPI/SlaveSPI.h"
 #include <SPI.h>
 
 #define SO   (gpio_num_t)22     // azul
@@ -35,7 +35,7 @@
 
 SlaveSPI slave(HSPI_HOST);   // VSPI_HOST
 
-#include "../lib/SBR_Global/SpiSlave/SimpleArray.h"
+#include "../lib/SlaveSPI/SimpleArray.h"
 
 typedef SimpleArray<uint8_t, int> array_t;
 
