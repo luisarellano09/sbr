@@ -16,11 +16,42 @@
  */
 
 /*******************************************************************************************************************************************
- *  												INCLUDES
+ *  												INCLUDES - ARDUINO
  *******************************************************************************************************************************************/
-
 #include <Arduino.h>
+#include "soc/soc.h"
+#include "soc/rtc_cntl_reg.h"
+
+/*******************************************************************************************************************************************
+ *  												INCLUDES - SBR
+ *******************************************************************************************************************************************/
 #include "./Manager/Manager.h"
+
+/*******************************************************************************************************************************************
+ *  												GLOBAL VARIABLES
+ *******************************************************************************************************************************************/
+// Manager Instance
+Manager* manager;
+
+// Task declaration
+TaskHandle_t TaskCore0, TaskCore1;
+
+// Timer declaration
+hw_timer_t * timer0 = NULL;
+hw_timer_t * timer1 = NULL;
+hw_timer_t * timer2 = NULL;
+hw_timer_t * timer3 = NULL;
+portMUX_TYPE timerMux0 = portMUX_INITIALIZER_UNLOCKED;
+portMUX_TYPE timerMux1 = portMUX_INITIALIZER_UNLOCKED;
+portMUX_TYPE timerMux2 = portMUX_INITIALIZER_UNLOCKED;
+portMUX_TYPE timerMux3 = portMUX_INITIALIZER_UNLOCKED;
+
+// Timer Flags
+bool flagTimer0 = false;
+bool flagTimer1 = false;
+bool flagTimer2 = false;
+bool flagTimer3 = false;
+
 
 /*******************************************************************************************************************************************
  *  												TEST
@@ -48,52 +79,32 @@ void test_run();
 void test_run_read();
 
 #define FRAME_SIZE              (uint8_t)8u                 /*Number of Bytes of the Frame*/
-void test_Get_frame();
+void test_Get_frames();
+void test_Get_frame(array_t* buffer);
 void test_RX_frame(COM_FRAME_st localFrame);
 void test_TX_frame();
 
 u32_t count = 0;
 
-/*******************************************************************************************************************************************
- *  												GLOBAL VARIABLES
- *******************************************************************************************************************************************/
+u32_t count_logger = 0;
 
-// Manager Instance
-Manager* manager;
-
-// Task declaration
-TaskHandle_t TaskCore0, TaskCore1;
-
-// Timer declaration
-hw_timer_t * timer0 = NULL;
-hw_timer_t * timer1 = NULL;
-hw_timer_t * timer2 = NULL;
-hw_timer_t * timer3 = NULL;
-portMUX_TYPE timerMux0 = portMUX_INITIALIZER_UNLOCKED;
-portMUX_TYPE timerMux1 = portMUX_INITIALIZER_UNLOCKED;
-portMUX_TYPE timerMux2 = portMUX_INITIALIZER_UNLOCKED;
-portMUX_TYPE timerMux3 = portMUX_INITIALIZER_UNLOCKED;
-
-// Timer Flags
-bool flagTimer0 = false;
-bool flagTimer1 = false;
-bool flagTimer2 = false;
-bool flagTimer3 = false;
+u32_t test_data = 0;
 
 
 /*******************************************************************************************************************************************
  *  												CORE LOOPS
  *******************************************************************************************************************************************/
-
 // Loop of core 0
 void LoopCore0( void * parameter ){
+
     while(true) {
+
         // Code for Timer 0 interruption
         if (flagTimer0){
             flagTimer0 = false;
 
             // ========== Code ==========
-                //test_run_read();
+
             // ==========================
         }
 
@@ -102,14 +113,14 @@ void LoopCore0( void * parameter ){
             flagTimer1 = false;
 
             // ========== Code ==========
-                manager->m_wifiManager->Run();
+                manager->m_wifiManager->RunOTA();
+                delay(1); // To feed the WDT
             // ==========================
         }
 
+        test_Get_frames();
         //test_run();
-        test_Get_frame();
 
-        delay(1);
     }
 }
 
@@ -121,7 +132,7 @@ void LoopCore1( void * parameter ){
             flagTimer2 = false;
 
             // ========== Code ==========
-
+            manager->m_logger->WriteValue(count_logger++);
             // ==========================
         }
 
@@ -133,15 +144,16 @@ void LoopCore1( void * parameter ){
 
             // ==========================
         }
+
+        manager->m_logger->Run();
+
         delay(1);
     }
 }
 
-
 /*******************************************************************************************************************************************
  *  												TIMERS
  *******************************************************************************************************************************************/
-
 // TIMER 0
 void IRAM_ATTR onTimer0(){
     portENTER_CRITICAL_ISR(&timerMux0);
@@ -178,12 +190,13 @@ void IRAM_ATTR onTimer3(){
     portEXIT_CRITICAL_ISR(&timerMux3);
 }
 
-
 /*******************************************************************************************************************************************
  *  												SETUP
  *******************************************************************************************************************************************/
-
 void setup() {
+
+    // Disable brownout detector
+    WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); 
 
     // Serial Port
     Serial.begin(115200);
@@ -191,8 +204,11 @@ void setup() {
     // Manager
     manager = new Manager();
 
+    delay(1000);
     // TEST
     test_setup();
+
+    delay(1000);
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -219,25 +235,25 @@ void setup() {
         1);         /* Core where the task should run */
 
     // Timer0
-    manager->m_logger->Write("start timer 0");
+    //manager->m_logger->Write("start timer 0");
     timer0 = timerBegin(0, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer0, &onTimer0, true); // edge (not level) triggered 
-    timerAlarmWrite(timer0, 100000, true); // 1000000 * 1 us = 1 s, autoreload true
+    timerAlarmWrite(timer0, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer1
-    manager->m_logger->Write("start timer 1");
+    //manager->m_logger->Write("start timer 1");
     timer1 = timerBegin(1, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer1, &onTimer1, true); // edge (not level) triggered 
-    timerAlarmWrite(timer1, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
+    timerAlarmWrite(timer1, 2000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer2
-    manager->m_logger->Write("start timer 2");
+    //manager->m_logger->Write("start timer 2");
     timer2 = timerBegin(2, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer2, &onTimer2, true); // edge (not level) triggered 
     timerAlarmWrite(timer2, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer3
-    manager->m_logger->Write("start timer 3");
+    //manager->m_logger->Write("start timer 3");
     timer3 = timerBegin(3, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer3, &onTimer3, true); // edge (not level) triggered 
     timerAlarmWrite(timer3, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
@@ -245,9 +261,8 @@ void setup() {
     // Enable the timer alarms
     timerAlarmEnable(timer0); // enable
     timerAlarmEnable(timer1); // enable
-    //timerAlarmEnable(timer2); // enable
+    timerAlarmEnable(timer2); // enable
     //timerAlarmEnable(timer3); // enable
-
 }
 
 /*******************************************************************************************************************************************
@@ -264,7 +279,7 @@ void test_setup(){
 
 void test_run(){
     //manager->m_logger->Write("Putos todos!!");
-    if (slave.getInputStream()->length() > 0 && digitalRead(SS) == HIGH) {  // Slave SPI has got data in.
+    if (slave.getInputStream()->length() >= 128 && digitalRead(SS) == HIGH) {  // Slave SPI has got data in.
         while (slave.getInputStream()->length()) {
             slave.readToArray(slave_msg);  // Not the sample read() as Serial
         }
@@ -281,7 +296,7 @@ void test_run(){
         slave_msg.clear();
         slave.flushInputStream();
 
-        test_run_read();  
+        //test_run_read();  
     }
 }
 
@@ -312,56 +327,105 @@ void test_run_read(){
 }
 
 
-void test_Get_frame(){
+void test_Get_frames(){
 
-    if (slave.getInputStream()->length() == FRAME_SIZE && digitalRead(SS) == HIGH) {  // Slave SPI has got data in.
+    // Get length of the buffer stream
+    int length = slave.getInputStream()->length();
 
-        array_t buffer(FRAME_SIZE);
+    if (length >= 32 && digitalRead(SS) == HIGH) {  // Slave SPI has got data in.
+
+        array_t _buffer(length);
 
         while (slave.getInputStream()->length()) {
-            slave.readToArray(buffer);
+            slave.readToArray(_buffer);
         }
 
-        // local frame
-        COM_FRAME_st localFrame;
-
-        /*---------REQUEST--------*/
-        localFrame.comFrameReq = buffer[0];
-
-        /*------------ID----------*/
-        localFrame.comFrameRegId = buffer[1];
-
-        /*------------DATA----------*/
-        localFrame.data = (buffer[2]);
-        localFrame.data += (buffer[3])<<8;
-        localFrame.data+= (buffer[4])<<16;
-        localFrame.data += (buffer[5])<<24;
-
-        /*|-----------------CRC-------------------|*/ 
-        localFrame.CRC = buffer[6];
-        localFrame.CRC += (buffer[7])<<8;
-
-        if(localFrame.comFrameReq == COM_FRAME_REQ_e::WRITE){
-            test_RX_frame(localFrame);
-        } else if(localFrame.comFrameReq == COM_FRAME_REQ_e::READ){
-            test_TX_frame();
-        }
-
+        // Flush the input buffer
         slave.flushInputStream();
+        
+        for(int i=0; i<length/FRAME_SIZE; i++){
+            // Create Buffer for one frame
+            array_t _bufferOneFrame(FRAME_SIZE);
+
+            // Calculate offset
+            auto _offset = FRAME_SIZE*i;
+
+            // Assign buffer bytes
+            _bufferOneFrame.append(_buffer[_offset + 0]);
+            _bufferOneFrame.append(_buffer[_offset + 1]);
+            _bufferOneFrame.append(_buffer[_offset + 2]);
+            _bufferOneFrame.append(_buffer[_offset + 3]);
+            _bufferOneFrame.append(_buffer[_offset + 4]);
+            _bufferOneFrame.append(_buffer[_offset + 5]);
+            _bufferOneFrame.append(_buffer[_offset + 6]);
+            _bufferOneFrame.append(_buffer[_offset + 7]);
+
+            // Get frame
+            test_Get_frame(&_bufferOneFrame);
+        }
+        
+
+    }
+}
+
+
+void test_Get_frame(array_t* buffer){
+
+    // Local Frame
+    COM_FRAME_st localFrame;
+
+    // REQUEST
+    localFrame.comFrameReq = (*buffer)[0];
+
+    // ID
+    localFrame.comFrameRegId = (*buffer)[1];
+
+    // DATA
+    localFrame.data = ((*buffer)[2]);
+    localFrame.data += ((*buffer)[3])<<8;
+    localFrame.data += ((*buffer)[4])<<16;
+    localFrame.data += ((*buffer)[5])<<24;
+
+    // CRC
+    localFrame.CRC = (*buffer)[6];
+    localFrame.CRC += ((*buffer)[7])<<8;
+
+    // Read Write Selector
+    if(localFrame.comFrameReq == COM_FRAME_REQ_e::WRITE){
+        test_RX_frame(localFrame);
+    } else if(localFrame.comFrameReq == COM_FRAME_REQ_e::READ){
+        test_TX_frame();
     }
 }
 
 
 void test_RX_frame(COM_FRAME_st localFrame){
-    Serial.println("======== RX =========");
-    Serial.print("Req: ");
-    Serial.println(localFrame.comFrameReq);
-    Serial.print("ReqID: ");
-    Serial.println(localFrame.comFrameRegId);
-    Serial.print("Data: ");
-    Serial.println(localFrame.data);
-    Serial.print("CRC: ");
-    Serial.println(localFrame.CRC);
+    // Serial.println("======== RX =========");
+    // Serial.print("Req: ");
+    // Serial.println(localFrame.comFrameReq);
+    // Serial.print("ReqID: ");
+    // Serial.println(localFrame.comFrameRegId);
+    // Serial.print("Data: ");
+    // Serial.println(localFrame.data);
+    // Serial.print("CRC: ");
+    // Serial.println(localFrame.CRC);
+
+    if (test_data != localFrame.data){
+        Serial.print("Error: ");
+        Serial.print(test_data);
+        Serial.print(" != ");
+        Serial.println(localFrame.data);
+        test_data = localFrame.data;
+    }
+
+    test_data++;
+
+    if (test_data > 10000) test_data = 0;
+
+    
+
+    
+
 }
 
 void test_TX_frame(){

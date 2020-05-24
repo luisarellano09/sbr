@@ -41,7 +41,7 @@ enum RC_e{
  *******************************************************************************************************************************************/
 
 /** \brief  Enumeration for SBR registers IDs. The number defines the register offset */
-enum COM_FRAME_REG_ID_e{
+enum COM_REQUEST_REG_ID_e{
 	TLF_DEVCFG0							=0x00,							/**< \brief Device configuration 0 *R2 (DEVCFG0) Register*/
 	TLF_DEVCFG1							=0x01,							/**< \brief Device configuration 1 *R0 (DEVCFG1) Register*/
 	TLF_DEVCFG2							=0x02,							/**< \brief Device configuration 2 *R2 (DEVCFG2) Register*/
@@ -100,22 +100,22 @@ enum COM_FRAME_REG_ID_e{
 
 
 /*******************************************************************************************************************************************
- *  												COMMUNICATION FRAME
+ *  												COMMUNICATION REQUEST
  *******************************************************************************************************************************************/
 
 /** \brief Defines if a read or write operation shall be performed. */
-enum COM_FRAME_REQ_e{
+enum COM_REQUEST_TYPE_e{
 	READ							=0x0,							/**< \brief Read operation*/
 	WRITE							=0x1,							/**< \brief Write operation*/
     STOP							=0x2,							/**< \brief STOP operation*/
 };
 
 
-/** \brief Structure to define the communication frame. */
-struct COM_FRAME_st
+/** \brief Structure to define the communication request. */
+struct COM_REQUEST_st
 {
-    uint8_t    comFrameReq;         /**< Request type: Read or Write. */
-    uint8_t    comFrameRegId;       /**< Request ID. */
+    uint8_t    comRequestType;      /**< Request type: Read or Write. */
+    uint8_t    comRequestRegId;     /**< Request ID. */
     uint32_t   data;                /**< Data payload. */
     uint16_t   CRC;                 /**< Frame consistency. */
 };

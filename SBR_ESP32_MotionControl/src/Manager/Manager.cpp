@@ -26,7 +26,7 @@
 Manager::Manager(){
 
     // Wifi Manager
-    m_wifiManager = new WifiManager(SSID, PASSWORD, HOSTNAME);
+    m_wifiManager = new WifiManager(SSID_, PASSWORD, HOSTNAME);
 
     // Logger
     m_logger = new Logger(LOGGERHOST, LOGGERPORT);

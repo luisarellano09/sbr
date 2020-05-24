@@ -44,7 +44,7 @@ public:
     /**
      * \brief Constructor.
      */
-    SPI_MasterManager(uint32_t _clock, uint8_t _MO, uint8_t _MI, uint8_t _MCLK);
+    SPI_MasterManager(uint32_t clock, uint8_t _MO, uint8_t _MI, uint8_t _MCLK);
 
     /**
      * \brief Destructor.
@@ -58,6 +58,19 @@ public:
      */  
     RC_e SetSlave(ESP32_Slave_e slave, uint8_t _CS);
 
+    /**
+     * \brief Function add a write request.
+     *
+     * \return Error Code.
+     */  
+    RC_e AddWriteRequest(ESP32_Slave_e slave, COM_REQUEST_REG_ID_e id, uint32_t data);
+
+    /**
+     * \brief Function send the requests to a slave.
+     *
+     * \return Error Code.
+     */  
+    RC_e SendRequests(ESP32_Slave_e slave);
     
     /**
      * \brief Function to execute the Manager.
@@ -74,7 +87,6 @@ public:
      */  
     RC_e SetLogger(Logger* logger);
     
-
 private:
 
     Logger* m_logger = NULL;    /** Reference to logger */
@@ -86,14 +98,14 @@ private:
      *
      * \return Error Code.
      */
-    RC_e SPIConfigure(uint32_t _clock, uint8_t _MO, uint8_t _MI, uint8_t _MCLK);
+    RC_e SPIConfigure(uint32_t clock, uint8_t _MO, uint8_t _MI, uint8_t _MCLK);
 
     /**
-     * \brief Function to send a frame .
+     * \brief Function to send a request .
      *
      * \return Error Code.
      */
-    RC_e SPI_TX_Frame(COM_FRAME_st frame);
+    RC_e SPI_TX_Request(COM_REQUEST_st request, uint8_t _CS);
 
     /**
      * \brief Function to Write a message using the Logger function.

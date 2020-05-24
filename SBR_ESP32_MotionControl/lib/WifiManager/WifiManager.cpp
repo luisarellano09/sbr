@@ -8,6 +8,7 @@
  * 
  * 
  * Changes
+ * 23.05.2020: Fix bugs
  * 30.04.2020: Logger reference
  * 16.04.2020: Class comments and RC_e concept
  * 13.04.2020: Doc was created
@@ -37,7 +38,7 @@ WifiManager::WifiManager(char* ssid, char* password, char* hostName){
     ConfigureOTA();
 
     // Run
-    Run();
+    ConnectWifi();
 }
 
 WifiManager::~WifiManager(){}
@@ -46,25 +47,42 @@ WifiManager::~WifiManager(){}
  *  												Public Methods
  *******************************************************************************************************************************************/
 
-RC_e WifiManager::Run(){
+RC_e WifiManager::ConnectWifi(){
+    // Check if Wifi is connected
+    if (WiFi.status() != WL_CONNECTED) {
+
+        // Station mode
+        WiFi.mode(WIFI_STA);
+
+        // Start Wifi
+        WiFi.begin(m_ssid, m_password);
+
+        // Disable reconnection
+        WiFi.setAutoConnect(false);
+        WiFi.setAutoReconnect(false);
+
+        Serial.println("Connecting...");
+
+        // Set Hostname
+        MDNS.begin(this->m_hostName);
+        WiFi.setHostname(this->m_hostName);
+    }
+
+    return RC_e::SUCCESS;  
+}
+
+RC_e WifiManager::RunOTA(){
     // Error code
     RC_e retCode = RC_e::ERROR;
 
     // Check if the Wifi is connected
-    if (WiFi.status() != WL_CONNECTED) 
+    if (WiFi.status() == WL_CONNECTED) 
     {
-        // Connect to Wifi
-        if ((retCode = ConnectWifi()) != RC_e::SUCCESS){
-            return retCode;        
-        }
-    } else{
-        // Configure OTA
+        // OTA
         if ((retCode = HandleOTA()) != RC_e::SUCCESS){
             return retCode;        
         }
     }
-
-    //LoggerWrite("From WifiManager");
 
     return RC_e::SUCCESS;
 }
@@ -78,9 +96,10 @@ RC_e WifiManager::SetLogger(Logger* logger){
  *******************************************************************************************************************************************/
 
 RC_e WifiManager::ConfigureWifi(){
+
     // Station mode
     WiFi.mode(WIFI_STA);
-
+    
     // Define Event
     WiFi.onEvent(
         [this](WiFiEvent_t event,system_event_info_t info) {
@@ -88,23 +107,6 @@ RC_e WifiManager::ConfigureWifi(){
         });
 
     return RC_e::SUCCESS;
-}
-
-RC_e WifiManager::ConnectWifi(){
-    // Start Wifi
-    WiFi.begin(m_ssid, m_password);
-    
-    // Check if Wifi is connected
-    if (WiFi.status() != WL_CONNECTED) {
-        Serial.println(".");
-        return RC_e::ERROR_WIFI_CONNECTION;
-    }
-
-    // Set Hostname
-    MDNS.begin(this->m_hostName);
-    WiFi.setHostname(this->m_hostName);
-
-    return RC_e::SUCCESS;  
 }
 
 void WifiManager::WiFiEvent(WiFiEvent_t event,system_event_info_t info){
@@ -129,7 +131,6 @@ void WifiManager::WiFiEvent(WiFiEvent_t event,system_event_info_t info){
             break;
         case SYSTEM_EVENT_STA_DISCONNECTED:
             Serial.println("Disconnected from WiFi access point");
-            WiFi.reconnect();
             break;
         case SYSTEM_EVENT_STA_AUTHMODE_CHANGE:
             //Serial.println("Authentication mode of access point has changed");
@@ -138,6 +139,7 @@ void WifiManager::WiFiEvent(WiFiEvent_t event,system_event_info_t info){
             Serial.print("Obtained IP address: ");
             Serial.println(WiFi.localIP());
             Serial.println(WiFi.macAddress());
+            m_logger->Configure();
             break;
         case SYSTEM_EVENT_STA_LOST_IP:
             //Serial.println("Lost IP address and IP address is reset to 0");
@@ -196,7 +198,7 @@ void WifiManager::WiFiEvent(WiFiEvent_t event,system_event_info_t info){
 }
 
 RC_e WifiManager::ConfigureOTA(){
-    // Hostname defaults to esp3232-[MAC]
+    // Hostname
     ArduinoOTA.setHostname(this->m_hostName);
 
     // Set OTA Port
@@ -210,8 +212,8 @@ RC_e WifiManager::ConfigureOTA(){
         else // U_SPIFFS
             type = "filesystem";
 
-      // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-      Serial.println("Start updating " + type);
+        // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+        Serial.println("Start updating " + type);
     })
     .onEnd([]() {
         Serial.println("\nEnd");

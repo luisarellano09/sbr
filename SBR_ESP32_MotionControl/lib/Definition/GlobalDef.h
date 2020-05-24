@@ -119,5 +119,4 @@ struct COM_FRAME_st
     uint16_t   CRC;                 /**< Frame consistency. */
 };
 
-
 #endif /* GLOBALDEF_H */

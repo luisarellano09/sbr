@@ -16,30 +16,20 @@
  */
 
 /*******************************************************************************************************************************************
- *  												INCLUDES
+ *  												INCLUDES - ARDUINO
  *******************************************************************************************************************************************/
-
 #include <Arduino.h>
-#include "./Manager/Manager.h"
+#include "soc/soc.h"
+#include "soc/rtc_cntl_reg.h"
 
 /*******************************************************************************************************************************************
- *  												TEST
+ *  												INCLUDES - SBR
  *******************************************************************************************************************************************/
-
-void test_setup();
-void test_run();
-void test_run_read();
-
-void test_TX_frame();
-void test_RX_frame();
-
-
-
+#include "./Manager/Manager.h"
 
 /*******************************************************************************************************************************************
  *  												GLOBAL VARIABLES
  *******************************************************************************************************************************************/
-
 // Manager Instance
 Manager* manager;
 
@@ -62,11 +52,21 @@ bool flagTimer1 = false;
 bool flagTimer2 = false;
 bool flagTimer3 = false;
 
+/*******************************************************************************************************************************************
+ *  												TEST
+ *******************************************************************************************************************************************/
+void test_setup();
+void test_run();
+void test_run_read();
+
+void test_TX_frame();
+void test_RX_frame();
+
+uint32_t count = 0;
 
 /*******************************************************************************************************************************************
  *  												CORE LOOPS
  *******************************************************************************************************************************************/
-
 // Loop of core 0
 void LoopCore0( void * parameter ){
     while(true) {
@@ -78,7 +78,7 @@ void LoopCore0( void * parameter ){
                 //test_run();
                 //test_run_read();
                 //test_TX_frame();
-                test_RX_frame();
+                //test_RX_frame();
             // ==========================
         }
 
@@ -87,10 +87,12 @@ void LoopCore0( void * parameter ){
             flagTimer1 = false;
 
             // ========== Code ==========
-                manager->m_wifiManager->Run();
+                manager->m_wifiManager->RunOTA();
+                delay(1);
             // ==========================
         }
-        delay(1);
+        
+        test_run();
     }
 }
 
@@ -122,7 +124,6 @@ void LoopCore1( void * parameter ){
 /*******************************************************************************************************************************************
  *  												TIMERS
  *******************************************************************************************************************************************/
-
 // TIMER 0
 void IRAM_ATTR onTimer0(){
     portENTER_CRITICAL_ISR(&timerMux0);
@@ -163,8 +164,10 @@ void IRAM_ATTR onTimer3(){
 /*******************************************************************************************************************************************
  *  												SETUP
  *******************************************************************************************************************************************/
-
 void setup() {
+
+    // Disable brownout detector
+    WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); 
 
     // Serial Port
     Serial.begin(115200);
@@ -203,7 +206,7 @@ void setup() {
     manager->m_logger->Write("start timer 0");
     timer0 = timerBegin(0, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer0, &onTimer0, true); // edge (not level) triggered 
-    timerAlarmWrite(timer0, 2000000, true); // 1000000 * 1 us = 1 s, autoreload true
+    timerAlarmWrite(timer0, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer1
     manager->m_logger->Write("start timer 1");
@@ -228,7 +231,6 @@ void setup() {
     timerAlarmEnable(timer1); // enable
     //timerAlarmEnable(timer2); // enable
     //timerAlarmEnable(timer3); // enable
-
 }
 
 /*******************************************************************************************************************************************
@@ -239,43 +241,26 @@ void loop() {
     vTaskDelete(NULL);
 }
 
-
-
-
 void test_setup(){
 
     // Setup Master-SPI
-
-
 }
 
 
-
-
-
 void test_run(){
-
-/*
-    master.beginTransaction(spi_setting);
-    digitalWrite(MS, LOW);
-
-    if (count>=99) count = 0;
-
-    master.transfer(count++);
-    master.transfer(count++);
-    master.transfer(count++);
-    master.transfer(count++);
-    master.transfer(count++);
-    master.transfer(count++);
-    master.transfer(count++);
-    master.transfer(count++);
-    master.transfer(count++);
-    master.transfer(count++);
-
-    digitalWrite(MS, HIGH);
-    master.endTransaction();
-
-    */
+    //Serial.println("sending");
+    
+    manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_FWDCFG, count++);
+    if (count > 10000) count = 0;
+    manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_IF, count++);
+    if (count > 10000) count = 0;
+    manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_FWDCFG, count++);
+    if (count > 10000) count = 0;
+    manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_IF, count++);
+    if (count > 10000) count = 0;
+    manager->m_SPI_MasterManager->SendRequests(ESP32_Slave_e::MOTION);
+    if (count > 10000) count = 0;
+    
 }
 
 void test_run_read(){

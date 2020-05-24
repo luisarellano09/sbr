@@ -34,34 +34,34 @@ void SPI_Slave::SetCS(uint8_t _CS){
     this->m_CS = _CS;
 }  
 
-RC_e SPI_Slave::AddFrame(COM_FRAME_REQ_e _req, COM_FRAME_REG_ID_e _id, uint32_t _data){
+RC_e SPI_Slave::AddRequest(COM_REQUEST_TYPE_e type, COM_REQUEST_REG_ID_e id, uint32_t data){
 
-    if (m_FrameBuffer == NULL){
+    if (m_RequestsArray == NULL){
         return RC_e::ERROR_NULL_POINTER;
     }
 
     // Check index
-    if(m_FrameBufferIndex<(SPI_SLAVE_BUFFER_SIZE-1)){
-        m_FrameBufferIndex++;
+    if(m_RequestsArrayIndex<(SPI_SLAVE_REQUESTS_ARRAY_SIZE-1)){
+        m_RequestsArrayIndex++;
     }
 
     // Add Frame
-    m_FrameBuffer[m_FrameBufferIndex].comFrameReq = _req;
-    m_FrameBuffer[m_FrameBufferIndex].comFrameRegId = _id;
-    m_FrameBuffer[m_FrameBufferIndex].data = _data;
-    m_FrameBuffer[m_FrameBufferIndex].CRC = 69;
+    m_RequestsArray[m_RequestsArrayIndex].comRequestType = type;
+    m_RequestsArray[m_RequestsArrayIndex].comRequestRegId = id;
+    m_RequestsArray[m_RequestsArrayIndex].data = data;
+    m_RequestsArray[m_RequestsArrayIndex].CRC = 69;
 
     return RC_e::SUCCESS;
 }  
 
 RC_e SPI_Slave::CleanBuffer(){
-    for(int i=0; i<SPI_SLAVE_BUFFER_SIZE; i++){
-        m_FrameBuffer[i].comFrameReq = COM_FRAME_REQ_e::STOP;
-        m_FrameBuffer[i].comFrameRegId = 0;
-        m_FrameBuffer[i].data = 0;
-        m_FrameBuffer[i].CRC = 0;
+    for(int i=0; i<SPI_SLAVE_REQUESTS_ARRAY_SIZE; i++){
+        m_RequestsArray[i].comRequestType = COM_REQUEST_TYPE_e::STOP;
+        m_RequestsArray[i].comRequestRegId = 0;
+        m_RequestsArray[i].data = 0;
+        m_RequestsArray[i].CRC = 0;
     }
-    m_FrameBufferIndex=-1;
+    m_RequestsArrayIndex=-1;
 
     return RC_e::SUCCESS;
 }  

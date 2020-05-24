@@ -102,7 +102,7 @@ esp_err_t SlaveSPI::begin(gpio_num_t so, gpio_num_t si, gpio_num_t sclk, gpio_nu
         .rx_buffer = rx_buffer,             //< rx buffer, or NULL for no MISO phase
         .user      = NULL                   //< User-defined variable. Can be used to store e.g. transaction ID.
     };
-    
+
     err = initTransmissionQueue();
     if (err != ESP_OK) {
         DEBUG_PRINT(err);

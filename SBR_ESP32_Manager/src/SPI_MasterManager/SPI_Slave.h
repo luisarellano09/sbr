@@ -34,6 +34,10 @@ class SPI_Slave
 {
 public:  
 
+    uint8_t m_CS;                                                       /** Chip Select Pin. */
+    COM_REQUEST_st m_RequestsArray[SPI_SLAVE_REQUESTS_ARRAY_SIZE];      /** Array of requests. */
+    int8_t m_RequestsArrayIndex;                                        /** Index of array of frames. */
+
     /**
      * \brief Constructor.
      */
@@ -51,18 +55,14 @@ public:
 
 
     /**
-     * \brief Add frame to the buffer.
+     * \brief Add request to the buffer.
      */
-    RC_e AddFrame(COM_FRAME_REQ_e _req, COM_FRAME_REG_ID_e _id, uint32_t _data);  
+    RC_e AddRequest(COM_REQUEST_TYPE_e type, COM_REQUEST_REG_ID_e id, uint32_t data);  
 
     /**
-     * \brief Clean Buffer of frames.
+     * \brief Clean Buffer of requests.
      */
     RC_e CleanBuffer();  
-
-    uint8_t m_CS;                                           /** Chip Select Pin. */
-    COM_FRAME_st m_FrameBuffer[SPI_SLAVE_BUFFER_SIZE];      /** Array of frames. */
-    int8_t m_FrameBufferIndex;
 
 private:
 

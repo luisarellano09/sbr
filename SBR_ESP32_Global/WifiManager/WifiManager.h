@@ -8,6 +8,7 @@
  * 
  * 
  * Changes
+ * 23.05.2020: Fix bugs
  * 30.04.2020: Logger reference
  * 16.04.2020: Class comments and RC_e concept
  * 13.04.2020: Doc was created
@@ -51,13 +52,27 @@ public:
      * \brief Destructor.
      */
     ~WifiManager();
+
+    /**
+     * \brief Function to connect to a Wifi.
+     *
+     * \return Error code.
+     */
+    RC_e ConnectWifi();
     
     /**
      * \brief Function to execute the Manager.
      *
      * \return Error Code.
      */  
-    RC_e Run();
+    RC_e RunOTA();
+
+    /**
+     * \brief Function to execute the Manager.
+     *
+     * \return status.
+     */  
+    bool IsOtaUploading();
 
     /**
      * \brief Function to set the Logger reference.
@@ -73,20 +88,12 @@ private:
     char* m_hostName;           /** ESP32 Hostname */
     Logger* m_logger = NULL;    /** Reference to logger */
 
-
     /**
      * \brief Function to Configure the Wifi.
      *
      * \return Error code.
      */
     RC_e ConfigureWifi();
-
-    /**
-     * \brief Function to connect to a Wifi.
-     *
-     * \return Error code.
-     */
-    RC_e ConnectWifi();
 
     /**
      * \brief Wifi Event handler.
