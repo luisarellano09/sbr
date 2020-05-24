@@ -27,6 +27,8 @@ Logger::Logger(char* host, uint16_t port){
     this->m_host = host;
     this->m_port = port;
 
+    this->m_flagSend = 0;
+
     Configure();
 }
 
@@ -36,25 +38,39 @@ Logger::~Logger(){}
  *  												Public Methods
  *******************************************************************************************************************************************/
 
-RC_e Logger::Setup(char* host, uint16_t port){
-    this->m_host = host;
-    this->m_port = port;
+RC_e Logger::Configure(){
 
-    if(Configure() != RC_e::SUCCESS){
+    // Check if the Wifi is connected
+    if (WiFi.status() != WL_CONNECTED) 
+    {
         return RC_e::ERROR_WIFI_CONNECTION;
     }
+
+    // Connect to socket server
+    webSocket.begin(this->m_host, this->m_port);
+    m_flagSend = 1;
+
+    Write("Connected");
+
+    return RC_e::SUCCESS;
 }
 
 RC_e Logger::Write(char* msg){
     // Result code
     RC_e retCode = RC_e::ERROR;
 
-    // Check if the socket client is connected to the server
-    if(!this->m_client.connected()){
-        if((retCode=Configure()) != RC_e::SUCCESS){
-            return retCode;
-        }
+    // Check if the Wifi is connected
+    if (WiFi.status() != WL_CONNECTED) 
+    {
+        return RC_e::ERROR_WIFI_CONNECTION;
     }
+
+    // Check if the socket client is connected to the server
+    // if(!this->webSocket.connected()){
+    //     if((retCode=Configure()) != RC_e::SUCCESS){
+    //         return retCode;
+    //     }
+    // }
 
     // Json and buffer
     StaticJsonDocument<JSON_MESSAGE_SIZE> logJson;
@@ -67,7 +83,8 @@ RC_e Logger::Write(char* msg){
     serializeJson(logJson, logBuffer);
 
     // Send message
-    this->m_client.println(logBuffer);
+    this->webSocket.emit("data", logBuffer);
+    m_flagSend = 1;
 
     return RC_e::SUCCESS;
 }
@@ -76,12 +93,18 @@ RC_e Logger::WriteValue(u16_t value){
     // Result code
     RC_e retCode = RC_e::ERROR;
 
-    // Check if the socket client is connected to the server
-    if(!this->m_client.connected()){
-        if((retCode=Configure()) != RC_e::SUCCESS){
-            return retCode;
-        }
+    // Check if the Wifi is connected
+    if (WiFi.status() != WL_CONNECTED) 
+    {
+        return RC_e::ERROR_WIFI_CONNECTION;
     }
+
+    // Check if the socket client is connected to the server
+    // if(!this->m_client.connected()){
+    //     if((retCode=Configure()) != RC_e::SUCCESS){
+    //         return retCode;
+    //     }
+    // }
 
     // Json and buffer
     StaticJsonDocument<JSON_MESSAGE_SIZE> logJson;
@@ -94,22 +117,23 @@ RC_e Logger::WriteValue(u16_t value){
     serializeJson(logJson, logBuffer);
 
     // Send message
-    this->m_client.println(logBuffer);
+    this->webSocket.emit("data",logBuffer);
+    m_flagSend = 1;
 
     return RC_e::SUCCESS;
+}
+
+void Logger::Run(){
+    if(m_flagSend !=0){
+        if (WiFi.status() == WL_CONNECTED) 
+        {
+            webSocket.loop();
+            m_flagSend = 0;
+        }
+    }
 }
 
 /*******************************************************************************************************************************************
  *  												Private Methods
  *******************************************************************************************************************************************/
 
-RC_e Logger::Configure(){
-    // Connect to socket server
-    if (!this->m_client.connect(this->m_host, this->m_port)){
-        return RC_e::ERROR_WIFI_CONNECTION;
-    }
-
-    Write("Connected");
-
-    return RC_e::SUCCESS;
-}

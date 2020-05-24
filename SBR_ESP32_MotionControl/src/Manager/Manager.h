@@ -8,6 +8,7 @@
  * 
  * 
  * Changes
+ * 24.05.2020: Delete logger
  * 30.04.2020: Add Wifimanager and logger instances.
  * 26.04.2020: Create Class.
  * 
@@ -23,7 +24,6 @@
 
 #include "../../lib/Definition/GlobalDef.h"
 #include "../../lib/WifiManager/WifiManager.h"
-#include "../../lib/Logger/Logger.h"
 
 
 /*******************************************************************************************************************************************
@@ -33,9 +33,6 @@
 #define SSID_ "ap01"
 #define PASSWORD "12345678"
 #define HOSTNAME "SBR_ESP32_MotionControl"
-#define LOGGERPORT (uint16_t)4001
-#define LOGGERHOST "192.168.43.72"
-
 
 /*******************************************************************************************************************************************
  *  												WifiManager Class
@@ -49,7 +46,6 @@ class Manager
 public:  
 
     WifiManager* m_wifiManager = NULL;  /** Instance for Wifimanager */
-    Logger* m_logger = NULL;            /** Instance for Logger */
 
     /**
      * \brief Constructor.

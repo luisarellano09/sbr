@@ -8,6 +8,7 @@
  * 
  * 
  * Changes
+ * 24.05.2020: Delete logger
  * 23.05.2020: Fix bugs
  * 30.04.2020: Logger reference
  * 16.04.2020: Class comments and RC_e concept
@@ -87,9 +88,6 @@ RC_e WifiManager::RunOTA(){
     return RC_e::SUCCESS;
 }
 
-RC_e WifiManager::SetLogger(Logger* logger){
-    this->m_logger = logger;
-}
 
 /*******************************************************************************************************************************************
  *  												Private Methods
@@ -139,7 +137,6 @@ void WifiManager::WiFiEvent(WiFiEvent_t event,system_event_info_t info){
             Serial.print("Obtained IP address: ");
             Serial.println(WiFi.localIP());
             Serial.println(WiFi.macAddress());
-            m_logger->Configure();
             break;
         case SYSTEM_EVENT_STA_LOST_IP:
             //Serial.println("Lost IP address and IP address is reset to 0");
@@ -237,14 +234,6 @@ RC_e WifiManager::ConfigureOTA(){
 
 RC_e WifiManager::HandleOTA(){
     ArduinoOTA.handle();
-    return RC_e::SUCCESS;
-}
-
-RC_e WifiManager::LoggerWrite(char* msg){
-    if(m_logger != NULL){
-        m_logger->Write(msg);
-    }
-    
     return RC_e::SUCCESS;
 }
 

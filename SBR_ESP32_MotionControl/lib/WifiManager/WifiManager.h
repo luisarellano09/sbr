@@ -8,6 +8,7 @@
  * 
  * 
  * Changes
+ * 24.05.2020: Delete logger
  * 23.05.2020: Fix bugs
  * 30.04.2020: Logger reference
  * 16.04.2020: Class comments and RC_e concept
@@ -30,7 +31,6 @@
 #include <ArduinoOTA.h>
 
 #include "../Definition/GlobalDef.h"
-#include "../Logger/Logger.h"
 
 /*******************************************************************************************************************************************
  *  												WifiManager Class
@@ -67,26 +67,10 @@ public:
      */  
     RC_e RunOTA();
 
-    /**
-     * \brief Function to execute the Manager.
-     *
-     * \return status.
-     */  
-    bool IsOtaUploading();
-
-    /**
-     * \brief Function to set the Logger reference.
-     * \param logger Pointer to reference the Logger object.
-     *
-     * \return Error Code.
-     */  
-    RC_e SetLogger(Logger* logger);
-    
 private:
     char* m_ssid;               /** Wifi router name */
     char* m_password;           /** Wifi password */ 
     char* m_hostName;           /** ESP32 Hostname */
-    Logger* m_logger = NULL;    /** Reference to logger */
 
     /**
      * \brief Function to Configure the Wifi.
@@ -115,13 +99,6 @@ private:
      * \return Error Code.
      */
     RC_e HandleOTA();
-
-    /**
-     * \brief Function to Write a message using the Logger function.
-     *
-     * \return Error Code.
-     */
-    RC_e LoggerWrite(char* msg);
 
 };
 

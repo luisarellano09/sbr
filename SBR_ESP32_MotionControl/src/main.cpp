@@ -132,7 +132,6 @@ void LoopCore1( void * parameter ){
             flagTimer2 = false;
 
             // ========== Code ==========
-            manager->m_logger->WriteValue(count_logger++);
             // ==========================
         }
 
@@ -144,8 +143,6 @@ void LoopCore1( void * parameter ){
 
             // ==========================
         }
-
-        manager->m_logger->Run();
 
         delay(1);
     }
@@ -235,25 +232,21 @@ void setup() {
         1);         /* Core where the task should run */
 
     // Timer0
-    //manager->m_logger->Write("start timer 0");
     timer0 = timerBegin(0, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer0, &onTimer0, true); // edge (not level) triggered 
     timerAlarmWrite(timer0, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer1
-    //manager->m_logger->Write("start timer 1");
     timer1 = timerBegin(1, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer1, &onTimer1, true); // edge (not level) triggered 
     timerAlarmWrite(timer1, 2000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer2
-    //manager->m_logger->Write("start timer 2");
     timer2 = timerBegin(2, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer2, &onTimer2, true); // edge (not level) triggered 
     timerAlarmWrite(timer2, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer3
-    //manager->m_logger->Write("start timer 3");
     timer3 = timerBegin(3, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer3, &onTimer3, true); // edge (not level) triggered 
     timerAlarmWrite(timer3, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
@@ -278,7 +271,6 @@ void test_setup(){
 }
 
 void test_run(){
-    //manager->m_logger->Write("Putos todos!!");
     if (slave.getInputStream()->length() >= 128 && digitalRead(SS) == HIGH) {  // Slave SPI has got data in.
         while (slave.getInputStream()->length()) {
             slave.readToArray(slave_msg);  // Not the sample read() as Serial

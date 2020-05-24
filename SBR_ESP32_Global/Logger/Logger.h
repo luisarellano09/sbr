@@ -23,6 +23,7 @@
 
 #include <WiFi.h>
 #include <ArduinoJson.h>
+#include "SocketIoClient.h"
 #include "../Definition/GlobalDef.h"
 
 /*******************************************************************************************************************************************
@@ -41,9 +42,6 @@
 class Logger
 {
 public:  
-
-    uint16_t m_port;                                    /** Socket server port */
-
     /**
      * \brief Constructor.
      * \param host Socket server hostname.
@@ -57,11 +55,11 @@ public:
     ~Logger();
 
     /**
-     * \brief Function to setup the logger.
-     * \param host Socket server hostname.
-     * \param port Socket server port.
+     * \brief Function to configure.
+     *
+     * \return Error Code.
      */  
-    RC_e Setup(char* host, uint16_t port);
+    RC_e Configure();
 
     /**
      * \brief Function to send a message to the logger.
@@ -76,19 +74,16 @@ public:
      * \return Error Code.
      */  
     RC_e WriteValue(u16_t msg);
+
+     void Run();
     
 private:
-    char * m_host;                                      /** Socket server hostname */
-    //uint16_t m_port;                                    /** Socket server port */
-    WiFiClient m_client;                                /** Wifi Client used for socket connection */
+    char * m_host;                  /** Socket server hostname */
+    uint16_t m_port;                /** Socket server port */
+    SocketIoClient webSocket;       /** Wifi Client used for socket connection */
+    uint8_t m_flagSend;
 
-    /**
-     * \brief Function to configure.
-     *
-     * \return Error Code.
-     */  
-    RC_e Configure();
-
+   
 };
 
 #endif // LOGGER_H

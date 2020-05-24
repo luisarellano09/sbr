@@ -8,6 +8,7 @@
  * 
  * 
  * Changes
+ * 24.05.2020: Delete logger
  * 30.04.2020: Add Wifimanager and logger instances.
  * 26.04.2020: Create Class
  * 
@@ -27,12 +28,6 @@ Manager::Manager(){
 
     // Wifi Manager
     m_wifiManager = new WifiManager(SSID_, PASSWORD, HOSTNAME);
-
-    // Logger
-    m_logger = new Logger(LOGGERHOST, LOGGERPORT);
-
-    // Connect references
-    m_wifiManager->SetLogger(m_logger);
 
 }
 
