@@ -64,7 +64,7 @@ void test_RX_frame();
 
 uint32_t count = 0;
 
-uint8_t flag_SPI_Manager_Enable = 1;
+uint8_t flag_SPI_Manager_Enable = 0;
 
 /*******************************************************************************************************************************************
  *  												CORE LOOPS
@@ -89,6 +89,35 @@ void LoopCore0( void * parameter ){
             flagTimer1 = false;
 
             // ========== Code ==========
+                if(Serial.available()){
+                    Serial.println("checking Serial");
+                    char incomingByte = Serial.read();
+                    Serial.flush();
+                    switch (incomingByte)
+                    {
+                        case 'p':
+                        case 'P':
+                            Serial.println("Programming Mode...");
+                            flag_SPI_Manager_Enable = 0;
+                            manager->m_wifiManager->Connect();
+                            break;
+                        case 'a':
+                        case 'A':
+                            Serial.println("Activate SPI Manager...");
+                            flag_SPI_Manager_Enable = 1;
+                            break;
+                        case 'd':
+                        case 'D':
+                            Serial.println("Deactivate SPI Manager...");
+                            flag_SPI_Manager_Enable = 0;
+                            break;
+                        case 'r':
+                        case 'R':
+                            Serial.println("Restarting...");
+                            ESP.restart();
+                            break;
+                    }
+                }
                 manager->m_wifiManager->RunOTA();
                 delay(1);
             // ==========================
@@ -205,25 +234,21 @@ void setup() {
         1);         /* Core where the task should run */
 
     // Timer0
-    manager->m_logger->Write("start timer 0");
     timer0 = timerBegin(0, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer0, &onTimer0, true); // edge (not level) triggered 
     timerAlarmWrite(timer0, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer1
-    manager->m_logger->Write("start timer 1");
     timer1 = timerBegin(1, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer1, &onTimer1, true); // edge (not level) triggered 
-    timerAlarmWrite(timer1, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
+    timerAlarmWrite(timer1, 2000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer2
-    manager->m_logger->Write("start timer 2");
     timer2 = timerBegin(2, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer2, &onTimer2, true); // edge (not level) triggered 
     timerAlarmWrite(timer2, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer3
-    manager->m_logger->Write("start timer 3");
     timer3 = timerBegin(3, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer3, &onTimer3, true); // edge (not level) triggered 
     timerAlarmWrite(timer3, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
@@ -250,9 +275,9 @@ void test_setup(){
 
 
 void test_run(){
-    //Serial.println("sending");
+   
 
-    if(flag_SPI_Manager_Enable){
+    if(flag_SPI_Manager_Enable>0){
         manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_FWDCFG, count++);
         if (count > 10000) count = 0;
         manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_IF, count++);
@@ -263,6 +288,8 @@ void test_run(){
         if (count > 10000) count = 0;
         manager->m_SPI_MasterManager->SendRequests(ESP32_Slave_e::MOTION);
         if (count > 10000) count = 0;
+    } else{
+        delay(1);
     }
     
 

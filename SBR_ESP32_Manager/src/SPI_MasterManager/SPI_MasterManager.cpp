@@ -80,9 +80,6 @@ RC_e SPI_MasterManager::Run(){
     return RC_e::SUCCESS;
 }
 
-RC_e SPI_MasterManager::SetLogger(Logger* logger){
-    this->m_logger = logger;
-}
 
 /*******************************************************************************************************************************************
  *  												Private Methods
@@ -126,15 +123,6 @@ RC_e SPI_MasterManager::SPI_TX_Request(COM_REQUEST_st request, uint8_t _CS){
     digitalWrite(_CS, HIGH);
     m_master.endTransaction();
 
-    return RC_e::SUCCESS;
-}
-
-
-RC_e SPI_MasterManager::LoggerWrite(char* msg){
-    if(m_logger != NULL){
-        m_logger->Write(msg);
-    }
-    
     return RC_e::SUCCESS;
 }
 

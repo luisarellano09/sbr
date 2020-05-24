@@ -24,7 +24,6 @@
 #include "../../lib/Definition/GlobalDef.h"
 #include "../Definition/LocalDef.h"
 #include "../../lib/WifiManager/WifiManager.h"
-#include "../../lib/Logger/Logger.h"
 #include "../SPI_MasterManager/SPI_MasterManager.h"
 
 
@@ -41,7 +40,6 @@ public:
 
     WifiManager* m_wifiManager = NULL;              /** Instance for Wifimanager. */
     SPI_MasterManager* m_SPI_MasterManager = NULL;  /** Instance for SPI Master Manager. */
-    Logger* m_logger = NULL;                        /** Instance for Logger. */
 
     /**
      * \brief Constructor.

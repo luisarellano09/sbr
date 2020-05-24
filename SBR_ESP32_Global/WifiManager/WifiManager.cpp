@@ -8,6 +8,7 @@
  * 
  * 
  * Changes
+ * 24.05.2020: Delete logger
  * 23.05.2020: Fix bugs
  * 30.04.2020: Logger reference
  * 16.04.2020: Class comments and RC_e concept
@@ -30,15 +31,6 @@ WifiManager::WifiManager(char* ssid, char* password, char* hostName){
     this->m_ssid = ssid;
     this->m_password = password;
     this->m_hostName = hostName;
-
-    // Configure Wifi
-    ConfigureWifi();
-
-    // Configure OTA
-    ConfigureOTA();
-
-    // Run
-    ConnectWifi();
 }
 
 WifiManager::~WifiManager(){}
@@ -46,6 +38,58 @@ WifiManager::~WifiManager(){}
 /*******************************************************************************************************************************************
  *  												Public Methods
  *******************************************************************************************************************************************/
+
+RC_e WifiManager::Connect(){
+    // Check if the Wifi is connected
+    if (WiFi.status() != WL_CONNECTED) {
+
+        // Configure Wifi
+        ConfigureWifi();
+
+        // Configure OTA
+        ConfigureOTA();
+
+        // Run
+        ConnectWifi();
+    }
+
+    return RC_e::SUCCESS;  
+}
+
+RC_e WifiManager::RunOTA(){
+    // Error code
+    RC_e retCode = RC_e::ERROR;
+
+    // Check if the Wifi is connected
+    if (WiFi.status() == WL_CONNECTED) 
+    {
+        // OTA
+        if ((retCode = HandleOTA()) != RC_e::SUCCESS){
+            return retCode;        
+        }
+    }
+
+    return RC_e::SUCCESS;
+}
+
+
+/*******************************************************************************************************************************************
+ *  												Private Methods
+ *******************************************************************************************************************************************/
+
+RC_e WifiManager::ConfigureWifi(){
+
+    // Station mode
+    WiFi.mode(WIFI_STA);
+    
+    // Define Event
+    WiFi.onEvent(
+        [this](WiFiEvent_t event,system_event_info_t info) {
+            this->WiFiEvent(event, info);
+        });
+
+    return RC_e::SUCCESS;
+}
 
 RC_e WifiManager::ConnectWifi(){
     // Check if Wifi is connected
@@ -69,44 +113,6 @@ RC_e WifiManager::ConnectWifi(){
     }
 
     return RC_e::SUCCESS;  
-}
-
-RC_e WifiManager::RunOTA(){
-    // Error code
-    RC_e retCode = RC_e::ERROR;
-
-    // Check if the Wifi is connected
-    if (WiFi.status() == WL_CONNECTED) 
-    {
-        // OTA
-        if ((retCode = HandleOTA()) != RC_e::SUCCESS){
-            return retCode;        
-        }
-    }
-
-    return RC_e::SUCCESS;
-}
-
-RC_e WifiManager::SetLogger(Logger* logger){
-    this->m_logger = logger;
-}
-
-/*******************************************************************************************************************************************
- *  												Private Methods
- *******************************************************************************************************************************************/
-
-RC_e WifiManager::ConfigureWifi(){
-
-    // Station mode
-    WiFi.mode(WIFI_STA);
-    
-    // Define Event
-    WiFi.onEvent(
-        [this](WiFiEvent_t event,system_event_info_t info) {
-            this->WiFiEvent(event, info);
-        });
-
-    return RC_e::SUCCESS;
 }
 
 void WifiManager::WiFiEvent(WiFiEvent_t event,system_event_info_t info){
@@ -236,14 +242,6 @@ RC_e WifiManager::ConfigureOTA(){
 
 RC_e WifiManager::HandleOTA(){
     ArduinoOTA.handle();
-    return RC_e::SUCCESS;
-}
-
-RC_e WifiManager::LoggerWrite(char* msg){
-    if(m_logger != NULL){
-        m_logger->Write(msg);
-    }
-    
     return RC_e::SUCCESS;
 }
 

@@ -27,7 +27,6 @@
 
 #include "../Definition/LocalDef.h"
 #include "../../lib/Definition/GlobalDef.h"
-#include "../../lib/Logger/Logger.h"
 
 /*******************************************************************************************************************************************
  *  												WifiManager Class
@@ -78,24 +77,16 @@ public:
      * \return Error Code.
      */  
     RC_e Run();
-
-    /**
-     * \brief Function to set the Logger reference.
-     * \param logger Pointer to reference the Logger object.
-     *
-     * \return Error Code.
-     */  
-    RC_e SetLogger(Logger* logger);
     
 private:
 
-    Logger* m_logger = NULL;    /** Reference to logger */
     SPISettings m_spi_setting;
     SPIClass m_master;
 
     /**
      * \brief Function to configure the SPI .
      *
+     * 
      * \return Error Code.
      */
     RC_e SPIConfigure(uint32_t clock, uint8_t _MO, uint8_t _MI, uint8_t _MCLK);
@@ -106,17 +97,6 @@ private:
      * \return Error Code.
      */
     RC_e SPI_TX_Request(COM_REQUEST_st request, uint8_t _CS);
-
-    /**
-     * \brief Function to Write a message using the Logger function.
-     *
-     * \return Error Code.
-     */
-    RC_e LoggerWrite(char* msg);
-
-
-
-   
 
 };
 

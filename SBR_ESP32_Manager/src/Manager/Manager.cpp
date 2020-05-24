@@ -32,12 +32,6 @@ Manager::Manager(){
     m_SPI_MasterManager = new SPI_MasterManager(SPI_CLOCK, MO, MI, MCLK);
     m_SPI_MasterManager->SetSlave(ESP32_Slave_e::MOTION, MOTION_CS);   // ESP32 - Motion Control
 
-    // Logger
-    m_logger = new Logger(LOGGER_HOST, LOGGER_PORT);
-
-    // Connect references
-    m_wifiManager->SetLogger(m_logger);
-
 }
 
 Manager::~Manager(){}

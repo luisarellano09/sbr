@@ -115,6 +115,7 @@ void LoopCore0( void * parameter ){
             // ========== Code ==========
 
                 if(Serial.available()){
+                    Serial.println("checking Serial");
                     char incomingByte = Serial.read();
                     Serial.flush();
                     switch (incomingByte)
