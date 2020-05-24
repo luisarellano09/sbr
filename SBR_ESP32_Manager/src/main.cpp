@@ -64,6 +64,8 @@ void test_RX_frame();
 
 uint32_t count = 0;
 
+uint8_t flag_SPI_Manager_Enable = 1;
+
 /*******************************************************************************************************************************************
  *  												CORE LOOPS
  *******************************************************************************************************************************************/
@@ -249,17 +251,21 @@ void test_setup(){
 
 void test_run(){
     //Serial.println("sending");
+
+    if(flag_SPI_Manager_Enable){
+        manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_FWDCFG, count++);
+        if (count > 10000) count = 0;
+        manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_IF, count++);
+        if (count > 10000) count = 0;
+        manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_FWDCFG, count++);
+        if (count > 10000) count = 0;
+        manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_IF, count++);
+        if (count > 10000) count = 0;
+        manager->m_SPI_MasterManager->SendRequests(ESP32_Slave_e::MOTION);
+        if (count > 10000) count = 0;
+    }
     
-    manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_FWDCFG, count++);
-    if (count > 10000) count = 0;
-    manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_IF, count++);
-    if (count > 10000) count = 0;
-    manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_FWDCFG, count++);
-    if (count > 10000) count = 0;
-    manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_IF, count++);
-    if (count > 10000) count = 0;
-    manager->m_SPI_MasterManager->SendRequests(ESP32_Slave_e::MOTION);
-    if (count > 10000) count = 0;
+
     
 }
 

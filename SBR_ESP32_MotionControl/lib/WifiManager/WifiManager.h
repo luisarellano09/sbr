@@ -54,12 +54,12 @@ public:
     ~WifiManager();
 
     /**
-     * \brief Function to connect to a Wifi.
+     * \brief Function to connect services.
      *
      * \return Error code.
      */
-    RC_e ConnectWifi();
-    
+    RC_e Connect();
+
     /**
      * \brief Function to execute the Manager.
      *
@@ -78,6 +78,13 @@ private:
      * \return Error code.
      */
     RC_e ConfigureWifi();
+
+    /**
+     * \brief Function to connect to a Wifi.
+     *
+     * \return Error code.
+     */
+    RC_e ConnectWifi();
 
     /**
      * \brief Wifi Event handler.

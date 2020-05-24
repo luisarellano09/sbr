@@ -31,15 +31,6 @@ WifiManager::WifiManager(char* ssid, char* password, char* hostName){
     this->m_ssid = ssid;
     this->m_password = password;
     this->m_hostName = hostName;
-
-    // Configure Wifi
-    ConfigureWifi();
-
-    // Configure OTA
-    ConfigureOTA();
-
-    // Run
-    ConnectWifi();
 }
 
 WifiManager::~WifiManager(){}
@@ -48,25 +39,18 @@ WifiManager::~WifiManager(){}
  *  												Public Methods
  *******************************************************************************************************************************************/
 
-RC_e WifiManager::ConnectWifi(){
-    // Check if Wifi is connected
+RC_e WifiManager::Connect(){
+    // Check if the Wifi is connected
     if (WiFi.status() != WL_CONNECTED) {
 
-        // Station mode
-        WiFi.mode(WIFI_STA);
+        // Configure Wifi
+        ConfigureWifi();
 
-        // Start Wifi
-        WiFi.begin(m_ssid, m_password);
+        // Configure OTA
+        ConfigureOTA();
 
-        // Disable reconnection
-        WiFi.setAutoConnect(false);
-        WiFi.setAutoReconnect(false);
-
-        Serial.println("Connecting...");
-
-        // Set Hostname
-        MDNS.begin(this->m_hostName);
-        WiFi.setHostname(this->m_hostName);
+        // Run
+        ConnectWifi();
     }
 
     return RC_e::SUCCESS;  
@@ -105,6 +89,30 @@ RC_e WifiManager::ConfigureWifi(){
         });
 
     return RC_e::SUCCESS;
+}
+
+RC_e WifiManager::ConnectWifi(){
+    // Check if Wifi is connected
+    if (WiFi.status() != WL_CONNECTED) {
+
+        // Station mode
+        WiFi.mode(WIFI_STA);
+
+        // Start Wifi
+        WiFi.begin(m_ssid, m_password);
+
+        // Disable reconnection
+        WiFi.setAutoConnect(false);
+        WiFi.setAutoReconnect(false);
+
+        Serial.println("Connecting...");
+
+        // Set Hostname
+        MDNS.begin(this->m_hostName);
+        WiFi.setHostname(this->m_hostName);
+    }
+
+    return RC_e::SUCCESS;  
 }
 
 void WifiManager::WiFiEvent(WiFiEvent_t event,system_event_info_t info){

@@ -113,6 +113,19 @@ void LoopCore0( void * parameter ){
             flagTimer1 = false;
 
             // ========== Code ==========
+
+                if(Serial.available()){
+                    char incomingByte = Serial.read();
+                    Serial.flush();
+                    switch (incomingByte)
+                    {
+                        case 'p':
+                        case 'P':
+                            manager->m_wifiManager->Connect();
+                            break;
+                    }
+                }
+
                 manager->m_wifiManager->RunOTA();
                 delay(1); // To feed the WDT
             // ==========================
@@ -254,7 +267,7 @@ void setup() {
     // Enable the timer alarms
     timerAlarmEnable(timer0); // enable
     timerAlarmEnable(timer1); // enable
-    timerAlarmEnable(timer2); // enable
+    //timerAlarmEnable(timer2); // enable
     //timerAlarmEnable(timer3); // enable
 }
 
