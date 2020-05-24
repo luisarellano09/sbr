@@ -124,6 +124,11 @@ void LoopCore0( void * parameter ){
                         case 'P':
                             manager->m_wifiManager->Connect();
                             break;
+                        case 'r':
+                        case 'R':
+                            Serial.println("Restarting...");
+                            ESP.restart();
+                            break;
                     }
                 }
 
@@ -338,7 +343,7 @@ void test_Get_frames(){
     // Get length of the buffer stream
     int length = slave.getInputStream()->length();
 
-    if (length >= 32 && digitalRead(SS) == HIGH) {  // Slave SPI has got data in.
+    if (length >= FRAME_SIZE && digitalRead(SS) == HIGH) {  // Slave SPI has got data in.
 
         array_t _buffer(length);
 
