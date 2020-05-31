@@ -108,6 +108,7 @@ enum COM_REQUEST_TYPE_e{
 	READ							=0x0,							/**< \brief Read operation*/
 	WRITE							=0x1,							/**< \brief Write operation*/
     STOP							=0x2,							/**< \brief STOP operation*/
+    NONE      						=0x3,							/**< \brief None operation*/                      
 };
 
 

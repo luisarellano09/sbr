@@ -20,7 +20,10 @@
         "files.associations": {
             "*.tcc": "cpp",
             "limits": "cpp",
-            "functional": "cpp"
+            "functional": "cpp",
+            "array": "cpp",
+            "string": "cpp",
+            "string_view": "cpp"
         }
     }
 }

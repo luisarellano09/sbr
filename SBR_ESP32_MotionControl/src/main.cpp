@@ -56,40 +56,7 @@ bool flagTimer3 = false;
 /*******************************************************************************************************************************************
  *  												TEST
  *******************************************************************************************************************************************/
-#include "../lib/SlaveSPI/SlaveSPI.h"
-#include <SPI.h>
-
-#define SO   (gpio_num_t)22     // azul
-#define SI   (gpio_num_t)23     // verde
-#define SCLK (gpio_num_t)19     // morado
-#define SS   (gpio_num_t)18     // plomo
-
-SlaveSPI slave(HSPI_HOST);   // VSPI_HOST
-
-#include "../lib/SlaveSPI/SimpleArray.h"
-
-typedef SimpleArray<uint8_t, int> array_t;
-
-array_t master_msg(SPI_DEFAULT_MAX_BUFFER_SIZE);
-array_t slave_msg(SPI_DEFAULT_MAX_BUFFER_SIZE);
-
-
-void test_setup();
-void test_run();
-void test_run_read();
-
-#define FRAME_SIZE              (uint8_t)8u                 /*Number of Bytes of the Frame*/
-void test_Get_frames();
-void test_Get_frame(array_t* buffer);
-void test_RX_frame(COM_FRAME_st localFrame);
-void test_TX_frame();
-
-u32_t count = 0;
-
-u32_t count_logger = 0;
-
-u32_t test_data = 0;
-
+void test_consumer();
 
 /*******************************************************************************************************************************************
  *  												CORE LOOPS
@@ -129,6 +96,10 @@ void LoopCore0( void * parameter ){
                             Serial.println("Restarting...");
                             ESP.restart();
                             break;
+                        case '1':
+                            Serial.println("Adding requests....");
+                            test_consumer();
+                            break;
                     }
                 }
 
@@ -137,7 +108,7 @@ void LoopCore0( void * parameter ){
             // ==========================
         }
 
-        test_Get_frames();
+        manager->m_spiSlaveManager->ListenRequest();
         //test_run();
 
     }
@@ -220,12 +191,6 @@ void setup() {
     // Manager
     manager = new Manager();
 
-    delay(1000);
-    // TEST
-    test_setup();
-
-    delay(1000);
-
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // Task of core 0
@@ -285,194 +250,16 @@ void loop() {
     vTaskDelete(NULL);
 }
 
-void test_setup(){
-    slave.begin(SO, SI, SCLK, SS, 8);
+
+void test_consumer(){
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 1);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 2);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 3);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 4);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 5);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 6);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 7);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 8);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 9);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 10);
 }
-
-void test_run(){
-    if (slave.getInputStream()->length() >= 128 && digitalRead(SS) == HIGH) {  // Slave SPI has got data in.
-        while (slave.getInputStream()->length()) {
-            slave.readToArray(slave_msg);  // Not the sample read() as Serial
-        }
-
-        // int a = slave_msg[0] + slave_msg[1] + slave_msg[2] + slave_msg[3] + slave_msg[4] + slave_msg[5] + slave_msg[6] + slave_msg[7] + slave_msg[8] + slave_msg[9];
-        // Serial.println(a);  
-       
-        Serial.println("================================");
-        for (int i = 0; i < slave_msg.length(); i++) {
-            Serial.println(slave_msg[i]);            
-        }
-
-
-        slave_msg.clear();
-        slave.flushInputStream();
-
-        //test_run_read();  
-    }
-}
-
-
-void test_run_read(){
-
-    // test
-    master_msg.clear();
-    master_msg.append(10);
-    master_msg.append(20);
-    master_msg.append(30);
-    master_msg.append(40);
-    master_msg.append(50);
-    master_msg.append(60);
-    master_msg.append(70);
-    master_msg.append(80);
-
-    slave.flushOutputStream();
-
-
-    slave.writeFromArray(master_msg);
-    Serial.println("********* TO SEND *******");
-    for (int i = 0; i < master_msg.length(); i++) {
-        Serial.println(master_msg[i]);            
-    }
-
-
-}
-
-
-void test_Get_frames(){
-
-    // Get length of the buffer stream
-    int length = slave.getInputStream()->length();
-
-    if (length >= FRAME_SIZE && digitalRead(SS) == HIGH) {  // Slave SPI has got data in.
-
-        array_t _buffer(length);
-
-        while (slave.getInputStream()->length()) {
-            slave.readToArray(_buffer);
-        }
-
-        // Flush the input buffer
-        slave.flushInputStream();
-        
-        for(int i=0; i<length/FRAME_SIZE; i++){
-            // Create Buffer for one frame
-            array_t _bufferOneFrame(FRAME_SIZE);
-
-            // Calculate offset
-            auto _offset = FRAME_SIZE*i;
-
-            // Assign buffer bytes
-            _bufferOneFrame.append(_buffer[_offset + 0]);
-            _bufferOneFrame.append(_buffer[_offset + 1]);
-            _bufferOneFrame.append(_buffer[_offset + 2]);
-            _bufferOneFrame.append(_buffer[_offset + 3]);
-            _bufferOneFrame.append(_buffer[_offset + 4]);
-            _bufferOneFrame.append(_buffer[_offset + 5]);
-            _bufferOneFrame.append(_buffer[_offset + 6]);
-            _bufferOneFrame.append(_buffer[_offset + 7]);
-
-            // Get frame
-            test_Get_frame(&_bufferOneFrame);
-        }
-        
-
-    }
-}
-
-
-void test_Get_frame(array_t* buffer){
-
-    // Local Frame
-    COM_FRAME_st localFrame;
-
-    // REQUEST
-    localFrame.comFrameReq = (*buffer)[0];
-
-    // ID
-    localFrame.comFrameRegId = (*buffer)[1];
-
-    // DATA
-    localFrame.data = ((*buffer)[2]);
-    localFrame.data += ((*buffer)[3])<<8;
-    localFrame.data += ((*buffer)[4])<<16;
-    localFrame.data += ((*buffer)[5])<<24;
-
-    // CRC
-    localFrame.CRC = (*buffer)[6];
-    localFrame.CRC += ((*buffer)[7])<<8;
-
-    // Read Write Selector
-    if(localFrame.comFrameReq == COM_FRAME_REQ_e::WRITE){
-        test_RX_frame(localFrame);
-    } else if(localFrame.comFrameReq == COM_FRAME_REQ_e::READ){
-        test_TX_frame();
-    }
-}
-
-
-void test_RX_frame(COM_FRAME_st localFrame){
-    // Serial.println("======== RX =========");
-    // Serial.print("Req: ");
-    // Serial.println(localFrame.comFrameReq);
-    // Serial.print("ReqID: ");
-    // Serial.println(localFrame.comFrameRegId);
-    // Serial.print("Data: ");
-    // Serial.println(localFrame.data);
-    // Serial.print("CRC: ");
-    // Serial.println(localFrame.CRC);
-
-    if (test_data != localFrame.data){
-        Serial.print("Error: ");
-        Serial.print(test_data);
-        Serial.print(" != ");
-        Serial.println(localFrame.data);
-        test_data = localFrame.data;
-    }
-
-    test_data++;
-
-    if (test_data > 10000) test_data = 0;
-
-    
-
-    
-
-}
-
-void test_TX_frame(){
-
-    COM_FRAME_st localFrame;
-
-    count++;
-    localFrame.comFrameReq = COM_FRAME_REQ_e::WRITE;
-    localFrame.comFrameRegId = COM_FRAME_REG_ID_e::TLF_IF;
-    localFrame.data = count;
-    localFrame.CRC = 169;
-
-    array_t buffer(FRAME_SIZE);
-
-    buffer.append(localFrame.comFrameReq);
-    buffer.append(localFrame.comFrameRegId);
-    buffer.append((byte)localFrame.data);
-    buffer.append((byte)(localFrame.data>>8));
-    buffer.append((byte)(localFrame.data>>16));
-    buffer.append((byte)(localFrame.data>>24));
-    buffer.append((byte)localFrame.CRC);
-    buffer.append((byte)(localFrame.CRC>>8));
-
-    slave.flushOutputStream();
-    slave.writeFromArray(buffer);
-
-    Serial.println("======== TX =========");
-    Serial.print("Req: ");
-    Serial.println(localFrame.comFrameReq);
-    Serial.print("ReqID: ");
-    Serial.println(localFrame.comFrameRegId);
-    Serial.print("Data: ");
-    Serial.println(localFrame.data);
-    Serial.print("CRC: ");
-    Serial.println(localFrame.CRC);
-
-}
-
-

@@ -52,8 +52,7 @@ public:
      * \brief Function to set the Chip Select.
      */
     void SetCS(uint8_t _CS);
-
-
+    
     /**
      * \brief Add request to the buffer.
      */

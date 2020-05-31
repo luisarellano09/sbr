@@ -64,12 +64,19 @@ RC_e SPI_MasterManager::AddWriteRequest(ESP32_Slave_e slave, COM_REQUEST_REG_ID_
     return RC_e::SUCCESS;
 }
 
-RC_e SPI_MasterManager::SendRequests(ESP32_Slave_e slave){
+RC_e SPI_MasterManager::SendWriteRequests(ESP32_Slave_e slave){
     for(int i=0; i<=m_SPI_Slaves[slave].m_RequestsArrayIndex; i++){
-        SPI_TX_Request(m_SPI_Slaves[slave].m_RequestsArray[i], m_SPI_Slaves[slave].m_CS);
+        SPI_SendWriteRequest(m_SPI_Slaves[slave].m_RequestsArray[i], m_SPI_Slaves[slave].m_CS);
         delay(1);
     }
     m_SPI_Slaves[slave].CleanBuffer();
+}
+
+RC_e SPI_MasterManager::ReadRequests(ESP32_Slave_e slave){
+    
+    COM_REQUEST_st request;
+    SPI_ReadRequest(&request, m_SPI_Slaves[slave].m_CS);
+    delay(1);
 }
 
 RC_e SPI_MasterManager::Run(){
@@ -94,13 +101,11 @@ RC_e SPI_MasterManager::SPIConfigure(uint32_t clock, uint8_t _MO, uint8_t _MI, u
     digitalWrite(_MCLK, LOW);   // Due to SPI_MODE0
     m_master.begin(_MCLK, _MI, _MO);    // Begin SPI master
 
-    quick_fix_spi_timing(m_master.bus());   // Fix SPI timing
-
     return RC_e::SUCCESS;
 }
 
 
-RC_e SPI_MasterManager::SPI_TX_Request(COM_REQUEST_st request, uint8_t _CS){
+RC_e SPI_MasterManager::SPI_SendWriteRequest(COM_REQUEST_st request, uint8_t _CS){
 
     uint8_t _buffer[SPI_MANAGER_REQUEST_SIZE];
 
@@ -126,3 +131,45 @@ RC_e SPI_MasterManager::SPI_TX_Request(COM_REQUEST_st request, uint8_t _CS){
     return RC_e::SUCCESS;
 }
 
+RC_e SPI_MasterManager::SPI_ReadRequest(COM_REQUEST_st* request, uint8_t _CS){
+
+    uint8_t _buffer[SPI_MANAGER_REQUEST_SIZE] = {0};
+
+    m_master.beginTransaction(m_spi_setting);
+    digitalWrite(_CS, LOW);
+    m_master.transferBytes(_buffer, _buffer, SPI_MANAGER_REQUEST_SIZE);
+    digitalWrite(_CS, HIGH);
+    m_master.endTransaction();
+
+    //---------REQUEST--------
+    request->comRequestType = _buffer[0];
+
+    //------------ID----------
+    request->comRequestRegId = _buffer[1];
+
+    //------------DATA----------
+    request->data = (_buffer[2]);
+    request->data += (_buffer[3])<<8;
+    request->data += (_buffer[4])<<16;
+    request->data += (_buffer[5])<<24;
+
+    //|-----------------CRC-------------------|
+    request->CRC = _buffer[6];
+    request->CRC += (_buffer[7])<<8;
+
+    if(request->comRequestType == COM_REQUEST_TYPE_e::WRITE){
+        Serial.println("====== RX =======");
+        Serial.print("Req: ");
+        Serial.println(request->comRequestType);
+        Serial.print("ReqID: ");
+        Serial.println(request->comRequestRegId);
+        Serial.print("Data: ");
+        Serial.println(request->data);
+        Serial.print("CRC: ");
+        Serial.println(request->CRC);
+    }
+
+
+
+    return RC_e::SUCCESS;
+}

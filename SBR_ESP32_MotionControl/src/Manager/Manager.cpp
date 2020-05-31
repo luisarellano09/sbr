@@ -27,7 +27,10 @@
 Manager::Manager(){
 
     // Wifi Manager
-    m_wifiManager = new WifiManager(SSID_, PASSWORD, HOSTNAME);
+    m_wifiManager = new WifiManager(WIFI_SSID, WIFI_PASSWORD, ESP32_HOSTNAME);
+
+    // SPI Slave Manager
+    m_spiSlaveManager = new SPI_SlaveManager(SO, SI, SCLK, SS);
 
 }
 

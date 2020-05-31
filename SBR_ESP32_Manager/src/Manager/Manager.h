@@ -23,6 +23,7 @@
 
 #include "../../lib/Definition/GlobalDef.h"
 #include "../Definition/LocalDef.h"
+
 #include "../../lib/WifiManager/WifiManager.h"
 #include "../SPI_MasterManager/SPI_MasterManager.h"
 

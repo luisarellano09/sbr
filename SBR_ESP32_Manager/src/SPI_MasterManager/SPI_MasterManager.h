@@ -21,7 +21,6 @@
  *******************************************************************************************************************************************/
 
 #include <Arduino.h>
-#include "../../lib/SlaveSPI/SlaveSPI.h"
 #include <SPI.h>
 #include "./SPI_Slave.h"
 
@@ -29,7 +28,7 @@
 #include "../../lib/Definition/GlobalDef.h"
 
 /*******************************************************************************************************************************************
- *  												WifiManager Class
+ *  												SPI Master Class
  *******************************************************************************************************************************************/
 /**
  * \brief Class to Manage the SPI Master
@@ -37,8 +36,6 @@
 class SPI_MasterManager
 {
 public:  
-
-    SPI_Slave m_SPI_Slaves[SPI_MANAGER_NUMBER_SLAVES];    /** Array of slaves */
 
     /**
      * \brief Constructor.
@@ -69,7 +66,14 @@ public:
      *
      * \return Error Code.
      */  
-    RC_e SendRequests(ESP32_Slave_e slave);
+    RC_e SendWriteRequests(ESP32_Slave_e slave);
+
+    /**
+     * \brief Function get the requests from a slave.
+     *
+     * \return Error Code.
+     */  
+    RC_e ReadRequests(ESP32_Slave_e slave);
     
     /**
      * \brief Function to execute the Manager.
@@ -82,6 +86,7 @@ private:
 
     SPISettings m_spi_setting;
     SPIClass m_master;
+    SPI_Slave m_SPI_Slaves[SPI_MANAGER_NUMBER_SLAVES];    /** Array of slaves */
 
     /**
      * \brief Function to configure the SPI .
@@ -96,7 +101,16 @@ private:
      *
      * \return Error Code.
      */
-    RC_e SPI_TX_Request(COM_REQUEST_st request, uint8_t _CS);
+    RC_e SPI_SendWriteRequest(COM_REQUEST_st request, uint8_t _CS);
+
+    /**
+     * \brief Function to send a request .
+     *
+     * \return Error Code.
+     */
+    RC_e SPI_ReadRequest(COM_REQUEST_st* request, uint8_t _CS);
+
+
 
 };
 

@@ -23,16 +23,10 @@
  *******************************************************************************************************************************************/
 
 #include "../../lib/Definition/GlobalDef.h"
+#include "../Definition/LocalDef.h"
+
 #include "../../lib/WifiManager/WifiManager.h"
-
-
-/*******************************************************************************************************************************************
- *  												DEFINE
- *******************************************************************************************************************************************/
-
-#define SSID_ "ap01"
-#define PASSWORD "12345678"
-#define HOSTNAME "SBR_ESP32_MotionControl"
+#include "../SPI_SlaveManager/SPI_SlaveManager.h"
 
 /*******************************************************************************************************************************************
  *  												WifiManager Class
@@ -46,6 +40,7 @@ class Manager
 public:  
 
     WifiManager* m_wifiManager = NULL;  /** Instance for Wifimanager */
+    SPI_SlaveManager* m_spiSlaveManager = NULL;  /** Instance for Wifimanager */
 
     /**
      * \brief Constructor.

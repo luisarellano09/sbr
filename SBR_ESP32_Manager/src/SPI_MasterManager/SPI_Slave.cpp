@@ -56,7 +56,7 @@ RC_e SPI_Slave::AddRequest(COM_REQUEST_TYPE_e type, COM_REQUEST_REG_ID_e id, uin
 
 RC_e SPI_Slave::CleanBuffer(){
     for(int i=0; i<SPI_SLAVE_REQUESTS_ARRAY_SIZE; i++){
-        m_RequestsArray[i].comRequestType = COM_REQUEST_TYPE_e::STOP;
+        m_RequestsArray[i].comRequestType = COM_REQUEST_TYPE_e::NONE;
         m_RequestsArray[i].comRequestRegId = 0;
         m_RequestsArray[i].data = 0;
         m_RequestsArray[i].CRC = 0;

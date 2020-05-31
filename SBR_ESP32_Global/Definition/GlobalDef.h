@@ -7,11 +7,12 @@
  * \brief All globla definitions of SBR Project.
  * 
  * Changes
- * V.1.4 -> 16.04.2020: [LA] RC_e update 
- * V.1.3 -> 14.04.2020: [JS] new ERRORS ENUM added 
- * V.1.2 -> 14.04.2020: [LA] Communication enums and struct
- * V.1.1 -> 14.04.2020: [JS] Comment header was added.
- * V.1.0 -> 13.04.2020: [LA] Doc was created
+ * 03.05.2020: [LA] RC_e update
+ * 16.04.2020: [LA] RC_e update 
+ * 14.04.2020: [JS] new ERRORS ENUM added 
+ * 14.04.2020: [LA] Communication enums and struct
+ * 14.04.2020: [JS] Comment header was added.
+ * 13.04.2020: [LA] Doc was created
  *
  *
  */
@@ -40,7 +41,7 @@ enum RC_e{
  *******************************************************************************************************************************************/
 
 /** \brief  Enumeration for SBR registers IDs. The number defines the register offset */
-enum COM_FRAME_REG_ID_e{
+enum COM_REQUEST_REG_ID_e{
 	TLF_DEVCFG0							=0x00,							/**< \brief Device configuration 0 *R2 (DEVCFG0) Register*/
 	TLF_DEVCFG1							=0x01,							/**< \brief Device configuration 1 *R0 (DEVCFG1) Register*/
 	TLF_DEVCFG2							=0x02,							/**< \brief Device configuration 2 *R2 (DEVCFG2) Register*/
@@ -99,24 +100,25 @@ enum COM_FRAME_REG_ID_e{
 
 
 /*******************************************************************************************************************************************
- *  												COMMUNICATION FRAME
+ *  												COMMUNICATION REQUEST
  *******************************************************************************************************************************************/
 
 /** \brief Defines if a read or write operation shall be performed. */
-enum COM_FRAME_REQ_e{
+enum COM_REQUEST_TYPE_e{
 	READ							=0x0,							/**< \brief Read operation*/
 	WRITE							=0x1,							/**< \brief Write operation*/
+    STOP							=0x2,							/**< \brief STOP operation*/
+    NONE      						=0x3,							/**< \brief None operation*/                      
 };
 
 
-/** \brief Structure to define the communication frame. */
-
-struct COM_FRAME_st
+/** \brief Structure to define the communication request. */
+struct COM_REQUEST_st
 {
-    uint8_t    comFrameReq;        /**< Some documentation for the member myStruct_t#a. */
-    uint8_t    comFrameRegId;      /**< Some documentation for the member myStruct_t#b. */
-    uint32_t   data;
-    uint16_t   CRC;                
+    uint8_t    comRequestType;      /**< Request type: Read or Write. */
+    uint8_t    comRequestRegId;     /**< Request ID. */
+    uint32_t   data;                /**< Data payload. */
+    uint16_t   CRC;                 /**< Frame consistency. */
 };
 
 
