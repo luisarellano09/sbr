@@ -76,20 +76,34 @@ RC_e SPI_MasterManager::SendWriteRequests(ESP32_Slave_e slave){
 }
 
 RC_e SPI_MasterManager::ReadSlaveRequests(ESP32_Slave_e slave){
+
+    uint8_t countStops = 0;
     
-    // Request to read
-    COM_REQUEST_st request;
+    for(auto i = 0; i< SPI_SLAVE_REQUESTS_ARRAY_SIZE; i++){
+        // Request to read
+        COM_REQUEST_st request;
+        
+        // Read request
+        if( SPI_ReadSlaveRequest(&request, m_SPI_Slaves[slave].m_CS) == RC_e::SUCCESS){
+            
+            if (request.comRequestType == COM_REQUEST_TYPE_e::STOP){
+                Serial.println("GOT STOP!");
+                countStops++;
+            } else if (request.comRequestType == COM_REQUEST_TYPE_e::READ || request.comRequestType == COM_REQUEST_TYPE_e::WRITE){
+                // Handle request
+                HandleReadSlaveRequest(&request);
+            }
 
-    //TODO add while loop until get STOP
+            if(countStops == 5){
+                return RC_e::SUCCESS;
+            }
+        }
 
-    // Read request
-    if( SPI_ReadSlaveRequest(&request, m_SPI_Slaves[slave].m_CS) == RC_e::SUCCESS){
-        // Handle request
-        HandleReadSlaveRequest(&request);
+        // Wait time
+        //delay(1);
     }
 
-    // Wait time
-    delay(1);
+    return RC_e::SUCCESS;
 }
 
 RC_e SPI_MasterManager::Run(){
@@ -171,10 +185,7 @@ RC_e SPI_MasterManager::SPI_ReadSlaveRequest(COM_REQUEST_st* request, uint8_t _C
 
 RC_e SPI_MasterManager::HandleReadSlaveRequest(COM_REQUEST_st* request){
 
-    
 
-    // Testing 
-    if(request->comRequestType == COM_REQUEST_TYPE_e::WRITE){
         Serial.println("====== RX =======");
         Serial.print("Req: ");
         Serial.println(request->comRequestType);
@@ -184,7 +195,7 @@ RC_e SPI_MasterManager::HandleReadSlaveRequest(COM_REQUEST_st* request){
         Serial.println(request->data);
         Serial.print("CRC: ");
         Serial.println(request->CRC);
-    }
+    
 
     return RC_e::SUCCESS;
 }

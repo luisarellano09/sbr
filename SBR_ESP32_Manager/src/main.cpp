@@ -111,6 +111,10 @@ void LoopCore0( void * parameter ){
                             Serial.println("Restarting...");
                             ESP.restart();
                             break;
+                        case '1':
+                            Serial.println("Reading Slave.....");
+                            test_run_read();
+                            break;
                     }
                 }
                 manager->m_wifiManager->RunOTA();
@@ -118,9 +122,9 @@ void LoopCore0( void * parameter ){
             // ==========================
         }
         
-        test_run();
+        //test_run();
         //test_run_read();
-        //delay(1);
+        delay(1);
     }
 }
 
