@@ -71,7 +71,6 @@ RC_e SPI_SlaveManager::ListenRequest(){
             // Get frame
             DecodeRequest(&_bufferOneFrame);
         }
-        
     }
 
     return RC_e::SUCCESS;
@@ -127,6 +126,9 @@ RC_e SPI_SlaveManager::DecodeRequest(array_t* buffer){
     BufferToRequest(_buffer, &request);
 
     // Check CRC
+    if (request.CRC != CalculateCrcFromRequest(&request)){
+        return RC_e::ERROR_CRC;
+    }
 
     // Read Write Selector
     if(request.comRequestType == COM_REQUEST_TYPE_e::WRITE){
@@ -181,7 +183,7 @@ RC_e SPI_SlaveManager::HandleReadRequest(){
         _request.comRequestType = COM_REQUEST_TYPE_e::STOP;
         _request.comRequestRegId = 0;
         _request.data = 0;
-        _request.CRC = 169;
+        _request.CRC = CalculateCrcFromRequest(&_request);
     }
 
     // SPI Buffer
@@ -233,7 +235,7 @@ RC_e SPI_SlaveManager::AddRequest(COM_REQUEST_TYPE_e type, COM_REQUEST_REG_ID_e 
     m_RequestsArray[m_RequestsArrayIndex].comRequestType = type;
     m_RequestsArray[m_RequestsArrayIndex].comRequestRegId = id;
     m_RequestsArray[m_RequestsArrayIndex].data = data;
-    m_RequestsArray[m_RequestsArrayIndex].CRC = 69;
+    m_RequestsArray[m_RequestsArrayIndex].CRC = CalculateCrcFromRequest(&m_RequestsArray[m_RequestsArrayIndex]);
 
     return RC_e::SUCCESS;
 }  

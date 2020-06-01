@@ -118,7 +118,8 @@ void LoopCore0( void * parameter ){
             // ==========================
         }
         
-        test_run_read();
+        test_run();
+        //test_run_read();
         //delay(1);
     }
 }
@@ -283,7 +284,7 @@ void test_run(){
 
 void test_run_read(){
     if(flag_SPI_Manager_Enable>0){
-        manager->m_SPI_MasterManager->ReadRequests(ESP32_Slave_e::MOTION);
+        manager->m_SPI_MasterManager->ReadSlaveRequests(ESP32_Slave_e::MOTION);
     }else{
         delay(1);
     }

@@ -73,7 +73,7 @@ public:
      *
      * \return Error Code.
      */  
-    RC_e ReadRequests(ESP32_Slave_e slave);
+    RC_e ReadSlaveRequests(ESP32_Slave_e slave);
     
     /**
      * \brief Function to execute the Manager.
@@ -108,7 +108,14 @@ private:
      *
      * \return Error Code.
      */
-    RC_e SPI_ReadRequest(COM_REQUEST_st* request, uint8_t _CS);
+    RC_e SPI_ReadSlaveRequest(COM_REQUEST_st* request, uint8_t _CS);
+
+    /**
+     * \brief Function to handle a read slave request .
+     *
+     * \return Error Code.
+     */
+    RC_e HandleReadSlaveRequest(COM_REQUEST_st* request);
 
 
 

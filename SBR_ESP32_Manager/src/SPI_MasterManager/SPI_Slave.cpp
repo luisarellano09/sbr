@@ -17,6 +17,7 @@
  *  												Includes
  *******************************************************************************************************************************************/
 #include "SPI_Slave.h"
+#include "../../lib/Utility/Utility.h"
 
 /*******************************************************************************************************************************************
  *  												Constructor
@@ -49,7 +50,7 @@ RC_e SPI_Slave::AddRequest(COM_REQUEST_TYPE_e type, COM_REQUEST_REG_ID_e id, uin
     m_RequestsArray[m_RequestsArrayIndex].comRequestType = type;
     m_RequestsArray[m_RequestsArrayIndex].comRequestRegId = id;
     m_RequestsArray[m_RequestsArrayIndex].data = data;
-    m_RequestsArray[m_RequestsArrayIndex].CRC = 69;
+    m_RequestsArray[m_RequestsArrayIndex].CRC = CalculateCrcFromRequest(&m_RequestsArray[m_RequestsArrayIndex]);
 
     return RC_e::SUCCESS;
 }  

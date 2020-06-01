@@ -70,13 +70,25 @@ RC_e SPI_MasterManager::SendWriteRequests(ESP32_Slave_e slave){
         SPI_SendWriteRequest(m_SPI_Slaves[slave].m_RequestsArray[i], m_SPI_Slaves[slave].m_CS);
         delay(1);
     }
+
+    // Clean Buffer
     m_SPI_Slaves[slave].CleanBuffer();
 }
 
-RC_e SPI_MasterManager::ReadRequests(ESP32_Slave_e slave){
+RC_e SPI_MasterManager::ReadSlaveRequests(ESP32_Slave_e slave){
     
+    // Request to read
     COM_REQUEST_st request;
-    SPI_ReadRequest(&request, m_SPI_Slaves[slave].m_CS);
+
+    //TODO add while loop until get STOP
+
+    // Read request
+    if( SPI_ReadSlaveRequest(&request, m_SPI_Slaves[slave].m_CS) == RC_e::SUCCESS){
+        // Handle request
+        HandleReadSlaveRequest(&request);
+    }
+
+    // Wait time
     delay(1);
 }
 
@@ -130,7 +142,7 @@ RC_e SPI_MasterManager::SPI_SendWriteRequest(COM_REQUEST_st request, uint8_t _CS
     return RC_e::SUCCESS;
 }
 
-RC_e SPI_MasterManager::SPI_ReadRequest(COM_REQUEST_st* request, uint8_t _CS){
+RC_e SPI_MasterManager::SPI_ReadSlaveRequest(COM_REQUEST_st* request, uint8_t _CS){
 
     // Buffer
     uint8_t _buffer[SPI_MANAGER_REQUEST_SIZE] = {0};
@@ -148,6 +160,18 @@ RC_e SPI_MasterManager::SPI_ReadRequest(COM_REQUEST_st* request, uint8_t _CS){
 
     // Convert buffer to request
     BufferToRequest(_buffer, request);
+
+    // Check CRC
+    if (request->CRC != CalculateCrcFromRequest(request)){
+        return RC_e::ERROR_CRC;
+    }
+
+    return RC_e::SUCCESS;
+}
+
+RC_e SPI_MasterManager::HandleReadSlaveRequest(COM_REQUEST_st* request){
+
+    
 
     // Testing 
     if(request->comRequestType == COM_REQUEST_TYPE_e::WRITE){
