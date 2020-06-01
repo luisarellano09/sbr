@@ -17,6 +17,7 @@
  *  												Includes
  *******************************************************************************************************************************************/
 #include "SPI_MasterManager.h"
+#include "../../lib/Utility/Utility.h"
 
 /*******************************************************************************************************************************************
  *  												Constructor
@@ -107,24 +108,22 @@ RC_e SPI_MasterManager::SPIConfigure(uint32_t clock, uint8_t _MO, uint8_t _MI, u
 
 RC_e SPI_MasterManager::SPI_SendWriteRequest(COM_REQUEST_st request, uint8_t _CS){
 
+    // Buffer
     uint8_t _buffer[SPI_MANAGER_REQUEST_SIZE];
 
-    _buffer[0] = request.comRequestType;
-    _buffer[1] = request.comRequestRegId;
-    _buffer[2] = (byte)request.data;
-    _buffer[3] = (byte)(request.data>>8);
-    _buffer[4] = (byte)(request.data>>16);
-    _buffer[5] = (byte)(request.data>>24);
-    _buffer[6] = (byte)request.CRC;
-    _buffer[7] = (byte)(request.CRC>>8);
+    // Convert request to buffer  
+    RequestToBuffer(&request, _buffer);
     
+    // Begin transcation
     m_master.beginTransaction(m_spi_setting);
     digitalWrite(_CS, LOW);
 
+    // Iterate all bytes from buffer
     for(int i=0; i<SPI_MANAGER_REQUEST_SIZE; i++){
         m_master.transfer(_buffer[i]);
     }
 
+    // End Transaction
     digitalWrite(_CS, HIGH);
     m_master.endTransaction();
 
@@ -133,30 +132,24 @@ RC_e SPI_MasterManager::SPI_SendWriteRequest(COM_REQUEST_st request, uint8_t _CS
 
 RC_e SPI_MasterManager::SPI_ReadRequest(COM_REQUEST_st* request, uint8_t _CS){
 
+    // Buffer
     uint8_t _buffer[SPI_MANAGER_REQUEST_SIZE] = {0};
 
+    // Begin Transaction
     m_master.beginTransaction(m_spi_setting);
     digitalWrite(_CS, LOW);
+
+    // Read request
     m_master.transferBytes(_buffer, _buffer, SPI_MANAGER_REQUEST_SIZE);
+    
+    // End Transaction
     digitalWrite(_CS, HIGH);
     m_master.endTransaction();
 
-    //---------REQUEST--------
-    request->comRequestType = _buffer[0];
+    // Convert buffer to request
+    BufferToRequest(_buffer, request);
 
-    //------------ID----------
-    request->comRequestRegId = _buffer[1];
-
-    //------------DATA----------
-    request->data = (_buffer[2]);
-    request->data += (_buffer[3])<<8;
-    request->data += (_buffer[4])<<16;
-    request->data += (_buffer[5])<<24;
-
-    //|-----------------CRC-------------------|
-    request->CRC = _buffer[6];
-    request->CRC += (_buffer[7])<<8;
-
+    // Testing 
     if(request->comRequestType == COM_REQUEST_TYPE_e::WRITE){
         Serial.println("====== RX =======");
         Serial.print("Req: ");
@@ -168,8 +161,6 @@ RC_e SPI_MasterManager::SPI_ReadRequest(COM_REQUEST_st* request, uint8_t _CS){
         Serial.print("CRC: ");
         Serial.println(request->CRC);
     }
-
-
 
     return RC_e::SUCCESS;
 }

@@ -116,7 +116,7 @@ enum COM_REQUEST_TYPE_e{
 struct COM_REQUEST_st
 {
     uint8_t    comRequestType;      /**< Request type: Read or Write. */
-    uint8_t    comRequestRegId;     /**< Request ID. */
+    uint16_t   comRequestRegId;     /**< Request ID. */
     uint32_t   data;                /**< Data payload. */
     uint16_t   CRC;                 /**< Frame consistency. */
 };

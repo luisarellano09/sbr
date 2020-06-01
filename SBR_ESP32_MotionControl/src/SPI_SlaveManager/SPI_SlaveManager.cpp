@@ -17,6 +17,7 @@
  *  												Includes
  *******************************************************************************************************************************************/
 #include "SPI_SlaveManager.h"
+#include "../../lib/Utility/Utility.h"
 
 /*******************************************************************************************************************************************
  *  												Constructor
@@ -107,52 +108,54 @@ RC_e SPI_SlaveManager::SPIConfigure(gpio_num_t _MO, gpio_num_t _MI, gpio_num_t _
 RC_e SPI_SlaveManager::DecodeRequest(array_t* buffer){
 
     // Local Frame
-    COM_REQUEST_st localFrame;
+    COM_REQUEST_st request;
 
-    // REQUEST
-    localFrame.comRequestType = (*buffer)[0];
+    // Local buffer
+    uint8_t _buffer[SPI_MANAGER_REQUEST_SIZE] = {0};
 
-    // ID
-    localFrame.comRequestRegId = (*buffer)[1];
+    // Assign from array_t to uint8_t
+    _buffer[0] = (*buffer)[0];
+    _buffer[1] = (*buffer)[1];
+    _buffer[2] = (*buffer)[2];
+    _buffer[3] = (*buffer)[3];
+    _buffer[4] = (*buffer)[4];
+    _buffer[5] = (*buffer)[5];
+    _buffer[6] = (*buffer)[6];
+    _buffer[7] = (*buffer)[7];
 
-    // DATA
-    localFrame.data = ((*buffer)[2]);
-    localFrame.data += ((*buffer)[3])<<8;
-    localFrame.data += ((*buffer)[4])<<16;
-    localFrame.data += ((*buffer)[5])<<24;
+    // Convert buffer to request
+    BufferToRequest(_buffer, &request);
 
-    // CRC
-    localFrame.CRC = (*buffer)[6];
-    localFrame.CRC += ((*buffer)[7])<<8;
+    // Check CRC
 
     // Read Write Selector
-    if(localFrame.comRequestType == COM_REQUEST_TYPE_e::WRITE){
-        HandleWriteRequest(localFrame);
-    } else if(localFrame.comRequestType == COM_REQUEST_TYPE_e::READ){
+    if(request.comRequestType == COM_REQUEST_TYPE_e::WRITE){
+        HandleWriteRequest(request);
+    } else if(request.comRequestType == COM_REQUEST_TYPE_e::READ){
         HandleReadRequest();
     }
 
     return RC_e::SUCCESS;
 }
 
-RC_e SPI_SlaveManager::HandleWriteRequest(COM_REQUEST_st localFrame){
+RC_e SPI_SlaveManager::HandleWriteRequest(COM_REQUEST_st request){
 
     // Serial.println("======== RX =========");
     // Serial.print("Req: ");
-    // Serial.println(localFrame.comFrameReq);
+    // Serial.println(request.comFrameReq);
     // Serial.print("ReqID: ");
-    // Serial.println(localFrame.comFrameRegId);
+    // Serial.println(request.comFrameRegId);
     // Serial.print("Data: ");
-    // Serial.println(localFrame.data);
+    // Serial.println(request.data);
     // Serial.print("CRC: ");
-    // Serial.println(localFrame.CRC);
+    // Serial.println(request.CRC);
 
-    if (test_data != localFrame.data){
+    if (test_data != request.data){
         Serial.print("Error: ");
         Serial.print(test_data);
         Serial.print(" != ");
-        Serial.println(localFrame.data);
-        test_data = localFrame.data;
+        Serial.println(request.data);
+        test_data = request.data;
     }
 
     test_data++;
@@ -165,44 +168,51 @@ RC_e SPI_SlaveManager::HandleWriteRequest(COM_REQUEST_st localFrame){
 
 RC_e SPI_SlaveManager::HandleReadRequest(){
 
-    COM_REQUEST_st localFrame;
+    COM_REQUEST_st _request;
 
     if(m_RequestsArrayIndexToSend<=m_RequestsArrayIndex){
-        localFrame.comRequestType = m_RequestsArray[m_RequestsArrayIndexToSend].comRequestType;
-        localFrame.comRequestRegId = m_RequestsArray[m_RequestsArrayIndexToSend].comRequestRegId;
-        localFrame.data = m_RequestsArray[m_RequestsArrayIndexToSend].data;
-        localFrame.CRC = m_RequestsArray[m_RequestsArrayIndexToSend].CRC;
+        _request.comRequestType = m_RequestsArray[m_RequestsArrayIndexToSend].comRequestType;
+        _request.comRequestRegId = m_RequestsArray[m_RequestsArrayIndexToSend].comRequestRegId;
+        _request.data = m_RequestsArray[m_RequestsArrayIndexToSend].data;
+        _request.CRC = m_RequestsArray[m_RequestsArrayIndexToSend].CRC;
         m_RequestsArrayIndexToSend++;
     } else{
         CleanBuffer();
-        localFrame.comRequestType = COM_REQUEST_TYPE_e::STOP;
-        localFrame.comRequestRegId = 0;
-        localFrame.data = 0;
-        localFrame.CRC = 169;
+        _request.comRequestType = COM_REQUEST_TYPE_e::STOP;
+        _request.comRequestRegId = 0;
+        _request.data = 0;
+        _request.CRC = 169;
     }
 
-    array_t buffer(SPI_MANAGER_REQUEST_SIZE);
+    // SPI Buffer
+    array_t _buffer(SPI_MANAGER_REQUEST_SIZE);
 
-    buffer.append(localFrame.comRequestType);
-    buffer.append(localFrame.comRequestRegId);
-    buffer.append((byte)localFrame.data);
-    buffer.append((byte)(localFrame.data>>8));
-    buffer.append((byte)(localFrame.data>>16));
-    buffer.append((byte)(localFrame.data>>24));
-    buffer.append((byte)localFrame.CRC);
-    buffer.append((byte)(localFrame.CRC>>8));
+    // Local buffer for conversion
+    uint8_t _partialBuffer[SPI_MANAGER_REQUEST_SIZE] = {0};
+
+    RequestToBuffer(&_request, _partialBuffer);
+
+    // Assign from partialBuffer to buffer
+    _buffer.append(_partialBuffer[0]);
+    _buffer.append(_partialBuffer[1]);
+    _buffer.append(_partialBuffer[2]);
+    _buffer.append(_partialBuffer[3]);
+    _buffer.append(_partialBuffer[4]);
+    _buffer.append(_partialBuffer[5]);
+    _buffer.append(_partialBuffer[6]);
+    _buffer.append(_partialBuffer[7]);
     
-    m_slave.writeFromArray(buffer);
+    m_slave.writeFromArray(_buffer);
 
     // Serial.println("======== TX =========");
     // Serial.print("Req: ");
-    // Serial.println(localFrame.comRequestType);
+    // Serial.println(_request.comRequestType);
     // Serial.print("ReqID: ");
-    // Serial.println(localFrame.comRequestRegId);
+    // Serial.println(_request.comRequestRegId);
     // Serial.print("Data: ");
-    // Serial.println(localFrame.data);
+    // Serial.println(_request.data);
     // Serial.print("CRC: ");
-    // Serial.println(localFrame.CRC);
+    // Serial.println(_request.CRC);
 
     return RC_e::SUCCESS;
 }
@@ -229,6 +239,7 @@ RC_e SPI_SlaveManager::AddRequest(COM_REQUEST_TYPE_e type, COM_REQUEST_REG_ID_e 
 }  
 
 RC_e SPI_SlaveManager::CleanBuffer(){
+
     for(int i=0; i<SPI_SLAVE_REQUESTS_ARRAY_SIZE; i++){
         m_RequestsArray[i].comRequestType = COM_REQUEST_TYPE_e::NONE;
         m_RequestsArray[i].comRequestRegId = 0;

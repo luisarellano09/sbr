@@ -99,7 +99,7 @@ private:
      *
      * \return Error Code.
      */
-    RC_e HandleWriteRequest(COM_REQUEST_st localFrame);
+    RC_e HandleWriteRequest(COM_REQUEST_st request);
 
     /**
      * \brief Function to hanfle RX request.
