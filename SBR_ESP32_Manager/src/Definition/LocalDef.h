@@ -51,11 +51,22 @@
  *******************************************************************************************************************************************/
 
 /** \brief  Enumeration for ESP32.  */
+enum Devices_e{
+    DEVICE_NONE         =-1,
+	DEVICE_MOTION	    = 0,        /**< \brief ESP32 Motion Control*/
+	DEVICE_SENSOR,                 /**< \brief ESP32 Sensors*/
+	DEVICE_UTIL,                   /**< \brief ESP32 Util*/
+    DEVICE_LINUX,                  /**< \brief Linux controller*/
+    DEVICE_LENGTH
+};
+
+/** \brief  Enumeration for ESP32.  */
 enum ESP32_Slave_e{
-	MOTION	    = 0,        /**< \brief ESP32 Motion Control*/
-	SENSOR,                 /**< \brief ESP32 Sensors*/
-	UTIL                    /**< \brief ESP32 Util*/
-} ;
+	SLAVE_MOTION  = Devices_e::DEVICE_MOTION,
+	SLAVE_SENSOR  = Devices_e::DEVICE_SENSOR,
+	SLAVE_UTIL    = Devices_e::DEVICE_UTIL,
+    SLAVE_LENGTH
+};
 
 
 #endif /* LOCALDEF_H */

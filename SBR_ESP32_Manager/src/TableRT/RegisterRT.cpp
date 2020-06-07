@@ -1,15 +1,14 @@
 /**
- * \file Manager.cpp
+ * \file RegisterRT.cpp
  * \author Luis Arellano - luis.arellano09@gmail.com
  * \date 26 April 2020
  *
- * \brief Class to Manager the ESP32.
+ * \brief Class to describe a register of the Data Table in Runtime.
  *
  * 
  * 
  * Changes
- * 30.04.2020: Add Wifimanager and logger instances.
- * 26.04.2020: Create Class
+ * 07.06.2020: Create Class.
  * 
  *
  */
@@ -18,35 +17,40 @@
 /*******************************************************************************************************************************************
  *  												INCLUDES
  *******************************************************************************************************************************************/
-#include "Manager.h"
+#include "./RegisterRT.h"
 
 /*******************************************************************************************************************************************
  *  												Constructor
  *******************************************************************************************************************************************/
-Manager::Manager(){
-
-    // Wifi Manager
-    m_wifiManager = new WifiManager(WIFI_SSID, WIFI_PASSWORD, ESP32_HOSTNAME);
-
-    // SPI Master Manager
-    m_SPI_MasterManager = new SPI_MasterManager(SPI_CLOCK, MO, MI, MCLK);
-    m_SPI_MasterManager->SetSlave(ESP32_Slave_e::SLAVE_MOTION, MOTION_CS);   // ESP32 - Motion Control
-
-    // Table RT
-    m_TableRT = new TableRT();
-    m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::R0, Devices_e::DEVICE_LINUX);
-
-
+RegisterRT::RegisterRT(){
+    m_value = 0;
+    m_subscribers_index = -1;
 }
 
-Manager::~Manager(){}
+RegisterRT::~RegisterRT(){}
 
 /*******************************************************************************************************************************************
  *  												Public Methods
  *******************************************************************************************************************************************/
 
+RC_e RegisterRT::AddSubscriber(Devices_e subscriber){
+    if(m_subscribers_index < Devices_e::DEVICE_LENGTH - 1){
+        m_subscribers_index++;
+        m_subscribers[m_subscribers_index] = subscriber;
+    }
 
+    return RC_e::SUCCESS;
+}
 
+RC_e RegisterRT::CleanSubscribers(){
+    for(auto i = 0; i< Devices_e::DEVICE_LENGTH; i++){
+        m_subscribers[i] = Devices_e::DEVICE_NONE;
+    };
+
+    m_subscribers_index = -1;
+
+    return RC_e::SUCCESS;
+}
 
 
 /*******************************************************************************************************************************************

@@ -56,7 +56,7 @@ bool flagTimer3 = false;
  *  												TEST
  *******************************************************************************************************************************************/
 
-void test_run();
+void test_run_write();
 void test_run_read();
 
 
@@ -115,6 +115,10 @@ void LoopCore0( void * parameter ){
                             Serial.println("Reading Slave.....");
                             test_run_read();
                             break;
+                        case '2':
+                            Serial.println("Writing Slave.....");
+                            test_run_write();
+                            break;
                     }
                 }
                 manager->m_wifiManager->RunOTA();
@@ -122,8 +126,6 @@ void LoopCore0( void * parameter ){
             // ==========================
         }
         
-        //test_run();
-        //test_run_read();
         delay(1);
     }
 }
@@ -267,18 +269,18 @@ void loop() {
 }
 
 
-void test_run(){
+void test_run_write(){
    
     if(flag_SPI_Manager_Enable>0){
-        manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_FWDCFG, count++);
+        manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_MOTION, COM_REQUEST_REG_ID_e::R5, count++);
         if (count > 10000) count = 0;
-        manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_IF, count++);
+        manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_MOTION, COM_REQUEST_REG_ID_e::R6, count++);
         if (count > 10000) count = 0;
-        manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_FWDCFG, count++);
+        manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_MOTION, COM_REQUEST_REG_ID_e::R7, count++);
         if (count > 10000) count = 0;
-        manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::MOTION, COM_REQUEST_REG_ID_e::TLF_IF, count++);
+        manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_MOTION, COM_REQUEST_REG_ID_e::R8, count++);
         if (count > 10000) count = 0;
-        manager->m_SPI_MasterManager->SendWriteRequests(ESP32_Slave_e::MOTION);
+        manager->m_SPI_MasterManager->SendWriteRequests(ESP32_Slave_e::SLAVE_MOTION);
         if (count > 10000) count = 0;
     } else{
         delay(1);
@@ -288,7 +290,7 @@ void test_run(){
 
 void test_run_read(){
     if(flag_SPI_Manager_Enable>0){
-        manager->m_SPI_MasterManager->ReadSlaveRequests(ESP32_Slave_e::MOTION);
+        manager->m_SPI_MasterManager->ReadSlaveRequests(ESP32_Slave_e::SLAVE_MOTION);
     }else{
         delay(1);
     }

@@ -1,9 +1,9 @@
 /**
- * \file TableRT.h
+ * \file RegisterRT.h
  * \author Luis Arellano - luis.arellano09@gmail.com
  * \date 26 April 2020
  *
- * \brief Class to describe the Data Table in Runtime.
+ * \brief Class to describe a register of the Data Table in Runtime.
  *
  * 
  * 
@@ -13,8 +13,8 @@
  *
  */
 
-#ifndef TABLERT_H
-#define TABLERT_H
+#ifndef REGISTERRT_H
+#define REGISTERRT_H
 
 /*******************************************************************************************************************************************
  *  												INCLUDES
@@ -22,8 +22,6 @@
 
 #include "../../lib/Definition/GlobalDef.h"
 #include "../Definition/LocalDef.h"
-
-#include "./RegisterRT.h"
 
 
 /*******************************************************************************************************************************************
@@ -33,34 +31,37 @@
 /**
  * \brief Class to describe the Data Table in Runtime.
  */
-class TableRT
+class RegisterRT
 {
 public:  
 
-    RegisterRT m_Registers[COM_REQUEST_REG_ID_e::REQUEST_REG_LENGTH];
+    uint32_t m_value;
+    Devices_e m_subscribers[Devices_e::DEVICE_LENGTH] = {Devices_e::DEVICE_NONE};
+    uint8_t m_subscribers_index;
 
     /**
      * \brief Constructor.
      */
-    TableRT();
+    RegisterRT();
 
     /**
      * \brief Destructor.
      */
-    ~TableRT();
+    ~RegisterRT();
 
     /**
-     * \brief Add subscriber to a register.
+     * \brief Add subscriber.
      */
-    RC_e AddSubscriber(COM_REQUEST_REG_ID_e regID, Devices_e subscriber);  
+    RC_e AddSubscriber(Devices_e subscriber);  
+   
+    /**
+     * \brief Clean Subscribers.
+     */
+    RC_e CleanSubscribers();  
    
 private:
 
-    /**
-     * \brief Clean Registers.
-     */
-    RC_e CleanRegisters();  
 
 };
 
-#endif // TABLERT_H
+#endif // REGISTERRT_H

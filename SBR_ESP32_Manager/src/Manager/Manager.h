@@ -1,5 +1,5 @@
 /**
- * \file Manager.cpp
+ * \file Manager.h
  * \author Luis Arellano - luis.arellano09@gmail.com
  * \date 26 April 2020
  *
@@ -26,10 +26,11 @@
 
 #include "../../lib/WifiManager/WifiManager.h"
 #include "../SPI_MasterManager/SPI_MasterManager.h"
+#include "../TableRT/TableRT.h"
 
 
 /*******************************************************************************************************************************************
- *  												WifiManager Class
+ *  												MANAGER Class
  *******************************************************************************************************************************************/
 
 /**
@@ -41,6 +42,7 @@ public:
 
     WifiManager* m_wifiManager = NULL;              /** Instance for Wifimanager. */
     SPI_MasterManager* m_SPI_MasterManager = NULL;  /** Instance for SPI Master Manager. */
+    TableRT* m_TableRT = NULL;                      /** Instance for RT table. */
 
     /**
      * \brief Constructor.
@@ -56,6 +58,7 @@ public:
 private:
 
 
+
 };
 
-#endif // LOGGER_H
+#endif // MANAGER_H

@@ -142,15 +142,15 @@ RC_e SPI_SlaveManager::DecodeRequest(array_t* buffer){
 
 RC_e SPI_SlaveManager::HandleWriteRequest(COM_REQUEST_st request){
 
-    // Serial.println("======== RX =========");
-    // Serial.print("Req: ");
-    // Serial.println(request.comFrameReq);
-    // Serial.print("ReqID: ");
-    // Serial.println(request.comFrameRegId);
-    // Serial.print("Data: ");
-    // Serial.println(request.data);
-    // Serial.print("CRC: ");
-    // Serial.println(request.CRC);
+    Serial.println("======== RX =========");
+    Serial.print("Req: ");
+    Serial.println(request.comRequestType);
+    Serial.print("ReqID: ");
+    Serial.println(request.comRequestRegId);
+    Serial.print("Data: ");
+    Serial.println(request.data);
+    Serial.print("CRC: ");
+    Serial.println(request.CRC);
 
     if (test_data != request.data){
         Serial.print("Error: ");
