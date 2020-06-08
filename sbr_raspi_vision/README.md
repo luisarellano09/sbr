@@ -1,3 +1,0 @@
-# SBR_RASPI_Qt_Vision
-
-SBR_RASPI_Qt_Vision

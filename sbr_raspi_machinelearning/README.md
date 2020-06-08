@@ -1,3 +1,0 @@
-# SBR_RASPI_Python_MachineLearning
-
-SBR_RASPI_Python_MachineLearning

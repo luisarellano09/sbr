@@ -1,3 +1,0 @@
-# SBR_RASPI_Qt_MainControl
-
-SBR_RASPI_Qt_MainControl
