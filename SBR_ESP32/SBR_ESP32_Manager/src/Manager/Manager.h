@@ -27,6 +27,7 @@
 #include "../../lib/WifiManager/WifiManager.h"
 #include "../SPI_MasterManager/SPI_MasterManager.h"
 #include "../TableRT/TableRT.h"
+#include "../PollingController/PollingController.h"
 
 
 /*******************************************************************************************************************************************
@@ -40,9 +41,10 @@ class Manager
 {
 public:  
 
-    WifiManager* m_wifiManager = NULL;              /** Instance for Wifimanager. */
+    WifiManager* m_WifiManager = NULL;              /** Instance for Wifimanager. */
     SPI_MasterManager* m_SPI_MasterManager = NULL;  /** Instance for SPI Master Manager. */
     TableRT* m_TableRT = NULL;                      /** Instance for RT table. */
+    PollingController* m_PollingController = NULL;  /** Instance for Polling Controller. */
 
     /**
      * \brief Constructor.
@@ -53,11 +55,18 @@ public:
      * \brief Destructor.
      */
     ~Manager();
-
    
 private:
 
+    /**
+     * \brief Add subscribers.
+     */
+    RC_e AddSubscribers();
 
+    /**
+     * \brief Add subscribers.
+     */
+    RC_e AddSlavesCS();
 
 };
 

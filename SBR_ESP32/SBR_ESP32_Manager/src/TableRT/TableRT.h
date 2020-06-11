@@ -53,6 +53,11 @@ public:
      * \brief Add subscriber to a register.
      */
     RC_e AddSubscriber(COM_REQUEST_REG_ID_e regID, Devices_e subscriber);  
+
+    /**
+     * \brief Update Register.
+     */
+    RC_e UpdateRegister(COM_REQUEST_REG_ID_e regID, uint32_t data);  
    
 private:
 

@@ -252,14 +252,14 @@ void loop() {
 
 
 void test_consumer(){
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 1);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 2);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 3);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 4);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 5);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 6);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 7);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 8);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 9);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TLF_BCK_MAIN_CTRL, 10);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R0, 1);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R1, 2);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R2, 3);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R3, 4);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R4, 5);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R5, 6);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R6, 7);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R7, 8);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R8, 9);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R9, 10);
 }

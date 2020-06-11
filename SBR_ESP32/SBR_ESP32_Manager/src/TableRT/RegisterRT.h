@@ -1,7 +1,7 @@
 /**
  * \file RegisterRT.h
  * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 26 April 2020
+ * \date 07 Jun 2020
  *
  * \brief Class to describe a register of the Data Table in Runtime.
  *
@@ -37,7 +37,7 @@ public:
 
     uint32_t m_value;
     Devices_e m_subscribers[Devices_e::DEVICE_LENGTH] = {Devices_e::DEVICE_NONE};
-    uint8_t m_subscribers_index;
+    int8_t m_subscribers_index;
 
     /**
      * \brief Constructor.

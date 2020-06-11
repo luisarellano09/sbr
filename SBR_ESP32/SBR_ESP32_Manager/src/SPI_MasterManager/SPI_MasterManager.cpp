@@ -26,6 +26,12 @@
 SPI_MasterManager::SPI_MasterManager(uint32_t clock, uint8_t _MO, uint8_t _MI, uint8_t _MCLK){
 
     SPIConfigure(clock, _MO, _MI, _MCLK);
+
+    // Clear Chip Selects
+    for(auto i=0; i<ESP32_Slave_e::SLAVE_LENGTH; i++){
+        this->m_SPI_Slaves[i].m_CS = 0;
+    }
+
 }
 
 SPI_MasterManager::~SPI_MasterManager(){}
@@ -33,6 +39,10 @@ SPI_MasterManager::~SPI_MasterManager(){}
 /*******************************************************************************************************************************************
  *  												Public Methods
  *******************************************************************************************************************************************/
+
+RC_e SPI_MasterManager::ConnectTableRT(TableRT* tableRT){
+    this->m_tableRT = tableRT;
+}
 
 RC_e SPI_MasterManager::SetSlave(ESP32_Slave_e slave, uint8_t _CS){
 
@@ -66,16 +76,25 @@ RC_e SPI_MasterManager::AddWriteRequest(ESP32_Slave_e slave, COM_REQUEST_REG_ID_
 }
 
 RC_e SPI_MasterManager::SendWriteRequests(ESP32_Slave_e slave){
+
+    // Iterate to slaves
     for(int i=0; i<=m_SPI_Slaves[slave].m_RequestsArrayIndex; i++){
         SPI_SendWriteRequest(m_SPI_Slaves[slave].m_RequestsArray[i], m_SPI_Slaves[slave].m_CS);
         delay(1);
     }
 
     // Clean Buffer
-    m_SPI_Slaves[slave].CleanBuffer();
+    this->m_SPI_Slaves[slave].CleanBuffer();
+
+    return RC_e::SUCCESS;
 }
 
 RC_e SPI_MasterManager::ReadSlaveRequests(ESP32_Slave_e slave){
+
+    // Check if pointer is Null
+    if(this->m_tableRT == NULL){
+        return RC_e::ERROR_NULL_POINTER;
+    }
 
     uint8_t countStops = 0;
     
@@ -84,32 +103,20 @@ RC_e SPI_MasterManager::ReadSlaveRequests(ESP32_Slave_e slave){
         COM_REQUEST_st request;
         
         // Read request
-        if( SPI_ReadSlaveRequest(&request, m_SPI_Slaves[slave].m_CS) == RC_e::SUCCESS){
+        if( SPI_ReadSlaveRequest(&request, this->m_SPI_Slaves[slave].m_CS) == RC_e::SUCCESS){
             
-            if (request.comRequestType == COM_REQUEST_TYPE_e::STOP){
-                Serial.println("GOT STOP!");
+            if (request.comRequestType == COM_REQUEST_TYPE_e::STOP || (request.comRequestType == 0 && request.comRequestRegId == 0 && request.data == 0)){
                 countStops++;
             } else if (request.comRequestType == COM_REQUEST_TYPE_e::READ || request.comRequestType == COM_REQUEST_TYPE_e::WRITE){
                 // Handle request
                 HandleReadSlaveRequest(&request);
             }
 
-            if(countStops == 5){
+            if(countStops > SPI_MANAGER_NUMBER_STOP_EMPTY){
                 return RC_e::SUCCESS;
             }
         }
-
-        // Wait time
-        //delay(1);
     }
-
-    return RC_e::SUCCESS;
-}
-
-RC_e SPI_MasterManager::Run(){
-
-    // Result code
-    RC_e retCode = RC_e::ERROR;
 
     return RC_e::SUCCESS;
 }
@@ -158,6 +165,16 @@ RC_e SPI_MasterManager::SPI_SendWriteRequest(COM_REQUEST_st request, uint8_t _CS
 
 RC_e SPI_MasterManager::SPI_ReadSlaveRequest(COM_REQUEST_st* request, uint8_t _CS){
 
+    // Check if pointer is null
+    if(request == NULL){
+        return RC_e::ERROR_NULL_POINTER;
+    }
+
+    // Check if CS exists
+    if(_CS == 0){
+        return RC_e::ERROR_NO_CS;
+    }
+
     // Buffer
     uint8_t _buffer[SPI_MANAGER_REQUEST_SIZE] = {0};
 
@@ -185,7 +202,7 @@ RC_e SPI_MasterManager::SPI_ReadSlaveRequest(COM_REQUEST_st* request, uint8_t _C
 
 RC_e SPI_MasterManager::HandleReadSlaveRequest(COM_REQUEST_st* request){
 
-
+    if(request->comRequestType == COM_REQUEST_TYPE_e::WRITE){
         Serial.println("====== RX =======");
         Serial.print("Req: ");
         Serial.println(request->comRequestType);
@@ -195,7 +212,31 @@ RC_e SPI_MasterManager::HandleReadSlaveRequest(COM_REQUEST_st* request){
         Serial.println(request->data);
         Serial.print("CRC: ");
         Serial.println(request->CRC);
-    
 
+        // Update Register
+        m_tableRT->UpdateRegister((COM_REQUEST_REG_ID_e)request->comRequestRegId, request->data);
+
+        // Add request to suscribers buffers
+        AddRequestToSubscriber(request);
+
+
+    } else if (request->comRequestType == COM_REQUEST_TYPE_e::READ){
+        //TODO implement read request
+    }
     return RC_e::SUCCESS;
+}
+
+RC_e SPI_MasterManager::AddRequestToSubscriber(COM_REQUEST_st* request){
+
+    for(auto i=0; i<Devices_e::DEVICE_LENGTH; i++){
+        // Get subscriber
+        Devices_e _subscriber = m_tableRT->m_Registers[(COM_REQUEST_REG_ID_e)request->comRequestRegId].m_subscribers[i];
+
+        // Select the devices
+        if (_subscriber == Devices_e::DEVICE_LINUX){
+            //TODO implement LInux buffer
+        } else if (_subscriber != Devices_e::DEVICE_NONE){
+            m_SPI_Slaves[_subscriber].AddRequest(COM_REQUEST_TYPE_e::WRITE, (COM_REQUEST_REG_ID_e)request->comRequestRegId, request->data);
+        }
+    }
 }

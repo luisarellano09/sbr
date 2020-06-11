@@ -1,7 +1,7 @@
 /**
  * \file RegisterRT.cpp
  * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 26 April 2020
+ * \date 07 Jun 2020
  *
  * \brief Class to describe a register of the Data Table in Runtime.
  *

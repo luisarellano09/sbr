@@ -33,7 +33,8 @@ enum RC_e{
 	ERROR_NULL_POINTER,                                             /**< \brief Error null pointer					*/
 	ERROR_SIZE_BUFFER,                                             	/**< \brief Error size buffer					*/
 	ERROR_CRC,		                                             	/**< \brief Error CRC Validation				*/
-    ERROR_WIFI_CONNECTION                                           /**< \brief Error Wifi connection   			*/
+    ERROR_WIFI_CONNECTION,                                          /**< \brief Error Wifi connection   			*/
+    ERROR_NO_CS                                                     /**< \brief Error No Chip Select   			    */
 } ;
 
 

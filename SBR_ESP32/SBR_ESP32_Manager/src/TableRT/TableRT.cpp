@@ -38,6 +38,12 @@ RC_e TableRT::AddSubscriber(COM_REQUEST_REG_ID_e regID, Devices_e subscriber){
     return RC_e::SUCCESS;
 }
 
+RC_e TableRT::UpdateRegister(COM_REQUEST_REG_ID_e regID, uint32_t data){
+    // Update value
+    m_Registers[regID].m_value = data;
+    return RC_e::SUCCESS;
+}
+
 /*******************************************************************************************************************************************
  *  												Private Methods
  *******************************************************************************************************************************************/

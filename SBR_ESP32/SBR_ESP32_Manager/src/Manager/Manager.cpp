@@ -26,17 +26,19 @@
 Manager::Manager(){
 
     // Wifi Manager
-    m_wifiManager = new WifiManager(WIFI_SSID, WIFI_PASSWORD, ESP32_HOSTNAME);
-
-    // SPI Master Manager
-    m_SPI_MasterManager = new SPI_MasterManager(SPI_CLOCK, MO, MI, MCLK);
-    m_SPI_MasterManager->SetSlave(ESP32_Slave_e::SLAVE_MOTION, MOTION_CS);   // ESP32 - Motion Control
+    m_WifiManager = new WifiManager(WIFI_SSID, WIFI_PASSWORD, ESP32_HOSTNAME);
 
     // Table RT
     m_TableRT = new TableRT();
-    m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::R0, Devices_e::DEVICE_LINUX);
+    AddSubscribers();
+    
+    // SPI Master Manager
+    m_SPI_MasterManager = new SPI_MasterManager(SPI_CLOCK, MO, MI, MCLK);
+    m_SPI_MasterManager->ConnectTableRT(m_TableRT);
+    AddSlavesCS();
 
-
+    // Polling Controller
+    m_PollingController = new PollingController(m_SPI_MasterManager);
 }
 
 Manager::~Manager(){}
@@ -46,9 +48,14 @@ Manager::~Manager(){}
  *******************************************************************************************************************************************/
 
 
-
-
-
 /*******************************************************************************************************************************************
  *  												Private Methods
  *******************************************************************************************************************************************/
+
+RC_e Manager::AddSubscribers(){
+    m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::R0, Devices_e::DEVICE_MOTION);
+}
+
+RC_e Manager::AddSlavesCS(){
+    m_SPI_MasterManager->SetSlave(ESP32_Slave_e::SLAVE_MOTION, MOTION_CS);   // ESP32 - Motion Control
+}

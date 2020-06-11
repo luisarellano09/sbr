@@ -22,10 +22,12 @@
 
 #include <Arduino.h>
 #include <SPI.h>
-#include "./SPI_Slave.h"
+#include "SPI_Slave.h"
 
 #include "../Definition/LocalDef.h"
 #include "../../lib/Definition/GlobalDef.h"
+
+#include "../TableRT/TableRT.h"
 
 /*******************************************************************************************************************************************
  *  												SPI Master Class
@@ -46,6 +48,13 @@ public:
      * \brief Destructor.
      */
     ~SPI_MasterManager();
+
+    /**
+     * \brief Function to connect to the tableRT pointer.
+     *
+     * \return Error Code.
+     */  
+    RC_e ConnectTableRT(TableRT* tableRT);
 
     /**
      * \brief Function to set the Slave.
@@ -75,18 +84,12 @@ public:
      */  
     RC_e ReadSlaveRequests(ESP32_Slave_e slave);
     
-    /**
-     * \brief Function to execute the Manager.
-     *
-     * \return Error Code.
-     */  
-    RC_e Run();
-    
 private:
 
     SPISettings m_spi_setting;
     SPIClass m_master;
-    SPI_Slave m_SPI_Slaves[SPI_MANAGER_NUMBER_SLAVES];    /** Array of slaves */
+    SPI_Slave m_SPI_Slaves[ESP32_Slave_e::SLAVE_LENGTH];    /** Array of slaves */
+    TableRT* m_tableRT = NULL;
 
     /**
      * \brief Function to configure the SPI .
@@ -116,6 +119,13 @@ private:
      * \return Error Code.
      */
     RC_e HandleReadSlaveRequest(COM_REQUEST_st* request);
+
+    /**
+     * \brief Function Add a request to the subscribed slave 
+     *
+     * \return Error Code.
+     */
+    RC_e AddRequestToSubscriber(COM_REQUEST_st* request);
 
 
 
