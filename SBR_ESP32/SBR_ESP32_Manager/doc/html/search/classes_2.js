@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pollingcontroller_178',['PollingController',['../class_polling_controller.html',1,'']]]
+  ['pollingcontroller_180',['PollingController',['../class_polling_controller.html',1,'']]]
 ];

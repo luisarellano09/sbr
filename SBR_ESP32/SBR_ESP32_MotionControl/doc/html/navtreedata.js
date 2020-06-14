@@ -23,7 +23,7 @@ for the JavaScript code in this file
 var NAVTREE =
 [
   [ "ESP32_MotionControl", "index.html", [
-    [ "SBR_ESP32_MotionControl", "md__r_e_a_d_m_e.html", null ],
+    [ "SBR_ESP32_MotionControl", "md__home_ubuntu__workspace__s_b_r__s_b_r__e_s_p32__s_b_r__e_s_p32__motion_control__r_e_a_d_m_e.html", null ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],

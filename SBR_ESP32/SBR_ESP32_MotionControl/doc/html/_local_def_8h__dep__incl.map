@@ -1,8 +1,8 @@
-<map id="src/Definition/LocalDef.h" name="src/Definition/LocalDef.h">
-<area shape="rect" id="node1" title="Definitions of ESP32 Project." alt="" coords="113,5,294,32"/>
-<area shape="rect" id="node2" href="$_manager_8h.html" title="Class to Manage the ESP32." alt="" coords="56,177,231,203"/>
-<area shape="rect" id="node5" href="$_s_p_i___slave_manager_8h.html" title="Class to Manage the SPI Slave communication." alt="" coords="181,80,346,121"/>
-<area shape="rect" id="node3" href="$main_8cpp.html" title="main class" alt="" coords="5,259,111,285"/>
-<area shape="rect" id="node4" href="$_manager_8cpp.html" title="Class to Manage the ESP32." alt="" coords="135,259,325,285"/>
-<area shape="rect" id="node6" href="$_s_p_i___slave_manager_8cpp.html" title="Class to Manage the SPI Slave communication." alt="" coords="255,169,429,211"/>
+<map id="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_MotionControl/src/Definition/LocalDef.h" name="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_MotionControl/src/Definition/LocalDef.h">
+<area shape="rect" id="node1" title="Definitions of ESP32 Project." alt="" coords="205,5,417,76"/>
+<area shape="rect" id="node2" href="$_manager_8h.html" title="Class to Manage the ESP32." alt="" coords="122,243,329,313"/>
+<area shape="rect" id="node5" href="$_s_p_i___slave_manager_8h.html" title="Class to Manage the SPI Slave communication." alt="" coords="263,124,531,195"/>
+<area shape="rect" id="node3" href="$main_8cpp.html" title="main class" alt="" coords="5,369,213,425"/>
+<area shape="rect" id="node4" href="$_manager_8cpp.html" title="Class to Manage the ESP32." alt="" coords="238,361,445,432"/>
+<area shape="rect" id="node6" href="$_s_p_i___slave_manager_8cpp.html" title="Class to Manage the SPI Slave communication." alt="" coords="353,243,621,313"/>
 </map>

@@ -112,17 +112,19 @@ RC_e SPI_MasterManager::ReadSlaveRequests(ESP32_Slave_e slave){
     // Stops counter
     uint8_t countStops = 0;
     
+    // Iterate through the requests
     for(auto i = 0; i< SPI_SLAVE_REQUESTS_ARRAY_SIZE; i++){
         // Request to read
         COM_REQUEST_st request;
         
         // Read request
         if( SPI_ReadSlaveRequest(&request, this->m_SPI_Slaves[slave].m_CS) == RC_e::SUCCESS){
-            
-            if (request.comRequestType == COM_REQUEST_TYPE_e::STOP || (request.comRequestType == 0 && request.comRequestRegId == 0 && request.data == 0)){
+
+            if (request.comRequestType == COM_REQUEST_TYPE_e::STOP){
                 // Increase stops counter
                 countStops++;
-            } else if (request.comRequestType == COM_REQUEST_TYPE_e::READ || request.comRequestType == COM_REQUEST_TYPE_e::WRITE){
+            } else if ((request.comRequestType == COM_REQUEST_TYPE_e::READ || request.comRequestType == COM_REQUEST_TYPE_e::WRITE) && 
+                      !(request.comRequestType == 0 && request.comRequestRegId == 0 && request.data == 0)){
                 // Handle request
                 if((retCode = HandleReadSlaveRequest(&request)) != RC_e::SUCCESS){
                     return retCode;
@@ -250,15 +252,15 @@ RC_e SPI_MasterManager::HandleReadSlaveRequest(COM_REQUEST_st* request){
         return RC_e::ERROR_NULL_POINTER;
     }
 
-    Serial.println("====== RX =======");
-    Serial.print("Req: ");
-    Serial.println(request->comRequestType);
-    Serial.print("ReqID: ");
-    Serial.println(request->comRequestRegId);
-    Serial.print("Data: ");
-    Serial.println(request->data);
-    Serial.print("CRC: ");
-    Serial.println(request->CRC);
+    // Serial.println("====== RX =======");
+    // Serial.print("Req: ");
+    // Serial.println(request->comRequestType);
+    // Serial.print("ReqID: ");
+    // Serial.println(request->comRequestRegId);
+    // Serial.print("Data: ");
+    // Serial.println(request->data);
+    // Serial.print("CRC: ");
+    // Serial.println(request->CRC);
 
     if (request->comRequestRegId >= COM_REQUEST_REG_ID_e::REQUEST_REG_LENGTH){
         return RC_e::ERROR_INVALID_REG_ID;

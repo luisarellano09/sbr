@@ -1,21 +1,25 @@
 {
 	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"name": "SBR_ESP32_Manager",
-			"path": "SBR_ESP32_Manager"
-		},
-		{
-			"name": "SBR_ESP32_MotionControl",
-			"path": "SBR_ESP32_MotionControl"
-		},
-		{
-			"name": "SBR_ESP32_Util",
-			"path": "SBR_ESP32_Util"
-		}
-	],
+        {
+            "path": "."
+        },
+        {
+            "name": "SBR_ESP32_Manager",
+            "path": "SBR_ESP32_Manager"
+        },
+        {
+            "name": "SBR_ESP32_MotionControl",
+            "path": "SBR_ESP32_MotionControl"
+        },
+        {
+            "name": "SBR_ESP32_Util",
+            "path": "SBR_ESP32_Util"
+        },
+        {
+            "name": "SBR_ESP32_Sensors",
+            "path": "SBR_ESP32_Sensors"
+        }
+    ],
     "settings": {
         "files.associations": {
             "*.tcc": "cpp",

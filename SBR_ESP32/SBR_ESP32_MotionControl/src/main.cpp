@@ -77,6 +77,10 @@ void LoopCore0( void * parameter ){
                     Serial.flush();
                     switch (incomingByte)
                     {
+                        case 'w':
+                        case 'W':
+                            Serial.println(" +++++ ESP32 MOTION +++++");
+                            break;
                         case 'p':
                         case 'P':
                             manager->m_wifiManager->Connect();
@@ -181,6 +185,7 @@ void setup() {
 
     // Serial Port
     Serial.begin(115200);
+    Serial.println(" +++++ ESP32 MOTION +++++");
 
     // Manager
     manager = new Manager();
@@ -250,9 +255,4 @@ void test_Add_Requests(){
     manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R2, 3);
     manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R3, 4);
     manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R4, 5);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R5, 6);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R6, 7);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R7, 8);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R8, 9);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R9, 10);
 }

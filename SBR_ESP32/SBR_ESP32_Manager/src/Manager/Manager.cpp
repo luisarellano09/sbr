@@ -51,11 +51,22 @@ Manager::~Manager(){}
 //=====================================================================================================
 RC_e Manager::AddSubscribers(){
     // R0
-    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::R0, Devices_e::DEVICE_MOTION);
+    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::R0, Devices_e::DEVICE_SENSOR);
+    // R4
+    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::R4, Devices_e::DEVICE_SENSOR);
+
+    // R5
+    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::R5, Devices_e::DEVICE_MOTION);
+    // R9
+    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::R9, Devices_e::DEVICE_MOTION);
+
+
 }
 
 //=====================================================================================================
 RC_e Manager::AddSlavesCS(){
     // ESP32 - Motion Control
-    this->m_SPI_MasterManager->SetSlaveCS(ESP32_Slave_e::SLAVE_MOTION, MOTION_CS);   
+    this->m_SPI_MasterManager->SetSlaveCS(ESP32_Slave_e::SLAVE_MOTION, MOTION_CS);
+    // ESP32 - Sensors
+    this->m_SPI_MasterManager->SetSlaveCS(ESP32_Slave_e::SLAVE_SENSOR, SENSORS_CS);   
 }

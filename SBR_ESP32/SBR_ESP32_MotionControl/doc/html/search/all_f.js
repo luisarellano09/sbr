@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['sbr_5fesp32_5fmotioncontrol_119',['SBR_ESP32_MotionControl',['../md__r_e_a_d_m_e.html',1,'']]],
+  ['sbr_5fesp32_5fmotioncontrol_119',['SBR_ESP32_MotionControl',['../md__home_ubuntu__workspace__s_b_r__s_b_r__e_s_p32__s_b_r__e_s_p32__motion_control__r_e_a_d_m_e.html',1,'']]],
   ['sclk_120',['SCLK',['../_local_def_8h.html#a1b39f68c76d4942d903c0a16f1882728',1,'LocalDef.h']]],
   ['setup_121',['setup',['../main_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d',1,'main.cpp']]],
   ['si_122',['SI',['../_local_def_8h.html#aa1be7844620ac7bffe73137a180aa044',1,'LocalDef.h']]],

@@ -58,7 +58,7 @@
  * @brief SPI Clock Speed Hz
  * 
  */
-#define SPI_CLOCK (uint32_t)11000000
+#define SPI_CLOCK (uint32_t)12000000
 
 /**
  * @brief MOSI Pin: Master Output - Slave Input
@@ -90,7 +90,7 @@
  * @brief Number of Stop or Empty Request during reading request from slaves
  * 
  */
-#define SPI_MANAGER_NUMBER_STOP_EMPTY (uint8_t)15u
+#define SPI_MANAGER_NUMBER_STOP_EMPTY (uint8_t)20u
 
 // ========================== SPI SLAVES ==========================
 
@@ -101,10 +101,16 @@
 #define SPI_SLAVE_REQUESTS_ARRAY_SIZE (uint8_t) 100u
 
 /**
- * @brief Chip Select Pin
+ * @brief Chip Select Pin Motion
  * 
  */
 #define MOTION_CS   18     // plomo
+
+/**
+ * @brief Chip Select Pin Sensors
+ * 
+ */
+#define SENSORS_CS   5     // white
 
 /*******************************************************************************************************************************************
  *  												ENUMERATIONS

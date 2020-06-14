@@ -1,7 +1,7 @@
-<map id="src/SPI_SlaveManager/SPI_SlaveManager.h" name="src/SPI_SlaveManager/SPI_SlaveManager.h">
-<area shape="rect" id="node1" title="Class to Manage the SPI Slave communication." alt="" coords="159,5,325,47"/>
-<area shape="rect" id="node2" href="$_manager_8h.html" title="Class to Manage the ESP32." alt="" coords="56,102,231,129"/>
-<area shape="rect" id="node5" href="$_s_p_i___slave_manager_8cpp.html" title="Class to Manage the SPI Slave communication." alt="" coords="255,95,429,136"/>
-<area shape="rect" id="node3" href="$main_8cpp.html" title="main class" alt="" coords="5,184,111,211"/>
-<area shape="rect" id="node4" href="$_manager_8cpp.html" title="Class to Manage the ESP32." alt="" coords="135,184,325,211"/>
+<map id="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_MotionControl/src/SPI_SlaveManager/SPI_SlaveManager.h" name="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_MotionControl/src/SPI_SlaveManager/SPI_SlaveManager.h">
+<area shape="rect" id="node1" title="Class to Manage the SPI Slave communication." alt="" coords="222,5,490,76"/>
+<area shape="rect" id="node2" href="$_manager_8h.html" title="Class to Manage the ESP32." alt="" coords="122,124,329,195"/>
+<area shape="rect" id="node5" href="$_s_p_i___slave_manager_8cpp.html" title="Class to Manage the SPI Slave communication." alt="" coords="353,124,621,195"/>
+<area shape="rect" id="node3" href="$main_8cpp.html" title="main class" alt="" coords="5,250,213,306"/>
+<area shape="rect" id="node4" href="$_manager_8cpp.html" title="Class to Manage the ESP32." alt="" coords="238,243,445,313"/>
 </map>

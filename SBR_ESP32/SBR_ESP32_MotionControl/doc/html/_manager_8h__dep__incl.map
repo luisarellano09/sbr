@@ -1,5 +1,5 @@
-<map id="src/Manager/Manager.h" name="src/Manager/Manager.h">
-<area shape="rect" id="node1" title="Class to Manage the ESP32." alt="" coords="56,5,231,32"/>
-<area shape="rect" id="node2" href="$main_8cpp.html" title="main class" alt="" coords="5,80,111,107"/>
-<area shape="rect" id="node3" href="$_manager_8cpp.html" title="Class to Manage the ESP32." alt="" coords="135,80,325,107"/>
+<map id="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_MotionControl/src/Manager/Manager.h" name="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_MotionControl/src/Manager/Manager.h">
+<area shape="rect" id="node1" title="Class to Manage the ESP32." alt="" coords="122,5,329,76"/>
+<area shape="rect" id="node2" href="$main_8cpp.html" title="main class" alt="" coords="5,131,213,187"/>
+<area shape="rect" id="node3" href="$_manager_8cpp.html" title="Class to Manage the ESP32." alt="" coords="238,124,445,195"/>
 </map>

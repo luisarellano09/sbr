@@ -1,0 +1,6 @@
+<map id="WifiManager::HandleOTA" name="WifiManager::HandleOTA">
+<area shape="rect" id="node1" title="Function to Handle the OTA service." alt="" coords="464,5,651,32"/>
+<area shape="rect" id="node2" href="$class_wifi_manager.html#a263b3d8d117ed83be3fd2dee3fe8459a" title="Run OTA service." alt="" coords="251,5,416,32"/>
+<area shape="rect" id="node3" href="$main_8cpp.html#a8847c9cdb135af13130b1a84b1373a7c" title=" " alt="" coords="112,5,203,32"/>
+<area shape="rect" id="node4" href="$main_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d" title=" " alt="" coords="5,5,64,32"/>
+</map>

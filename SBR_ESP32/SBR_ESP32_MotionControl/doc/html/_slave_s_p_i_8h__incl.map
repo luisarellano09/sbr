@@ -1,8 +1,8 @@
-<map id="lib/SlaveSPI/SlaveSPI.h" name="lib/SlaveSPI/SlaveSPI.h">
-<area shape="rect" id="node1" title="Slave SPI driver." alt="" coords="175,5,346,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,89,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="113,80,168,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="192,80,329,107"/>
-<area shape="rect" id="node5" href="$_simple_array_8h.html" title="Simple Array class." alt="" coords="354,80,466,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="490,80,613,107"/>
+<map id="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_MotionControl/lib/SlaveSPI/SlaveSPI.h" name="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_MotionControl/lib/SlaveSPI/SlaveSPI.h">
+<area shape="rect" id="node1" title="Slave SPI driver." alt="" coords="157,5,364,76"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,124,89,151"/>
+<area shape="rect" id="node3" title=" " alt="" coords="113,124,168,151"/>
+<area shape="rect" id="node4" title=" " alt="" coords="192,124,329,151"/>
+<area shape="rect" id="node5" href="$_simple_array_8h.html" title="Simple Array class." alt="" coords="354,124,466,151"/>
+<area shape="rect" id="node6" title=" " alt="" coords="490,124,613,151"/>
 </map>

@@ -1,4 +1,4 @@
-<map id="src/SPI_SlaveManager" name="src/SPI_SlaveManager">
+<map id="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_MotionControl/src/SPI_SlaveManager" name="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_MotionControl/src/SPI_SlaveManager">
 <area shape="rect" id="node1" href="dir_6c8049e52108e9179ebe624467d0c82f.html" title="SPI_SlaveManager" alt="" coords="26,52,169,100"/>
 <area shape="rect" id="node2" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html" title="lib" alt="" coords="9,148,81,196"/>
 <area shape="rect" id="edge1-headlabel" href="dir_000008_000000.html" title="2" alt="" coords="70,129,79,143"/>

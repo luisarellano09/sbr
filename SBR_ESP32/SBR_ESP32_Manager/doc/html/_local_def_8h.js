@@ -7,6 +7,7 @@ var _local_def_8h =
     [ "MI", "_local_def_8h.html#a8ab8c74f9a8a56744b84d93a6a8bdd35", null ],
     [ "MO", "_local_def_8h.html#ae024296e7d5f339da2a2739e6132d613", null ],
     [ "MOTION_CS", "_local_def_8h.html#a84febccb7f2d6d312505935f13fd0087", null ],
+    [ "SENSORS_CS", "_local_def_8h.html#ae5e796928a8155335671900d81057e5e", null ],
     [ "SPI_CLOCK", "_local_def_8h.html#a2088ee4b3ab36cfe1ad2c379fcbf871a", null ],
     [ "SPI_MANAGER_NUMBER_STOP_EMPTY", "_local_def_8h.html#a7858ada80bed7d41788dbff6675f4d23", null ],
     [ "SPI_MANAGER_REQUEST_SIZE", "_local_def_8h.html#aaa14070e999bd0bdfd1fa82664dd9db9", null ],
