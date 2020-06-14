@@ -1,18 +1,13 @@
 /**
- * \file Logger.h
- * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 26 April 2020
- *
- * \brief Class to create log through Wifi using Wifi socket client.
- *
+ * @file Logger.h
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Class to create log through Wifi using Wifi socket client
+ * @version 1.0
+ * @date 14-06-2020
  * 
  * 
- * Changes
- * 01.05.2020: Add WriteValue
- * 26.04.2020: Create Class
- * 
- *
  */
+
 
 #ifndef LOGGER_H
 #define LOGGER_H
@@ -42,46 +37,55 @@
 class Logger
 {
 public:  
+
     /**
-     * \brief Constructor.
-     * \param host Socket server hostname.
-     * \param port Socket server port.
+     * @brief Construct a new Logger object
+     * 
+     * @param host Socket server hostname
+     * @param port Socket server port
      */
     Logger(char* host, uint16_t port);
 
     /**
-     * \brief Destructor.
+     * @brief Destroy the Logger object
+     * 
      */
     ~Logger();
 
     /**
-     * \brief Function to configure.
-     *
-     * \return Error Code.
-     */  
+     * @brief Configure service
+     * 
+     * @return RC_e Result code
+     */
     RC_e Configure();
 
     /**
-     * \brief Function to send a message to the logger.
-     * \param msg Message to send.
-     * \return Error Code.
-     */  
+     * @brief Write a message to the logger
+     * 
+     * @param msg Message to be sent
+     * @return RC_e Result code
+     */
     RC_e Write(char* msg);
 
     /**
-     * \brief Function to send a value to the logger.
-     * \param value Message to send.
-     * \return Error Code.
-     */  
+     * @brief Write a value to the logger
+     * 
+     * @param msg Value to be sent
+     * @return RC_e Result code
+     */
     RC_e WriteValue(u16_t msg);
 
-     void Run();
+    /**
+     * @brief Run the logger service
+     * 
+     */
+    void Run();
     
 private:
-    char * m_host;                  /** Socket server hostname */
-    uint16_t m_port;                /** Socket server port */
-    SocketIoClient webSocket;       /** Wifi Client used for socket connection */
-    uint8_t m_flagSend;
+    char * m_host;                  /**< Socket server hostname */
+    uint16_t m_port;                /**< Socket server port */
+    SocketIoClient webSocket;       /**< Wifi Client used for socket connection */
+    uint8_t m_flagSend;             /**< Flag of data to be sent */
 
    
 };

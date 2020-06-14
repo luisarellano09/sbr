@@ -1,18 +1,12 @@
 /**
- * \file RegisterRT.cpp
- * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 07 Jun 2020
- *
- * \brief Class to describe a register of the Data Table in Runtime.
- *
+ * @file RegisterRT.cpp
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Class to describe a register of the Data Table in Runtime
+ * @version 1.0
+ * @date 13-06-2020
  * 
  * 
- * Changes
- * 07.06.2020: Create Class.
- * 
- *
  */
-
 
 /*******************************************************************************************************************************************
  *  												INCLUDES
@@ -22,32 +16,47 @@
 /*******************************************************************************************************************************************
  *  												Constructor
  *******************************************************************************************************************************************/
+
+//=====================================================================================================
 RegisterRT::RegisterRT(){
-    m_value = 0;
-    m_subscribers_index = -1;
+    // Init
+    this->m_value = 0;
+    this->m_subscribers_index = -1;
+
+    // Clean
+    CleanSubscribers();
 }
 
+//=====================================================================================================
 RegisterRT::~RegisterRT(){}
 
 /*******************************************************************************************************************************************
  *  												Public Methods
  *******************************************************************************************************************************************/
 
+//=====================================================================================================
 RC_e RegisterRT::AddSubscriber(Devices_e subscriber){
-    if(m_subscribers_index < Devices_e::DEVICE_LENGTH - 1){
-        m_subscribers_index++;
-        m_subscribers[m_subscribers_index] = subscriber;
+    // Check if max index is reached
+    if(this->m_subscribers_index < Devices_e::DEVICE_LENGTH - 1){
+        // Increase index
+        this->m_subscribers_index++;
+
+        // Add subscriber
+        this->m_subscribers[this->m_subscribers_index] = subscriber;
     }
 
     return RC_e::SUCCESS;
 }
 
+//=====================================================================================================
 RC_e RegisterRT::CleanSubscribers(){
+    // Iterate through devices
     for(auto i = 0; i< Devices_e::DEVICE_LENGTH; i++){
-        m_subscribers[i] = Devices_e::DEVICE_NONE;
+        this->m_subscribers[i] = Devices_e::DEVICE_NONE;
     };
 
-    m_subscribers_index = -1;
+    // Init
+    this->m_subscribers_index = -1;
 
     return RC_e::SUCCESS;
 }

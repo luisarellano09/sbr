@@ -1,0 +1,8 @@
+<map id="PollingController" name="PollingController">
+<area shape="rect" id="node1" title="Class to control the polling of communication." alt="" coords="80,748,295,928"/>
+<area shape="rect" id="node2" href="$class_s_p_i___master_manager.html" title="Class to Manage the SPI Master." alt="" coords="83,432,292,685"/>
+<area shape="rect" id="node3" href="$class_table_r_t.html" title="Class to describe the Data Table in Runtime." alt="" coords="19,226,167,362"/>
+<area shape="rect" id="node4" href="$class_register_r_t.html" title="Class to describe the Data Table in Runtime." alt="" coords="5,5,180,156"/>
+<area shape="rect" id="node5" href="$class_s_p_i___slave.html" title="Class to describe a SPI Slave." alt="" coords="191,219,379,369"/>
+<area shape="rect" id="node6" href="$struct_c_o_m___r_e_q_u_e_s_t__st.html" title="Structure to define the communication request." alt="" coords="207,20,362,141"/>
+</map>

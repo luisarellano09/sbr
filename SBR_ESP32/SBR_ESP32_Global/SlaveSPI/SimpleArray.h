@@ -1,10 +1,11 @@
 /**
- * Simple Array Class
- *
- *  Created on: Sep 27, 2018
- *      Author: iPAS <ipas.th@gmail.com>
- *
- * Inspired by https://gist.github.com/daeltar/90951
+ * @file SimpleArray.h
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Simple Array class
+ * @version 1.0
+ * @date 14-06-2020
+ * 
+ * 
  */
 
 #ifndef __SIMPLE_ARRAY_H__

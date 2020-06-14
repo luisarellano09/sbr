@@ -1,3 +1,13 @@
+/**
+ * @file SlaveSPI.h
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Slave SPI driver
+ * @version 0.1
+ * @date 14-06-2020
+ * 
+ * 
+ */
+
 #ifndef __SLAVE_SPI_CLASS_H__
 #define __SLAVE_SPI_CLASS_H__
 

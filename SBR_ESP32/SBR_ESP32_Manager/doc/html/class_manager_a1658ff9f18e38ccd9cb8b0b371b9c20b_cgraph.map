@@ -1,0 +1,9 @@
+<map id="Manager::Manager" name="Manager::Manager">
+<area shape="rect" id="node1" title="Construct a new Manager object." alt="" coords="5,69,149,95"/>
+<area shape="rect" id="node2" href="$class_manager.html#acf2b29e91d0d4fb28f3b8fd6eeebe6b7" title="Add Chip Select of the Slaves." alt="" coords="205,14,377,41"/>
+<area shape="rect" id="node4" href="$class_manager.html#a4baa69f1bf4f283ab0915a4865dc1f36" title="Add Subscribers to the Table." alt="" coords="197,69,384,95"/>
+<area shape="rect" id="node7" href="$class_s_p_i___master_manager.html#a3c1a74d0bd26b73c729335243af91e12" title="Function to connect to the tableRT pointer." alt="" coords="211,120,370,161"/>
+<area shape="rect" id="node3" href="$class_s_p_i___master_manager.html#a3744131e5a3f2532257028d025fbf5b0" title="SFunction to set the Slave chip select." alt="" coords="439,5,598,47"/>
+<area shape="rect" id="node5" href="$class_table_r_t.html#a78cff888b3be4a6de827340520a3a016" title="Add subscriber to a register." alt="" coords="432,71,605,98"/>
+<area shape="rect" id="node6" href="$class_register_r_t.html#a4d71364b34bc81e1ed7da7b83e92f3c2" title="Add subscriber to a register." alt="" coords="653,71,847,98"/>
+</map>

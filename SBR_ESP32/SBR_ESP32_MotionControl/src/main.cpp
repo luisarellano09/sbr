@@ -1,18 +1,11 @@
 /**
- * \file main.cpp
- * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 16 April 2020
- *
- * \brief main class
- *
+ * @file main.cpp
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief main class
+ * @version 
+ * @date 13-06-2020
  * 
  * 
- * Changes
- * 30.04.2020: Add Manager system.
- * 16.04.2020: Class comments and RC_e concept
- * 13.04.2020: Doc was created
- * 
- *
  */
 
 /*******************************************************************************************************************************************
@@ -56,16 +49,14 @@ bool flagTimer3 = false;
 /*******************************************************************************************************************************************
  *  												TEST
  *******************************************************************************************************************************************/
-void test_consumer();
+void test_Add_Requests();
 
 /*******************************************************************************************************************************************
  *  												CORE LOOPS
  *******************************************************************************************************************************************/
 // Loop of core 0
 void LoopCore0( void * parameter ){
-
     while(true) {
-
         // Code for Timer 0 interruption
         if (flagTimer0){
             flagTimer0 = false;
@@ -80,7 +71,6 @@ void LoopCore0( void * parameter ){
             flagTimer1 = false;
 
             // ========== Code ==========
-
                 if(Serial.available()){
                     Serial.println("checking Serial");
                     char incomingByte = Serial.read();
@@ -98,19 +88,21 @@ void LoopCore0( void * parameter ){
                             break;
                         case '1':
                             Serial.println("Adding requests....");
-                            test_consumer();
+                            test_Add_Requests();
                             break;
                     }
                 }
 
+                // Run OTA service
                 manager->m_wifiManager->RunOTA();
-                delay(1); // To feed the WDT
+
+                // Delay to feed WDT
+                delay(1);
             // ==========================
         }
 
+        // Run SPI Slave service
         manager->m_spiSlaveManager->ListenRequest();
-        //test_run();
-
     }
 }
 
@@ -122,6 +114,7 @@ void LoopCore1( void * parameter ){
             flagTimer2 = false;
 
             // ========== Code ==========
+
             // ==========================
         }
 
@@ -134,6 +127,7 @@ void LoopCore1( void * parameter ){
             // ==========================
         }
 
+        // Delay to feed WDT
         delay(1);
     }
 }
@@ -250,8 +244,7 @@ void loop() {
     vTaskDelete(NULL);
 }
 
-
-void test_consumer(){
+void test_Add_Requests(){
     manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R0, 1);
     manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R1, 2);
     manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R2, 3);

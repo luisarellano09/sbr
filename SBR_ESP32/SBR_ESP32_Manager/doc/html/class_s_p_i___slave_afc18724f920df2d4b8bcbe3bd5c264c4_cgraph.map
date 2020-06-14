@@ -1,0 +1,4 @@
+<map id="SPI_Slave::SPI_Slave" name="SPI_Slave::SPI_Slave">
+<area shape="rect" id="node1" title="Construct a new spi slave object." alt="" coords="5,5,161,32"/>
+<area shape="rect" id="node2" href="$class_s_p_i___slave.html#ae1ee2c30cfb61827b27ea73a575eefc0" title="Clean Buffer of requests." alt="" coords="209,5,380,32"/>
+</map>

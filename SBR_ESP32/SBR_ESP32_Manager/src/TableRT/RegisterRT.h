@@ -1,16 +1,11 @@
 /**
- * \file RegisterRT.h
- * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 07 Jun 2020
- *
- * \brief Class to describe a register of the Data Table in Runtime.
- *
+ * @file RegisterRT.h
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Class to describe a register of the Data Table in Runtime
+ * @version 1.0
+ * @date 13-06-2020
  * 
  * 
- * Changes
- * 07.06.2020: Create Class.
- * 
- *
  */
 
 #ifndef REGISTERRT_H
@@ -29,33 +24,41 @@
  *******************************************************************************************************************************************/
 
 /**
- * \brief Class to describe the Data Table in Runtime.
+ * @brief Class to describe the Data Table in Runtime
+ * 
  */
 class RegisterRT
 {
 public:  
 
-    uint32_t m_value;
-    Devices_e m_subscribers[Devices_e::DEVICE_LENGTH] = {Devices_e::DEVICE_NONE};
-    int8_t m_subscribers_index;
+    uint32_t m_value;               /**< \brief Register value*/
+    Devices_e m_subscribers[Devices_e::DEVICE_LENGTH] = {Devices_e::DEVICE_NONE};   /**< \brief Subscribers array*/
+    int8_t m_subscribers_index;     /**< \brief Subscribers index*/
 
     /**
-     * \brief Constructor.
+     * @brief Construct a new Register RT object
+     * 
      */
     RegisterRT();
 
     /**
-     * \brief Destructor.
+     * @brief Destroy the Register R T object
+     * 
      */
     ~RegisterRT();
 
     /**
-     * \brief Add subscriber.
+     * @brief Add subscriber to a register
+     * 
+     * @param subscriber Subscriber device
+     * @return RC_e Result code
      */
     RC_e AddSubscriber(Devices_e subscriber);  
-   
+
     /**
-     * \brief Clean Subscribers.
+     * @brief Clean Subscribers
+     * 
+     * @return RC_e Result code
      */
     RC_e CleanSubscribers();  
    

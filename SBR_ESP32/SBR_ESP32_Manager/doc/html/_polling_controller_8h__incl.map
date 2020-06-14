@@ -1,0 +1,11 @@
+<map id="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_Manager/src/PollingController/PollingController.h" name="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_Manager/src/PollingController/PollingController.h">
+<area shape="rect" id="node1" title="Class to control the polling of communication." alt="" coords="126,5,347,76"/>
+<area shape="rect" id="node2" href="$_global_def_8h.html" title="Global definitions of SBR." alt="" coords="47,363,178,404"/>
+<area shape="rect" id="node4" href="$_local_def_8h.html" title="Definitions of ESP32 Project." alt="" coords="288,370,459,397"/>
+<area shape="rect" id="node5" href="$_s_p_i___master_manager_8h.html" title="lass to Manage the SPI Master" alt="" coords="204,124,370,165"/>
+<area shape="rect" id="node8" href="$_table_r_t_8h.html" title="Class to describe the Data Table in Runtime." alt="" coords="25,213,176,240"/>
+<area shape="rect" id="node3" title=" " alt="" coords="332,452,416,479"/>
+<area shape="rect" id="node6" title=" " alt="" coords="404,213,458,240"/>
+<area shape="rect" id="node7" href="$_s_p_i___slave_8h.html" title="Class to describe a SPI Slave." alt="" coords="238,288,336,315"/>
+<area shape="rect" id="node9" href="$_register_r_t_8h.html" title="Class to describe a register of the Data Table in Runtime." alt="" coords="104,288,214,315"/>
+</map>

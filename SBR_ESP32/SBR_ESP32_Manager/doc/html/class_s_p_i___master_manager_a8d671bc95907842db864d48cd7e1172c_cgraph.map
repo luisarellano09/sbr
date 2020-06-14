@@ -1,0 +1,6 @@
+<map id="SPI_MasterManager::SendWriteRequests" name="SPI_MasterManager::SendWriteRequests">
+<area shape="rect" id="node1" title="Function send the requests to a slave" alt="" coords="5,27,164,69"/>
+<area shape="rect" id="node2" href="$class_s_p_i___slave.html#ae1ee2c30cfb61827b27ea73a575eefc0" title="Clean Buffer of requests." alt="" coords="212,5,383,32"/>
+<area shape="rect" id="node3" href="$class_s_p_i___master_manager.html#a7e9ebe266e2982fd46348c18242c3314" title="Function to send a request through SPI." alt="" coords="213,57,382,98"/>
+<area shape="rect" id="node4" href="$_utility_8h.html#a16e3637a67aa53dc443e5c33a34b9c3d" title="Convert Request to Buffer format." alt="" coords="431,64,560,91"/>
+</map>

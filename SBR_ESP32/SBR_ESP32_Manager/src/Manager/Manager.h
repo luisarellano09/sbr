@@ -1,17 +1,11 @@
 /**
- * \file Manager.h
- * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 26 April 2020
- *
- * \brief Class to Manager the ESP32.
- *
+ * @file Manager.h
+ * @author Luis Arellano - luis.arellano09@gmail.com
+ * @brief Class to Manage the ESP32
+ * @version 1.0
+ * @date 2020-06-13
  * 
  * 
- * Changes
- * 30.04.2020: Add Wifimanager and logger instances.
- * 26.04.2020: Create Class.
- * 
- *
  */
 
 #ifndef MANAGER_H
@@ -35,36 +29,43 @@
  *******************************************************************************************************************************************/
 
 /**
- * \brief Class to Manage the ESP32.
+ * @brief lass to Manage the ESP32
+ * 
  */
 class Manager
 {
 public:  
 
-    WifiManager* m_WifiManager = NULL;              /** Instance for Wifimanager. */
-    SPI_MasterManager* m_SPI_MasterManager = NULL;  /** Instance for SPI Master Manager. */
-    TableRT* m_TableRT = NULL;                      /** Instance for RT table. */
-    PollingController* m_PollingController = NULL;  /** Instance for Polling Controller. */
+    WifiManager* m_WifiManager = NULL;              /**< \brief Instance for Wifimanager. */
+    SPI_MasterManager* m_SPI_MasterManager = NULL;  /**< \brief Instance for SPI Master Manager. */
+    TableRT* m_TableRT = NULL;                      /**< \brief Instance for RT table. */
+    PollingController* m_PollingController = NULL;  /**< \brief Instance for Polling Controller. */
 
     /**
-     * \brief Constructor.
+     * @brief Construct a new Manager object
+     * 
      */
     Manager();
 
     /**
-     * \brief Destructor.
+     * @brief Destroy the Manager object
+     * 
      */
     ~Manager();
    
 private:
 
     /**
-     * \brief Add subscribers.
+     * @brief Add Subscribers to the Table
+     * 
+     * @return RC_e Result code
      */
     RC_e AddSubscribers();
 
     /**
-     * \brief Add subscribers.
+     * @brief Add Chip Select of the Slaves
+     * 
+     * @return RC_e Result code
      */
     RC_e AddSlavesCS();
 

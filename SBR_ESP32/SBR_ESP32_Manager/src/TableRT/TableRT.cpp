@@ -1,17 +1,13 @@
 /**
- * \file TableRT.cpp
- * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 26 April 2020
- *
- * \brief Class to describe the Data Table in Runtime.
- *
+ * @file TableRT.cpp
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Class to describe the Data Table in Runtime
+ * @version 1.0
+ * @date 13-06-2020
  * 
  * 
- * Changes
- * 07.06.2020: Create Class.
- * 
- *
  */
+
 
 
 /*******************************************************************************************************************************************
@@ -22,25 +18,31 @@
 /*******************************************************************************************************************************************
  *  												Constructor
  *******************************************************************************************************************************************/
+
+//=====================================================================================================
 TableRT::TableRT(){
     // Clean all registers
     CleanRegisters();
 }
 
+//=====================================================================================================
 TableRT::~TableRT(){}
 
 /*******************************************************************************************************************************************
  *  												Public Methods
  *******************************************************************************************************************************************/
 
+//=====================================================================================================
 RC_e TableRT::AddSubscriber(COM_REQUEST_REG_ID_e regID, Devices_e subscriber){
-    m_Registers[regID].AddSubscriber(subscriber);
+    // Add subscriber in the register
+    this->m_Registers[regID].AddSubscriber(subscriber);
     return RC_e::SUCCESS;
 }
 
+//=====================================================================================================
 RC_e TableRT::UpdateRegister(COM_REQUEST_REG_ID_e regID, uint32_t data){
     // Update value
-    m_Registers[regID].m_value = data;
+    this->m_Registers[regID].m_value = data;
     return RC_e::SUCCESS;
 }
 
@@ -48,10 +50,13 @@ RC_e TableRT::UpdateRegister(COM_REQUEST_REG_ID_e regID, uint32_t data){
  *  												Private Methods
  *******************************************************************************************************************************************/
 
+//=====================================================================================================
 RC_e TableRT::CleanRegisters(){
     // Iterate all registers
     for(auto i = 0; i < COM_REQUEST_REG_ID_e::REQUEST_REG_LENGTH; i++){
-        m_Registers[i].CleanSubscribers();
+        // Clean subscribers
+        this->m_Registers[i].CleanSubscribers();
+        this->m_Registers[i].m_value = 0;
     }
     return RC_e::SUCCESS;
 }

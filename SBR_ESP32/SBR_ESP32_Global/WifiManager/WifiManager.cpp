@@ -1,20 +1,11 @@
 /**
- * \file WifiManager.cpp
- * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 16 April 2020
- *
- * \brief Class to Manage the Wifi
- *
+ * @file WifiManager.h
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Class to Manage the Wifi
+ * @version 1.0
+ * @date 14-06-2020
  * 
  * 
- * Changes
- * 24.05.2020: Delete logger
- * 23.05.2020: Fix bugs
- * 30.04.2020: Logger reference
- * 16.04.2020: Class comments and RC_e concept
- * 13.04.2020: Doc was created
- * 
- *
  */
 
 /*******************************************************************************************************************************************
@@ -26,19 +17,22 @@
  *  												Constructor
  *******************************************************************************************************************************************/
 
+//=====================================================================================================
 WifiManager::WifiManager(char* ssid, char* password, char* hostName){
-    // Set attributes
+    // Set values
     this->m_ssid = ssid;
     this->m_password = password;
     this->m_hostName = hostName;
 }
 
+//=====================================================================================================
 WifiManager::~WifiManager(){}
 
 /*******************************************************************************************************************************************
  *  												Public Methods
  *******************************************************************************************************************************************/
 
+//=====================================================================================================
 RC_e WifiManager::Connect(){
     // Check if the Wifi is connected
     if (WiFi.status() != WL_CONNECTED) {
@@ -56,6 +50,7 @@ RC_e WifiManager::Connect(){
     return RC_e::SUCCESS;  
 }
 
+//=====================================================================================================
 RC_e WifiManager::RunOTA(){
     // Error code
     RC_e retCode = RC_e::ERROR;
@@ -77,6 +72,7 @@ RC_e WifiManager::RunOTA(){
  *  												Private Methods
  *******************************************************************************************************************************************/
 
+//=====================================================================================================
 RC_e WifiManager::ConfigureWifi(){
 
     // Station mode
@@ -91,6 +87,7 @@ RC_e WifiManager::ConfigureWifi(){
     return RC_e::SUCCESS;
 }
 
+//=====================================================================================================
 RC_e WifiManager::ConnectWifi(){
     // Check if Wifi is connected
     if (WiFi.status() != WL_CONNECTED) {
@@ -115,6 +112,7 @@ RC_e WifiManager::ConnectWifi(){
     return RC_e::SUCCESS;  
 }
 
+//=====================================================================================================
 void WifiManager::WiFiEvent(WiFiEvent_t event,system_event_info_t info){
     Serial.printf("[WiFi-event] event: %d\n", event);
 
@@ -202,6 +200,7 @@ void WifiManager::WiFiEvent(WiFiEvent_t event,system_event_info_t info){
     }
 }
 
+//=====================================================================================================
 RC_e WifiManager::ConfigureOTA(){
     // Hostname
     ArduinoOTA.setHostname(this->m_hostName);
@@ -240,6 +239,7 @@ RC_e WifiManager::ConfigureOTA(){
     return RC_e::SUCCESS;
 }
 
+//=====================================================================================================
 RC_e WifiManager::HandleOTA(){
     ArduinoOTA.handle();
     return RC_e::SUCCESS;

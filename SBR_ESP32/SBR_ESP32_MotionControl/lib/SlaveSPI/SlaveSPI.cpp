@@ -1,3 +1,13 @@
+/**
+ * @file SlaveSPI.cpp
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Slave SPI driver
+ * @version 0.1
+ * @date 14-06-2020
+ * 
+ * 
+ */
+
 #include "SlaveSPI.h"
 
 int         SlaveSPI::vector_size    = 0;

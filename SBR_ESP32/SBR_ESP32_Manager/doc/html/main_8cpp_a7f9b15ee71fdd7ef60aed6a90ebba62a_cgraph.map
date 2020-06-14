@@ -1,0 +1,11 @@
+<map id="test_add_read" name="test_add_read">
+<area shape="rect" id="node1" title=" " alt="" coords="5,101,120,127"/>
+<area shape="rect" id="node2" href="$class_s_p_i___master_manager.html#a5171c2f7bfd43cec46a9db37417d5b58" title="Function get the requests from a slave." alt="" coords="168,93,327,135"/>
+<area shape="rect" id="node3" href="$class_s_p_i___master_manager.html#af596f204209fe3c6c405ea2ad3e25590" title="Function to handle a read slave request." alt="" coords="375,60,565,101"/>
+<area shape="rect" id="node6" href="$class_s_p_i___master_manager.html#a827ba35689b11f8ae33ed07e896470b6" title="Function to send a request." alt="" coords="385,125,555,167"/>
+<area shape="rect" id="node4" href="$class_s_p_i___master_manager.html#a6055fe8af2033935fc74f54eabcfb86d" title="Function to add a request to the subscribed slaves." alt="" coords="614,5,803,47"/>
+<area shape="rect" id="node5" href="$class_table_r_t.html#a5b8b00d171486702545bc9b58de2eb28" title="Update Register." alt="" coords="618,71,799,98"/>
+<area shape="rect" id="node7" href="$_utility_8h.html#ade6249093f0f5ac0cdb96bc71b80d70b" title="Convert buffer to request format." alt="" coords="644,129,773,155"/>
+<area shape="rect" id="node8" href="$_utility_8h.html#a92fd1cc3fb432cde66fb1af15078cc16" title="Calculate CRC of a request." alt="" coords="613,179,804,206"/>
+<area shape="rect" id="node9" href="$_utility_8h.html#a16e3637a67aa53dc443e5c33a34b9c3d" title="Convert Request to Buffer format." alt="" coords="852,179,981,206"/>
+</map>

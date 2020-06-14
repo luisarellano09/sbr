@@ -1,16 +1,12 @@
 /**
- * \file PollingController.h
- * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 08 Jun 2020
- *
- * \brief Class to describe a register of the Data Table in Runtime.
- *
+ * @file PollingController.h
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Class to control the polling of communication
+ * @version 1.0
+ * @date 13-06-2020
  * 
+ * @copyright Copyright (c) 2020
  * 
- * Changes
- * 07.06.2020: Create Class.
- * 
- *
  */
 
 #ifndef POLLINGCONTROLLER_H
@@ -29,68 +25,87 @@
 /*******************************************************************************************************************************************
  *  												ENUMERATION
  *******************************************************************************************************************************************/
-/** \brief  States for the ESP32 polling.  */
+
+/**
+ * @brief States for the ESP32 polling state machine
+ * 
+ */
 enum StateEsp32Polling{
-	IDLE,
-    SEND_REQ,
-    RECV_REQ
+	IDLE,       /**< \brief IDLE state */
+    SEND_REQ,   /**< \brief Send requests to slaves state */
+    RECV_REQ    /**< \brief Recieve requests from slaves state */
 };
 
-/** \brief  States for the ESP32 polling.  */
+/**
+ * @brief Commands of ESP32 polling
+ * 
+ */
 enum CommandEsp32Polling{
-	ESP32_POLLING_START,
-    ESP32_POLLING_STOP
+	ESP32_POLLING_START,    /**< \brief Start ESP32 Polling*/
+    ESP32_POLLING_STOP      /**< \brief Stop ESP32 Polling*/
 };
 
 
 /*******************************************************************************************************************************************
- *  												TableRT Class
+ *  												Polling Controller Class
  *******************************************************************************************************************************************/
 
 /**
- * \brief Class to describe the Data Table in Runtime.
+ * @brief Class to control the polling of communication
+ * 
  */
 class PollingController
 {
 public:  
 
     /**
-     * \brief Constructor.
+     * @brief Construct a new Polling Controller object
+     * 
+     * @param spiMasterManager Reference of the SPI_MasterManager
      */
     PollingController(SPI_MasterManager* spiMasterManager);
 
     /**
-     * \brief Destructor.
+     * @brief Destroy the Polling Controller object
+     * 
      */
     ~PollingController();
 
     /**
-     * \brief Function to run polling.
+     * @brief Function to run polling on ESP32s
+     * 
+     * @return RC_e Result code
      */
     RC_e RunESP32();
 
+
     /**
-     * \brief Start the state machine of polling between the ESP32.
+     * @brief top the state machine of polling between the ESP32
+     * 
+     * @return RC_e Result code
      */
     RC_e StartEsp32Polling();
 
     /**
-     * \brief Stop the state machine of polling between the ESP32.
+     * @brief top the state machine of polling between the ESP32
+     * 
+     * @return RC_e 
      */
     RC_e StopEsp32Polling();
 
    
 private:
 
-    SPI_MasterManager* m_spiMasterManager;
-
-    StateEsp32Polling m_currentStateEsp32Polling;
-    StateEsp32Polling m_nextStateEsp32Polling;
-    CommandEsp32Polling m_commandEsp32Polling;
+    SPI_MasterManager* m_spiMasterManager;          /**< \brief Reference of the SPI_MasterManager object*/
+    StateEsp32Polling m_currentStateEsp32Polling;   /**< \brief Current state of the ESP32 Polling state machine*/
+    StateEsp32Polling m_nextStateEsp32Polling;      /**< \brief Next state of the ESP32 Polling state machine*/
+    CommandEsp32Polling m_commandEsp32Polling;      /**< \brief Command of the ESP32 Polling state machine*/
     
 
     /**
-     * \brief State Machine of polling between the ESP32.
+     * @brief State Machine of polling between the ESP32
+     * 
+     * @return RC_e Result code
      */
     RC_e SM_Esp32Polling();  
 

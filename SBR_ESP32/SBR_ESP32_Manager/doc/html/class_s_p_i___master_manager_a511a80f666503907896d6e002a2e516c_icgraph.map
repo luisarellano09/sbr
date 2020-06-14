@@ -1,0 +1,4 @@
+<map id="SPI_MasterManager::SPIConfigure" name="SPI_MasterManager::SPIConfigure">
+<area shape="rect" id="node1" title="Function to configure the SPI." alt="" coords="212,5,371,47"/>
+<area shape="rect" id="node2" href="$class_s_p_i___master_manager.html#a50d59b58ba9e81d791fd7bafa9f5d2b7" title="Construct a new spi mastermanager object." alt="" coords="5,5,164,47"/>
+</map>

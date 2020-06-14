@@ -1,18 +1,13 @@
 /**
- * \file PollingController.cpp
- * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 08 Jun 2020
- *
- * \brief Class to describe a register of the Data Table in Runtime.
- *
+ * @file PollingController.cpp
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Class to control the polling of communication.
+ * @version 1.0
+ * @date 13-06-2020
  * 
+ * @copyright Copyright (c) 2020
  * 
- * Changes
- * 07.06.2020: Create Class.
- * 
- *
  */
-
 
 /*******************************************************************************************************************************************
  *  												INCLUDES
@@ -22,36 +17,51 @@
 /*******************************************************************************************************************************************
  *  												Constructor
  *******************************************************************************************************************************************/
+
+//=====================================================================================================
 PollingController::PollingController(SPI_MasterManager* spiMasterManager){
 
-    // Check if the pointers is null
+    // Check if the pointer is null
     if (spiMasterManager != NULL){
-        m_spiMasterManager = spiMasterManager;
+        this->m_spiMasterManager = spiMasterManager;
     }
 
-    m_currentStateEsp32Polling = StateEsp32Polling::IDLE;
-    m_nextStateEsp32Polling = StateEsp32Polling::IDLE;
-    m_commandEsp32Polling = CommandEsp32Polling::ESP32_POLLING_STOP;
+    // Init
+    this->m_currentStateEsp32Polling = StateEsp32Polling::IDLE;
+    this->m_nextStateEsp32Polling = StateEsp32Polling::IDLE;
+    this->m_commandEsp32Polling = CommandEsp32Polling::ESP32_POLLING_STOP;
 }
 
+//=====================================================================================================
 PollingController::~PollingController(){}
 
 /*******************************************************************************************************************************************
  *  												Public Methods
  *******************************************************************************************************************************************/
 
+//=====================================================================================================
 RC_e PollingController::RunESP32(){
-    SM_Esp32Polling();
+
+    // Result code
+    RC_e retCode = RC_e::ERROR;
+
+    // Call State Machine
+    if((retCode = SM_Esp32Polling()) != RC_e::SUCCESS){
+        return retCode;
+    }
+    
     return RC_e::SUCCESS;
 }
 
+//=====================================================================================================
 RC_e PollingController::StartEsp32Polling(){
-    m_commandEsp32Polling = CommandEsp32Polling::ESP32_POLLING_START;
+    this->m_commandEsp32Polling = CommandEsp32Polling::ESP32_POLLING_START;
     return RC_e::SUCCESS;
 }
 
+//=====================================================================================================
 RC_e PollingController::StopEsp32Polling(){
-    m_commandEsp32Polling = CommandEsp32Polling::ESP32_POLLING_STOP;
+    this->m_commandEsp32Polling = CommandEsp32Polling::ESP32_POLLING_STOP;
     return RC_e::SUCCESS;
 }
 
@@ -59,51 +69,51 @@ RC_e PollingController::StopEsp32Polling(){
  *  												Private Methods
  *******************************************************************************************************************************************/
 
+//=====================================================================================================
 RC_e PollingController::SM_Esp32Polling(){
 
-    // Check if the pointers is null
-    if (m_spiMasterManager == NULL){
+    // Check if the pointer is null
+    if (this->m_spiMasterManager == NULL){
         return RC_e::ERROR_NULL_POINTER;
     }
 
     // Check if the command is STOP
-    if (m_commandEsp32Polling == CommandEsp32Polling::ESP32_POLLING_STOP){
-        m_nextStateEsp32Polling = StateEsp32Polling::IDLE;
+    if (this->m_commandEsp32Polling == CommandEsp32Polling::ESP32_POLLING_STOP){
+        this->m_nextStateEsp32Polling = StateEsp32Polling::IDLE;
     }
 
     // Update current state
-    m_currentStateEsp32Polling = m_nextStateEsp32Polling;
+    this->m_currentStateEsp32Polling = this->m_nextStateEsp32Polling;
 
     // State Machine
-    switch (m_currentStateEsp32Polling)
+    switch (this->m_currentStateEsp32Polling)
     {
         case StateEsp32Polling::IDLE:
             // Condition next step
-            if(m_commandEsp32Polling == CommandEsp32Polling::ESP32_POLLING_START){
-                m_nextStateEsp32Polling = StateEsp32Polling::SEND_REQ;
+            if(this->m_commandEsp32Polling == CommandEsp32Polling::ESP32_POLLING_START){
+                this->m_nextStateEsp32Polling = StateEsp32Polling::SEND_REQ;
             }
             break;
 
         case StateEsp32Polling::SEND_REQ:
             // Send request to slaves
             for(auto i=0; i<ESP32_Slave_e::SLAVE_LENGTH; i++){
-                m_spiMasterManager->SendWriteRequests((ESP32_Slave_e)i);
+                this->m_spiMasterManager->SendWriteRequests((ESP32_Slave_e)i);
             }
 
             // Next step
-            m_nextStateEsp32Polling = StateEsp32Polling::RECV_REQ;
+            this->m_nextStateEsp32Polling = StateEsp32Polling::RECV_REQ;
             break;
 
         case StateEsp32Polling::RECV_REQ:
-            // Recieve request to slaves
+            // Recieve request from slaves
             for(auto i=0; i<ESP32_Slave_e::SLAVE_LENGTH; i++){
-                m_spiMasterManager->ReadSlaveRequests((ESP32_Slave_e)i);
+                this->m_spiMasterManager->ReadSlaveRequests((ESP32_Slave_e)i);
             }
 
             // Next step
-            m_nextStateEsp32Polling = StateEsp32Polling::SEND_REQ;
+            this->m_nextStateEsp32Polling = StateEsp32Polling::SEND_REQ;
             break;
-
     }
 
     delay(1);

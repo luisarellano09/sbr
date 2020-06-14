@@ -1,0 +1,7 @@
+<map id="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_Manager/src/PollingController/PollingController.h" name="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_Manager/src/PollingController/PollingController.h">
+<area shape="rect" id="node1" title="Class to control the polling of communication." alt="" coords="254,5,475,76"/>
+<area shape="rect" id="node2" href="$_manager_8h.html" title="Class to Manage the ESP32." alt="" coords="115,131,358,187"/>
+<area shape="rect" id="node5" href="$_polling_controller_8cpp.html" title="Class to control the polling of communication." alt="" coords="382,124,603,195"/>
+<area shape="rect" id="node3" href="$main_8cpp.html" title="main class" alt="" coords="5,243,212,299"/>
+<area shape="rect" id="node4" href="$_manager_8cpp.html" title="Class to Manage the ESP32." alt="" coords="237,243,495,299"/>
+</map>

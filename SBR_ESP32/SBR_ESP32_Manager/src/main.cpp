@@ -1,18 +1,11 @@
 /**
- * \file main.cpp
- * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 16 April 2020
- *
- * \brief main class
- *
+ * @file main.cpp
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief main class
+ * @version 
+ * @date 13-06-2020
  * 
  * 
- * Changes
- * 30.04.2020: Add Manager system.
- * 16.04.2020: Class comments and RC_e concept
- * 13.04.2020: Doc was created
- * 
- *
  */
 
 /*******************************************************************************************************************************************
@@ -59,7 +52,6 @@ bool flagTimer3 = false;
 void test_add_write();
 void test_add_read();
 
-
 uint32_t count = 0;
 
 /*******************************************************************************************************************************************
@@ -90,7 +82,7 @@ void LoopCore0( void * parameter ){
                     {
                         case 'p':
                         case 'P':
-                            Serial.println("Programming Mode...");
+                            Serial.println("Programming Mode.....");
                             manager->m_PollingController->StopEsp32Polling();
                             manager->m_WifiManager->Connect();
                             break;
@@ -120,11 +112,16 @@ void LoopCore0( void * parameter ){
                             break;
                     }
                 }
+                
+                // Run OTA service
                 manager->m_WifiManager->RunOTA();
+
+                // Delay to feed WDT
                 delay(1);
             // ==========================
         }
         
+        // Run ESP32 polling
         manager->m_PollingController->RunESP32();
     }
 }
@@ -149,6 +146,8 @@ void LoopCore1( void * parameter ){
 
             // ==========================
         }
+
+        // Delay to feed WDT
         delay(1);
     }
 }
@@ -270,13 +269,9 @@ void loop() {
 
 void test_add_write(){
     manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_MOTION, COM_REQUEST_REG_ID_e::R0, count++);
-    if (count > 10000) count = 0;
     manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_MOTION, COM_REQUEST_REG_ID_e::R1, count++);
-    if (count > 10000) count = 0;
     manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_MOTION, COM_REQUEST_REG_ID_e::R2, count++);
-    if (count > 10000) count = 0;
     manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_MOTION, COM_REQUEST_REG_ID_e::R3, count++);
-    if (count > 10000) count = 0;
 }
 
 void test_add_read(){

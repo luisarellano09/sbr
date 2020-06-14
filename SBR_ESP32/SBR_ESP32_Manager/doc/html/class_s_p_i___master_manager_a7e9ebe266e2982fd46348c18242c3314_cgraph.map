@@ -1,0 +1,4 @@
+<map id="SPI_MasterManager::SPI_SendWriteRequest" name="SPI_MasterManager::SPI_SendWriteRequest">
+<area shape="rect" id="node1" title="Function to send a request through SPI." alt="" coords="5,5,175,47"/>
+<area shape="rect" id="node2" href="$_utility_8h.html#a16e3637a67aa53dc443e5c33a34b9c3d" title="Convert Request to Buffer format." alt="" coords="223,13,352,39"/>
+</map>

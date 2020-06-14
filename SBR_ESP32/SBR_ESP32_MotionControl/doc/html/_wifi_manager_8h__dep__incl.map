@@ -1,0 +1,7 @@
+<map id="lib/WifiManager/WifiManager.h" name="lib/WifiManager/WifiManager.h">
+<area shape="rect" id="node1" title="Class to Manage the Wifi." alt="" coords="127,5,351,32"/>
+<area shape="rect" id="node2" href="$_wifi_manager_8cpp.html" title=" " alt="" coords="5,80,244,107"/>
+<area shape="rect" id="node3" href="$_manager_8h.html" title="Class to Manage the ESP32." alt="" coords="268,80,443,107"/>
+<area shape="rect" id="node4" href="$main_8cpp.html" title="main class" alt="" coords="216,155,321,181"/>
+<area shape="rect" id="node5" href="$_manager_8cpp.html" title="Class to Manage the ESP32." alt="" coords="345,155,536,181"/>
+</map>

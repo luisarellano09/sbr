@@ -1,0 +1,9 @@
+<map id="SPI_Slave::CleanBuffer" name="SPI_Slave::CleanBuffer">
+<area shape="rect" id="node1" title="Clean Buffer of requests." alt="" coords="831,42,1001,69"/>
+<area shape="rect" id="node2" href="$class_s_p_i___master_manager.html#a8d671bc95907842db864d48cd7e1172c" title="Function send the requests to a slave" alt="" coords="624,5,783,47"/>
+<area shape="rect" id="node7" href="$class_s_p_i___slave.html#afc18724f920df2d4b8bcbe3bd5c264c4" title="Construct a new spi slave object." alt="" coords="625,71,781,98"/>
+<area shape="rect" id="node3" href="$class_polling_controller.html#ac08ae46bdb01c3fd7b87677e4e78ca17" title="State Machine of polling between the ESP32." alt="" coords="437,5,576,47"/>
+<area shape="rect" id="node4" href="$class_polling_controller.html#ae2b71624e2d4dfd8e7ebd847199fab30" title="Function to run polling on ESP32s." alt="" coords="251,5,389,47"/>
+<area shape="rect" id="node5" href="$main_8cpp.html#a8847c9cdb135af13130b1a84b1373a7c" title=" " alt="" coords="112,13,203,39"/>
+<area shape="rect" id="node6" href="$main_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d" title=" " alt="" coords="5,13,64,39"/>
+</map>

@@ -1,18 +1,11 @@
 /**
- * \file Manager.cpp
- * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 26 April 2020
- *
- * \brief Class to Manager the ESP32.
- *
+ * @file Manager.h
+ * @author Luis Arellano - luis.arellano09@gmail.com
+ * @brief Class to Manage the ESP32
+ * @version 1.0
+ * @date 2020-06-13
  * 
  * 
- * Changes
- * 24.05.2020: Delete logger
- * 30.04.2020: Add Wifimanager and logger instances.
- * 26.04.2020: Create Class.
- * 
- *
  */
 
 #ifndef MANAGER_H
@@ -33,25 +26,27 @@
  *******************************************************************************************************************************************/
 
 /**
- * \brief Class to Manage the ESP32.
+ * @brief Class to Manage the ESP32
+ * 
  */
 class Manager
 {
 public:  
 
-    WifiManager* m_wifiManager = NULL;  /** Instance for Wifimanager */
-    SPI_SlaveManager* m_spiSlaveManager = NULL;  /** Instance for Wifimanager */
+    WifiManager* m_wifiManager = NULL;              /**< Instance for Wifimanager */
+    SPI_SlaveManager* m_spiSlaveManager = NULL;     /**< Instance for SPI Slave manager */
 
     /**
-     * \brief Constructor.
+     * @brief Construct a new Manager object
+     * 
      */
     Manager();
 
     /**
-     * \brief Destructor.
+     * @brief Destroy the Manager object
+     * 
      */
     ~Manager();
-
    
 private:
 

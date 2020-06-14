@@ -1,0 +1,17 @@
+<map id="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_Manager/src/Manager/Manager.h" name="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_Manager/src/Manager/Manager.h">
+<area shape="rect" id="node1" title="Class to Manage the ESP32." alt="" coords="527,5,769,61"/>
+<area shape="rect" id="node2" href="$_global_def_8h.html" title="Global definitions of SBR." alt="" coords="579,452,709,493"/>
+<area shape="rect" id="node4" href="$_local_def_8h.html" title="Definitions of ESP32 Project." alt="" coords="933,459,1104,486"/>
+<area shape="rect" id="node5" href="$_wifi_manager_8h.html" title="Class to Manage the Wifi." alt="" coords="305,363,455,404"/>
+<area shape="rect" id="node10" href="$_s_p_i___master_manager_8h.html" title="lass to Manage the SPI Master" alt="" coords="499,199,666,240"/>
+<area shape="rect" id="node13" href="$_table_r_t_8h.html" title="Class to describe the Data Table in Runtime." alt="" coords="850,288,1001,315"/>
+<area shape="rect" id="node15" href="$_polling_controller_8h.html" title="Class to control the polling of communication." alt="" coords="631,109,777,151"/>
+<area shape="rect" id="node3" title=" " alt="" coords="550,541,634,568"/>
+<area shape="rect" id="node6" title=" " alt="" coords="5,459,67,486"/>
+<area shape="rect" id="node7" title=" " alt="" coords="91,459,189,486"/>
+<area shape="rect" id="node8" title=" " alt="" coords="214,459,301,486"/>
+<area shape="rect" id="node9" title=" " alt="" coords="325,459,435,486"/>
+<area shape="rect" id="node11" title=" " alt="" coords="546,288,601,315"/>
+<area shape="rect" id="node12" href="$_s_p_i___slave_8h.html" title="Class to describe a SPI Slave." alt="" coords="749,370,846,397"/>
+<area shape="rect" id="node14" href="$_register_r_t_8h.html" title="Class to describe a register of the Data Table in Runtime." alt="" coords="870,370,981,397"/>
+</map>

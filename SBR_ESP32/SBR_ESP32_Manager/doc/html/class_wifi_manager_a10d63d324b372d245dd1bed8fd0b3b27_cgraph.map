@@ -1,0 +1,7 @@
+<map id="WifiManager::Connect" name="WifiManager::Connect">
+<area shape="rect" id="node1" title="Connect to Wifi services." alt="" coords="5,56,172,83"/>
+<area shape="rect" id="node2" href="$class_wifi_manager.html#a2ee943ea424ed683be2e0d1f2ca6ce23" title="Configure the OTA service." alt="" coords="220,5,423,32"/>
+<area shape="rect" id="node3" href="$class_wifi_manager.html#a13837b80378450a5c0354f8913d58cc9" title="Configure the Wifi." alt="" coords="220,56,423,83"/>
+<area shape="rect" id="node5" href="$class_wifi_manager.html#abfa90dcf574e2c771473e3533e162bc4" title="Connect to a Wifi." alt="" coords="225,107,417,133"/>
+<area shape="rect" id="node4" href="$class_wifi_manager.html#a64bef73d837b09ff1198b45ee6cb876f" title="Wifi Event handler." alt="" coords="471,56,648,83"/>
+</map>

@@ -1,9 +1,11 @@
 /**
- * Simple.cpp
- *
- *  Created on: Sep 27, 2018
- *       Email: ipas.th@gmail.com
- *      Author: ipas
+ * @file SimpleArray.cpp
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Simple Array class
+ * @version 1.0
+ * @date 14-06-2020
+ * 
+ * 
  */
 
 #include "SimpleArray.h"

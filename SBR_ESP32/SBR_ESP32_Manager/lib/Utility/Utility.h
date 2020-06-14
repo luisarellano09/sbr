@@ -1,16 +1,11 @@
 /**
- * \file Utility.h
- * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 03.05.2020
- *
- * \brief Library with various functions.
- *
+ * @file Utility.h
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Library with various functions
+ * @version 1.0
+ * @date 14-06-2020
  * 
  * 
- * Changes
- * 03.05.2020: Library was created
- * 
- *
  */
 
 #ifndef UTILITY_H
@@ -25,12 +20,22 @@
  *  												REQUEST COMMUNICATION
  *******************************************************************************************************************************************/
 
+//=====================================================================================================
+/**
+ * @brief Convert Request to Buffer format
+ * 
+ * @param request Reference of a request 
+ * @param buffer Reference of a buffer
+ * @return RC_e Result code
+ */
 static RC_e RequestToBuffer(COM_REQUEST_st* request, uint8_t* buffer){
 
+    // Check if pointers are null
     if (request == NULL || buffer == NULL){
         return RC_e::ERROR_NULL_POINTER;
     }
 
+    // Separate into buffer
     buffer[0] = (request->comRequestType & 0x0F) + ((request->comRequestRegId & 0xF00)>>4);
     buffer[1] = (request->comRequestRegId & 0x0FF);
     buffer[2] = (byte)request->data;
@@ -43,8 +48,17 @@ static RC_e RequestToBuffer(COM_REQUEST_st* request, uint8_t* buffer){
     return RC_e::SUCCESS;
 }
 
+//=====================================================================================================
+/**
+ * @brief Convert buffer to request format
+ * 
+ * @param buffer Reference of a buffer
+ * @param request Reference of a request 
+ * @return RC_e Result code
+ */
 static RC_e BufferToRequest(uint8_t* buffer, COM_REQUEST_st* request){
 
+    // Check if pointers are null
     if (request == NULL || buffer == NULL){
         return RC_e::ERROR_NULL_POINTER;
     }
@@ -73,7 +87,11 @@ static RC_e BufferToRequest(uint8_t* buffer, COM_REQUEST_st* request){
  *  												CRC
  *******************************************************************************************************************************************/
 
-
+//=====================================================================================================
+/**
+ * @brief CRC Table
+ * 
+ */
 static const uint16_t Calc16CrcTab[256] = {
    0x0000,0x1021,0x2042,0x3063,0x4084,0x50a5,0x60c6,0x70e7,
    0x8108,0x9129,0xa14a,0xb16b,0xc18c,0xd1ad,0xe1ce,0xf1ef,
@@ -109,13 +127,27 @@ static const uint16_t Calc16CrcTab[256] = {
    0x6e17,0x7e36,0x4e55,0x5e74,0x2e93,0x3eb2,0x0ed1,0x1ef0
 };
 
-static uint16_t CalculateCrcFromRequest(COM_REQUEST_st* request)
-{
-    // Buffer
-    uint8_t _buffer[SPI_MANAGER_REQUEST_SIZE];
+//=====================================================================================================
+/**
+ * @brief Calculate CRC of a request
+ * 
+ * @param request Reference of a request object
+ * @return uint16_t CRC value
+ */
+static uint16_t CalculateCrcFromRequest(COM_REQUEST_st* request){
 
+    // Check if pointer is null
+    if (request == NULL){
+        return 0;
+    }
+
+    // Buffer
+    uint8_t _buffer[SPI_MANAGER_REQUEST_SIZE] = {0};
+
+    // Convert request to buffer
     RequestToBuffer(request, _buffer);
 
+    // Sum all CRC values
     return 
         Calc16CrcTab[_buffer[0]] +
         Calc16CrcTab[_buffer[1]] +
@@ -124,20 +156,5 @@ static uint16_t CalculateCrcFromRequest(COM_REQUEST_st* request)
         Calc16CrcTab[_buffer[4]] +
         Calc16CrcTab[_buffer[5]];
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #endif // UTILITY_H

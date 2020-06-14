@@ -1,0 +1,11 @@
+<map id="SPI_SlaveManager::DecodeRequest" name="SPI_SlaveManager::DecodeRequest">
+<area shape="rect" id="node1" title="Function to decode request." alt="" coords="5,78,204,119"/>
+<area shape="rect" id="node2" href="$_utility_8h.html#ade6249093f0f5ac0cdb96bc71b80d70b" title="Convert buffer to request format." alt="" coords="285,5,415,32"/>
+<area shape="rect" id="node3" href="$_utility_8h.html#a92fd1cc3fb432cde66fb1af15078cc16" title="Calculate CRC of a request." alt="" coords="514,35,705,61"/>
+<area shape="rect" id="node5" href="$class_s_p_i___slave_manager.html#a2f077c9ee29847170e9bf5d4b854871a" title="Function to hanfle RX request." alt="" coords="252,107,448,149"/>
+<area shape="rect" id="node9" href="$class_s_p_i___slave_manager.html#adacedbf5fccaf9cccae69dcafb9d1432" title="Function to handle RX request." alt="" coords="252,173,448,214"/>
+<area shape="rect" id="node4" href="$_utility_8h.html#a16e3637a67aa53dc443e5c33a34b9c3d" title="Convert Request to Buffer format." alt="" coords="771,60,900,87"/>
+<area shape="rect" id="node6" href="$class_simple_array.html#aa9e9e941eb7a273c613bd039d8ac9fc2" title=" " alt="" coords="531,136,688,163"/>
+<area shape="rect" id="node7" href="$class_s_p_i___slave_manager.html#adfdb91b0b368278a1a9f12c73f67eac8" title="Clean Buffer of requests." alt="" coords="496,187,723,213"/>
+<area shape="rect" id="node8" href="$class_slave_s_p_i.html#a7409c14fdb1fc101041851a7a9a07a33" title=" " alt="" coords="516,237,703,264"/>
+</map>

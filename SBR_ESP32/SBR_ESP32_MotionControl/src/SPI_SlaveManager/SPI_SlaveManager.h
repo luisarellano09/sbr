@@ -1,16 +1,11 @@
 /**
- * \file SPI_SlaveManager.h
- * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 03.05.2020
- *
- * \brief Class to Manage the SPI Slave
- *
+ * @file SPI_SlaveManager.h
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Class to Manage the SPI Slave communication
+ * @version 1.0
+ * @date 14-06-2020
  * 
  * 
- * Changes
- * 30.05.2020: Create Class
- * 
- *
  */
 
 #ifndef SPI_SLAVEMANAGER_H
@@ -32,89 +27,110 @@
 /*******************************************************************************************************************************************
  *  												SPI Slave Class
  *******************************************************************************************************************************************/
+
 /**
- * \brief Class to Manage the SPI Slave
+ * @brief Class to Manage the SPI Slave
+ * 
  */
 class SPI_SlaveManager
 {
-
+    /**
+     * @brief Type definition of a SimpleArray to be used by the SPI library functions.
+     * 
+     */
     typedef SimpleArray<uint8_t, int> array_t;
 
 public:  
 
     /**
-     * \brief Constructor.
+     * @brief Construct a new spi slavemanager object
+     * 
+     * @param _SO Slave Output pin
+     * @param _SI Slave Input pin
+     * @param _SCLK Slave clock pin
+     * @param _SS Slave Select pin
      */
-    SPI_SlaveManager(gpio_num_t _MO, gpio_num_t _MI, gpio_num_t _MCLK, gpio_num_t _SS);
+    SPI_SlaveManager(uint8_t _SO, uint8_t _SI, uint8_t _SCLK, uint8_t _SS);
 
     /**
-     * \brief Destructor.
+     * @brief Destroy the spi slavemanager object
+     * 
      */
     ~SPI_SlaveManager();
 
     /**
-     * \brief Function to get request.
-     *
-     * \return Error Code.
+     * @brief Listen the incomming requests
+     * 
+     * @return RC_e Result code
      */
     RC_e ListenRequest();
 
     /**
-     * \brief Function add a write request.
-     *
-     * \return Error Code.
-     */  
-    RC_e AddWriteRequest(COM_REQUEST_REG_ID_e id, uint32_t data);
+     * @brief Add a write-type request to the buffer
+     * 
+     * @param regId Register ID
+     * @param data Data value
+     * @return RC_e Result code
+     */
+    RC_e AddWriteRequest(COM_REQUEST_REG_ID_e regId, uint32_t data);
     
 private:
 
-    SlaveSPI m_slave;
-    gpio_num_t m_SS;
+    SlaveSPI m_slave;   /**< \brief Instance of a SPI slave */
+    gpio_num_t m_SS;    /**< \brief Slave select pin*/
 
-    COM_REQUEST_st m_RequestsArray[SPI_SLAVE_REQUESTS_ARRAY_SIZE];      /** Array of requests. */
-    int8_t m_RequestsArrayIndex;
-    int8_t m_RequestsArrayIndexToSend;                                         /** Index of array of frames. */
-
-    uint32_t count = 0;
-    uint32_t count_logger = 0;
-    uint32_t test_data = 0;
+    COM_REQUEST_st m_RequestsArray[SPI_SLAVE_REQUESTS_ARRAY_SIZE];      /**< Array of requests. */
+    int8_t m_RequestsArrayIndex;                                        /**< Index of total requests added in array . */
+    int8_t m_RequestsArrayIndexToSend;                                  /**< Index of sending request. */
 
     /**
-     * \brief Function to configure the SPI .
-     *
+     * @brief Configure the SPI Slave
      * 
-     * \return Error Code.
+     * @param _SO Slave Output pin
+     * @param _SI Slave Input pin
+     * @param _SCLK Slave clock pin
+     * @param _SS Slave Select pin
+     * @return RC_e Result code
      */
-    RC_e SPIConfigure(gpio_num_t _MO, gpio_num_t _MI, gpio_num_t _MCLK, gpio_num_t _SS);
+    RC_e SPIConfigure(uint8_t _SO, uint8_t _SI, uint8_t _SCLK, uint8_t _SS);
 
     /**
-     * \brief Function to decode request.
-     *
-     * \return Error Code.
+     * @brief Handle incomming request
+     * 
+     * @param buffer Reference of the buffer array
+     * @return RC_e Result code
      */
-    RC_e DecodeRequest(array_t* buffer);
+    RC_e HandleRequest(array_t* buffer);
 
     /**
-     * \brief Function to handle RX request.
-     *
-     * \return Error Code.
+     * @brief Handle a Write-type request
+     * 
+     * @param request Reference of a request
+     * @return RC_e Result code
      */
-    RC_e HandleWriteRequest(COM_REQUEST_st request);
+    RC_e HandleWriteRequest(COM_REQUEST_st* request);
 
     /**
-     * \brief Function to hanfle RX request.
-     *
-     * \return Error Code.
+     * @brief Handle a Read-type request
+     * 
+     * @return RC_e Result code
      */
     RC_e HandleReadRequest();
 
     /**
-     * \brief Add request to the buffer.
+     * @brief Add request to the buffer
+     * 
+     * @param type Request type
+     * @param regId Register ID
+     * @param data Data value
+     * @return RC_e Result code
      */
-    RC_e AddRequest(COM_REQUEST_TYPE_e type, COM_REQUEST_REG_ID_e id, uint32_t data);  
+    RC_e AddRequest(COM_REQUEST_TYPE_e type, COM_REQUEST_REG_ID_e regId, uint32_t data);  
 
     /**
-     * \brief Clean Buffer of requests.
+     * @brief Clean Buffer of requests
+     * 
+     * @return RC_e Result code
      */
     RC_e CleanBuffer();  
    

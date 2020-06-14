@@ -1,17 +1,11 @@
 /**
- * \file Logger.cpp
- * \author Luis Arellano - luis.arellano09@gmail.com
- * \date 26 April 2020
- *
- * \brief Class to create log through Wifi using Wifi socket client.
- *
+ * @file Logger.cpp
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Class to create log through Wifi using Wifi socket client
+ * @version 1.0
+ * @date 14-06-2020
  * 
  * 
- * Changes
- * 01.05.2020: Add WriteValue
- * 26.04.2020: Create Class
- * 
- *
  */
 
 /*******************************************************************************************************************************************
@@ -24,6 +18,7 @@
  *******************************************************************************************************************************************/
 
 Logger::Logger(char* host, uint16_t port){
+    // Set values
     this->m_host = host;
     this->m_port = port;
 
@@ -65,13 +60,6 @@ RC_e Logger::Write(char* msg){
         return RC_e::ERROR_WIFI_CONNECTION;
     }
 
-    // Check if the socket client is connected to the server
-    // if(!this->webSocket.connected()){
-    //     if((retCode=Configure()) != RC_e::SUCCESS){
-    //         return retCode;
-    //     }
-    // }
-
     // Json and buffer
     StaticJsonDocument<JSON_MESSAGE_SIZE> logJson;
     char logBuffer[JSON_MESSAGE_SIZE];
@@ -98,13 +86,6 @@ RC_e Logger::WriteValue(u16_t value){
     {
         return RC_e::ERROR_WIFI_CONNECTION;
     }
-
-    // Check if the socket client is connected to the server
-    // if(!this->m_client.connected()){
-    //     if((retCode=Configure()) != RC_e::SUCCESS){
-    //         return retCode;
-    //     }
-    // }
 
     // Json and buffer
     StaticJsonDocument<JSON_MESSAGE_SIZE> logJson;

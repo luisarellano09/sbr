@@ -1,0 +1,10 @@
+<map id="Manager" name="Manager">
+<area shape="rect" id="node1" title="lass to Manage the ESP32" alt="" coords="197,1035,339,1156"/>
+<area shape="rect" id="node2" href="$class_wifi_manager.html" title="Class to Manage the Wifi." alt="" coords="5,748,147,972"/>
+<area shape="rect" id="node3" href="$class_polling_controller.html" title="Class to control the polling of communication." alt="" coords="511,770,726,950"/>
+<area shape="rect" id="node4" href="$class_s_p_i___master_manager.html" title="Class to Manage the SPI Master." alt="" coords="258,432,467,685"/>
+<area shape="rect" id="node5" href="$class_table_r_t.html" title="Class to describe the Data Table in Runtime." alt="" coords="141,226,289,362"/>
+<area shape="rect" id="node6" href="$class_register_r_t.html" title="Class to describe the Data Table in Runtime." alt="" coords="127,5,302,156"/>
+<area shape="rect" id="node7" href="$class_s_p_i___slave.html" title="Class to describe a SPI Slave." alt="" coords="313,219,501,369"/>
+<area shape="rect" id="node8" href="$struct_c_o_m___r_e_q_u_e_s_t__st.html" title="Structure to define the communication request." alt="" coords="329,20,484,141"/>
+</map>

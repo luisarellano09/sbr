@@ -1,22 +1,13 @@
 /**
- * \file GlobalDef.h
- * \author Luis Arellano
- * \date 13 Jun 2020
- * \todo .
- *
- * \brief All globla definitions of SBR Project.
+ * @file GlobalDef.h
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Global definitions of SBR
+ * @version 1.0
+ * @date 14-06-2020
  * 
- * Changes
- * 07.06.2020: [LA] COM_REQUEST_REG_ID_e update
- * 03.05.2020: [LA] RC_e update
- * 16.04.2020: [LA] RC_e update 
- * 14.04.2020: [JS] new ERRORS ENUM added 
- * 14.04.2020: [LA] Communication enums and struct
- * 14.04.2020: [JS] Comment header was added.
- * 13.04.2020: [LA] Doc was created
- *
  *
  */
+
 #ifndef GLOBALDEF_H
 #define GLOBALDEF_H
 
@@ -26,15 +17,19 @@
  *  												RESULT CODE
  *******************************************************************************************************************************************/
 
-/** \brief  Enumeration for TLF errors.  */
+/**
+ * @brief Enumeration for Result codes
+ * 
+ */
 enum RC_e{
-	SUCCESS						= 0,                                /**< \brief Operation Successful				*/
-	ERROR,                                                          /**< \brief Error 						        */
-	ERROR_NULL_POINTER,                                             /**< \brief Error null pointer					*/
-	ERROR_SIZE_BUFFER,                                             	/**< \brief Error size buffer					*/
-	ERROR_CRC,		                                             	/**< \brief Error CRC Validation				*/
-    ERROR_WIFI_CONNECTION,                                          /**< \brief Error Wifi connection   			*/
-    ERROR_NO_CS                                                     /**< \brief Error No Chip Select   			    */
+	SUCCESS = 0,                /**< \brief Operation Successful*/
+	ERROR,                      /**< \brief Error */
+	ERROR_NULL_POINTER,         /**< \brief Error null pointer */
+	ERROR_SIZE_BUFFER,          /**< \brief Error size buffer */
+	ERROR_CRC,		            /**< \brief Error CRC Validation */
+    ERROR_WIFI_CONNECTION,      /**< \brief Error Wifi connection */
+    ERROR_NO_CS,                /**< \brief Error No Chip Select */
+    ERROR_INVALID_REG_ID        /**< \brief Error Invalid register ID */
 } ;
 
 
@@ -42,7 +37,10 @@ enum RC_e{
  *  												SBR REGISTER ID ADDRESSES
  *******************************************************************************************************************************************/
 
-/** \brief  Enumeration for SBR registers IDs. The number defines the register offset */
+/**
+ * @brief Enumeration for SBR registers IDs. The number defines the register offset
+ * 
+ */
 enum COM_REQUEST_REG_ID_e{
 	R0 = 0,	        /**< \brief R0 */
     R1,	            /**< \brief R1 */
@@ -58,21 +56,25 @@ enum COM_REQUEST_REG_ID_e{
 	REQUEST_REG_LENGTH					            
 };
 
-
 /*******************************************************************************************************************************************
  *  												COMMUNICATION REQUEST
  *******************************************************************************************************************************************/
 
-/** \brief Defines if a read or write operation shall be performed. */
+/**
+ * @brief Defines if a read or write operation shall be performed
+ * 
+ */
 enum COM_REQUEST_TYPE_e{
-	READ							=0x0,							/**< \brief Read operation*/
-	WRITE							=0x1,							/**< \brief Write operation*/
-    STOP							=0x2,							/**< \brief STOP operation*/
-    NONE      						=0x3,							/**< \brief None operation*/                      
+	READ	    =0x0,		        /**< \brief Read operation*/
+	WRITE		=0x1,				/**< \brief Write operation*/
+    STOP		=0x2,				/**< \brief STOP operation*/
+    NONE      	=0x3,				/**< \brief None operation*/                      
 };
 
-
-/** \brief Structure to define the communication request. */
+/**
+ * @brief Structure to define the communication request
+ * 
+ */
 struct COM_REQUEST_st
 {
     uint8_t    comRequestType;      /**< Request type: Read or Write. */
@@ -80,6 +82,5 @@ struct COM_REQUEST_st
     uint32_t   data;                /**< Data payload. */
     uint16_t   CRC;                 /**< Frame consistency. */
 };
-
 
 #endif /* GLOBALDEF_H */

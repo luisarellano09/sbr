@@ -1,0 +1,11 @@
+<map id="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_Manager/src/TableRT/TableRT.h" name="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_Manager/src/TableRT/TableRT.h">
+<area shape="rect" id="node1" title="Class to describe the Data Table in Runtime." alt="" coords="263,5,492,61"/>
+<area shape="rect" id="node2" href="$_s_p_i___master_manager_8h.html" title="lass to Manage the SPI Master" alt="" coords="178,109,420,180"/>
+<area shape="rect" id="node3" href="$_manager_8h.html" title="Class to Manage the ESP32." alt="" coords="134,354,376,410"/>
+<area shape="rect" id="node6" href="$_polling_controller_8h.html" title="Class to control the polling of communication." alt="" coords="347,228,568,299"/>
+<area shape="rect" id="node9" href="$_table_r_t_8cpp.html" title="Class to describe the Data Table in Runtime." alt="" coords="496,117,740,173"/>
+<area shape="rect" id="node8" href="$_s_p_i___master_manager_8cpp.html" title="lass to Manage the SPI Master" alt="" coords="30,228,272,299"/>
+<area shape="rect" id="node4" href="$main_8cpp.html" title="main class" alt="" coords="24,465,230,521"/>
+<area shape="rect" id="node5" href="$_manager_8cpp.html" title="Class to Manage the ESP32." alt="" coords="255,465,514,521"/>
+<area shape="rect" id="node7" href="$_polling_controller_8cpp.html" title="Class to control the polling of communication." alt="" coords="400,347,622,417"/>
+</map>

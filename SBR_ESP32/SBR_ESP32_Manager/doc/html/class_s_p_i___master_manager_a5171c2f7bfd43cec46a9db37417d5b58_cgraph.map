@@ -1,0 +1,10 @@
+<map id="SPI_MasterManager::ReadSlaveRequests" name="SPI_MasterManager::ReadSlaveRequests">
+<area shape="rect" id="node1" title="Function get the requests from a slave." alt="" coords="5,93,164,135"/>
+<area shape="rect" id="node2" href="$class_s_p_i___master_manager.html#af596f204209fe3c6c405ea2ad3e25590" title="Function to handle a read slave request." alt="" coords="212,60,403,101"/>
+<area shape="rect" id="node5" href="$class_s_p_i___master_manager.html#a827ba35689b11f8ae33ed07e896470b6" title="Function to send a request." alt="" coords="222,125,393,167"/>
+<area shape="rect" id="node3" href="$class_s_p_i___master_manager.html#a6055fe8af2033935fc74f54eabcfb86d" title="Function to add a request to the subscribed slaves." alt="" coords="451,5,641,47"/>
+<area shape="rect" id="node4" href="$class_table_r_t.html#a5b8b00d171486702545bc9b58de2eb28" title="Update Register." alt="" coords="455,71,637,98"/>
+<area shape="rect" id="node6" href="$_utility_8h.html#ade6249093f0f5ac0cdb96bc71b80d70b" title="Convert buffer to request format." alt="" coords="481,129,611,155"/>
+<area shape="rect" id="node7" href="$_utility_8h.html#a92fd1cc3fb432cde66fb1af15078cc16" title="Calculate CRC of a request." alt="" coords="451,179,641,206"/>
+<area shape="rect" id="node8" href="$_utility_8h.html#a16e3637a67aa53dc443e5c33a34b9c3d" title="Convert Request to Buffer format." alt="" coords="689,179,819,206"/>
+</map>
