@@ -1,0 +1,27 @@
+ 
+name: SBRNX
+user: sbrnx
+pw: La1123.
+
+sudo apt update 
+sudo apt upgrade
+sudo apt dist-upgrade
+
+uninstall all non use apps
+
+sudo apt install htop
+
+
+Docker
+	sudo groupadd docker
+	sudo usermod -aG docker $USER
+	newgrp docker 
+	
+SSD
+	https://github.com/NVIDIA-AI-IOT/jetson-cloudnative-demo
+
+
+VNC
+	https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-18-04#step-4-%E2%80%94-running-vnc-as-a-system-service
+
+
