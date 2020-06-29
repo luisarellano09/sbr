@@ -45,7 +45,7 @@ RC_e SPI_SlaveManager::ListenRequest(){
     int length = m_slave.getInputStream()->length();
 
     // Slave SPI has got data in
-    if (length >= SPI_MANAGER_REQUEST_SIZE && digitalRead(m_SS) == HIGH){  
+    if (length >= SPI_MANAGER_REQUEST_SIZE && digitalRead(m_SS) == HIGH){
 
         // Buffer
         array_t _buffer(length);

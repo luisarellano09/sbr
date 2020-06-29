@@ -123,12 +123,9 @@ RC_e SPI_MasterManager::ReadSlaveRequests(ESP32_Slave_e slave){
             if (request.comRequestType == COM_REQUEST_TYPE_e::STOP){
                 // Increase stops counter
                 countStops++;
-            } else if ((request.comRequestType == COM_REQUEST_TYPE_e::READ || request.comRequestType == COM_REQUEST_TYPE_e::WRITE) && 
-                      !(request.comRequestType == 0 && request.comRequestRegId == 0 && request.data == 0)){
+            } else if (request.comRequestType == COM_REQUEST_TYPE_e::READ || request.comRequestType == COM_REQUEST_TYPE_e::WRITE){
                 // Handle request
-                if((retCode = HandleReadSlaveRequest(&request)) != RC_e::SUCCESS){
-                    return retCode;
-                }
+                HandleReadSlaveRequest(&request);
             }
 
             // check if counter max is reached
@@ -228,6 +225,9 @@ RC_e SPI_MasterManager::SPI_ReadSlaveRequest(COM_REQUEST_st* request, uint8_t _C
     digitalWrite(_CS, HIGH);
     m_master.endTransaction();
 
+    // Delay to wait for response
+    delayMicroseconds(200);
+
     // Convert buffer to request
     if((retCode = BufferToRequest(_buffer, request)) != RC_e::SUCCESS){
         return retCode;
@@ -252,6 +252,10 @@ RC_e SPI_MasterManager::HandleReadSlaveRequest(COM_REQUEST_st* request){
         return RC_e::ERROR_NULL_POINTER;
     }
 
+    if (request->comRequestRegId >= COM_REQUEST_REG_ID_e::REQUEST_REG_LENGTH || request->comRequestRegId <= COM_REQUEST_REG_ID_e::REQUEST_INITIAL_RED_ID){
+        return RC_e::ERROR_INVALID_REG_ID;
+    }
+
     // Serial.println("====== RX =======");
     // Serial.print("Req: ");
     // Serial.println(request->comRequestType);
@@ -261,10 +265,6 @@ RC_e SPI_MasterManager::HandleReadSlaveRequest(COM_REQUEST_st* request){
     // Serial.println(request->data);
     // Serial.print("CRC: ");
     // Serial.println(request->CRC);
-
-    if (request->comRequestRegId >= COM_REQUEST_REG_ID_e::REQUEST_REG_LENGTH){
-        return RC_e::ERROR_INVALID_REG_ID;
-    }
 
     // Types of Request from the Slave
     if(request->comRequestType == COM_REQUEST_TYPE_e::WRITE){
@@ -282,6 +282,7 @@ RC_e SPI_MasterManager::HandleReadSlaveRequest(COM_REQUEST_st* request){
     } else if (request->comRequestType == COM_REQUEST_TYPE_e::READ){
         //TODO implement read request
     }
+
     return RC_e::SUCCESS;
 }
 

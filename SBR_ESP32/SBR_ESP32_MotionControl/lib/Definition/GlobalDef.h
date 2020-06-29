@@ -42,18 +42,19 @@ enum RC_e{
  * 
  */
 enum COM_REQUEST_REG_ID_e{
-	R0 = 0,	        /**< \brief R0 */
-    R1,	            /**< \brief R1 */
-    R2,	            /**< \brief R2 */
-    R3,	            /**< \brief R3 */
-    R4,	            /**< \brief R4 */
-    R5,	            /**< \brief R5 */
-    R6,	            /**< \brief R6 */
-    R7,	            /**< \brief R7 */
-    R8,	            /**< \brief R8 */
-    R9,	            /**< \brief R9 */
-    R10,	        /**< \brief R10 */
-	REQUEST_REG_LENGTH					            
+    REQUEST_INITIAL_RED_ID = 10,
+	R0,                     /**< \brief R0 */
+    R1,	                    /**< \brief R1 */
+    R2,	                    /**< \brief R2 */
+    R3,	                    /**< \brief R3 */
+    R4,	                    /**< \brief R4 */
+    R5,	                    /**< \brief R5 */
+    R6,	                    /**< \brief R6 */
+    R7,	                    /**< \brief R7 */
+    R8,	                    /**< \brief R8 */
+    R9,	                    /**< \brief R9 */
+    R10,	                /**< \brief R10 */
+	REQUEST_REG_LENGTH      /**< \brief Number of registers */					            
 };
 
 /*******************************************************************************************************************************************

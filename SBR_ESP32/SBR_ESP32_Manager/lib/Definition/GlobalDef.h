@@ -42,7 +42,8 @@ enum RC_e{
  * 
  */
 enum COM_REQUEST_REG_ID_e{
-	R0 = 0,	                /**< \brief R0 */
+    REQUEST_INITIAL_RED_ID = 10,
+	R0,                     /**< \brief R0 */
     R1,	                    /**< \brief R1 */
     R2,	                    /**< \brief R2 */
     R3,	                    /**< \brief R3 */

@@ -242,6 +242,7 @@ RC_e WifiManager::ConfigureOTA(){
 //=====================================================================================================
 RC_e WifiManager::HandleOTA(){
     ArduinoOTA.handle();
+    delay(10);
     return RC_e::SUCCESS;
 }
 

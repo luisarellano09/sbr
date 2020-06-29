@@ -90,7 +90,7 @@
  * @brief Number of Stop or Empty Request during reading request from slaves
  * 
  */
-#define SPI_MANAGER_NUMBER_STOP_EMPTY (uint8_t)20u
+#define SPI_MANAGER_NUMBER_STOP_EMPTY (uint8_t)3u
 
 // ========================== SPI SLAVES ==========================
 

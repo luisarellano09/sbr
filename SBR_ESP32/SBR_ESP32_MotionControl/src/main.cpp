@@ -50,6 +50,7 @@ bool flagTimer3 = false;
  *  												TEST
  *******************************************************************************************************************************************/
 void test_Add_Requests();
+uint32_t test_counter = 0;
 
 /*******************************************************************************************************************************************
  *  												CORE LOOPS
@@ -250,9 +251,9 @@ void loop() {
 }
 
 void test_Add_Requests(){
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R0, 1);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R0, test_counter++);
     manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R1, 2);
     manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R2, 3);
     manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R3, 4);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R4, 5);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R4, test_counter++);
 }
