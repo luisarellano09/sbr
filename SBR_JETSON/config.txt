@@ -24,4 +24,20 @@ SSD
 VNC
 	https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-18-04#step-4-%E2%80%94-running-vnc-as-a-system-service
 
+D435
+	https://github.com/IntelRealSense/librealsense/blob/master/doc/installation_jetson.md
+
+	sudo apt-get install -y v4l-utils
+
+	https://github.com/IntelRealSense/librealsense/tree/master/wrappers/python#building-from-source
+
+	git clone https://github.com/IntelRealSense/librealsense.git
+	cd librealsense
+	mkdir build
+	cd build
+	cmake ../ -DBUILD_PYTHON_BINDINGS=bool:true
+	make
+
+
+
 
