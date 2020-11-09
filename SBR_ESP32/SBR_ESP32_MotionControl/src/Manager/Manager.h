@@ -19,7 +19,7 @@
 #include "../Definition/LocalDef.h"
 
 #include "../../lib/WifiManager/WifiManager.h"
-#include "../SPI_SlaveManager/SPI_SlaveManager.h"
+#include "../RegisterManager/RegisterManager.h"
 
 /*******************************************************************************************************************************************
  *  												WifiManager Class
@@ -34,7 +34,7 @@ class Manager
 public:  
 
     WifiManager* m_wifiManager = NULL;              /**< Instance for Wifimanager */
-    SPI_SlaveManager* m_spiSlaveManager = NULL;     /**< Instance for SPI Slave manager */
+    RegisterManager* m_registerManager = NULL;        /**< Instance for RegisterManager */
 
     /**
      * @brief Construct a new Manager object

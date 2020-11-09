@@ -12,7 +12,7 @@
  *  												Includes
  *******************************************************************************************************************************************/
 #include "SPI_SlaveManager.h"
-#include "../../lib/Utility/Utility.h"
+#include "../Utility/Utility.h"
 
 /*******************************************************************************************************************************************
  *  												Constructor
@@ -180,15 +180,17 @@ RC_e SPI_SlaveManager::HandleWriteRequest(COM_REQUEST_st* request){
         return RC_e::ERROR_NULL_POINTER;
     }
 
-    Serial.println("======== RX =========");
-    Serial.print("Req: ");
-    Serial.println(request->comRequestType);
-    Serial.print("ReqID: ");
-    Serial.println(request->comRequestRegId);
-    Serial.print("Data: ");
-    Serial.println(request->data);
-    Serial.print("CRC: ");
-    Serial.println(request->CRC);
+    RegisterHandler((COM_REQUEST_REG_ID_e)request->comRequestRegId, request->data);
+
+    // Serial.println("======== RX =========");
+    // Serial.print("Req: ");
+    // Serial.println(request->comRequestType);
+    // Serial.print("ReqID: ");
+    // Serial.println(request->comRequestRegId);
+    // Serial.print("Data: ");
+    // Serial.println(request->data);
+    // Serial.print("CRC: ");
+    // Serial.println(request->CRC);
 
     return RC_e::SUCCESS;
 }

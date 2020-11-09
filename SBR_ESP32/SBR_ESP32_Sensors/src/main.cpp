@@ -251,7 +251,7 @@ void loop() {
 }
 
 void test_Add_Requests(){
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R5, test_counter++);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::, test_counter++);
     manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R6, 7);
     manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R7, 8);
     manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R8, 9);

@@ -49,11 +49,6 @@ bool flagTimer3 = false;
  *  												TEST
  *******************************************************************************************************************************************/
 
-void test_add_write_motion();
-void test_add_write_sensors();
-void test_add_read();
-
-uint32_t count = 0;
 
 /*******************************************************************************************************************************************
  *  												CORE LOOPS
@@ -109,16 +104,13 @@ void LoopCore0( void * parameter ){
                             break;
                         case '1':
                             Serial.println("Adding Requests to Motion.....");
-                            test_add_write_motion();
+                            manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_MOTION, COM_REQUEST_REG_ID_e::TEST_R02, 99);
                             break;
                         case '2':
                             Serial.println("Adding Requests to Sensors.....");
-                            test_add_write_sensors();
                             break;
                         case '3':
                             Serial.println("Adding Requests to all.....");
-                            test_add_write_motion();
-                            test_add_write_sensors();
                             break;
                     }
                 }
@@ -275,22 +267,4 @@ void setup() {
 // Loop not used
 void loop() {
     vTaskDelete(NULL);
-}
-
-void test_add_write_motion(){
-    manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_MOTION, COM_REQUEST_REG_ID_e::R0, count++);
-    manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_MOTION, COM_REQUEST_REG_ID_e::R1, count++);
-    manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_MOTION, COM_REQUEST_REG_ID_e::R2, count++);
-    manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_MOTION, COM_REQUEST_REG_ID_e::R3, count++);
-}
-
-void test_add_write_sensors(){
-    manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_SENSOR, COM_REQUEST_REG_ID_e::R5, count++);
-    manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_SENSOR, COM_REQUEST_REG_ID_e::R6, count++);
-    manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_SENSOR, COM_REQUEST_REG_ID_e::R7, count++);
-    manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_SENSOR, COM_REQUEST_REG_ID_e::R8, count++);
-}
-
-void test_add_read(){
-        manager->m_SPI_MasterManager->ReadSlaveRequests(ESP32_Slave_e::SLAVE_MOTION);
 }

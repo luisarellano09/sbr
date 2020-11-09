@@ -50,16 +50,22 @@ Manager::~Manager(){}
 
 //=====================================================================================================
 RC_e Manager::AddSubscribers(){
-    // R0
-    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::R0, Devices_e::DEVICE_SENSOR);
+    // R2
+    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::TEST_R02, Devices_e::DEVICE_SENSOR);
+    // R3
+    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::TEST_R03, Devices_e::DEVICE_SENSOR);
     // R4
-    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::R4, Devices_e::DEVICE_SENSOR);
-
+    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::TEST_R04, Devices_e::DEVICE_SENSOR);
     // R5
-    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::R5, Devices_e::DEVICE_MOTION);
+    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::TEST_R05, Devices_e::DEVICE_SENSOR);
+    // R6
+    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::TEST_R06, Devices_e::DEVICE_SENSOR);
+    // R7
+    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::TEST_R07, Devices_e::DEVICE_SENSOR);
+    // R8
+    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::TEST_R08, Devices_e::DEVICE_SENSOR);
     // R9
-    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::R9, Devices_e::DEVICE_MOTION);
-
+    this->m_TableRT->AddSubscriber(COM_REQUEST_REG_ID_e::TEST_R09, Devices_e::DEVICE_SENSOR);
 
 }
 

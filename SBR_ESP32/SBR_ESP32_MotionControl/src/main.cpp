@@ -49,8 +49,7 @@ bool flagTimer3 = false;
 /*******************************************************************************************************************************************
  *  												TEST
  *******************************************************************************************************************************************/
-void test_Add_Requests();
-uint32_t test_counter = 0;
+
 
 /*******************************************************************************************************************************************
  *  												CORE LOOPS
@@ -91,9 +90,13 @@ void LoopCore0( void * parameter ){
                             Serial.println("Restarting...");
                             ESP.restart();
                             break;
+                        case '0':
+                            Serial.println("Adding requests....");
+                            //manager->m_spiSlaveManager->m_testMode = false;
+                            break;
                         case '1':
                             Serial.println("Adding requests....");
-                            test_Add_Requests();
+                            //manager->m_spiSlaveManager->m_testMode = true;
                             break;
                     }
                 }
@@ -107,7 +110,7 @@ void LoopCore0( void * parameter ){
         }
 
         // Run SPI Slave service
-        manager->m_spiSlaveManager->ListenRequest();
+        manager->m_registerManager->ListenRequest();
     }
 }
 
@@ -119,6 +122,7 @@ void LoopCore1( void * parameter ){
             flagTimer2 = false;
 
             // ========== Code ==========
+            
 
             // ==========================
         }
@@ -248,12 +252,4 @@ void setup() {
 // Loop not used
 void loop() {
     vTaskDelete(NULL);
-}
-
-void test_Add_Requests(){
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R0, test_counter++);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R1, 2);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R2, 3);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R3, 4);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R4, test_counter++);
 }

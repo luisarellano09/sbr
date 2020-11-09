@@ -18,11 +18,11 @@
 #include <Arduino.h>
 #include <SPI.h>
 
-#include "../Definition/LocalDef.h"
+#include "../../src/Definition/LocalDef.h"
 #include "../../lib/Definition/GlobalDef.h"
 
-#include "../lib/SlaveSPI/SlaveSPI.h"
-#include "../lib/SlaveSPI/SimpleArray.h"
+#include "../SlaveSPI/SlaveSPI.h"
+#include "../SlaveSPI/SimpleArray.h"
 
 /*******************************************************************************************************************************************
  *  												SPI Slave Class
@@ -73,6 +73,9 @@ public:
      * @return RC_e Result code
      */
     RC_e AddWriteRequest(COM_REQUEST_REG_ID_e regId, uint32_t data);
+
+
+    RC_e virtual RegisterHandler(COM_REQUEST_REG_ID_e regId, uint32_t data) = 0;
     
 private:
 
@@ -132,7 +135,7 @@ private:
      * 
      * @return RC_e Result code
      */
-    RC_e CleanBuffer();  
+    RC_e CleanBuffer();
    
 };
 
