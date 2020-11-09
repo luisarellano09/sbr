@@ -1,0 +1,7 @@
+<map id="SPI_SlaveManager::HandleReadRequest" name="SPI_SlaveManager::HandleReadRequest">
+<area shape="rect" id="node1" title="Handle a Read&#45;type request." alt="" coords="732,5,928,47"/>
+<area shape="rect" id="node2" href="$class_s_p_i___slave_manager.html#a938f6cff63d2b832356ab45f997250f8" title="Handle incomming request." alt="" coords="488,5,684,47"/>
+<area shape="rect" id="node3" href="$class_s_p_i___slave_manager.html#a671eb16648ab7184c1597a2a7f13d7ac" title="Listen the incomming requests." alt="" coords="251,5,440,47"/>
+<area shape="rect" id="node4" href="$main_8cpp.html#a8847c9cdb135af13130b1a84b1373a7c" title=" " alt="" coords="112,13,203,39"/>
+<area shape="rect" id="node5" href="$main_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d" title=" " alt="" coords="5,13,64,39"/>
+</map>

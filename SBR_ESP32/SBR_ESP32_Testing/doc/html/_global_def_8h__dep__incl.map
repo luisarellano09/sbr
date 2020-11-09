@@ -1,0 +1,11 @@
+<map id="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_Sensors/lib/Definition/GlobalDef.h" name="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_Sensors/lib/Definition/GlobalDef.h">
+<area shape="rect" id="node1" title="Global definitions of SBR." alt="" coords="321,5,528,76"/>
+<area shape="rect" id="node2" href="$_utility_8h.html" title="Library with various functions." alt="" coords="5,131,212,187"/>
+<area shape="rect" id="node4" href="$_wifi_manager_8h.html" title="Class to Manage the Wifi." alt="" coords="539,124,745,195"/>
+<area shape="rect" id="node6" href="$_manager_8h.html" title="Class to Manage the ESP32." alt="" coords="329,250,566,306"/>
+<area shape="rect" id="node9" href="$_s_p_i___slave_manager_8h.html" title="Class to Manage the SPI Slave communication." alt="" coords="237,124,463,195"/>
+<area shape="rect" id="node3" href="$_s_p_i___slave_manager_8cpp.html" title="Class to Manage the SPI Slave communication." alt="" coords="63,243,290,313"/>
+<area shape="rect" id="node5" href="$_wifi_manager_8cpp.html" title=" " alt="" coords="591,243,797,313"/>
+<area shape="rect" id="node7" href="$main_8cpp.html" title="main class" alt="" coords="217,361,424,417"/>
+<area shape="rect" id="node8" href="$_manager_8cpp.html" title="Class to Manage the ESP32." alt="" coords="448,361,700,417"/>
+</map>

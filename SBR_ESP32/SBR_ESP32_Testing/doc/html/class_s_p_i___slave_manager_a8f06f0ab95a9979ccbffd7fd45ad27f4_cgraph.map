@@ -1,0 +1,8 @@
+<map id="SPI_SlaveManager::SPIConfigure" name="SPI_SlaveManager::SPIConfigure">
+<area shape="rect" id="node1" title="Configure the SPI Slave." alt="" coords="5,56,239,83"/>
+<area shape="rect" id="node2" href="$class_slave_s_p_i.html#a3e87d53a307b90b093373a08c040d496" title=" " alt="" coords="287,56,409,83"/>
+<area shape="rect" id="node3" href="$class_slave_s_p_i.html#adc3f47f2217e77a343af65b46fbb367d" title=" " alt="" coords="457,49,651,90"/>
+<area shape="rect" id="node4" href="$class_simple_array.html#a7d77eb820300d1bbb8c762b728a4805c" title=" " alt="" coords="699,5,869,32"/>
+<area shape="rect" id="node5" href="$class_simple_array.html#a106276f7c1a207d2fc14c073516e3540" title=" " alt="" coords="709,56,859,83"/>
+<area shape="rect" id="node6" href="$class_simple_array.html#a3f99098b5dc871ebf39e22963be71810" title=" " alt="" coords="705,107,863,133"/>
+</map>

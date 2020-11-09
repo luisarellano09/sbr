@@ -1,0 +1,7 @@
+<map id="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_Sensors/src/SPI_SlaveManager/SPI_SlaveManager.h" name="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_Sensors/src/SPI_SlaveManager/SPI_SlaveManager.h">
+<area shape="rect" id="node1" title="Class to Manage the SPI Slave communication." alt="" coords="250,5,477,76"/>
+<area shape="rect" id="node2" href="$_manager_8h.html" title="Class to Manage the ESP32." alt="" coords="117,131,354,187"/>
+<area shape="rect" id="node5" href="$_s_p_i___slave_manager_8cpp.html" title="Class to Manage the SPI Slave communication." alt="" coords="378,124,605,195"/>
+<area shape="rect" id="node3" href="$main_8cpp.html" title="main class" alt="" coords="5,243,212,299"/>
+<area shape="rect" id="node4" href="$_manager_8cpp.html" title="Class to Manage the ESP32." alt="" coords="236,243,488,299"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="CalculateCrcFromRequest" name="CalculateCrcFromRequest">
+<area shape="rect" id="node1" title="Calculate CRC of a request." alt="" coords="1023,71,1213,98"/>
+<area shape="rect" id="node2" href="$class_s_p_i___slave_manager.html#a1e921446d5a4d5cf154d3c2994b6b7da" title="Add request to the buffer." alt="" coords="747,13,975,39"/>
+<area shape="rect" id="node7" href="$class_s_p_i___slave_manager.html#a2f077c9ee29847170e9bf5d4b854871a" title="Handle a Read&#45;type request." alt="" coords="763,64,959,105"/>
+<area shape="rect" id="node8" href="$class_s_p_i___slave_manager.html#a938f6cff63d2b832356ab45f997250f8" title="Handle incomming request." alt="" coords="495,71,691,112"/>
+<area shape="rect" id="node3" href="$class_s_p_i___slave_manager.html#ac51a022188274a549c4e31a0bb201104" title="Add a write&#45;type request to the buffer." alt="" coords="488,5,699,47"/>
+<area shape="rect" id="node4" href="$main_8cpp.html#a317a27464f608b0accf7e2be9fb53059" title=" " alt="" coords="272,15,419,42"/>
+<area shape="rect" id="node5" href="$main_8cpp.html#a8847c9cdb135af13130b1a84b1373a7c" title=" " alt="" coords="112,46,203,73"/>
+<area shape="rect" id="node6" href="$main_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d" title=" " alt="" coords="5,46,64,73"/>
+<area shape="rect" id="node9" href="$class_s_p_i___slave_manager.html#a671eb16648ab7184c1597a2a7f13d7ac" title="Listen the incomming requests." alt="" coords="251,68,440,109"/>
+</map>
