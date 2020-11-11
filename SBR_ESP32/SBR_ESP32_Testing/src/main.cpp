@@ -14,17 +14,20 @@
 #include <Arduino.h>
 #include "soc/soc.h"
 #include "soc/rtc_cntl_reg.h"
-
+#include "SPI.h"
 /*******************************************************************************************************************************************
  *  												INCLUDES - SBR
  *******************************************************************************************************************************************/
 #include "./Manager/Manager.h"
+#include "./IMUManager/IMUManager.h"
 
 /*******************************************************************************************************************************************
  *  												GLOBAL VARIABLES
  *******************************************************************************************************************************************/
 // Manager Instance
 Manager* manager;
+//IMU Instance
+IMUManager *myIMU;
 
 // Task declaration
 TaskHandle_t TaskCore0, TaskCore1;
@@ -99,7 +102,7 @@ void LoopCore0( void * parameter ){
                 }
 
                 // Run OTA service
-                manager->m_wifiManager->RunOTA();
+                //manager->m_wifiManager->RunOTA();
 
                 // Delay to feed WDT
                 delay(1);
@@ -107,7 +110,7 @@ void LoopCore0( void * parameter ){
         }
 
         // Run SPI Slave service
-        manager->m_spiSlaveManager->ListenRequest();
+        //manager->m_spiSlaveManager->ListenRequest();
     }
 }
 
@@ -189,8 +192,10 @@ void setup() {
     Serial.println(" +++++ ESP32 SENSORS +++++");
 
     // Manager
-    manager = new Manager();
-
+    //manager = new Manager();
+   
+    myIMU = new IMUManager();
+       
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // Task of core 0
@@ -251,11 +256,11 @@ void loop() {
 }
 
 void test_Add_Requests(){
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::, test_counter++);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R6, 7);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R7, 8);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R8, 9);
-    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::R9, test_counter++);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TEST_R05, test_counter++);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TEST_R06, 7);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TEST_R07, 8);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TEST_R08, 9);
+    manager->m_spiSlaveManager->AddWriteRequest(COM_REQUEST_REG_ID_e::TEST_R09, test_counter++);
 }
 
 
