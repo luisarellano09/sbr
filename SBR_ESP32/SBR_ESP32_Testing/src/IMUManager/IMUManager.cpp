@@ -1,7 +1,7 @@
 /**
  * @file IMUManager.cpp
  * @author Jorge SALGADO (jorgesalgado23@gmail.com)
- * @brief Class to Manage the IMU
+ * @brief Class to Manage the IMU, communication with HSPI
  * @version 1.0
  * @date 11-11-2020
  * 
@@ -21,7 +21,7 @@
 IMUManager::IMUManager(){
  
     _spiPort = new SPIClass(HSPI);
-    BeginSPI(15, 1, 24, 27,3000,*_spiPort);
+    BeginSPI(15, 4, 2, 26,27,*_spiPort);
 }
 
 //=====================================================================================================
@@ -191,23 +191,6 @@ boolean IMUManager::sendPacket(uint8_t channelNumber, uint8_t dataLength)
  *  												Private Methods
  *******************************************************************************************************************************************/
 
-//=====================================================================================================
-RC_e IMUManager::ConfigureIMU(){
-
-
-    return RC_e::SUCCESS;
-}
-
-//=====================================================================================================
-RC_e IMUManager::ConnectIMU(){
-
-    return RC_e::SUCCESS;  
-}
-
-//=====================================================================================================
-void IMUManager::IMUEvent(){
-
-}
 
 
 

@@ -12,9 +12,8 @@
  *  												INCLUDES - ARDUINO
  *******************************************************************************************************************************************/
 #include <Arduino.h>
-#include "soc/soc.h"
-#include "soc/rtc_cntl_reg.h"
-#include "SPI.h"
+#include "../lib//Definition/GlobalDef.h"
+#include "soc/rtc_wdt.h"
 /*******************************************************************************************************************************************
  *  												INCLUDES - SBR
  *******************************************************************************************************************************************/
@@ -61,6 +60,7 @@ uint32_t test_counter = 0;
 // Loop of core 0
 void LoopCore0( void * parameter ){
     while(true) {
+        //Serial.println("TEST");
         // Code for Timer 0 interruption
         if (flagTimer0){
             flagTimer0 = false;
@@ -68,46 +68,46 @@ void LoopCore0( void * parameter ){
             // ========== Code ==========
             /*Nothing to DO*/
             // ==========================
+
         }
 
         // Code for Timer 1 interruption
         if (flagTimer1){
             flagTimer1 = false;
-
-            // ========== Code ==========
-                if(Serial.available()){
-                    Serial.println("checking Serial");
-                    char incomingByte = Serial.read();
-                    Serial.flush();
-                    switch (incomingByte)
-                    {
-                        case 'w':
-                        case 'W':
-                            Serial.println(" +++++ ESP32 SENSORS +++++");
-                            break;
-                        case 'p':
-                        case 'P':
-                            manager->m_wifiManager->Connect();
-                            break;
-                        case 'r':
-                        case 'R':
-                            Serial.println("Restarting...");
-                            ESP.restart();
-                            break;
-                        case '1':
-                            Serial.println("Adding requests....");
-                            test_Add_Requests();
-                            break;
-                    }
-                }
-
-                // Run OTA service
-                //manager->m_wifiManager->RunOTA();
-
-                // Delay to feed WDT
-                delay(1);
-            // ==========================
         }
+        // ========== Code ==========
+        if(Serial.available()){
+            Serial.println("checking Serial");
+            char incomingByte = Serial.read();
+            Serial.flush();
+            switch (incomingByte)
+            {
+                case 'w':
+                case 'W':
+                    Serial.println(" +++++ ESP32 SENSORS +++++");
+                    break;
+                case 'p':
+                case 'P':
+                    
+                    break;
+                case 'r':
+                case 'R':
+                    Serial.println("Restarting...");
+                    
+                    break;
+                case '1':
+                    Serial.println("Adding requests....");
+                
+                    break;
+            }
+        }
+
+        // Run OTA service
+        //manager->m_wifiManager->RunOTA();
+
+        // Delay to feed WDT
+        delay(1);
+        // ==========================
 
         // Run SPI Slave service
         //manager->m_spiSlaveManager->ListenRequest();
@@ -117,6 +117,7 @@ void LoopCore0( void * parameter ){
 // Loop of core 1
 void LoopCore1( void * parameter ){
     while(true) {
+        //Serial.println("TEST");
         // Code for Timer 2 interruption
         if (flagTimer2){
             flagTimer2 = false;
@@ -185,7 +186,9 @@ void IRAM_ATTR onTimer3(){
 void setup() {
 
     // Disable brownout detector
-    WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); 
+    //WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); 
+    rtc_wdt_protect_off();
+    rtc_wdt_disable();
 
     // Serial Port
     Serial.begin(115200);
@@ -194,8 +197,14 @@ void setup() {
     // Manager
     //manager = new Manager();
    
-    myIMU = new IMUManager();
-       
+    
+    /*Test PS0 PS1 IMU*/
+    pinMode(4, OUTPUT);
+	pinMode(2, OUTPUT);   
+    digitalWrite(4, HIGH);
+    digitalWrite(2, HIGH);
+    //myIMU = new IMUManager();
+
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // Task of core 0
@@ -221,28 +230,32 @@ void setup() {
         1);         /* Core where the task should run */
 
     // Timer0
+    Serial.println("start timer 0");
     timer0 = timerBegin(0, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer0, &onTimer0, true); // edge (not level) triggered 
-    timerAlarmWrite(timer0, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
+    timerAlarmWrite(timer0, 10000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer1
+    Serial.println("start timer 1");
     timer1 = timerBegin(1, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer1, &onTimer1, true); // edge (not level) triggered 
     timerAlarmWrite(timer1, 2000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer2
+    Serial.println("start timer 2");
     timer2 = timerBegin(2, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer2, &onTimer2, true); // edge (not level) triggered 
     timerAlarmWrite(timer2, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer3
+    Serial.println("start timer 3");
     timer3 = timerBegin(3, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer3, &onTimer3, true); // edge (not level) triggered 
     timerAlarmWrite(timer3, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Enable the timer alarms
-    timerAlarmEnable(timer0); // enable
-    timerAlarmEnable(timer1); // enable
+    //timerAlarmEnable(timer0); // enable
+    //timerAlarmEnable(timer1); // enable
     //timerAlarmEnable(timer2); // enable
     //timerAlarmEnable(timer3); // enable
 }

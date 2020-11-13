@@ -141,29 +141,6 @@ private:
 	uint8_t _int;
 	uint8_t _rst;
 
-    /**
-     * @brief Configure the IMU
-     * 
-     * @return RC_e Ressult code
-     */
-    RC_e ConfigureIMU();
-
-    /**
-     * @brief Connect to a IMU
-     * 
-     * @return RC_e Result code
-     */
-    RC_e ConnectIMU();
-
-    /**
-     * @brief IMU Event handler
-     * 
-     * @param event IMU event
-     * @param info System information about the event
-     */
-    void IMUEvent();
-
-
 };
 
 #endif // IMUMANAGER_H
