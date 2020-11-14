@@ -21,7 +21,8 @@
 IMUManager::IMUManager(){
  
     _spiPort = new SPIClass(HSPI);
-    BeginSPI(15, 4, 2, 26,27,*_spiPort);
+    BeginSPI(15, 4, 26, 27,1000000,*_spiPort);
+   
 }
 
 //=====================================================================================================
@@ -56,34 +57,56 @@ void IMUManager::BeginSPI(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_
 	delay(2);				   //Min length not specified in datasheet?
 	digitalWrite(_rst, HIGH);  //Bring out of reset
 
-	//Wait for first assertion of INT before using WAK pin. Can take ~104ms
+
+	//Wait for first assertion of INT before using WAKE pin. Can take ~104ms
 	waitForSPI();
 
-	//if(wakeBNO080() == false) //Bring IC out of sleep after reset
-	//  Serial.println("BNO080 did not wake up");
-
 	_spiPort->begin(); //Turn on SPI hardware
-
+    
 	//At system startup, the hub must send its full advertisement message (see 5.2 and 5.3) to the
 	//host. It must not send any other data until this step is complete.
 	//When BNO080 first boots it broadcasts big startup packet
 	//Read it and dump it
 	waitForSPI(); //Wait for assertion of INT before reading advert message.
 	receivePacket();
+    
 
 	//The BNO080 will then transmit an unsolicited Initialize Response (see 6.4.5.2)
 	//Read it and dump it
-	waitForSPI(); //Wait for assertion of INT before reading Init response
-	receivePacket();
-
+	waitForSPI(); //Wait for assertion of INT before reading Init response    
+	receivePacket();    
+    
 	//Check communication with device
 	shtpData[0] = SHTP_REPORT_PRODUCT_ID_REQUEST; //Request the product ID and reset info
 	shtpData[1] = 0;							  //Reserved
 
+    
 	//Transmit packet on channel 2, 2 bytes
 	sendPacket(CHANNEL_CONTROL, 2);
-}
 
+    	//Now we wait for response
+	waitForSPI();
+	if (receivePacket() == true)
+	{
+		if (shtpData[0] == SHTP_REPORT_PRODUCT_ID_RESPONSE)
+			if (true)
+			{
+				Serial.print(F("SW Version Major: 0x"));
+				Serial.print(shtpData[2], HEX);
+				Serial.print(F(" SW Version Minor: 0x"));
+				Serial.print(shtpData[3], HEX);
+				uint32_t SW_Part_Number = ((uint32_t)shtpData[7] << 24) | ((uint32_t)shtpData[6] << 16) | ((uint32_t)shtpData[5] << 8) | ((uint32_t)shtpData[4]);
+				Serial.print(F(" SW Part Number: 0x"));
+				Serial.print(SW_Part_Number, HEX);
+				uint32_t SW_Build_Number = ((uint32_t)shtpData[11] << 24) | ((uint32_t)shtpData[10] << 16) | ((uint32_t)shtpData[9] << 8) | ((uint32_t)shtpData[8]);
+				Serial.print(F(" SW Build Number: 0x"));
+				Serial.print(SW_Build_Number, HEX);
+				uint16_t SW_Version_Patch = ((uint16_t)shtpData[13] << 8) | ((uint16_t)shtpData[12]);
+				Serial.print(F(" SW Version Patch: 0x"));
+				Serial.println(SW_Version_Patch, HEX);
+			}
+	}
+}
 //Blocking wait for BNO080 to assert (pull low) the INT pin
 //indicating it's ready for comm. Can take more than 104ms
 //after a hardware reset
@@ -109,8 +132,11 @@ boolean IMUManager::receivePacket(void)
     //Old way: if (waitForSPI() == false) return (false); //Something went wrong
 
     //Get first four bytes to find out how much data we need to read
+    
 
     _spiPort->beginTransaction(SPISettings(_spiPortSpeed, MSBFIRST, SPI_MODE3));
+
+    Serial.println("Test 2");
     digitalWrite(_cs, LOW);
 
     //Get the first four bytes, aka the packet header
@@ -124,7 +150,7 @@ boolean IMUManager::receivePacket(void)
     shtpHeader[1] = packetMSB;
     shtpHeader[2] = channelNumber;
     shtpHeader[3] = sequenceNumber;
-
+    
     //Calculate the number of data bytes in this packet
     uint16_t dataLength = ((uint16_t)packetMSB << 8 | packetLSB);
     dataLength &= ~(1 << 15); //Clear the MSbit.
@@ -136,7 +162,7 @@ boolean IMUManager::receivePacket(void)
         return (false); //All done
     }
     dataLength -= 4; //Remove the header bytes from the data count
-
+    
     //Read incoming data into the shtpData array
     for (uint16_t dataSpot = 0; dataSpot < dataLength; dataSpot++)
     {
@@ -146,9 +172,28 @@ boolean IMUManager::receivePacket(void)
     }
 
     digitalWrite(_cs, HIGH); //Release BNO080
-
+    
     _spiPort->endTransaction();
+    
+    Serial.println("==== LENGHT BNO080 =====");
+    Serial.print("PacketLSB");
+    Serial.println(shtpHeader[0], HEX);
+    Serial.print("PacketMSB");
+    Serial.println(shtpHeader[1], HEX);
+    Serial.print("Channel Number");
+    Serial.println(shtpHeader[2], HEX);
+    Serial.print("Sequence Number");
+    Serial.println(shtpHeader[3], HEX);
 
+    Serial.println("==== DATA=====");
+    Serial.print("DATA0");
+    Serial.println(shtpData[0], HEX);
+    Serial.print("DATA1");
+    Serial.println(shtpData[1], HEX);
+    Serial.print("DATA2");
+    Serial.println(shtpData[2], HEX);
+    Serial.print("DATA3");
+    Serial.println(shtpData[3], HEX);
 
 	return (true); //We're done!
 }

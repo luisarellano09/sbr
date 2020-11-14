@@ -27,7 +27,7 @@
 Manager* manager;
 //IMU Instance
 IMUManager *myIMU;
-
+SPIClass *MySPI = NULL;              /**< Instance for SPI */
 // Task declaration
 TaskHandle_t TaskCore0, TaskCore1;
 
@@ -88,7 +88,8 @@ void LoopCore0( void * parameter ){
                     break;
                 case 'p':
                 case 'P':
-                    
+                    myIMU = new IMUManager();
+                    Serial.println("myIMU created");
                     break;
                 case 'r':
                 case 'R':
@@ -187,8 +188,10 @@ void setup() {
 
     // Disable brownout detector
     //WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); 
-    rtc_wdt_protect_off();
-    rtc_wdt_disable();
+    //rtc_wdt_protect_off();
+    //rtc_wdt_disable();
+
+    //MySPI = new SPIClass(HSPI);
 
     // Serial Port
     Serial.begin(115200);
@@ -199,10 +202,8 @@ void setup() {
    
     
     /*Test PS0 PS1 IMU*/
-    pinMode(4, OUTPUT);
 	pinMode(2, OUTPUT);   
-    digitalWrite(4, HIGH);
-    digitalWrite(2, HIGH);
+    digitalWrite(2, HIGH); //PS1 to HIGH
     //myIMU = new IMUManager();
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
