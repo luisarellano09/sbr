@@ -14,11 +14,13 @@
 #include <Arduino.h>
 #include "../lib//Definition/GlobalDef.h"
 #include "soc/rtc_wdt.h"
+//#include "SPI.h"
 /*******************************************************************************************************************************************
  *  												INCLUDES - SBR
  *******************************************************************************************************************************************/
 #include "./Manager/Manager.h"
-#include "./IMUManager/IMUManager.h"
+//#include "./IMUManager/IMUManager.h"
+#include "./BNO080/SparkFun_BNO080_Arduino_Library.h"
 
 /*******************************************************************************************************************************************
  *  												GLOBAL VARIABLES
@@ -26,8 +28,9 @@
 // Manager Instance
 Manager* manager;
 //IMU Instance
-IMUManager *myIMU;
-SPIClass *MySPI = NULL;              /**< Instance for SPI */
+//IMUManager *myIMU;
+BNO080 *myIMU;
+SPIClass *SPI2BNO080 = NULL;   
 // Task declaration
 TaskHandle_t TaskCore0, TaskCore1;
 
@@ -88,17 +91,63 @@ void LoopCore0( void * parameter ){
                     break;
                 case 'p':
                 case 'P':
-                    myIMU = new IMUManager();
-                    Serial.println("myIMU created");
+                    //myIMU = new IMUManager();
+                    //Serial.println("myIMU created");
+                    SPI2BNO080 = new SPIClass();
+                    SPI2BNO080->begin(14,25,13,15);
+                    myIMU = new BNO080();
+                    //myIMU->enableDebugging(Serial);
+
+                    if(myIMU->beginSPI(15, 4, 26, 27,1000000,*SPI2BNO080) == false)
+                    {
+                        Serial.println("myIMU error");
+                        while(1);
+                    }
                     break;
                 case 'r':
                 case 'R':
                     Serial.println("Restarting...");
                     
                     break;
+                case '0':
+                    myIMU->enableRotationVector(50); //Send data update every 50ms
+                    myIMU->enableAccelerometer(50);
+                    Serial.println(F("Rotation vector enabled"));
+                    Serial.println(F("Output in form i, j, k, real, accuracy"));
+                    break;
                 case '1':
                     Serial.println("Adding requests....");
-                
+                    while(1){
+                    delay(10); //You can do many other things. We spend most of our time printing and delaying.
+  
+                    //Look for reports from the IMU
+                    if (myIMU->dataAvailable() == true)
+                    {
+                        float AccX = myIMU->getAccelX();
+                        float AccY = myIMU->getAccelY();
+                        float AccZ = myIMU->getAccelZ();
+                        float Accurancy = myIMU->getAccelAccuracy();
+                        //float quatI = myIMU->getQuatI();
+                        //float quatJ = myIMU->getQuatJ();
+                        //float quatK = myIMU->getQuatK();
+                        //float quatReal = myIMU->getQuatReal();
+                        //float quatRadianAccuracy = myIMU->getQuatRadianAccuracy();
+
+                        Serial.print(AccX, 2);
+                        Serial.print(F(","));
+                        Serial.print(AccY, 2);
+                        Serial.print(F(","));
+                        Serial.print(AccZ, 2);
+                        Serial.print(F(","));
+                        Serial.print(Accurancy, 2);
+                        Serial.print(F(","));
+                        //Serial.print(quatRadianAccuracy, 2);
+                        //Serial.print(F(","));
+                        //Serial.print((float)measurements / ((millis() - startTime) / 1000.0), 2);
+                        //Serial.print(F("Hz"));
+                        Serial.println();
+                    }
+                    }
                     break;
             }
         }
@@ -191,7 +240,7 @@ void setup() {
     //rtc_wdt_protect_off();
     //rtc_wdt_disable();
 
-    //MySPI = new SPIClass(HSPI);
+
 
     // Serial Port
     Serial.begin(115200);
@@ -204,6 +253,8 @@ void setup() {
     /*Test PS0 PS1 IMU*/
 	pinMode(2, OUTPUT);   
     digitalWrite(2, HIGH); //PS1 to HIGH
+    pinMode(4, OUTPUT);   
+    digitalWrite(4, HIGH); //PS1 to HIGH
     //myIMU = new IMUManager();
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

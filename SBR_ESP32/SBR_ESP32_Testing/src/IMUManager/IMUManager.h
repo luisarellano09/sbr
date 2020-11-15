@@ -127,11 +127,51 @@ public:
     void BeginSPI(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INTPin, uint8_t user_RSTPin, uint32_t spiPortSpeed, SPIClass &spiPort);
 
     boolean waitForSPI();
-
-
+    void setFeatureCommand(uint8_t reportID, uint16_t timeBetweenReports);
+    void setFeatureCommand(uint8_t reportID, uint16_t timeBetweenReports, uint32_t specificConfig);
+    void enableRotationVector(uint16_t timeBetweenReports);
+    void enableAccelerometer(uint16_t timeBetweenReports);
     boolean receivePacket(void);
 
     boolean sendPacket(uint8_t channelNumber, uint8_t dataLength);
+
+    bool dataAvailable(void);
+
+    void parseInputReport(void);
+
+    float qToFloat(int16_t fixedPointValue, uint8_t qPoint); //Given a Q value, converts fixed point floating to regular floating point number
+    uint32_t floatToQ(float floatValue, uint8_t qPoint);// oposite of above
+    
+    float getQuatI();
+	float getQuatJ();
+	float getQuatK();
+	float getQuatReal();
+	float getQuatRadianAccuracy();
+	uint8_t getQuatAccuracy();
+
+	float getAccelX();
+	float getAccelY();
+	float getAccelZ();
+	uint8_t getAccelAccuracy();
+
+	float getLinAccelX();
+	float getLinAccelY();
+	float getLinAccelZ();
+	uint8_t getLinAccelAccuracy();
+
+	float getGyroX();
+	float getGyroY();
+	float getGyroZ();
+	uint8_t getGyroAccuracy();
+
+	float getFastGyroX();
+	float getFastGyroY();
+	float getFastGyroZ();
+
+	float getMagX();
+	float getMagY();
+	float getMagZ();
+	uint8_t getMagAccuracy();
 
 private:
 
@@ -140,7 +180,34 @@ private:
 	uint8_t _wake;
 	uint8_t _int;
 	uint8_t _rst;
+    //These are the raw sensor values (without Q applied) pulled from the user requested Input Report
+	uint16_t rawAccelX, rawAccelY, rawAccelZ, accelAccuracy;
+	uint16_t rawLinAccelX, rawLinAccelY, rawLinAccelZ, accelLinAccuracy;
+	uint16_t rawGyroX, rawGyroY, rawGyroZ, gyroAccuracy;
+	uint16_t rawMagX, rawMagY, rawMagZ, magAccuracy;
+	uint16_t rawQuatI, rawQuatJ, rawQuatK, rawQuatReal, rawQuatRadianAccuracy, quatAccuracy;
+	uint16_t rawFastGyroX, rawFastGyroY, rawFastGyroZ;
+	uint16_t stepCount;
+	uint32_t timeStamp;
+	uint8_t stabilityClassifier;
+	uint8_t activityClassifier;
+	uint8_t *_activityConfidences;						  //Array that store the confidences of the 9 possible activities
+	uint8_t calibrationStatus;							  //Byte R0 of ME Calibration Response
+	bool calibrationSaveConfirmed;   // Have we received confirmation that calibration was saved?
+	uint16_t memsRawAccelX, memsRawAccelY, memsRawAccelZ; //Raw readings from MEMS sensor
+	uint16_t memsRawGyroX, memsRawGyroY, memsRawGyroZ;	//Raw readings from MEMS sensor
+	uint16_t memsRawMagX, memsRawMagY, memsRawMagZ;		  //Raw readings from MEMS sensor
+    uint8_t memsRawMagStatus;
 
+	//These Q values are defined in the datasheet but can also be obtained by querying the meta data records
+	//See the read metadata example for more info
+	int16_t rotationVector_Q1 = 14;
+	int16_t rotationVectorAccuracy_Q1 = 12; //Heading accuracy estimate in radians. The Q point is 12.
+	int16_t accelerometer_Q1 = 8;
+	int16_t linear_accelerometer_Q1 = 8;
+	int16_t gyro_Q1 = 9;
+	int16_t magnetometer_Q1 = 4;
+	int16_t angular_velocity_Q1 = 10;
 };
 
 #endif // IMUMANAGER_H
