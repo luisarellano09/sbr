@@ -21,6 +21,7 @@
 #include "./Manager/Manager.h"
 //#include "./IMUManager/IMUManager.h"
 #include "./BNO080/SparkFun_BNO080_Arduino_Library.h"
+#include "./ControlMotors/MotorManager.h"
 
 /*******************************************************************************************************************************************
  *  												GLOBAL VARIABLES
@@ -31,6 +32,7 @@ Manager* manager;
 //IMUManager *myIMU;
 BNO080 *myIMU;
 SPIClass *SPI2BNO080 = NULL;   
+MotorManager *myMotors;
 // Task declaration
 TaskHandle_t TaskCore0, TaskCore1;
 
@@ -56,7 +58,7 @@ bool flagTimer3 = false;
  *******************************************************************************************************************************************/
 void test_Add_Requests();
 uint32_t test_counter = 0;
-
+int8_t i8DutyCycle = 50;
 /*******************************************************************************************************************************************
  *  												CORE LOOPS
  *******************************************************************************************************************************************/
@@ -94,11 +96,11 @@ void LoopCore0( void * parameter ){
                     //myIMU = new IMUManager();
                     //Serial.println("myIMU created");
                     SPI2BNO080 = new SPIClass();
-                    SPI2BNO080->begin(14,25,13,15);
+                    SPI2BNO080->begin(14,25,13,32);
                     myIMU = new BNO080();
                     //myIMU->enableDebugging(Serial);
 
-                    if(myIMU->beginSPI(15, 4, 26, 27,1000000,*SPI2BNO080) == false)
+                    if(myIMU->beginSPI(32, 33, 26, 27,1000000,*SPI2BNO080) == false)
                     {
                         Serial.println("myIMU error");
                         while(1);
@@ -146,9 +148,47 @@ void LoopCore0( void * parameter ){
                         //Serial.print((float)measurements / ((millis() - startTime) / 1000.0), 2);
                         //Serial.print(F("Hz"));
                         Serial.println();
+                        if(AccX >1.00 ){
+                            digitalWrite(2, HIGH);//DIR 2
+                            digitalWrite(5, HIGH); //DIR1
+                            ledcWrite(0,125);
+                            ledcWrite(1,125);
+                        }
+                        else if (AccX<-1.00){  
+                            digitalWrite(2, LOW);//DIR 2
+                            digitalWrite(5, LOW); //DIR1
+                            ledcWrite(0,125);
+                            ledcWrite(1,125);
+                        }
+                        else{
+                            ledcWrite(0,0);
+                            ledcWrite(1,0);
+                        }
                     }
                     }
                     break;
+                
+                case '2':
+                    myMotors->PWM1(i8DutyCycle);
+                    myMotors->PWM2(i8DutyCycle);
+                    break;
+                case '3':
+                    myMotors->PWM1(-1*i8DutyCycle);
+                    myMotors->PWM2(-1*i8DutyCycle);
+                    break;
+                case '+':
+                    i8DutyCycle += 10;
+                    myMotors->PWM1(i8DutyCycle);
+                    myMotors->PWM2(i8DutyCycle);
+                    Serial.println(i8DutyCycle);
+                    break;
+                case '-':
+                    i8DutyCycle -= 10;
+                    myMotors->PWM1(i8DutyCycle);
+                    myMotors->PWM2(i8DutyCycle);
+                    Serial.println(i8DutyCycle);
+                    break;                
+
             }
         }
 
@@ -251,12 +291,30 @@ void setup() {
    
     
     /*Test PS0 PS1 IMU*/
-	pinMode(2, OUTPUT);   
-    digitalWrite(2, HIGH); //PS1 to HIGH
-    pinMode(4, OUTPUT);   
-    digitalWrite(4, HIGH); //PS1 to HIGH
-    //myIMU = new IMUManager();
+	pinMode(33, OUTPUT);   
+    digitalWrite(33, HIGH); //PS1 to HIGH
+    pinMode(12, OUTPUT);   
+    digitalWrite(12, HIGH); //PS1 to HIGH
+    
+    /*pwm Dir*/
+    /*pinMode(2, OUTPUT);   
+    digitalWrite(2, HIGH);//DIR 2
+    pinMode(5, OUTPUT);   
+    digitalWrite(5, HIGH); //DIR1
 
+     // sets the pins as outputs:
+    ledcAttachPin(4,0);
+    ledcSetup(0,5000,12);
+    ledcWrite(0,2048);
+
+    // sets the pins as outputs:
+    ledcAttachPin(15,1);
+    ledcSetup(1,5000,12);
+    ledcWrite(1,2048);*/
+
+    myMotors = new MotorManager();
+    myMotors->Begin(5,2,4,15);
+    i8DutyCycle = 50;
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // Task of core 0
