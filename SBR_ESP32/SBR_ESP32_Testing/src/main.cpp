@@ -14,13 +14,12 @@
 #include <Arduino.h>
 #include "../lib//Definition/GlobalDef.h"
 #include "soc/rtc_wdt.h"
-//#include "SPI.h"
+#include "PID/PID_Manager.h"
 /*******************************************************************************************************************************************
  *  												INCLUDES - SBR
  *******************************************************************************************************************************************/
 #include "./Manager/Manager.h"
-//#include "./IMUManager/IMUManager.h"
-#include "./BNO080/SparkFun_BNO080_Arduino_Library.h"
+#include "./IMUManager/IMUManager.h"
 #include "./ControlMotors/MotorManager.h"
 
 /*******************************************************************************************************************************************
@@ -29,9 +28,10 @@
 // Manager Instance
 Manager* manager;
 //IMU Instance
-//IMUManager *myIMU;
-BNO080 *myIMU;
-SPIClass *SPI2BNO080 = NULL;   
+IMUManager *myIMU;
+//PID instance
+PID_Manager *myPID;
+
 MotorManager *myMotors;
 // Task declaration
 TaskHandle_t TaskCore0, TaskCore1;
@@ -52,19 +52,14 @@ bool flagTimer1 = false;
 bool flagTimer2 = false;
 bool flagTimer3 = false;
 
-
+extern float AccX_Mesured;
 /*******************************************************************************************************************************************
  *  												TEST
  *******************************************************************************************************************************************/
 void test_Add_Requests();
 uint32_t test_counter = 0;
 int8_t i8DutyCycle = 50;
-float AccXDeseado=0.0;
-float r_pid;
-float e_pid;
-float u_pid;
-float vel_pid;
-float AccX_Previous;
+
 /*******************************************************************************************************************************************
  *  												CORE LOOPS
  *******************************************************************************************************************************************/
@@ -86,6 +81,27 @@ void LoopCore0( void * parameter ){
         if (flagTimer1){
             flagTimer1 = false;
         }
+
+        /*Get all Data*/
+        if(RC_e::SUCCESS == myIMU->Run()){
+            if((AccX_Mesured < 1)&&(AccX_Mesured > -1))
+            {
+                AccX_Mesured = 0;
+            }
+            float out = myPID->UpdatePID(AccX_Mesured);
+            if(out>100){
+                out =100;
+            }
+            else if(out <-100)
+            {
+                out = -100;
+            }
+            
+            myMotors->PWM1(out);
+            myMotors->PWM2(out);
+            Serial.println(out);
+        }        
+        
         // ========== Code ==========
         if(Serial.available()){
             Serial.println("checking Serial");
@@ -99,18 +115,7 @@ void LoopCore0( void * parameter ){
                     break;
                 case 'p':
                 case 'P':
-                    //myIMU = new IMUManager();
-                    //Serial.println("myIMU created");
-                    SPI2BNO080 = new SPIClass();
-                    SPI2BNO080->begin(14,25,13,32);
-                    myIMU = new BNO080();
-                    //myIMU->enableDebugging(Serial);
 
-                    if(myIMU->beginSPI(32, 33, 26, 27,1000000,*SPI2BNO080) == false)
-                    {
-                        Serial.println("myIMU error");
-                        while(1);
-                    }
                     break;
                 case 'r':
                 case 'R':
@@ -118,60 +123,12 @@ void LoopCore0( void * parameter ){
                     
                     break;
                 case '0':
-                    myIMU->enableRotationVector(50); //Send data update every 50ms
-                    myIMU->enableAccelerometer(50);
                     Serial.println(F("Rotation vector enabled"));
                     Serial.println(F("Output in form i, j, k, real, accuracy"));
                     break;
                 case '1':
                     Serial.println("Adding requests....");
-                    while(1){
-                        delay(10); //You can do many other things. We spend most of our time printing and delaying.
-    
-                        //Look for reports from the IMU
-                        if (myIMU->dataAvailable() == true)
-                        {
-                            float AccX = myIMU->getAccelX();
-                            float AccY = myIMU->getAccelY();
-                            float AccZ = myIMU->getAccelZ();
-                            float Accurancy = myIMU->getAccelAccuracy();
-                            //float quatI = myIMU->getQuatI();
-                            //float quatJ = myIMU->getQuatJ();
-                            //float quatK = myIMU->getQuatK();
-                            //float quatReal = myIMU->getQuatReal();
-                            //float quatRadianAccuracy = myIMU->getQuatRadianAccuracy();
 
-                            //Serial.println(AccX, 2);
-                            /*Serial.print(F(","));
-                            Serial.print(AccY, 2);
-                            Serial.print(F(","));
-                            Serial.print(AccZ, 2);
-                            Serial.print(F(","));
-                            Serial.print(Accurancy, 2);
-                            Serial.print(F(","));*/
-                            //Serial.print(quatRadianAccuracy, 2);
-                            //Serial.print(F(","));
-                            //Serial.print((float)measurements / ((millis() - startTime) / 1000.0), 2);
-                            //Serial.print(F("Hz"));
-                            r_pid = AccX;
-                            u_pid = 0;
-
-                            e_pid = r_pid - AccXDeseado;
-                            vel_pid = AccX- AccX_Previous;
-
-                            u_pid = e_pid*6+ vel_pid*40;
-                            if(u_pid>100)
-                                u_pid = 100;
-
-                            if(u_pid<-100)
-                                u_pid = -100;
-
-                            Serial.println(u_pid);
-                            myMotors->PWM1((int8_t)u_pid);
-                            myMotors->PWM2((int8_t)u_pid);
-                            AccX_Previous = AccX;
-                        }
-                    }
                     break;
                 
                 case '2':
@@ -292,19 +249,17 @@ void setup() {
     Serial.begin(115200);
     Serial.println(" +++++ ESP32 SENSORS +++++");
 
-    // Manager
-    //manager = new Manager();
+    /* Manager IMU
+    Configure SPI and PS0 and PS1
+    */
+    myIMU = new IMUManager();
    
-    
-    /*Test PS0 PS1 IMU*/
-	pinMode(33, OUTPUT);   
-    digitalWrite(33, HIGH); //PS1 to HIGH
-    pinMode(12, OUTPUT);   
-    digitalWrite(12, HIGH); //PS1 to HIGH
-    
     myMotors = new MotorManager();
+
     myMotors->Begin(5,2,4,15);
-    i8DutyCycle = 50;
+    i8DutyCycle = 0;
+
+    myPID = new PID_Manager();
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // Task of core 0

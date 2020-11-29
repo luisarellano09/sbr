@@ -81,12 +81,12 @@ RC_e MotorManager::PWM1(int8_t i8DutyCyle){
         /*change Duty Cycle*/
         if(i8DutyCyle > 0){
 
-            digitalWrite(this->u8PinDir1, HIGH); 
+            digitalWrite(this->u8PinDir1, LOW); 
             ledcWrite(PWM_CHANNEL_0,u32freq);
         }
         else
         {
-            digitalWrite(this->u8PinDir1, LOW); 
+            digitalWrite(this->u8PinDir1, HIGH); 
             ledcWrite(PWM_CHANNEL_0,u32freq);
         }
         retCode = RC_e::SUCCESS;
@@ -112,12 +112,12 @@ RC_e MotorManager::PWM2(int8_t i8DutyCyle){
         u32freq = (abs(i8DutyCyle)*255)/100;
         /*change Duty Cycle*/
         if(i8DutyCyle > 0){
-            digitalWrite(this->u8PinDir2, HIGH); 
+            digitalWrite(this->u8PinDir2, LOW); 
             ledcWrite(PWM_CHANNEL_1,u32freq);
         }
         else
         {
-            digitalWrite(this->u8PinDir2, LOW); 
+            digitalWrite(this->u8PinDir2, HIGH); 
             ledcWrite(PWM_CHANNEL_1,u32freq);
         }
     }

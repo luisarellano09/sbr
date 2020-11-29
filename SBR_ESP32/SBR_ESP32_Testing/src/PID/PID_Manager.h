@@ -16,6 +16,12 @@
  *******************************************************************************************************************************************/
 #include "../Definition/GlobalDef.h"
 
+#define P_Gain  11.0
+#define I_Gain  1.0
+#define D_Gain  10.0
+
+#define PositionDesired     (float)0.0
+
 /*******************************************************************************************************************************************
  *  												IMUManager Class
  *******************************************************************************************************************************************/
@@ -28,7 +34,8 @@ class PID_Manager{
 
 public: 
     /*Global Variables*/
-
+    float Prev_error = 0.0;
+    float IState =0.0;
     /**
      * @brief Construct a new Motor Manager object
      * 
@@ -50,11 +57,12 @@ public:
      * @return RC_e Result code
      */
 
-
-
+    float UpdatePID(float PositionMesured);
 
 private:
-
+    float UpdateP(float error);  
+    float UpdateI(float error);  
+    float UpdateD(float error, float Prev_error);  
 };
 
 #endif // PID_MANAGER_H
