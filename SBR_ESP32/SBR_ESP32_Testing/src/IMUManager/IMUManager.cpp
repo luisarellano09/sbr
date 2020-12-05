@@ -17,7 +17,8 @@
 #include "IMUManager.h"
 #include "SPI.h"
 
-float AccX_Mesured =0.0;
+float AccX_Mesured = 0.0;
+float Pitch_Mesured = 0.0;
 /*******************************************************************************************************************************************
  *  												Constructor
  *******************************************************************************************************************************************/
@@ -50,8 +51,9 @@ IMUManager::IMUManager(){
 		}
     }
 	
-	//myBN080->enableRotationVector(50);//Send data update every 50ms
-	myBN080->enableAccelerometer(10);
+	myBN080->enableRotationVector(50);//Send data update every 50ms
+	//myBN080->enableAccelerometer(10);
+	//myBN080->enableGyro(50);
 
 }
 
@@ -64,15 +66,16 @@ IMUManager::~IMUManager(){}
 RC_e IMUManager::Run(){
 	RC_e retCode = RC_e::ERROR;
 	if(myBN080->dataAvailable() == true){
-		AccX_Mesured = myBN080->getAccelX();
-        float AccY = myBN080->getAccelY();
-        float AccZ = myBN080->getAccelZ();
-		Serial.print(AccX_Mesured, 2);
+		Pitch_Mesured = myBN080->getPitch();
+		//AccX_Mesured = myBN080->getAccelX();
+        //float AccY = myBN080->getAccelY();
+        //float AccZ = myBN080->getAccelZ();
+		Serial.print(Pitch_Mesured, 2);
 		Serial.print(F(","));
-		Serial.print(AccX_Mesured, 2);
+		Serial.print(Pitch_Mesured, 2);
 		Serial.print(F(","));
-		Serial.print(AccX_Mesured, 2);
-		Serial.print("\n");
+		Serial.print(Pitch_Mesured, 2);
+		Serial.println("\n");
 		
 		retCode = RC_e::SUCCESS;
 	}

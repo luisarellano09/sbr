@@ -38,6 +38,7 @@
 #define SPEED_IMU   3000000 //3MHz
 
 extern float AccX_Mesured;
+extern float Pitch_Mesured;
 
 /*******************************************************************************************************************************************
  *  												IMUManager Class

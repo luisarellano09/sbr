@@ -16,11 +16,11 @@
  *******************************************************************************************************************************************/
 #include "../Definition/GlobalDef.h"
 
-#define P_Gain  11.0
-#define I_Gain  1.0
-#define D_Gain  10.0
+#define P_Gain  120.0f
+#define I_Gain  20.0f
+#define D_Gain  60.0f
 
-#define PositionDesired     (float)0.0
+#define PositionDesired     (float)0.0f
 
 /*******************************************************************************************************************************************
  *  												IMUManager Class

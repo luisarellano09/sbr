@@ -21,10 +21,11 @@
 #include "./Manager/Manager.h"
 #include "./IMUManager/IMUManager.h"
 #include "./ControlMotors/MotorManager.h"
-
 /*******************************************************************************************************************************************
  *  												GLOBAL VARIABLES
  *******************************************************************************************************************************************/
+
+#define SIZE_FILTER 6
 // Manager Instance
 Manager* manager;
 //IMU Instance
@@ -53,6 +54,8 @@ bool flagTimer2 = false;
 bool flagTimer3 = false;
 
 extern float AccX_Mesured;
+float AccX_Filtered = 0;
+float buffer[SIZE_FILTER];
 /*******************************************************************************************************************************************
  *  												TEST
  *******************************************************************************************************************************************/
@@ -74,21 +77,11 @@ void LoopCore0( void * parameter ){
             // ========== Code ==========
             /*Nothing to DO*/
             // ==========================
-
-        }
-
-        // Code for Timer 1 interruption
-        if (flagTimer1){
-            flagTimer1 = false;
-        }
-
-        /*Get all Data*/
-        if(RC_e::SUCCESS == myIMU->Run()){
-            if((AccX_Mesured < 1)&&(AccX_Mesured > -1))
+            if((Pitch_Mesured < 0.1)&&(Pitch_Mesured > -0.1))
             {
-                AccX_Mesured = 0;
+                Pitch_Mesured = 0;
             }
-            float out = myPID->UpdatePID(AccX_Mesured);
+            float out = myPID->UpdatePID(Pitch_Mesured);
             if(out>100){
                 out =100;
             }
@@ -100,6 +93,16 @@ void LoopCore0( void * parameter ){
             myMotors->PWM1(out);
             myMotors->PWM2(out);
             Serial.println(out);
+        }
+
+        // Code for Timer 1 interruption
+        if (flagTimer1){
+            flagTimer1 = false;
+        }
+
+        /*Get all Data*/
+        if(RC_e::SUCCESS == myIMU->Run()){
+            
         }        
         
         // ========== Code ==========
@@ -125,32 +128,7 @@ void LoopCore0( void * parameter ){
                 case '0':
                     Serial.println(F("Rotation vector enabled"));
                     Serial.println(F("Output in form i, j, k, real, accuracy"));
-                    break;
-                case '1':
-                    Serial.println("Adding requests....");
-
-                    break;
-                
-                case '2':
-                    myMotors->PWM1(i8DutyCycle);
-                    myMotors->PWM2(i8DutyCycle);
-                    break;
-                case '3':
-                    myMotors->PWM1(-1*i8DutyCycle);
-                    myMotors->PWM2(-1*i8DutyCycle);
-                    break;
-                case '+':
-                    i8DutyCycle += 10;
-                    myMotors->PWM1(i8DutyCycle);
-                    myMotors->PWM2(i8DutyCycle);
-                    Serial.println(i8DutyCycle);
-                    break;
-                case '-':
-                    i8DutyCycle -= 10;
-                    myMotors->PWM1(i8DutyCycle);
-                    myMotors->PWM2(i8DutyCycle);
-                    Serial.println(i8DutyCycle);
-                    break;                
+                    break;               
 
             }
         }
@@ -288,7 +266,7 @@ void setup() {
     Serial.println("start timer 0");
     timer0 = timerBegin(0, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer0, &onTimer0, true); // edge (not level) triggered 
-    timerAlarmWrite(timer0, 10000, true); // 1000000 * 1 us = 1 s, autoreload true
+    timerAlarmWrite(timer0, 80000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer1
     Serial.println("start timer 1");
@@ -309,7 +287,7 @@ void setup() {
     timerAlarmWrite(timer3, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Enable the timer alarms
-    //timerAlarmEnable(timer0); // enable
+    timerAlarmEnable(timer0); // enable
     //timerAlarmEnable(timer1); // enable
     //timerAlarmEnable(timer2); // enable
     //timerAlarmEnable(timer3); // enable

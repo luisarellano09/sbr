@@ -30,9 +30,10 @@ PID_Manager::~PID_Manager(){}
  *******************************************************************************************************************************************/
 float PID_Manager::UpdatePID(float PositionMesured){
     float RetValue;
-    float error = PositionDesired-PositionMesured;
+    float error = PositionDesired - PositionMesured;
     float P = UpdateP(error);
     float I = UpdateI(error);
+    //Serial.println(I);
     float D = UpdateD(error, Prev_error);
     RetValue = P+I+D;
     Prev_error = error;
@@ -51,23 +52,17 @@ float PID_Manager::UpdateP(float error){
 
 float PID_Manager::UpdateI(float error){
     float RetValue;
-    /*float iMax = 1000;//0.1(maxOut-minOut)/I_Gain;
-    float iMin = -1000;//-0.1(maxOut-minOut)/I_Gain;*/
+    static float value;
 
-    IState += error;
-    RetValue = IState;
-    /*Apply anti-windup*/
-    /*if(RetValue>iMax){
-        RetValue = iMax;
-    }
-    else if(RetValue<iMin){
-        RetValue = iMin;
-    }*/
+    value +=error;
+    RetValue = value;
+    
+
+
     RetValue *= I_Gain;
+    //Serial.printf("%f\n",RetValue);
     return RetValue;    
 }
-
-
 
 float PID_Manager::UpdateD(float error, float Prev_error){
     float RetValue;
