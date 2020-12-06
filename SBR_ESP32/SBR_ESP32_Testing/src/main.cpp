@@ -56,6 +56,10 @@ bool flagTimer3 = false;
 extern float AccX_Mesured;
 float AccX_Filtered = 0;
 float buffer[SIZE_FILTER];
+float PIDResult = 5.0f;
+float myKp = 0.0f;
+float myKi = 0.0f;
+float myKd = 0.0f;
 /*******************************************************************************************************************************************
  *  												TEST
  *******************************************************************************************************************************************/
@@ -77,22 +81,29 @@ void LoopCore0( void * parameter ){
             // ========== Code ==========
             /*Nothing to DO*/
             // ==========================
-            if((Pitch_Mesured < 0.1)&&(Pitch_Mesured > -0.1))
+            if((Pitch_Mesured < 0.04)&&(Pitch_Mesured > -0.04))
             {
                 Pitch_Mesured = 0;
             }
-            float out = myPID->UpdatePID(Pitch_Mesured);
-            if(out>100){
-                out =100;
+            if(RC_e::SUCCESS == myPID->UpdatePID(Pitch_Mesured,&PIDResult)){
+
+                if(PIDResult>100){
+                    PIDResult =100;
+                }
+                else if(PIDResult <-100)
+                {
+                    PIDResult = -100;
+                }
+                
+                myMotors->PWM1(PIDResult);
+                myMotors->PWM2(PIDResult);
+                
+                Serial.println(PIDResult);
             }
-            else if(out <-100)
-            {
-                out = -100;
+            else{
+                Serial.println("ERROR PID");
             }
-            
-            myMotors->PWM1(out);
-            myMotors->PWM2(out);
-            Serial.println(out);
+
         }
 
         // Code for Timer 1 interruption
@@ -103,7 +114,8 @@ void LoopCore0( void * parameter ){
         /*Get all Data*/
         if(RC_e::SUCCESS == myIMU->Run()){
             
-        }        
+        }
+                
         
         // ========== Code ==========
         if(Serial.available()){
@@ -118,11 +130,24 @@ void LoopCore0( void * parameter ){
                     break;
                 case 'p':
                 case 'P':
-
+                    myPID->GetKp(&myKp);
+                    myPID->GetKi(&myKi);
+                    myPID->GetKd(&myKd);
+                    Serial.println(myKp);
+                    Serial.println(myKi);
+                    Serial.println(myKd);
                     break;
                 case 'r':
                 case 'R':
-                    Serial.println("Restarting...");
+                    myPID->SetKp(100.00f);
+                    myPID->SetKi(00.00f);
+                    myPID->SetKd(00.00f);
+                    myPID->GetKp(&myKp);
+                    myPID->GetKi(&myKi);
+                    myPID->GetKd(&myKd);
+                    Serial.println(myKp);
+                    Serial.println(myKi);
+                    Serial.println(myKd);
                     
                     break;
                 case '0':
