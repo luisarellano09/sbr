@@ -57,9 +57,12 @@ extern float AccX_Mesured;
 float AccX_Filtered = 0;
 float buffer[SIZE_FILTER];
 float PIDResult = 5.0f;
+float Consigne = 0.0f;
 float myKp = 0.0f;
 float myKi = 0.0f;
 float myKd = 0.0f;
+float TestValue = 0.0f;
+char Pressed = '0';
 /*******************************************************************************************************************************************
  *  												TEST
  *******************************************************************************************************************************************/
@@ -130,31 +133,93 @@ void LoopCore0( void * parameter ){
                     break;
                 case 'p':
                 case 'P':
-                    myPID->GetKp(&myKp);
-                    myPID->GetKi(&myKi);
-                    myPID->GetKd(&myKd);
-                    Serial.println(myKp);
-                    Serial.println(myKi);
-                    Serial.println(myKd);
+
                     break;
                 case 'r':
                 case 'R':
-                    myPID->SetKp(100.00f);
-                    myPID->SetKi(00.00f);
-                    myPID->SetKd(00.00f);
-                    myPID->GetKp(&myKp);
-                    myPID->GetKi(&myKi);
-                    myPID->GetKd(&myKd);
-                    Serial.println(myKp);
-                    Serial.println(myKi);
-                    Serial.println(myKd);
+ 
                     
                     break;
-                case '0':
-                    Serial.println(F("Rotation vector enabled"));
-                    Serial.println(F("Output in form i, j, k, real, accuracy"));
-                    break;               
+                case '1':
+                    Pressed = '1';
+                break;   
+                case '2':
+                    Pressed = '2';
+                break;     
+                case '3':
+                    Pressed = '3';
+                break;      
+                case '4':
+                    Pressed = '4';
+                break;         
+                case '+':
+                    switch (Pressed)
 
+                    {
+                    case '1':
+                        /* code */
+                        myPID->GetConsigne(&TestValue);
+                        TestValue +=0.1f;
+                        myPID->SetConsigne(TestValue);
+                        Serial.printf("consinge: %f\n",TestValue);
+                        break;
+                    case '2':
+                        /* code */
+                        myPID->GetKp(&TestValue);
+                        TestValue +=1.0f;
+                        myPID->SetKp(TestValue);
+                        Serial.printf("Kp: %f\n",TestValue);;
+                        break;
+                    case '3':
+                        /* code */
+                        myPID->GetKi(&TestValue);
+                        TestValue +=1.0f;
+                        myPID->SetKi(TestValue);
+                        Serial.printf("ki: %f\n",TestValue);;
+                        break;
+                    case '4':
+                        /* code */
+                        myPID->GetKd(&TestValue);
+                        TestValue +=1.0f;
+                        myPID->SetKd(TestValue);
+                        Serial.printf("kd: %f\n",TestValue);;
+                        break;
+                    }
+                break;  
+                case '-':
+                    switch (Pressed)
+
+                    {
+                    case '1':
+                        /* code */
+                        myPID->GetConsigne(&TestValue);
+                        TestValue -=0.1f;
+                        myPID->SetConsigne(TestValue);
+                        Serial.printf("consinge: %f\n",TestValue);;
+                        break;
+                    case '2':
+                        /* code */
+                        myPID->GetKp(&TestValue);
+                        TestValue -=1.0f;
+                        myPID->SetKp(TestValue);
+                        Serial.printf("kp: %f\n",TestValue);
+                        break;
+                    case '3':
+                        /* code */
+                        myPID->GetKi(&TestValue);
+                        TestValue -=1.0f;
+                        myPID->SetKi(TestValue);
+                        Serial.printf("ki: %f\n",TestValue);
+                        break;
+                    case '4':
+                        /* code */
+                        myPID->GetKd(&TestValue);
+                        TestValue -=1.0f;
+                        myPID->SetKd(TestValue);
+                        Serial.printf("kd: %f\n",TestValue);
+                        break;
+                    }
+                break; 
             }
         }
 
