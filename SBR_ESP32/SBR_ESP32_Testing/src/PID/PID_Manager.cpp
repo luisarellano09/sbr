@@ -198,10 +198,18 @@ float PID_Manager::UpdateP(float error){
 
 float PID_Manager::UpdateI(float error){
     float RetValue;
-    static float value;
 
-    value +=error;
-    RetValue = value*Ki;
+    this->AccIntegral +=error;
+    if(this->AccIntegral > MAX_ACC_INTEGRAL){
+       this->AccIntegral = MAX_ACC_INTEGRAL;
+    }else if(this->AccIntegral < MIN_ACC_INTEGRAL)
+    {
+        /* code */
+        this->AccIntegral = MIN_ACC_INTEGRAL;
+        
+    }
+
+    RetValue = this->AccIntegral*Ki;
 
     return RetValue;    
 }

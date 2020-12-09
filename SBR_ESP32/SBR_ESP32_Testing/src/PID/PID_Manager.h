@@ -24,6 +24,8 @@
 #define MAX_RADIAN          (float)0.87f          //miliRadian = 50°
 #define MIN_RADIAN          (float)-0.87f         //miliRadian = 50°
 
+#define MAX_ACC_INTEGRAL    (float)4.00f
+#define MIN_ACC_INTEGRAL    (float)-4.00f
 /*******************************************************************************************************************************************
  *  												IMUManager Class
  *******************************************************************************************************************************************/
@@ -80,7 +82,8 @@ public:
 
 private:
     /*Variable*/
-    float Prev_error = 0.0;     //  e(k-1)
+    float Prev_error = 0.0f;     //  e(k-1)
+    float AccIntegral = 0.0f;
     /*functions*/
     float UpdateP(float error);  
     float UpdateI(float error);  

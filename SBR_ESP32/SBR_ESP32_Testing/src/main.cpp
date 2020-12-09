@@ -84,7 +84,7 @@ void LoopCore0( void * parameter ){
             // ========== Code ==========
             /*Nothing to DO*/
             // ==========================
-            if((Pitch_Mesured < 0.04)&&(Pitch_Mesured > -0.04))
+            if((Pitch_Mesured < 0.03)&&(Pitch_Mesured > -0.03))
             {
                 Pitch_Mesured = 0;
             }
@@ -101,7 +101,7 @@ void LoopCore0( void * parameter ){
                 myMotors->PWM1(PIDResult);
                 myMotors->PWM2(PIDResult);
                 
-                Serial.println(PIDResult);
+                //Serial.println(PIDResult);
             }
             else{
                 Serial.println("ERROR PID");
