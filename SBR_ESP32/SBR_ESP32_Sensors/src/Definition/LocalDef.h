@@ -17,6 +17,14 @@
  *  												DEFINE
  *******************************************************************************************************************************************/
 
+// ========================== Node ==========================
+
+/**
+ * @brief Node ID  
+ * 
+ */
+#define NODE_ID 1
+
 // ========================== WIFI ==========================
 
 /**
@@ -39,19 +47,6 @@
  */
 #define ESP32_HOSTNAME "SBR_ESP32_Sensors"
 
-// ========================== LOGGER ==========================
-
-/**
- * @brief Logger Port
- * 
- */
-#define LOGGER_PORT (uint16_t)4000
-
-/**
- * @brief Logger Host
- * 
- */
-#define LOGGER_HOST "ubuntudev"
 
 // ========================== SPI SLAVE ========================
 
@@ -78,21 +73,5 @@
  * 
  */
 #define SS   (gpio_num_t)18     // plomo
-
-// ========================== SPI MANAGER =======================
-
-/**
- * @brief Number of Bytes of the Request
- * 
- */
-#define SPI_MANAGER_REQUEST_SIZE  (uint8_t)8u  
-
-
-/**
- * @brief Max length of requests to send to the a slave
- * 
- */
-#define SPI_SLAVE_REQUESTS_ARRAY_SIZE (uint8_t) 100u
-
 
 #endif /* LOCALDEF_H */

@@ -2,10 +2,9 @@
  * @file GlobalDef.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Global definitions of SBR
- * @version 1.0
- * @date 14-06-2020
+ * @version 2.0
+ * @date 09.01.2021
  * 
- *
  */
 
 #ifndef GLOBALDEF_H
@@ -21,28 +20,76 @@
  * @brief Enumeration for Result codes
  * 
  */
-enum RC_e{
-	SUCCESS = 0,                /**< \brief Operation Successful*/
-	ERROR,                      /**< \brief Error */
-	ERROR_NULL_POINTER,         /**< \brief Error null pointer */
-	ERROR_SIZE_BUFFER,          /**< \brief Error size buffer */
-	ERROR_CRC,		            /**< \brief Error CRC Validation */
-    ERROR_WIFI_CONNECTION,      /**< \brief Error Wifi connection */
-    ERROR_NO_CS,                /**< \brief Error No Chip Select */
-    ERROR_INVALID_REG_ID        /**< \brief Error Invalid register ID */
+enum RC_e {
+	SUCCESS = 0,                    /**< \brief Operation Successful*/
+	ERROR,                          /**< \brief Error */
+	ERROR_NULL_POINTER,             /**< \brief Error null pointer */
+	ERROR_SIZE_BUFFER,              /**< \brief Error size buffer */
+	ERROR_CRC,		                /**< \brief Error CRC Validation */
+    ERROR_WIFI_CONNECTION,          /**< \brief Error Wifi connection */
+    ERROR_NO_CS,                    /**< \brief Error No Chip Select */
+    ERROR_INVALID_REG_ID,           /**< \brief Error Invalid register ID */
+    ERROR_INVALID_SUBSCRIBER,       /**< \brief Error Invalid subscriber */
+    ERROR_MAX_SLAVE_REQUEST_INDEX,  /**< \brief Error Max slave request index reached */
+    ERROR_MAX_NUMBER_SUBSCRIBERS,   /**< \brief Error Max number of subscribers reached */
 } ;
+
+/*******************************************************************************************************************************************
+ *  												COMMUNICATION REQUEST
+ *******************************************************************************************************************************************/
+
+/**
+ * @brief Defines if a read or write operation shall be performed
+ * 
+ */
+enum COM_REQUEST_TYPE_e {
+	READ	    =0x0,		        /**< \brief Read operation*/
+	WRITE		=0x1,				/**< \brief Write operation*/
+    STOP		=0x2,				/**< \brief STOP operation*/
+    NONE      	=0x3,				/**< \brief None operation*/                      
+};
+
+//=====================================================================================================
+/**
+ * @brief Structure to define the communication request
+ * 
+ */
+struct COM_REQUEST_st {
+    uint8_t    comRequestType;      /**< Request type: Read or Write. */
+    uint16_t   comRequestRegId;     /**< Request ID. */
+    int32_t    data;                /**< Data payload. */
+    uint16_t   CRC;                 /**< Frame consistency. */
+};
 
 
 /*******************************************************************************************************************************************
- *  												SBR REGISTER ID ADDRESSES
+ *  												COMMUNICATION SETTINGS
+ *******************************************************************************************************************************************/
+
+/**
+ * @brief Number of Bytes of the Request
+ * 
+ */
+#define SPI_MANAGER_REQUEST_SIZE  (uint8_t) 8u 
+
+//=====================================================================================================
+/**
+ * @brief Max length of requests to send to the a slave
+ * 
+ */
+#define SPI_SLAVE_REQUESTS_ARRAY_SIZE (uint8_t) 100u
+
+
+/*******************************************************************************************************************************************
+ *  												SBR REGISTER IDs
  *******************************************************************************************************************************************/
 
 /**
  * @brief Enumeration for SBR registers IDs. The number defines the register offset
  * 
  */
-enum COM_REQUEST_REG_ID_e{
-    REQUEST_INITIAL_RED_ID = 10,
+enum COM_REQUEST_REG_ID_e {
+    REQUEST_INITIAL_RED_ID = 0,
 	TEST_R01,                       /**< \brief Testing register R01 */
     TEST_R02,	                    /**< \brief Testing register R02 */
     TEST_R03,	                    /**< \brief Testing register R03 */
@@ -143,34 +190,7 @@ enum COM_REQUEST_REG_ID_e{
     TEST_R98,	                    /**< \brief Testing register R98 */
     TEST_R99,	                    /**< \brief Testing register R99 */
     TEST_R100,	                    /**< \brief Testing register R100 */
-	REQUEST_REG_LENGTH              /**< \brief Number of registers */					            
-};
-
-/*******************************************************************************************************************************************
- *  												COMMUNICATION REQUEST
- *******************************************************************************************************************************************/
-
-/**
- * @brief Defines if a read or write operation shall be performed
- * 
- */
-enum COM_REQUEST_TYPE_e{
-	READ	    =0x0,		        /**< \brief Read operation*/
-	WRITE		=0x1,				/**< \brief Write operation*/
-    STOP		=0x2,				/**< \brief STOP operation*/
-    NONE      	=0x3,				/**< \brief None operation*/                      
-};
-
-/**
- * @brief Structure to define the communication request
- * 
- */
-struct COM_REQUEST_st
-{
-    uint8_t    comRequestType;      /**< Request type: Read or Write. */
-    uint16_t   comRequestRegId;     /**< Request ID. */
-    uint32_t   data;                /**< Data payload. */
-    uint16_t   CRC;                 /**< Frame consistency. */
+	REQUEST_REG_LENGTH = 1000       /**< \brief Number of registers */					            
 };
 
 #endif /* GLOBALDEF_H */

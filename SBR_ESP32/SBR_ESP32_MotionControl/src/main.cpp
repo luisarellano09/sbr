@@ -18,7 +18,7 @@
 /*******************************************************************************************************************************************
  *  												INCLUDES - SBR
  *******************************************************************************************************************************************/
-#include "./Manager/Manager.h"
+#include "./Application/Manager/Manager.h"
 
 /*******************************************************************************************************************************************
  *  												GLOBAL VARIABLES
@@ -81,23 +81,36 @@ void LoopCore0( void * parameter ){
                         case 'W':
                             Serial.println(" +++++ ESP32 MOTION +++++");
                             break;
+
                         case 'p':
                         case 'P':
                             manager->m_wifiManager->Connect();
                             break;
+
                         case 'r':
                         case 'R':
                             Serial.println("Restarting...");
                             ESP.restart();
                             break;
-                        case '0':
-                            Serial.println("Adding requests....");
-                            //manager->m_spiSlaveManager->m_testMode = false;
+
+                        case 't':
+                        case 'T':
+                            manager->CommunicationTestStart();
+                            Serial.println("Testing...");
                             break;
-                        case '1':
-                            Serial.println("Adding requests....");
-                            //manager->m_spiSlaveManager->m_testMode = true;
+
+                        case 'l':
+                        case 'L':
+                            manager->EnableDebugMode();
+                            Serial.println("Enable Debug...");
                             break;
+
+                        case 'k':
+                        case 'K':
+                            manager->DisableDebugMode();
+                            Serial.println("Disable Debug...");
+                            break;
+
                     }
                 }
 
@@ -110,7 +123,7 @@ void LoopCore0( void * parameter ){
         }
 
         // Run SPI Slave service
-        manager->m_registerManager->ListenRequest();
+        manager->m_registerManager->Listen();
     }
 }
 
@@ -122,7 +135,7 @@ void LoopCore1( void * parameter ){
             flagTimer2 = false;
 
             // ========== Code ==========
-            
+            manager->CommunicationTestPublish();
 
             // ==========================
         }
@@ -219,6 +232,9 @@ void setup() {
         &TaskCore1, /* Task handle. */
         1);         /* Core where the task should run */
 
+    disableCore0WDT();
+    disableCore1WDT();
+    
     // Timer0
     timer0 = timerBegin(0, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer0, &onTimer0, true); // edge (not level) triggered 
@@ -227,12 +243,12 @@ void setup() {
     // Timer1
     timer1 = timerBegin(1, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer1, &onTimer1, true); // edge (not level) triggered 
-    timerAlarmWrite(timer1, 2000000, true); // 1000000 * 1 us = 1 s, autoreload true
+    timerAlarmWrite(timer1, 2000000, true); // 2000000 * 1 us = 2 s, autoreload true
 
     // Timer2
     timer2 = timerBegin(2, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer2, &onTimer2, true); // edge (not level) triggered 
-    timerAlarmWrite(timer2, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
+    timerAlarmWrite(timer2, 100000, true); //   1 us = 1 s, autoreload true
 
     // Timer3
     timer3 = timerBegin(3, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
@@ -242,8 +258,9 @@ void setup() {
     // Enable the timer alarms
     timerAlarmEnable(timer0); // enable
     timerAlarmEnable(timer1); // enable
-    //timerAlarmEnable(timer2); // enable
-    //timerAlarmEnable(timer3); // enable
+    timerAlarmEnable(timer2); // enable
+    timerAlarmEnable(timer3); // enable
+
 }
 
 /*******************************************************************************************************************************************

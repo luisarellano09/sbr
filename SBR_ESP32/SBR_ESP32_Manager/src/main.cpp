@@ -18,7 +18,7 @@
 /*******************************************************************************************************************************************
  *  												INCLUDES - SBR
  *******************************************************************************************************************************************/
-#include "./Manager/Manager.h"
+#include "./Application/Manager/Manager.h"
 
 /*******************************************************************************************************************************************
  *  												GLOBAL VARIABLES
@@ -48,7 +48,6 @@ bool flagTimer3 = false;
 /*******************************************************************************************************************************************
  *  												TEST
  *******************************************************************************************************************************************/
-
 
 /*******************************************************************************************************************************************
  *  												CORE LOOPS
@@ -80,37 +79,49 @@ void LoopCore0( void * parameter ){
                         case 'W':
                             Serial.println(" +++++ ESP32 MANAGER +++++");
                             break;
+
                         case 'p':
                         case 'P':
                             Serial.println("Programming Mode.....");
-                            manager->m_PollingController->StopEsp32Polling();
+                            manager->m_PollingController->StopPolling();
                             manager->m_WifiManager->Connect();
                             break;
+
                         case 'a':
                         case 'A':
                             Serial.println("Start Esp32 Polling.....");
-                            manager->m_PollingController->StartEsp32Polling();
+                            manager->m_PollingController->StartPolling();
                             break;
+
                         case 'd':
                         case 'D':
                             Serial.println("Stop Esp32 Polling.....");
-                            manager->m_PollingController->StopEsp32Polling();
+                            manager->m_PollingController->StopPolling();
                             break;
                             break;
+
                         case 'r':
                         case 'R':
                             Serial.println("Restarting...");
                             ESP.restart();
                             break;
-                        case '1':
-                            Serial.println("Adding Requests to Motion.....");
-                            manager->m_SPI_MasterManager->AddWriteRequest(ESP32_Slave_e::SLAVE_MOTION, COM_REQUEST_REG_ID_e::TEST_R02, 99);
+
+                        case 't':
+                        case 'T':
+                            manager->CommunicationTestStart();
+                            Serial.println("Testing...");
                             break;
-                        case '2':
-                            Serial.println("Adding Requests to Sensors.....");
+
+                        case 'l':
+                        case 'L':
+                            manager->EnableDebugMode();
+                            Serial.println("Enable Debug...");
                             break;
-                        case '3':
-                            Serial.println("Adding Requests to all.....");
+
+                        case 'k':
+                        case 'K':
+                            manager->DisableDebugMode();
+                            Serial.println("Disable Debug...");
                             break;
                     }
                 }
@@ -124,7 +135,7 @@ void LoopCore0( void * parameter ){
         }
         
         // Run ESP32 polling
-        manager->m_PollingController->RunESP32();
+        manager->m_PollingController->Run();
     }
 }
 
@@ -136,7 +147,10 @@ void LoopCore1( void * parameter ){
             flagTimer2 = false;
 
             // ========== Code ==========
-
+                //Serial.print("\033[2J\033[H");
+                for (int i=0; i<2; i++){
+                    Serial.printf("\r\nCorrects: %d \t\t Errors: %d", manager->m_TestingNodeResultCorrect[i], manager->m_TestingNodeResultError[i]);
+                }
             // ==========================
         }
 
@@ -148,6 +162,9 @@ void LoopCore1( void * parameter ){
 
             // ==========================
         }
+        
+        // Check Communication Testing
+        manager->CommunicationTestCheck();
 
         // Delay to feed WDT
         delay(1);
@@ -234,6 +251,9 @@ void setup() {
         &TaskCore1, /* Task handle. */
         1);         /* Core where the task should run */
 
+    disableCore0WDT();
+    disableCore1WDT();
+
     // Timer0
     timer0 = timerBegin(0, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer0, &onTimer0, true); // edge (not level) triggered 
@@ -257,8 +277,8 @@ void setup() {
     // Enable the timer alarms
     timerAlarmEnable(timer0); // enable
     timerAlarmEnable(timer1); // enable
-    //timerAlarmEnable(timer2); // enable
-    //timerAlarmEnable(timer3); // enable
+    timerAlarmEnable(timer2); // enable
+    timerAlarmEnable(timer3); // enable
 }
 
 /*******************************************************************************************************************************************
@@ -268,3 +288,5 @@ void setup() {
 void loop() {
     vTaskDelete(NULL);
 }
+
+

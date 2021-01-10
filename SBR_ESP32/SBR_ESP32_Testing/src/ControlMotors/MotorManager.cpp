@@ -47,6 +47,7 @@ RC_e retCode = RC_e::ERROR;
         digitalWrite(this->u8PinDir1, HIGH);    
         digitalWrite(this->u8PinDir2, HIGH); 
         
+        
         /*sets the pins as outputs:*/
         ledcAttachPin(u8PIN_PWM1,PWM_CHANNEL_0);
         ledcSetup(PWM_CHANNEL_0,F32PWM_FREQUENCY,U8PWM_RESOLUTION);

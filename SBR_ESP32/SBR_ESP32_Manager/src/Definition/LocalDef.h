@@ -1,9 +1,9 @@
 /**
  * @file LocalDef.h
- * @author Luis Arellano
- * @brief Definitions of ESP32 Project.
- * @version 1.0
- * @date 2020-06-13
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Global definitions of SBR
+ * @version 2.0
+ * @date 09.01.2021
  * 
  */
 
@@ -38,27 +38,13 @@
  */
 #define ESP32_HOSTNAME "SBR_ESP32_Manager"
 
-// ========================== LOGGER ==========================
-
-/**
- * @brief Logger Port
- * 
- */
-#define LOGGER_PORT (uint16_t)4000
-
-/**
- * @brief Logger Host
- * 
- */
-#define LOGGER_HOST "ubuntudev"
-
 // ========================== SPI MASTER ========================
 
 /**
  * @brief SPI Clock Speed Hz
  * 
  */
-#define SPI_CLOCK (uint32_t)12000000
+#define SPI_CLOCK (uint32_t) 12000000
 
 /**
  * @brief MOSI Pin: Master Output - Slave Input
@@ -81,12 +67,6 @@
 // ========================== SPI MANAGER =======================
 
 /**
- * @brief Number of Bytes of the Request
- * 
- */
-#define SPI_MANAGER_REQUEST_SIZE  (uint8_t)8u  
-
-/**
  * @brief Number of Stop or Empty Request during reading request from slaves
  * 
  */
@@ -95,22 +75,22 @@
 // ========================== SPI SLAVES ==========================
 
 /**
- * @brief Max length of requests to send to the a slave
+ * @brief Chip Select Pin Node01
  * 
  */
-#define SPI_SLAVE_REQUESTS_ARRAY_SIZE (uint8_t) 100u
+#define ESP32_NODE01_CS   18
 
 /**
- * @brief Chip Select Pin Motion
+ * @brief Chip Select Pin Node02
  * 
  */
-#define MOTION_CS   18     // plomo
+#define ESP32_NODE02_CS   5
 
 /**
- * @brief Chip Select Pin Sensors
+ * @brief Chip Select Pin Node03
  * 
  */
-#define SENSORS_CS   5     // white
+#define ESP32_NODE03_CS   17
 
 /*******************************************************************************************************************************************
  *  												ENUMERATIONS
@@ -120,24 +100,25 @@
  * @brief Enumeration for Devices
  * 
  */
-enum Devices_e{
-    DEVICE_NONE         =-1,        /**< \brief None*/
-	DEVICE_MOTION	    = 0,        /**< \brief ESP32 Motion Control*/
-	DEVICE_SENSOR,                  /**< \brief ESP32 Sensors*/
-	DEVICE_UTIL,                    /**< \brief ESP32 Util*/
-    DEVICE_LINUX,                   /**< \brief Linux controller*/
-    DEVICE_LENGTH                   /**< \brief Length*/
+enum Devices_e {
+    DEVICE_NONE = -1,       /**< \brief None*/
+	DEVICE_ESP32_NODE01,    /**< \brief ESP32 Node01*/
+	DEVICE_ESP32_NODE02,    /**< \brief ESP32 Node02*/
+	//DEVICE_ESP32_NODE03,    /**< \brief ESP32 Node03*/
+    DEVICE_LINUX,           /**< \brief Linux controller*/
+    DEVICE_LENGTH           /**< \brief Length*/
 };
 
+//=====================================================================================================
 /**
- * @brief Enumeration for ESP32
+ * @brief Enumeration for ESP32 SPI SLAVES
  * 
  */
-enum ESP32_Slave_e{
-	SLAVE_MOTION  = Devices_e::DEVICE_MOTION,   /**< \brief ESP32 Motion Control*/
-	SLAVE_SENSOR  = Devices_e::DEVICE_SENSOR,   /**< \brief ESP32 Sensors*/
-	SLAVE_UTIL    = Devices_e::DEVICE_UTIL,     /**< \brief ESP32 Util*/
-    SLAVE_LENGTH                                /**< \brief Length*/
+enum ESP32_SPI_Slave_e {
+	SLAVE_NODE01 = 0,   /**< \brief ESP32 Node01*/
+	SLAVE_NODE02,       /**< \brief ESP32 Node02*/
+	//SLAVE_NODE03,       /**< \brief ESP32 Node03*/
+    SLAVE_LENGTH        /**< \brief Length*/
 };
 
 
