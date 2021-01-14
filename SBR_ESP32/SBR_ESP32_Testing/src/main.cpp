@@ -21,7 +21,7 @@
 #include "./ControlMotors/MotorManager.h"
 // This optional setting causes Encoder to use more optimized code,
 // It must be defined before Encoder.h is included.
-#include "./ENCODER/ESP32Encoder.h"
+//#include "./ENCODER/ESP32Encoder.h"
 #include "PID/PID_Manager.h"
 #include "BNO080/BNO080.h"
 
@@ -48,8 +48,8 @@ BNO080 *myIMU;
 MotorManager *myMotors;
 
 
-ESP32Encoder encoder;
-ESP32Encoder encoder2;
+//ESP32Encoder encoder;
+//ESP32Encoder encoder2;
 
 
 unsigned long encoder2lastToggled;
@@ -145,6 +145,8 @@ void LoopCore0( void * parameter ){
             Serial.print(F(","));
             Serial.print(myIMU->mYaw, 2);
             Serial.println("\n");
+        } else {
+            Serial.println("IMU not connected!!!");
         }
 
         //Serial.println("Encoder count = "+String((int32_t)encoder.getCount())+" "+String((int32_t)encoder2.getCount()));
@@ -351,9 +353,9 @@ void setup() {
 
     /*****************************************************************************************/
     /* Manager INIT IMU*/
-    ImuSpi = new SPIClass();
-    myIMU = new BNO080( 12, 18, 26, 27, 3000000,*ImuSpi, 14, 25, 13, 32);
-    myIMU->configure(myIMU->RotationVector, 10);
+    myIMU = new BNO080();
+    myIMU->configure(32, 12, 26, 27, 3000000, 14, 25, 13);
+    myIMU->enableRotationVector(5);
     /*****************************************************************************************/
     myMotors = new MotorManager();
 
@@ -362,14 +364,14 @@ void setup() {
 
     myPID = new PID_Manager();
 
-    ESP32Encoder::useInternalWeakPullResistors = UP;
+    //ESP32Encoder::useInternalWeakPullResistors = UP;
     
-    encoder.attachFullQuad(PINENC1A,PINENC1B);
-    encoder2.attachSingleEdge(PINENC2A,PINENC2B);
+    //encoder.attachFullQuad(PINENC1A,PINENC1B);
+    //encoder2.attachSingleEdge(PINENC2A,PINENC2B);
     
-    encoder.setCount(0);
-    encoder2.clearCount();
-    Serial.println("Encodr Start ="+String((int32_t)encoder.getCount()));
+    //encoder.setCount(0);
+    //encoder2.clearCount();
+    //Serial.println("Encodr Start ="+String((int32_t)encoder.getCount()));
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // Task of core 0

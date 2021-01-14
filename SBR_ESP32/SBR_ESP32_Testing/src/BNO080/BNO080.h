@@ -131,12 +131,28 @@ class BNO080
 {
 public:
 	/*Added Constructor for SBR Project*/
-	BNO080(uint8_t PS0_IMU, uint8_t PS1_IMU, uint8_t INT_IMU, uint8_t RST_IMU, uint32_t SPEED_IMU,SPIClass &spiPort,uint8_t CLK_IMU, uint8_t MISO_IMU, uint8_t MOSI_IMU, uint8_t CS_IMU);
+	BNO080();
 
 	~BNO080();
 
-	boolean begin(uint8_t deviceAddress = BNO080_DEFAULT_ADDRESS, TwoWire &wirePort = Wire, uint8_t intPin = 255); //By default use the default I2C addres, and use Wire port, and don't declare an INT pin
-	boolean beginSPI(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INTPin, uint8_t user_RSTPin, uint32_t spiPortSpeed = 3000000, SPIClass &spiPort = SPI);
+	/***********************************/
+	/* Functions added to SBR Project  */
+	/***********************************/
+
+
+
+	float m_quatI, mQuatJ, mQuatK, mQuatReal, mQuatRadianAccuracy, mquatAccuracy;
+	float mRoll, mPitch, mYaw; 
+    // ToDo: agregar todos las variables
+
+	RC_e configure(uint8_t deviceAddress = BNO080_DEFAULT_ADDRESS, TwoWire &wirePort = Wire, uint8_t intPin = 255, uint8_t PS0_IMU = 255, uint8_t PS1_IMU = 255); //By default use the default I2C addres, and use Wire port, and don't declare an INT pin
+    RC_e configure(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INTPin, uint8_t user_RSTPin, uint32_t spiPortSpeed, uint8_t CLK_IMU, uint8_t MISO_IMU, uint8_t MOSI_IMU, uint8_t PS0_IMU = 255, uint8_t PS1_IMU = 255);
+
+	RC_e Run();
+
+	/*************************************/
+	/* 	End Functions SBR Project		*/
+	/*************************************/
 
 	void enableDebugging(Stream &debugPort = Serial); //Turn on debug printing. If user doesn't specify then Serial will be used.
 
@@ -257,37 +273,13 @@ public:
 	uint8_t commandSequenceNumber = 0;				//Commands have a seqNum as well. These are inside command packet, the header uses its own seqNum per channel
 	uint32_t metaData[MAX_METADATA_SIZE];			//There is more than 10 words in a metadata record but we'll stop at Q point 3
 
-	/***********************************/
-	/* Functions added to SBR Project  */
-	/***********************************/
-	float mQuatI, mQuatJ, mQuatK, mQuatReal, mQuatRadianAccuracy, mquatAccuracy;
-	float mRoll, mPitch, mYaw; 
 
-	enum SensorList{
-		RotationVector = 0,
-		GameRotationVector = 1,
-		ARVRStabilizedRotationVector = 2,
-		ARVRStabilizedGameRotationVector = 3,
-		Accelerometer = 4,
-		LinearAccelerometer = 5,
-		Gyro = 6,
-		Magnetometer = 7,
-		StepCounter = 8,
-		StabilityClassifier = 9,
-		RawAccelerometer = 10,
-		RawGyro = 11,
-		RawMagnetometer = 12,
-		GyroIntegratedRotationVector = 13,
-	};
-
-
-	RC_e configure(SensorList SensorAvailable, uint16_t timeBetweenReports);
-	RC_e Run();
-	/*************************************/
-	/* 	End Functions SBR Project		*/
-	/*************************************/
 
 private:
+
+    // Sensor is connected
+    bool m_isConnected = false;
+
 	//Variables
 	TwoWire *_i2cPort;		//The generic connection to user's chosen I2C hardware
 	uint8_t _deviceAddress; //Keeps track of I2C address. setI2CAddress changes this.
@@ -295,7 +287,7 @@ private:
 	Stream *_debugPort;			 //The stream to send debug messages to if enabled. Usually Serial.
 	boolean _printDebug = false; //Flag to print debugging variables
 
-	SPIClass *_spiPort;			 //The generic connection to user's chosen SPI hardware
+	SPIClass* _spiPort;			 //The generic connection to user's chosen SPI hardware
 	unsigned long _spiPortSpeed; //Optional user defined port speed
 	uint8_t _cs;				 //Pins needed for SPI
 	uint8_t _wake;
@@ -328,4 +320,13 @@ private:
 	int16_t gyro_Q1 = 9;
 	int16_t magnetometer_Q1 = 4;
 	int16_t angular_velocity_Q1 = 10;
+
+    // Begin
+    boolean begin(uint8_t deviceAddress = BNO080_DEFAULT_ADDRESS, TwoWire &wirePort = Wire, uint8_t intPin = 255); //By default use the default I2C addres, and use Wire port, and don't declare an INT pin
+	boolean beginSPI(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INTPin, uint8_t user_RSTPin, uint32_t spiPortSpeed, uint8_t CLK_IMU, uint8_t MISO_IMU, uint8_t MOSI_IMU);
+
 };
+
+
+
+

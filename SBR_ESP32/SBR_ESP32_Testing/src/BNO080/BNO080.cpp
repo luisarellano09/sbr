@@ -34,25 +34,7 @@
 
 //=====================================================================================================
 
-BNO080::BNO080(uint8_t PS0_IMU, uint8_t PS1_IMU, uint8_t INT_IMU, uint8_t RST_IMU, uint32_t SPEED_IMU,SPIClass &spiPort,uint8_t CLK_IMU, uint8_t MISO_IMU, uint8_t MOSI_IMU, uint8_t CS_IMU){
-
-    /*DIOD PS0 PS1 IMU to choose SPI*/
-	pinMode(PS0_IMU, OUTPUT);   
-    digitalWrite(PS0_IMU, HIGH); //PS0 to HIGH
-    pinMode(PS1_IMU, OUTPUT);   
-    digitalWrite(PS1_IMU, HIGH); //PS1 to HIGH
-	
-	//Get user settings
-	_spiPort = &spiPort;
-	_i2cPort = NULL;
-	_cs = CS_IMU;				 //Pins needed for SPI
-	_wake = PS0_IMU;			 //WAKE and PS0 are the same Pin
-	_int = INT_IMU;
-	_rst = RST_IMU;
-	_spiPortSpeed = SPEED_IMU;
-    _spiPort->begin(CLK_IMU,MISO_IMU,MOSI_IMU,_cs);
-
-
+BNO080::BNO080(){
 }
 
 //=====================================================================================================
@@ -109,12 +91,12 @@ boolean BNO080::begin(uint8_t deviceAddress, TwoWire &wirePort, uint8_t intPin)
 	return (false); //Something went wrong
 }
 
-boolean BNO080::beginSPI(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INTPin, uint8_t user_RSTPin, uint32_t spiPortSpeed, SPIClass &spiPort)
+boolean BNO080::beginSPI(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INTPin, uint8_t user_RSTPin, uint32_t spiPortSpeed, uint8_t CLK_IMU, uint8_t MISO_IMU, uint8_t MOSI_IMU)
 {
 	_i2cPort = NULL; //This null tells the send/receive functions to use SPI
 
 	//Get user settings
-	_spiPort = &spiPort;
+	_spiPort = new SPIClass();
 	_spiPortSpeed = spiPortSpeed;
 	if (_spiPortSpeed > 3000000)
 		_spiPortSpeed = 3000000; //BNO080 max is 3MHz
@@ -143,7 +125,7 @@ boolean BNO080::beginSPI(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_I
 	//if(wakeBNO080() == false) //Bring IC out of sleep after reset
 	//  Serial.println("BNO080 did not wake up");
 
-	_spiPort->begin(); //Turn on SPI hardware
+	_spiPort->begin(CLK_IMU,MISO_IMU,MOSI_IMU,user_CSPin);
 
 	//At system startup, the hub must send its full advertisement message (see 5.2 and 5.3) to the
 	//host. It must not send any other data until this step is complete.
@@ -371,6 +353,17 @@ void BNO080::parseInputReport(void)
 		//Only available on rotation vector and ar/vr stabilized rotation vector,
 		// not game rot vector and not ar/vr stabilized rotation vector
 		rawQuatRadianAccuracy = data5;
+
+        this->m_quatI = getQuatI();
+		mQuatJ = getQuatJ();
+		mQuatK = getQuatK();
+		mQuatReal = getQuatReal();
+		mQuatRadianAccuracy = getQuatRadianAccuracy();
+		mquatAccuracy = getQuatAccuracy();
+		mRoll = getRoll();
+        mPitch = getPitch();
+        mYaw = getYaw();
+
 	}
 	else if (shtpData[5] == SENSOR_REPORTID_STEP_COUNTER)
 	{
@@ -1535,47 +1528,62 @@ void BNO080::printHeader(void)
 /*		Function added to SBR Project			*/
 /*********************************************************************************/
 
-RC_e BNO080::configure(SensorList SensorAvailable, uint16_t timeBetweenReports){
+RC_e BNO080::configure(uint8_t deviceAddress, TwoWire &wirePort, uint8_t intPin, uint8_t PS0_IMU, uint8_t PS1_IMU){
 	
-	RC_e Return = RC_e::ERROR;
+    /*DIOD PS0 PS1 IMU to choose SPI*/
+	if (PS0_IMU != 255) {
+        pinMode(PS0_IMU, OUTPUT);   
+        digitalWrite(PS0_IMU, LOW); //PS0 to HIGH
+    }
 
-	if(_i2cPort == NULL){//DO Spi
-		if(beginSPI(_cs, _wake, _int, _rst,_spiPortSpeed,*_spiPort) == true)
-		{
-			if (SensorAvailable == SensorList::RotationVector)
-			{
-				/* code */
-				enableRotationVector(timeBetweenReports);//Send data update every 10ms
-			}
-			else
-			{
-				/*Nothing to do*/
-			}
-			Return = RC_e::SUCCESS;
-		}
-		else
-		{
-			/*Nothing to do*/
-		}
-	}
+    if (PS0_IMU != 255) {
+        pinMode(PS1_IMU, OUTPUT);   
+        digitalWrite(PS1_IMU, LOW); //PS1 to HIGH
+    }
+    
+	if (!this->begin(deviceAddress, wirePort, intPin)){
+        m_isConnected = false;
+        return RC_e::ERROR;
+    }
 
-	return Return;
+    m_isConnected = true;
+
+	return SUCCESS;
 }
+
+RC_e BNO080::configure(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INTPin, uint8_t user_RSTPin, uint32_t spiPortSpeed, uint8_t CLK_IMU, uint8_t MISO_IMU, uint8_t MOSI_IMU, uint8_t PS0_IMU, uint8_t PS1_IMU){
+
+    /*DIOD PS0 PS1 IMU to choose SPI*/
+	if (PS0_IMU != 255) {
+        pinMode(PS0_IMU, OUTPUT);   
+        digitalWrite(PS0_IMU, HIGH); //PS0 to HIGH
+    }
+
+    if (PS0_IMU != 255) {
+        pinMode(PS1_IMU, OUTPUT);   
+        digitalWrite(PS1_IMU, HIGH); //PS1 to HIGH
+    }
+
+	if (!this->beginSPI(user_CSPin, user_WAKPin, user_INTPin, user_RSTPin, spiPortSpeed, CLK_IMU, MISO_IMU, MOSI_IMU)){
+        m_isConnected = false;
+        return RC_e::ERROR;
+    }
+
+    m_isConnected = true;
+    return SUCCESS;
+	
+}
+
 
 RC_e  BNO080::Run(){
-	RC_e retCode = RC_e::ERROR;
-	if(dataAvailable() == true){
-		/*	Update Data IMU */
-		mQuatI = getQuatI();
-		mQuatJ = getQuatJ();
-		mQuatK = getQuatK();
-		mQuatReal = getQuatReal();
-		mQuatRadianAccuracy = getQuatRadianAccuracy();
-		mquatAccuracy = getQuatAccuracy();
-		mRoll = getRoll();
-        mPitch = getPitch();
-        mYaw = getYaw();	
-		retCode = RC_e::SUCCESS;
-	}
-	return retCode;
+
+    if (!this->m_isConnected){
+        return RC_e::ERROR;
+    }
+
+	dataAvailable();
+	return RC_e::SUCCESS;;
 }
+
+
+
