@@ -30,6 +30,61 @@
  *  												IMUManager Class
  *******************************************************************************************************************************************/
 
+
+
+struct PIDTunning_t{
+    float KP,
+    float KI,
+    float KD,
+} 
+
+
+class {
+
+private:
+
+    PIDTunning_t SchechulePara[10] =  {0};
+    int8_t modeIndex = -1;
+
+
+    void setMode(int mode){
+        modeIndex = mode;
+    }
+
+    void addScheducle(mode, kp, ki, kd){}
+
+        [
+            1,2,3           mode 0
+            10,50,60        mode 1
+
+        ]
+
+
+    ComputePID(){
+        ki = SchechulePara[modeIndex]
+    }
+
+
+    // borrar los ratios 
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * @brief Class to Manage the IMU in this case BNO080
  * 

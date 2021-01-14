@@ -241,7 +241,8 @@ void setup() {
 
     delay(500);  // needed to start-up task1
 
-    // Task of core 1
+    // Task of core 1    disableCore0WDT();
+    disableCore1WDT();
     xTaskCreatePinnedToCore(
         LoopCore1,  /* Function to implement the task */
         "LoopCore1",    /* Name of the task */
