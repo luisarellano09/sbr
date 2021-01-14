@@ -354,15 +354,16 @@ void BNO080::parseInputReport(void)
 		// not game rot vector and not ar/vr stabilized rotation vector
 		rawQuatRadianAccuracy = data5;
 
-        this->m_quatI = getQuatI();
-		mQuatJ = getQuatJ();
-		mQuatK = getQuatK();
-		mQuatReal = getQuatReal();
-		mQuatRadianAccuracy = getQuatRadianAccuracy();
-		mquatAccuracy = getQuatAccuracy();
-		mRoll = getRoll();
-        mPitch = getPitch();
-        mYaw = getYaw();
+        this->m_quatI = FACTOR_CONV_RAD_TO_DEG*getQuatI();
+		this->mQuatJ = FACTOR_CONV_RAD_TO_DEG*getQuatJ();
+		this->mQuatK = FACTOR_CONV_RAD_TO_DEG*getQuatK();
+		this->mQuatReal = FACTOR_CONV_RAD_TO_DEG*getQuatReal();
+		this->mQuatRadianAccuracy = FACTOR_CONV_RAD_TO_DEG*getQuatRadianAccuracy();
+		this->mquatAccuracy = FACTOR_CONV_RAD_TO_DEG*getQuatAccuracy();
+		this->mRoll = FACTOR_CONV_RAD_TO_DEG*getRoll();
+        this->mPitch = FACTOR_CONV_RAD_TO_DEG*getPitch();
+        this->mYaw = FACTOR_CONV_RAD_TO_DEG*getYaw();
+		
 
 	}
 	else if (shtpData[5] == SENSOR_REPORTID_STEP_COUNTER)
@@ -1566,6 +1567,7 @@ RC_e BNO080::configure(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INT
 
 	if (!this->beginSPI(user_CSPin, user_WAKPin, user_INTPin, user_RSTPin, spiPortSpeed, CLK_IMU, MISO_IMU, MOSI_IMU)){
         m_isConnected = false;
+		/*test [JSA]*/		
         return RC_e::ERROR;
     }
 
