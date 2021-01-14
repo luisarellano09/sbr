@@ -14,26 +14,47 @@
 #include <Arduino.h>
 #include "../lib//Definition/GlobalDef.h"
 #include "soc/rtc_wdt.h"
-#include "PID/PID_Manager.h"
 /*******************************************************************************************************************************************
  *  												INCLUDES - SBR
  *******************************************************************************************************************************************/
 #include "./Manager/Manager.h"
-#include "./IMUManager/IMUManager.h"
 #include "./ControlMotors/MotorManager.h"
+// This optional setting causes Encoder to use more optimized code,
+// It must be defined before Encoder.h is included.
+#include "./ENCODER/ESP32Encoder.h"
+#include "PID/PID_Manager.h"
+#include "BNO080/BNO080.h"
+
+/* rotary encoder */
+#define PINENC1A 34 
+#define PINENC1B 35
+
+#define PINENC2A 22 
+#define PINENC2B 23
+
 /*******************************************************************************************************************************************
  *  												GLOBAL VARIABLES
  *******************************************************************************************************************************************/
 
 #define SIZE_FILTER 6
+
+SPIClass *ImuSpi;
 // Manager Instance
 Manager* manager;
-//IMU Instance
-IMUManager *myIMU;
 //PID instance
 PID_Manager *myPID;
-
+//IMU instance
+BNO080 *myIMU;
 MotorManager *myMotors;
+
+
+ESP32Encoder encoder;
+ESP32Encoder encoder2;
+
+
+unsigned long encoder2lastToggled;
+bool encoder2Paused = false;
+
 // Task declaration
 TaskHandle_t TaskCore0, TaskCore1;
 
@@ -84,11 +105,11 @@ void LoopCore0( void * parameter ){
             // ========== Code ==========
             /*Nothing to DO*/
             // ==========================
-            if((Pitch_Mesured < 0.03)&&(Pitch_Mesured > -0.03))
+            /*if((Pitch_Mesured < 0.03)&&(Pitch_Mesured > -0.03))
             {
                 Pitch_Mesured = 0;
-            }
-            if(RC_e::SUCCESS == myPID->UpdatePID(Pitch_Mesured,&PIDResult)){
+            }*/
+            /*if(1){//(RC_e::SUCCESS == myPID->UpdatePID(Pitch_Mesured,&PIDResult)){
 
                 if(PIDResult>100){
                     PIDResult =100;
@@ -105,7 +126,7 @@ void LoopCore0( void * parameter ){
             }
             else{
                 Serial.println("ERROR PID");
-            }
+            }*/
 
         }
 
@@ -114,10 +135,20 @@ void LoopCore0( void * parameter ){
             flagTimer1 = false;
         }
 
-        /*Get all Data*/
+        /****************************************************/
+        /*      Manager TASK IMU*/
+        /****************************************************/
         if(RC_e::SUCCESS == myIMU->Run()){
-            
+        	Serial.print(myIMU->mRoll, 2);
+            Serial.print(F(","));
+            Serial.print(myIMU->mPitch, 2);
+            Serial.print(F(","));
+            Serial.print(myIMU->mYaw, 2);
+            Serial.println("\n");
         }
+
+        //Serial.println("Encoder count = "+String((int32_t)encoder.getCount())+" "+String((int32_t)encoder2.getCount()));
+        //delay(10);
                 
         
         // ========== Code ==========
@@ -227,7 +258,7 @@ void LoopCore0( void * parameter ){
         //manager->m_wifiManager->RunOTA();
 
         // Delay to feed WDT
-        delay(1);
+        delay(10);
         // ==========================
 
         // Run SPI Slave service
@@ -317,17 +348,28 @@ void setup() {
     Serial.begin(115200);
     Serial.println(" +++++ ESP32 SENSORS +++++");
 
-    /* Manager IMU
-    Configure SPI and PS0 and PS1
-    */
-    myIMU = new IMUManager();
-   
+
+    /*****************************************************************************************/
+    /* Manager INIT IMU*/
+    ImuSpi = new SPIClass();
+    myIMU = new BNO080( 12, 18, 26, 27, 3000000,*ImuSpi, 14, 25, 13, 32);
+    myIMU->configure(myIMU->RotationVector, 10);
+    /*****************************************************************************************/
     myMotors = new MotorManager();
 
     myMotors->Begin(5,2,4,15);
     i8DutyCycle = 0;
 
     myPID = new PID_Manager();
+
+    ESP32Encoder::useInternalWeakPullResistors = UP;
+    
+    encoder.attachFullQuad(PINENC1A,PINENC1B);
+    encoder2.attachSingleEdge(PINENC2A,PINENC2B);
+    
+    encoder.setCount(0);
+    encoder2.clearCount();
+    Serial.println("Encodr Start ="+String((int32_t)encoder.getCount()));
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // Task of core 0

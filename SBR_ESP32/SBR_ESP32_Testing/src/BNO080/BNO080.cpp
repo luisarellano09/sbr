@@ -27,7 +27,37 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "SparkFun_BNO080_Arduino_Library.h"
+#include "BNO080.h"
+/*******************************************************************************************************************************************
+ *  												Constructor
+ *******************************************************************************************************************************************/
+
+//=====================================================================================================
+
+BNO080::BNO080(uint8_t PS0_IMU, uint8_t PS1_IMU, uint8_t INT_IMU, uint8_t RST_IMU, uint32_t SPEED_IMU,SPIClass &spiPort,uint8_t CLK_IMU, uint8_t MISO_IMU, uint8_t MOSI_IMU, uint8_t CS_IMU){
+
+    /*DIOD PS0 PS1 IMU to choose SPI*/
+	pinMode(PS0_IMU, OUTPUT);   
+    digitalWrite(PS0_IMU, HIGH); //PS0 to HIGH
+    pinMode(PS1_IMU, OUTPUT);   
+    digitalWrite(PS1_IMU, HIGH); //PS1 to HIGH
+	
+	//Get user settings
+	_spiPort = &spiPort;
+	_i2cPort = NULL;
+	_cs = CS_IMU;				 //Pins needed for SPI
+	_wake = PS0_IMU;			 //WAKE and PS0 are the same Pin
+	_int = INT_IMU;
+	_rst = RST_IMU;
+	_spiPortSpeed = SPEED_IMU;
+    _spiPort->begin(CLK_IMU,MISO_IMU,MOSI_IMU,_cs);
+
+
+}
+
+//=====================================================================================================
+BNO080::~BNO080(){}
+
 
 //Attempt communication with the device
 //Return true if we got a 'Polo' back from Marco
@@ -181,7 +211,7 @@ bool BNO080::dataAvailable(void)
 		if (digitalRead(_int) == HIGH)
 			return (false);
 	}
-
+	
 	if (receivePacket() == true)
 	{
 		//Check to see if this packet is a sensor reporting its data to us
@@ -1499,4 +1529,53 @@ void BNO080::printHeader(void)
 		}
 		_debugPort->println();
 	}
+}
+
+/*********************************************************************************/
+/*		Function added to SBR Project			*/
+/*********************************************************************************/
+
+RC_e BNO080::configure(SensorList SensorAvailable, uint16_t timeBetweenReports){
+	
+	RC_e Return = RC_e::ERROR;
+
+	if(_i2cPort == NULL){//DO Spi
+		if(beginSPI(_cs, _wake, _int, _rst,_spiPortSpeed,*_spiPort) == true)
+		{
+			if (SensorAvailable == SensorList::RotationVector)
+			{
+				/* code */
+				enableRotationVector(timeBetweenReports);//Send data update every 10ms
+			}
+			else
+			{
+				/*Nothing to do*/
+			}
+			Return = RC_e::SUCCESS;
+		}
+		else
+		{
+			/*Nothing to do*/
+		}
+	}
+
+	return Return;
+}
+
+RC_e  BNO080::Run(){
+	RC_e retCode = RC_e::ERROR;
+	if(dataAvailable() == true){
+		/*	Update Data IMU */
+		mQuatI = getQuatI();
+		mQuatJ = getQuatJ();
+		mQuatK = getQuatK();
+		mQuatReal = getQuatReal();
+		mQuatRadianAccuracy = getQuatRadianAccuracy();
+		mquatAccuracy = getQuatAccuracy();
+		mRoll = getRoll();
+        mPitch = getPitch();
+        mYaw = getYaw();	
+		retCode = RC_e::SUCCESS;
+	}
+	return retCode;
 }

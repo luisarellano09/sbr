@@ -37,7 +37,7 @@
 
 #include <Wire.h>
 #include <SPI.h>
-
+#include "../Definition/GlobalDef.h"
 //The default I2C address for the BNO080 on the SparkX breakout is 0x4B. 0x4A is also possible.
 #define BNO080_DEFAULT_ADDRESS 0x4B
 
@@ -130,6 +130,11 @@ const byte CHANNEL_GYRO = 5;
 class BNO080
 {
 public:
+	/*Added Constructor for SBR Project*/
+	BNO080(uint8_t PS0_IMU, uint8_t PS1_IMU, uint8_t INT_IMU, uint8_t RST_IMU, uint32_t SPEED_IMU,SPIClass &spiPort,uint8_t CLK_IMU, uint8_t MISO_IMU, uint8_t MOSI_IMU, uint8_t CS_IMU);
+
+	~BNO080();
+
 	boolean begin(uint8_t deviceAddress = BNO080_DEFAULT_ADDRESS, TwoWire &wirePort = Wire, uint8_t intPin = 255); //By default use the default I2C addres, and use Wire port, and don't declare an INT pin
 	boolean beginSPI(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INTPin, uint8_t user_RSTPin, uint32_t spiPortSpeed = 3000000, SPIClass &spiPort = SPI);
 
@@ -251,6 +256,36 @@ public:
 	uint8_t sequenceNumber[6] = {0, 0, 0, 0, 0, 0}; //There are 6 com channels. Each channel has its own seqnum
 	uint8_t commandSequenceNumber = 0;				//Commands have a seqNum as well. These are inside command packet, the header uses its own seqNum per channel
 	uint32_t metaData[MAX_METADATA_SIZE];			//There is more than 10 words in a metadata record but we'll stop at Q point 3
+
+	/***********************************/
+	/* Functions added to SBR Project  */
+	/***********************************/
+	float mQuatI, mQuatJ, mQuatK, mQuatReal, mQuatRadianAccuracy, mquatAccuracy;
+	float mRoll, mPitch, mYaw; 
+
+	enum SensorList{
+		RotationVector = 0,
+		GameRotationVector = 1,
+		ARVRStabilizedRotationVector = 2,
+		ARVRStabilizedGameRotationVector = 3,
+		Accelerometer = 4,
+		LinearAccelerometer = 5,
+		Gyro = 6,
+		Magnetometer = 7,
+		StepCounter = 8,
+		StabilityClassifier = 9,
+		RawAccelerometer = 10,
+		RawGyro = 11,
+		RawMagnetometer = 12,
+		GyroIntegratedRotationVector = 13,
+	};
+
+
+	RC_e configure(SensorList SensorAvailable, uint16_t timeBetweenReports);
+	RC_e Run();
+	/*************************************/
+	/* 	End Functions SBR Project		*/
+	/*************************************/
 
 private:
 	//Variables
