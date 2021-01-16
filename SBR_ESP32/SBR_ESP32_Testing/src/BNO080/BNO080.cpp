@@ -355,15 +355,55 @@ void BNO080::parseInputReport(void)
 		rawQuatRadianAccuracy = data5;
 
         this->m_quatI = FACTOR_CONV_RAD_TO_DEG*getQuatI();
-		this->mQuatJ = FACTOR_CONV_RAD_TO_DEG*getQuatJ();
-		this->mQuatK = FACTOR_CONV_RAD_TO_DEG*getQuatK();
-		this->mQuatReal = FACTOR_CONV_RAD_TO_DEG*getQuatReal();
-		this->mQuatRadianAccuracy = FACTOR_CONV_RAD_TO_DEG*getQuatRadianAccuracy();
-		this->mquatAccuracy = FACTOR_CONV_RAD_TO_DEG*getQuatAccuracy();
-		this->mRoll = FACTOR_CONV_RAD_TO_DEG*getRoll();
-        this->mPitch = FACTOR_CONV_RAD_TO_DEG*getPitch();
-        this->mYaw = FACTOR_CONV_RAD_TO_DEG*getYaw();
+		this->m_QuatJ = FACTOR_CONV_RAD_TO_DEG*getQuatJ();
+		this->m_QuatK = FACTOR_CONV_RAD_TO_DEG*getQuatK();
+		this->m_QuatReal = FACTOR_CONV_RAD_TO_DEG*getQuatReal();
+		this->m_QuatRadianAccuracy = FACTOR_CONV_RAD_TO_DEG*getQuatRadianAccuracy();
+		this->m_quatAccuracy = FACTOR_CONV_RAD_TO_DEG*getQuatAccuracy();
+		this->m_Roll = FACTOR_CONV_RAD_TO_DEG*getRoll();
+		float tempRoll = FACTOR_CONV_RAD_TO_DEG*getRoll();
+		if(tempRoll > 0.0){
+			this->m_Roll = 180- tempRoll;
+		}
+		else{
+			this->m_Roll = -180 - tempRoll;
+		}
+        this->m_Pitch = FACTOR_CONV_RAD_TO_DEG*getPitch();
+        this->m_Yaw = FACTOR_CONV_RAD_TO_DEG*getYaw();
+				
+		/*compute the quadrant of yaw*/
+		if((this->m_Yaw > -180.0)&&(this->m_Yaw < -90.0)){
+			m_quadrant = 1;
+		}
+		else if((this->m_Yaw > -90.0)&&(this->m_Yaw < 0.0)){
+			m_quadrant = 2;
+		}
+		else if((this->m_Yaw > 0.0)&&(this->m_Yaw < 90.0)){
+			m_quadrant = 3;
+		}
+		else if((this->m_Yaw > 90.0)&&(this->m_Yaw < 180.0)){
+			m_quadrant = 4;
+		}
+		else
+		{
+			/*Nothing to do*/
+		}
 		
+		/*absolute Yaw*/
+		if((m_quadrantPrev == 4)&&(m_quadrant == 1)){
+			m_numberOfTurns++;
+		}
+		else if((m_quadrantPrev == 1)&&(m_quadrant == 4)){
+			m_numberOfTurns--;	
+		}
+
+		this->m_absYaw = this->m_Yaw + m_numberOfTurns*(360); 
+
+		this->m_absYawCalib = this->m_absYaw-offsetYaw;
+
+		this->m_calibYaw = int(this->m_absYawCalib)%(360);
+
+		m_quadrantPrev = m_quadrant;
 
 	}
 	else if (shtpData[5] == SENSOR_REPORTID_STEP_COUNTER)
@@ -500,7 +540,8 @@ float BNO080::getYaw()
 	float t4 = +1.0 - 2.0 * (ysqr + dqz * dqz);
 	float yaw = atan2(t3, t4);
 
-	return (yaw);
+	/*[JSA]: sign changed*/
+	return (-yaw);
 }
 
 //Return the rotation vector quaternion I
@@ -1576,6 +1617,9 @@ RC_e BNO080::configure(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INT
 	
 }
 
+RC_e BNO080::calibrationAngles(){
+	offsetYaw = this->m_Yaw;
+}
 
 RC_e  BNO080::Run(){
 

@@ -142,12 +142,14 @@ public:
 
 
 
-	float m_quatI, mQuatJ, mQuatK, mQuatReal, mQuatRadianAccuracy, mquatAccuracy;
-	float mRoll, mPitch, mYaw; 
+	float m_quatI, m_QuatJ, m_QuatK, m_QuatReal, m_QuatRadianAccuracy, m_quatAccuracy;
+	float m_Roll, m_Pitch, m_Yaw; 
+	float m_calibYaw, m_absYaw, m_absYawCalib;
     // ToDo: agregar todos las variables
 
 	RC_e configure(uint8_t deviceAddress = BNO080_DEFAULT_ADDRESS, TwoWire &wirePort = Wire, uint8_t intPin = 255, uint8_t PS0_IMU = 255, uint8_t PS1_IMU = 255); //By default use the default I2C addres, and use Wire port, and don't declare an INT pin
     RC_e configure(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INTPin, uint8_t user_RSTPin, uint32_t spiPortSpeed, uint8_t CLK_IMU, uint8_t MISO_IMU, uint8_t MOSI_IMU, uint8_t PS0_IMU = 255, uint8_t PS1_IMU = 255);
+	RC_e calibrationAngles();
 
 	RC_e Run();
 
@@ -280,6 +282,9 @@ private:
 
     // Sensor is connected
     bool m_isConnected = false;
+	int m_numberOfTurns = 0;
+	uint8_t m_quadrant, m_quadrantPrev;
+	float offsetYaw = 0;
 
 	//Variables
 	TwoWire *_i2cPort;		//The generic connection to user's chosen I2C hardware

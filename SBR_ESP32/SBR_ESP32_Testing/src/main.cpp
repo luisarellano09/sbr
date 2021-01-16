@@ -22,8 +22,9 @@
 // This optional setting causes Encoder to use more optimized code,
 // It must be defined before Encoder.h is included.
 //#include "./ENCODER/ESP32Encoder.h"
-#include "PID/PID_Manager.h"
-#include "BNO080/BNO080.h"
+
+#include "./BNO080/BNO080.h"
+#include "./PID/PID.h"
 
 /* rotary encoder */
 #define PINENC1A 34 
@@ -38,15 +39,13 @@
 
 #define SIZE_FILTER 6
 
-SPIClass *ImuSpi;
 // Manager Instance
 Manager* manager;
 //PID instance
-PID_Manager *myPID;
+PID *myPID;
 //IMU instance
 BNO080 *myIMU;
 MotorManager *myMotors;
-
 
 //ESP32Encoder encoder;
 //ESP32Encoder encoder2;
@@ -91,6 +90,15 @@ void test_Add_Requests();
 uint32_t test_counter = 0;
 int8_t i8DutyCycle = 50;
 
+double inputPID = 0;
+double outputPID = 0;
+double SetpointPID = 0;
+double Kp = 1;
+double Ki = 1;
+double Kd = 1;
+int POn = 1;
+int ControllerDirectionPID = 1;
+
 /*******************************************************************************************************************************************
  *  												CORE LOOPS
  *******************************************************************************************************************************************/
@@ -102,31 +110,28 @@ void LoopCore0( void * parameter ){
         if (flagTimer0){
             flagTimer0 = false;
 
-            // ========== Code ==========
-            /*Nothing to DO*/
-            // ==========================
             /*if((Pitch_Mesured < 0.03)&&(Pitch_Mesured > -0.03))
             {
                 Pitch_Mesured = 0;
             }*/
-            /*if(1){//(RC_e::SUCCESS == myPID->UpdatePID(Pitch_Mesured,&PIDResult)){
+            if(myPID->Compute()){
 
-                if(PIDResult>100){
-                    PIDResult =100;
+                /*if(outputPID>100){
+                    outputPID =100;
                 }
-                else if(PIDResult <-100)
+                else if(outputPID <-100)
                 {
-                    PIDResult = -100;
-                }
+                    outputPID = -100;
+                }*/
                 
-                myMotors->PWM1(PIDResult);
-                myMotors->PWM2(PIDResult);
+                //myMotors->PWM1(PIDResult);
+                //myMotors->PWM2(PIDResult);
                 
-                //Serial.println(PIDResult);
+                //Serial.println(outputPID);
             }
             else{
-                Serial.println("ERROR PID");
-            }*/
+                //Serial.println("ERROR PID");
+            }
 
         }
 
@@ -139,11 +144,20 @@ void LoopCore0( void * parameter ){
         /*      Manager TASK IMU*/
         /****************************************************/
         if(RC_e::SUCCESS == myIMU->Run()){
-        	Serial.print(myIMU->mRoll, 2);
-            Serial.print(F(","));
-            Serial.print(myIMU->mPitch, 2);
-            Serial.print(F(","));
-            Serial.print(myIMU->mYaw, 2);
+            inputPID = myIMU->m_Pitch;
+            Serial.print(F("Roll="));
+        	Serial.print(myIMU->m_Roll, 2);
+            Serial.print(F("\tPitch="));
+            Serial.print(myIMU->m_Pitch, 2);
+            Serial.print(F("\t"));
+            Serial.print(F("Yaw="));
+            Serial.print(myIMU->m_Yaw, 2);
+            Serial.print(F("\tabsYaw="));
+            Serial.print(myIMU->m_absYaw, 2);
+            Serial.print(F("\tabsYawCalib="));
+            Serial.print(myIMU->m_absYawCalib, 2);
+            Serial.print(F("\tyawcalib="));
+            Serial.print(myIMU->m_calibYaw, 2);            
             Serial.println("\n");
         } else {
             Serial.println("IMU not connected!!!");
@@ -163,6 +177,7 @@ void LoopCore0( void * parameter ){
                 case 'w':
                 case 'W':
                     Serial.println(" +++++ ESP32 SENSORS +++++");
+                    myIMU->calibrationAngles();
                     break;
                 case 'p':
                 case 'P':
@@ -191,30 +206,30 @@ void LoopCore0( void * parameter ){
                     {
                     case '1':
                         /* code */
-                        myPID->GetConsigne(&TestValue);
+                        //myPID->GetConsigne(&TestValue);
                         TestValue +=0.1f;
-                        myPID->SetConsigne(TestValue);
+                        //myPID->SetConsigne(TestValue);
                         Serial.printf("consinge: %f\n",TestValue);
                         break;
                     case '2':
                         /* code */
-                        myPID->GetKp(&TestValue);
+                        //myPID->GetKp(&TestValue);
                         TestValue +=1.0f;
-                        myPID->SetKp(TestValue);
+                        //myPID->SetKp(TestValue);
                         Serial.printf("Kp: %f\n",TestValue);;
                         break;
                     case '3':
                         /* code */
-                        myPID->GetKi(&TestValue);
+                        //myPID->GetKi(&TestValue);
                         TestValue +=1.0f;
-                        myPID->SetKi(TestValue);
+                        //myPID->SetKi(TestValue);
                         Serial.printf("ki: %f\n",TestValue);;
                         break;
                     case '4':
                         /* code */
-                        myPID->GetKd(&TestValue);
+                        //myPID->GetKd(&TestValue);
                         TestValue +=1.0f;
-                        myPID->SetKd(TestValue);
+                        //myPID->SetKd(TestValue);
                         Serial.printf("kd: %f\n",TestValue);;
                         break;
                     }
@@ -225,30 +240,30 @@ void LoopCore0( void * parameter ){
                     {
                     case '1':
                         /* code */
-                        myPID->GetConsigne(&TestValue);
+                        //myPID->GetConsigne(&TestValue);
                         TestValue -=0.1f;
-                        myPID->SetConsigne(TestValue);
+                        //myPID->SetConsigne(TestValue);
                         Serial.printf("consinge: %f\n",TestValue);;
                         break;
                     case '2':
                         /* code */
-                        myPID->GetKp(&TestValue);
+                        //myPID->GetKp(&TestValue);
                         TestValue -=1.0f;
-                        myPID->SetKp(TestValue);
+                        //myPID->SetKp(TestValue);
                         Serial.printf("kp: %f\n",TestValue);
                         break;
                     case '3':
                         /* code */
-                        myPID->GetKi(&TestValue);
+                        //myPID->GetKi(&TestValue);
                         TestValue -=1.0f;
-                        myPID->SetKi(TestValue);
+                        //myPID->SetKi(TestValue);
                         Serial.printf("ki: %f\n",TestValue);
                         break;
                     case '4':
                         /* code */
-                        myPID->GetKd(&TestValue);
+                        //myPID->GetKd(&TestValue);
                         TestValue -=1.0f;
-                        myPID->SetKd(TestValue);
+                        //myPID->SetKd(TestValue);
                         Serial.printf("kd: %f\n",TestValue);
                         break;
                     }
@@ -344,8 +359,6 @@ void setup() {
     //rtc_wdt_protect_off();
     //rtc_wdt_disable();
 
-
-
     // Serial Port
     Serial.begin(115200);
     Serial.println(" +++++ ESP32 SENSORS +++++");
@@ -361,8 +374,15 @@ void setup() {
 
     myMotors->Begin(5,2,4,15);
     i8DutyCycle = 0;
+    
 
-    myPID = new PID_Manager();
+    /************************************************************************************************/
+    /* Manager INIT PID*/
+    myPID = new PID(&inputPID, &outputPID, &SetpointPID, Kp, Ki, Kd, POn, ControllerDirectionPID);
+    //turn the PID on
+    myPID->SetMode(AUTOMATIC);
+    myPID->SetOutputLimits(-100,+100);
+    /*************************************************************************************************/
 
     //ESP32Encoder::useInternalWeakPullResistors = UP;
     
