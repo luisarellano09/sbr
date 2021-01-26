@@ -3,7 +3,7 @@
  * @author Luis Arellano - luis.arellano09@gmail.com
  * @brief Class to Manage the ESP32
  * @version 2.0
- * @date 09.01.2021
+ * @date 10.01.2021
  * 
  * 
  */
@@ -19,26 +19,22 @@
 #include "../../Definition/LocalDef.h"
 
 #include "../../Middleware/WifiManager/WifiManager.h"
-#include "../../Middleware/Communication/TableRegister/TableRegister.h"
 
-#include "../Communication/NodeEsp32/NodeEsp32.h"
-#include "../Communication/NodeLinux/NodeLinux.h"
+#include "../Communication/Node01/Node01.h"
 
 /*******************************************************************************************************************************************
  *  												CLASS
  *******************************************************************************************************************************************/
 
 /**
- * @brief lass to Manage the ESP32
+ * @brief Class to Manage the ESP32
  * 
  */
 class Manager {
 public:  
 
-    WifiManager* m_wifiManager = NULL;              /**< \brief Instance for Wifimanager. */
-    NodeEsp32* m_nodeESP32 = NULL;  /**< \brief Instance for SPI Master Manager. */
-    NodeLinux* m_nodeLinux = NULL;  /**< \brief Instance for SPI Master Manager. */
-    TableRegister* m_tableRegister = NULL;                      /**< \brief Instance for RT table. */
+    WifiManager* m_wifiManager = NULL;              /**< Instance for Wifimanager */
+    Node01* m_node01 = NULL;
 
     /**
      * @brief Construct a new Manager object
@@ -48,6 +44,7 @@ public:
 
     /**
      * @brief Destroy the Manager object
+     * saga falabella peru 
      * 
      */
     ~Manager();
@@ -55,14 +52,23 @@ public:
     /**
      * @brief Function to start testing the communication system
      * 
+     * @return RC_e Result code
      */
-    void CommunicationTestStart();
+    RC_e CommunicationTestStart();
 
     /**
-     * @brief Function to check the communication system
+     * @brief Function to publish registers to test the communication system
      * 
+     * @return RC_e Result code
      */
-    void CommunicationTestCheck();
+    RC_e CommunicationTestPublish();
+
+    /**
+     * @brief Function to check the test of the communication system
+     * 
+     * @return RC_e Result code
+     */
+    RC_e CommunicationTestAnswer(COM_REQUEST_REG_ID_e regId, int32_t data);
 
     /**
      * @brief Enable the debug mode of the class
@@ -77,36 +83,13 @@ public:
      * @return RC_e Result code
      */
     RC_e DisableDebugMode();
+
    
-
-    int32_t m_TestingNodeValues[10] = {0};
-    int32_t m_TestingNodeResultCorrect[10] = {0};
-    int32_t m_TestingNodeResultError[10] = {-1, -1, -1, -1, -1};
-
 private:
 
-    bool m_TestingMode = false;   /**< \brief Flag of testing mode. */
-    bool m_debugMode = false;     /**< Debug Mode */
-
-    /**
-     * @brief Add Subscribers to the Table
-     * 
-     * @return RC_e Result code
-     */
-    RC_e AddSubscribers();
-
-    /**
-     * @brief Add Chip Select of the Slaves
-     * 
-     * @return RC_e Result code
-     */
-    RC_e AddSlavesCS();
-
-    /**
-     * @brief Function to init the test of the communication system
-     * 
-     */
-    void CommunicationTestInit();
+    bool m_TestingMode = false;     /**< Flag of testing mode. */
+    int32_t m_TestingCounter = 0;   /**< Counter of testing mode. */
+    bool m_debugMode = false;       /**< Debug Mode */
 
     /**
      * @brief Function to print the debug message
@@ -117,4 +100,4 @@ private:
 
 };
 
-#endif // MANAGER_H
+#endif // LOGGER_H

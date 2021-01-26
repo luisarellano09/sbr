@@ -1,3 +1,0 @@
-# SBR_ESP32_RemoteControl
-
-SBR_ESP32_RemoteControl

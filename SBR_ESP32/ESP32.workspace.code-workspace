@@ -8,16 +8,16 @@
             "path": "SBR_ESP32_Manager"
         },
         {
-            "name": "SBR_ESP32_MotionControl",
-            "path": "SBR_ESP32_MotionControl"
+            "name": "SBR_ESP32_Node01",
+            "path": "SBR_ESP32_Node01"
         },
         {
-            "name": "SBR_ESP32_Util",
-            "path": "SBR_ESP32_Util"
+            "name": "SBR_ESP32_Node02",
+            "path": "SBR_ESP32_Node02"
         },
         {
-            "name": "SBR_ESP32_Sensors",
-            "path": "SBR_ESP32_Sensors"
+            "name": "SBR_ESP32_Node03",
+            "path": "SBR_ESP32_Node03"
         }
     ],
     "settings": {

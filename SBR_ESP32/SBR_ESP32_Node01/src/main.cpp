@@ -46,54 +46,6 @@ bool flagTimer3 = false;
  *  												TEST
  *******************************************************************************************************************************************/
 
-void testNode(){
-    manager->m_nodeESP32->AddRequest(DEVICE_e::ESP32_NODE01, COM_REQUEST_TYPE_e::READ, COM_REQUEST_REG_ID_e::REGISTER_10, 100);
-    manager->m_nodeESP32->AddRequest(DEVICE_e::ESP32_NODE02, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::REGISTER_20, 200);
-    manager->m_nodeESP32->AddRequest(DEVICE_e::MANAGER, COM_REQUEST_TYPE_e::READ, COM_REQUEST_REG_ID_e::REGISTER_30, 300);
-    manager->m_nodeESP32->PrintBuffer();
-
-
-    if (manager->m_nodeESP32->SendNextRequest() == RC_e::SUCCESS){
-        Serial.println("SUCCESS");
-    }
-    manager->m_nodeESP32->PrintBuffer();
-
-    if (manager->m_nodeESP32->SendNextRequest() == RC_e::SUCCESS){
-        Serial.println("SUCCESS");
-    }
-    manager->m_nodeESP32->PrintBuffer();
-
-    if (manager->m_nodeESP32->SendNextRequest() == RC_e::SUCCESS){
-        Serial.println("SUCCESS");
-    }
-    manager->m_nodeESP32->PrintBuffer();
-
-    if (manager->m_nodeESP32->SendNextRequest() == RC_e::SUCCESS){
-        Serial.println("SUCCESS");
-    }
-    manager->m_nodeESP32->PrintBuffer();
-
-    if (manager->m_nodeESP32->SendNextRequest() == RC_e::SUCCESS){
-        Serial.println("SUCCESS");
-    }
-    manager->m_nodeESP32->PrintBuffer();
-
-}
-
-void testTable(){
-    manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_01, 100);
-    manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_10, 1000);
-
-    manager->m_tableRegister->PrintTable();
-}
-
-
-void test(){
-    //testNode();
-    testTable();
-}
-
-
 
 /*******************************************************************************************************************************************
  *  												CORE LOOPS
@@ -102,13 +54,13 @@ void test(){
 void LoopCore0( void * parameter ){
     disableLoopWDT();
     disableCore0WDT();
-    while(true) {
+    while (true) {
         // Code for Timer 0 interruption
         if (flagTimer0){
             flagTimer0 = false;
 
             // ========== Code ==========
-                //Serial.println("Core0");
+
             // ==========================
         }
 
@@ -117,20 +69,18 @@ void LoopCore0( void * parameter ){
             flagTimer1 = false;
 
             // ========== Code ==========
-                if(Serial.available()){
+                if (Serial.available()){
                     Serial.println("checking Serial");
                     char incomingByte = Serial.read();
                     Serial.flush();
-                    switch (incomingByte)
-                    {
+                    switch (incomingByte) {
                         case 'w':
                         case 'W':
-                            Serial.println(" +++++ ESP32 MANAGER +++++");
+                            Serial.println(" +++++ ESP32 NODE01 +++++");
                             break;
 
                         case 'p':
                         case 'P':
-                            Serial.println("Programming Mode.....");
                             manager->m_wifiManager->Connect();
                             break;
 
@@ -156,37 +106,27 @@ void LoopCore0( void * parameter ){
                         case 'K':
                             manager->DisableDebugMode();
                             Serial.println("Disable Debug...");
-                            break;
-
-                        case '1':
-                            test();
-                            break;
+                            break;             
 
                         case '2':
-                            manager->m_nodeESP32->AddRequest(DEVICE_e::ESP32_NODE01, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::REGISTER_10, 20);
-                            manager->m_nodeESP32->SendNextRequest();
+                            manager->m_node01->AddRequest(DEVICE_e::MANAGER, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::REGISTER_100, 200);
+                            manager->m_node01->SendNextRequest();
                             break;
 
-                        case '3':
-                            Serial.println(millis());
-                            for (int i=0; i<1000; i++){
-                                manager->m_nodeESP32->AddRequest(DEVICE_e::ESP32_NODE01, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::REGISTER_10, i);
-                                manager->m_nodeESP32->SendNextRequest();
-                            }
-                            Serial.println(millis());
+                        case 'i':
+                            manager->m_node01->PrintBuffer();
                             break;
-
                     }
                 }
-                
+
                 // Run OTA service
                 manager->m_wifiManager->RunOTA();
 
             // ==========================
         }
 
-        manager->m_nodeESP32->Listen();
-        
+        manager->m_node01->Listen();
+
         feedLoopWDT();
     }
 }
@@ -201,12 +141,8 @@ void LoopCore1( void * parameter ){
             flagTimer2 = false;
 
             // ========== Code ==========
-                //Serial.print("\033[2J\033[H");
-                // for (int i=0; i<2; i++){
-                //     Serial.printf("\r\nCorrects: %d \t\t Errors: %d", manager->m_TestingNodeResultCorrect[i], manager->m_TestingNodeResultError[i]);
-                // }
+            //manager->CommunicationTestPublish();
 
-                //Serial.println("Core1");
             // ==========================
         }
 
@@ -218,14 +154,10 @@ void LoopCore1( void * parameter ){
 
             // ==========================
         }
-        
-        // Check Communication Testing
-        //manager->CommunicationTestCheck();
 
         feedLoopWDT();
     }
 }
-
 
 /*******************************************************************************************************************************************
  *  												TIMERS
@@ -235,7 +167,6 @@ void IRAM_ATTR onTimer0(){
     portENTER_CRITICAL_ISR(&timerMux0);
 
     flagTimer0 = true;
-    //Serial.printf("\r\nTimer0: %d", xPortGetCoreID());
 
     portEXIT_CRITICAL_ISR(&timerMux0);
 }
@@ -245,7 +176,6 @@ void IRAM_ATTR onTimer1(){
     portENTER_CRITICAL_ISR(&timerMux1);
 
     flagTimer1 = true;
-    //Serial.printf("\r\nTimer1: %d", xPortGetCoreID());
 
     portEXIT_CRITICAL_ISR(&timerMux1);
 }
@@ -255,7 +185,6 @@ void IRAM_ATTR onTimer2(){
     portENTER_CRITICAL_ISR(&timerMux2);
 
     flagTimer2 = true;
-    //Serial.printf("\r\nTimer2: %d", xPortGetCoreID());
 
     portEXIT_CRITICAL_ISR(&timerMux2);
 }
@@ -265,11 +194,9 @@ void IRAM_ATTR onTimer3(){
     portENTER_CRITICAL_ISR(&timerMux3);
 
     flagTimer3 = true;
-    //Serial.printf("\r\nTimer3: %d", xPortGetCoreID());
 
     portEXIT_CRITICAL_ISR(&timerMux3);
 }
-
 
 /*******************************************************************************************************************************************
  *  												SETUP
@@ -281,7 +208,7 @@ void setup() {
 
     // Serial Port
     Serial.begin(115200);
-    Serial.println(" +++++ ESP32 MANAGER +++++");
+    Serial.println(" +++++ ESP32 NODE01 +++++");
 
     // Manager
     manager = new Manager();
@@ -298,7 +225,9 @@ void setup() {
         &TaskCore0, /* Task handle. */
         0);         /* Core where the task should run */
 
-    // Task of core 1    
+    delay(500);  // needed to start-up task1
+
+    // Task of core 1
     xTaskCreatePinnedToCore(
         LoopCore1,  /* Function to implement the task */
         "LoopCore1",    /* Name of the task */
@@ -307,7 +236,7 @@ void setup() {
         1,          /* Priority of the task */
         &TaskCore1, /* Task handle. */
         1);         /* Core where the task should run */
-
+    
     // Timer0
     timer0 = timerBegin(0, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer0, &onTimer0, true); // edge (not level) triggered 
@@ -316,24 +245,24 @@ void setup() {
     // Timer1
     timer1 = timerBegin(1, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer1, &onTimer1, true); // edge (not level) triggered 
-    timerAlarmWrite(timer1, 2000000, true); // 1000000 * 1 us = 1 s, autoreload true
+    timerAlarmWrite(timer1, 2000000, true); // 2000000 * 1 us = 2 s, autoreload true
 
     // Timer2
     timer2 = timerBegin(2, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer2, &onTimer2, true); // edge (not level) triggered 
-    timerAlarmWrite(timer2, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
+    timerAlarmWrite(timer2, 100000, true); //   1 us = 1 s, autoreload true
 
     // Timer3
     timer3 = timerBegin(3, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer3, &onTimer3, true); // edge (not level) triggered 
     timerAlarmWrite(timer3, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
-    timerAlarmEnable(timer3); // enable
 
     // Enable the timer alarms
     timerAlarmEnable(timer0); // enable
     timerAlarmEnable(timer1); // enable
     timerAlarmEnable(timer2); // enable
     timerAlarmEnable(timer3); // enable
+
 }
 
 /*******************************************************************************************************************************************
@@ -343,5 +272,3 @@ void setup() {
 void loop() {
     vTaskDelete(NULL);
 }
-
-

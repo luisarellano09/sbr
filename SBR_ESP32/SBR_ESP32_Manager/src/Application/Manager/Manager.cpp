@@ -18,21 +18,16 @@
  *******************************************************************************************************************************************/
 
 Manager::Manager(){
-
     // Wifi Manager
-    this->m_WifiManager = new WifiManager(WIFI_SSID, WIFI_PASSWORD, ESP32_HOSTNAME);
+    this->m_wifiManager = new WifiManager(WIFI_SSID, WIFI_PASSWORD, ESP32_HOSTNAME);
+
+    // Nodes Manager
+    this->m_nodeESP32 = new NodeEsp32(&Serial1, NODE_ESP32s_BAUDRATE, NODE_ESP32s_RX, NODE_ESP32s_TX);
+    this->m_nodeLinux = new NodeLinux(&Serial2, NODE_ESP32s_BAUDRATE, 5, 18);
 
     // Table RT
-    this->m_TableRT = new TableRT();
-    AddSubscribers();
-    
-    // SPI Master Manager
-    this->m_SPI_MasterManager = new SPI_MasterManager(SPI_CLOCK, MO, MI, MCLK);
-    this->m_SPI_MasterManager->ConnectTableRT(m_TableRT);
-    AddSlavesCS();
-
-    // Polling Controller
-    this->m_PollingController = new PollingController(m_SPI_MasterManager);
+    this->m_tableRegister = new TableRegister(this->m_nodeESP32, this->m_nodeLinux);
+    this->AddSubscribers();
 }
 
 //=====================================================================================================
@@ -49,41 +44,38 @@ void Manager::CommunicationTestStart(){
 
 //=====================================================================================================
 void Manager::CommunicationTestCheck(){
-    if (this->m_TestingMode){
-        if (this->m_PollingController->GetPollingControllerState() == StatePolling::DONE){
-            
-            int nodeNumber = 2;
-            for (int node=0; node<nodeNumber; node++){
+    if (this->m_TestingMode){    
+        int nodeNumber = 2;
+        for (int node=0; node<nodeNumber; node++){
 
-                int resultFlag = 0;
-                // Get limits
-                int registerOffset = node*100 + 10;
-                int registeMax = node*100 + nodeNumber*10;
-                int nodeGroupValue = m_TableRT->m_Registers[registeMax-1].m_value;
+            int resultFlag = 0;
+            // Get limits
+            int registerOffset = node*100 + 10;
+            int registeMax = node*100 + nodeNumber*10;
+            int nodeGroupValue = m_tableRegister->m_registers[registeMax-1].m_value;
 
-                if ( nodeGroupValue != m_TestingNodeValues[node]) {
-                    // Iteration
-                    for (int registerID = registerOffset; registerID<registeMax; registerID++){
-                        int32_t registerAnswerValue = m_TableRT->m_Registers[registerID].m_value;
-                        //Serial.printf("\r\nNode(%d) \t\tPreviuos: %d \t\t New: %d", node, m_TestingNodeValues[node], registerAnswerValue);
-                        if ( registerAnswerValue == m_TestingNodeValues[node] + 1 ){
-                            resultFlag = 1;
-                        } else {
-                            resultFlag = 0;
-                            break;
-                        }
-                    }
-
-                    // Check result  
-                    if (resultFlag) {
-                        m_TestingNodeResultCorrect[node]++;
+            if ( nodeGroupValue != m_TestingNodeValues[node]) {
+                // Iteration
+                for (int registerID = registerOffset; registerID<registeMax; registerID++){
+                    int32_t registerAnswerValue = m_tableRegister->m_registers[registerID].m_value;
+                    //Serial.printf("\r\nNode(%d) \t\tPreviuos: %d \t\t New: %d", node, m_TestingNodeValues[node], registerAnswerValue);
+                    if ( registerAnswerValue == m_TestingNodeValues[node] + 1 ){
+                        resultFlag = 1;
                     } else {
-                        m_TestingNodeResultError[node]++;
-                    }  
+                        resultFlag = 0;
+                        break;
+                    }
+                }
 
-                    m_TestingNodeValues[node] = nodeGroupValue;                         
-                }    
-            }
+                // Check result  
+                if (resultFlag) {
+                    m_TestingNodeResultCorrect[node]++;
+                } else {
+                    m_TestingNodeResultError[node]++;
+                }  
+
+                m_TestingNodeValues[node] = nodeGroupValue;                         
+            }    
         }
     }
 }
@@ -91,21 +83,20 @@ void Manager::CommunicationTestCheck(){
 //=====================================================================================================
 RC_e Manager::EnableDebugMode(){
     this->m_debugMode = true;
-    this->m_WifiManager->EnableDebugMode();
-    this->m_SPI_MasterManager->EnableDebugMode();
-    this->m_TableRT->EnableDebugMode();
-    this->m_PollingController->EnableDebugMode();
-
+    this->m_wifiManager->EnableDebugMode();
+    this->m_nodeESP32->EnableDebugMode();
+    this->m_nodeLinux->EnableDebugMode();
+    this->m_tableRegister->EnableDebugMode();
     return RC_e::SUCCESS;
 }
 
 //=====================================================================================================
 RC_e Manager::DisableDebugMode(){
     this->m_debugMode = false;
-    this->m_WifiManager->DisableDebugMode();
-    this->m_SPI_MasterManager->DisableDebugMode();
-    this->m_TableRT->DisableDebugMode();
-    this->m_PollingController->DisableDebugMode();
+    this->m_wifiManager->DisableDebugMode();
+    this->m_nodeESP32->DisableDebugMode();
+    this->m_nodeLinux->DisableDebugMode();
+    this->m_tableRegister->DisableDebugMode();
     return RC_e::SUCCESS;
 }
 
@@ -120,23 +111,11 @@ RC_e Manager::AddSubscribers(){
 }
 
 //=====================================================================================================
-RC_e Manager::AddSlavesCS(){
-    // ESP32 - Motion Control
-    this->m_SPI_MasterManager->SetSlaveCS(ESP32_SPI_Slave_e::SLAVE_NODE01, ESP32_NODE01_CS);
-    // ESP32 - Sensors
-    this->m_SPI_MasterManager->SetSlaveCS(ESP32_SPI_Slave_e::SLAVE_NODE02, ESP32_NODE02_CS);  
-    // ESP32 - Util
-    //this->m_SPI_MasterManager->SetSlaveCS(ESP32_SPI_Slave_e::SLAVE_UTIL, ESP32_UTIL_CS);  
-
-    return RC_e::SUCCESS; 
-}
-
-//=====================================================================================================
 void Manager::CommunicationTestInit(){
 
-    for (int i=0; i<COM_REQUEST_REG_ID_e::REQUEST_REG_LENGTH; i++ ){
+    for (int i=0; i<COM_REQUEST_REG_ID_e::LENGTH_REG_ID; i++ ){
         // Cleaning Subscribers
-        this->m_TableRT->m_Registers[i].CleanSubscribers();
+        this->m_tableRegister->m_registers[i].Clean();
     }
 
     // Iterate through Nodes to add subscribers
@@ -146,7 +125,7 @@ void Manager::CommunicationTestInit(){
             if (nodeSubs != node){
                 for (int registerOffset=0; registerOffset<10; registerOffset++){
                     int tempRegister = 100*nodeSubs + registerOffset;
-                    this->m_TableRT->AddSubscriber((COM_REQUEST_REG_ID_e)tempRegister, (Devices_e)node);
+                    this->m_tableRegister->AddSubscriber((COM_REQUEST_REG_ID_e)tempRegister, (DEVICE_e)node);
                 }
             }
         }
