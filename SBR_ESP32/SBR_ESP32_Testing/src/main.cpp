@@ -21,17 +21,11 @@
 #include "./ControlMotors/MotorManager.h"
 // This optional setting causes Encoder to use more optimized code,
 // It must be defined before Encoder.h is included.
-//#include "./ENCODER/ESP32Encoder.h"
+#include "./ENCODER/ESP32Encoder.h"
 
 #include "./BNO080/BNO080.h"
-#include "./PID/PID.h"
 
-/* rotary encoder */
-#define PINENC1A 34 
-#define PINENC1B 35
 
-#define PINENC2A 22 
-#define PINENC2B 23
 
 /*******************************************************************************************************************************************
  *  												GLOBAL VARIABLES
@@ -42,13 +36,13 @@
 // Manager Instance
 Manager* manager;
 //PID instance
-PID *myPID;
+//PID *myPID;
 //IMU instance
 BNO080 *myIMU;
 MotorManager *myMotors;
 
-//ESP32Encoder encoder;
-//ESP32Encoder encoder2;
+ESP32Encoder encoderRight;
+ESP32Encoder encoderLeft;
 
 
 unsigned long encoder2lastToggled;
@@ -114,7 +108,7 @@ void LoopCore0( void * parameter ){
             {
                 Pitch_Mesured = 0;
             }*/
-            if(myPID->Compute()){
+            //if(myPID->Compute()){
 
                 /*if(outputPID>100){
                     outputPID =100;
@@ -128,10 +122,10 @@ void LoopCore0( void * parameter ){
                 //myMotors->PWM2(PIDResult);
                 
                 //Serial.println(outputPID);
-            }
-            else{
+            //}
+            //else{
                 //Serial.println("ERROR PID");
-            }
+            //}
 
         }
 
@@ -163,8 +157,8 @@ void LoopCore0( void * parameter ){
             Serial.println("IMU not connected!!!");
         }
 
-        //Serial.println("Encoder count = "+String((int32_t)encoder.getCount())+" "+String((int32_t)encoder2.getCount()));
-        //delay(10);
+        Serial.println("Encoder count = "+String((int32_t)encoderLeft.getCount())+" "+String((int32_t)encoderRight.getCount()));
+        delay(10);
                 
         
         // ========== Code ==========
@@ -361,7 +355,7 @@ void setup() {
 
     // Serial Port
     Serial.begin(115200);
-    Serial.println(" +++++ ESP32 SENSORS +++++");
+    Serial.println(" +++++ ESP32 TESTING +++++");
 
 
     /*****************************************************************************************/
@@ -378,20 +372,26 @@ void setup() {
 
     /************************************************************************************************/
     /* Manager INIT PID*/
-    myPID = new PID(&inputPID, &outputPID, &SetpointPID, Kp, Ki, Kd, POn, ControllerDirectionPID);
+    //myPID = new PID(&inputPID, &outputPID, &SetpointPID, Kp, Ki, Kd, POn, ControllerDirectionPID);
     //turn the PID on
-    myPID->SetMode(AUTOMATIC);
-    myPID->SetOutputLimits(-100,+100);
+    //myPID->SetMode(AUTOMATIC);
+    //myPID->SetOutputLimits(-100,+100);
     /*************************************************************************************************/
 
-    //ESP32Encoder::useInternalWeakPullResistors = UP;
+    ESP32Encoder::useInternalWeakPullResistors = UP;
     
-    //encoder.attachFullQuad(PINENC1A,PINENC1B);
-    //encoder2.attachSingleEdge(PINENC2A,PINENC2B);
+/* rotary encoder */
+/*#define PINENC1A 34 
+#define PINENC1B 35
+
+#define PINENC2A 22 
+#define PINENC2B 23*/
+    encoderLeft.attachFullQuad(34,35);
+    encoderRight.attachSingleEdge(22,23);
     
-    //encoder.setCount(0);
-    //encoder2.clearCount();
-    //Serial.println("Encodr Start ="+String((int32_t)encoder.getCount()));
+    encoderRight.setCount(0);
+    encoderLeft.clearCount();
+    //Serial.println("Encodr Start ="+String((int32_t)encoderRight.getCount()));
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // Task of core 0

@@ -278,7 +278,7 @@ RC_e SPI_SlaveManager::CleanBuffer(){
     // Iterate through the array of requests
     for(int i=0; i<SPI_SLAVE_REQUESTS_ARRAY_SIZE; i++){
         // Clear
-        m_RequestsArray[i].comRequestType = COM_REQUEST_TYPE_e::NONE;
+        m_RequestsArray[i].comRequestType = COM_REQUEST_TYPE_e::NONE1;
         m_RequestsArray[i].comRequestRegId = 0;
         m_RequestsArray[i].data = 0;
         m_RequestsArray[i].CRC = 0;
