@@ -21,9 +21,10 @@
 #include "./ControlMotors/MotorManager.h"
 // This optional setting causes Encoder to use more optimized code,
 // It must be defined before Encoder.h is included.
-#include "./ENCODER/ESP32Encoder.h"
 
+#include "./ENCODER/ESP32Encoder.h"
 #include "./BNO080/BNO080.h"
+#include "./PID/PID_v1.h"
 
 
 
@@ -36,7 +37,7 @@
 // Manager Instance
 Manager* manager;
 //PID instance
-//PID *myPID;
+PID *myPID;
 //IMU instance
 BNO080 *myIMU;
 MotorManager *myMotors;
@@ -104,13 +105,13 @@ void LoopCore0( void * parameter ){
         if (flagTimer0){
             flagTimer0 = false;
 
-            /*if((Pitch_Mesured < 0.03)&&(Pitch_Mesured > -0.03))
+            if((myIMU->m_Pitch < 0.03)&&(myIMU->m_Pitch > -0.03))
             {
-                Pitch_Mesured = 0;
-            }*/
-            //if(myPID->Compute()){
+                myIMU->m_Pitch = 0;
+            }
+            /*if(myPID->Compute()){
 
-                /*if(outputPID>100){
+                if(outputPID>100){
                     outputPID =100;
                 }
                 else if(outputPID <-100)
@@ -122,10 +123,10 @@ void LoopCore0( void * parameter ){
                 //myMotors->PWM2(PIDResult);
                 
                 //Serial.println(outputPID);
-            //}
-            //else{
-                //Serial.println("ERROR PID");
-            //}
+            /*}
+            else{
+                Serial.println("ERROR PID");
+            }*/
 
         }
 

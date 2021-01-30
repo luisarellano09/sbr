@@ -1,62 +1,33 @@
-/*
-  This is a library written for the BNO080
-  SparkFun sells these at its website: www.sparkfun.com
-  Do you like this library? Help support SparkFun. Buy a board!
-  https://www.sparkfun.com/products/14686
-
-  Written by Nathan Seidle @ SparkFun Electronics, December 28th, 2017
-
-  The BNO080 IMU is a powerful triple axis gyro/accel/magnetometer coupled with an ARM processor
-  to maintain and complete all the complex calculations for various VR, inertial, step counting,
-  and movement operations.
-
-  This library handles the initialization of the BNO080 and is able to query the sensor
-  for different readings.
-
-  https://github.com/sparkfun/SparkFun_BNO080_Arduino_Library
-
-  Development environment specifics:
-  Arduino IDE 1.8.3
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * @file BNO080.h
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @author Jorge Salgado (jorgesalgado23@gmail.com)
+ * @brief Class to BNO080 IMU sensor
+ * this is a library modified from sparkfun library  :
+ * https://github.com/sparkfun/SparkFun_BNO080_Arduino_Library
+ * @version 3.0
+ * @date 28.01.2021
 */
 
-#pragma once
-
-#if (ARDUINO >= 100)
+#ifndef BNO080_H
+#define BNO080_H
+/*******************************************************************************************************************************************
+ *  												INCLUDE
+ *******************************************************************************************************************************************/
 #include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
-
 #include <Wire.h>
 #include <SPI.h>
 #include "../Definition/GlobalDef.h"
+
 //The default I2C address for the BNO080 on the SparkX breakout is 0x4B. 0x4A is also possible.
 #define BNO080_DEFAULT_ADDRESS 0x4B
 
 //Platform specific configurations
 
 //Define the size of the I2C buffer based on the platform the user has
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-#if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__)
-
-//I2C_BUFFER_LENGTH is defined in Wire.H
-#define I2C_BUFFER_LENGTH BUFFER_LENGTH
-
-#else
-
 //The catch-all default is 32
 #define I2C_BUFFER_LENGTH 32
 
-#endif
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 //Registers
 const byte CHANNEL_COMMAND = 0;
@@ -127,181 +98,776 @@ const byte CHANNEL_GYRO = 5;
 #define MAX_PACKET_SIZE 128 //Packets can be up to 32k but we don't have that much RAM.
 #define MAX_METADATA_SIZE 9 //This is in words. There can be many but we mostly only care about the first 9 (Qs, range, etc)
 
-
+/*******************************************************************************************************************************************
+ *  												CLASS
+ *******************************************************************************************************************************************/
+/**
+ * @brief Class BNO080 IMU manager
+ * 
+ */
 class BNO080
 {
 public:
-	/*Added Constructor for SBR Project*/
-	BNO080();
 
+	float m_quatI, m_QuatJ, m_QuatK, m_QuatReal;		/**< Quaternion Variable */
+	float m_QuatRadianAccuracy, m_quatAccuracy;			
+	float m_Roll, m_Pitch, m_Yaw; 						/**< Euler variables */
+	float m_calibYaw, m_absYaw, m_absYawCalib; 			/**< Yaw Calibration variable */
+
+	uint8_t shtpHeader[4]; 								/**<Each packet has a header of 4 bytes*/
+	uint8_t shtpData[MAX_PACKET_SIZE];
+	uint8_t sequenceNumber[6] = {0, 0, 0, 0, 0, 0}; 	/**<There are 6 com channels. Each channel has its own seqnum*/
+	uint8_t commandSequenceNumber = 0;					/**<Commands have a seqNum as well. These are inside command packet, the header uses its own seqNum per channel*/
+	uint32_t metaData[MAX_METADATA_SIZE];				/**<There is more than 10 words in a metadata record but we'll stop at Q point 3*/
+
+    /**
+     * @brief Constructor
+     * 
+     */
+	BNO080();
+    /**
+     * @brief Destructor
+     * 
+     */
 	~BNO080();
 
-	/***********************************/
-	/* Functions added to SBR Project  */
-	/***********************************/
-
-
-
-	float m_quatI, m_QuatJ, m_QuatK, m_QuatReal, m_QuatRadianAccuracy, m_quatAccuracy;
-	float m_Roll, m_Pitch, m_Yaw; 
-	float m_calibYaw, m_absYaw, m_absYawCalib;
-    // ToDo: agregar todos las variables
-
+	/**
+	 * @brief Configure the BNO080 
+	 * 
+	 * 
+	 * @return RC_e Result code
+	 */
 	RC_e configure(uint8_t deviceAddress = BNO080_DEFAULT_ADDRESS, TwoWire &wirePort = Wire, uint8_t intPin = 255, uint8_t PS0_IMU = 255, uint8_t PS1_IMU = 255); //By default use the default I2C addres, and use Wire port, and don't declare an INT pin
+	
+	/**
+	 * @brief Configure the BNO080 
+	 * 
+	 * @param user_CSPin Chip Select Pin
+     * @param user_WAKPin Wake up Pin (same pin PS0)
+     * @param user_INTPin Interrupt pin
+	 * @param user_RSTPin Reset Pin
+     * @param spiPortSpeed Spi Speed max 3Mbps
+     * @param CLK_IMU Clock Pin 
+	 * @param MISO_IMU Master Input Slave Output
+     * @param MOSI_IMU Master Output Slave Input
+     * @param PS0_IMU PS0 Pin select Mode IMU (optional)
+	 * @param PS1_IMU PS1 Pin select Mode IMU (optional)
+	 *  
+	 * @return RC_e Result code
+	 */
     RC_e configure(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INTPin, uint8_t user_RSTPin, uint32_t spiPortSpeed, uint8_t CLK_IMU, uint8_t MISO_IMU, uint8_t MOSI_IMU, uint8_t PS0_IMU = 255, uint8_t PS1_IMU = 255);
+	
+  	/**
+     * @brief Set the YawCalib to zero position
+     * 
+     * @return RC_e Result code
+     */
 	RC_e calibrationAngles();
 
+    /**
+     * @brief Update all public variables
+     * 
+     * @return RC_e Result code
+     */
 	RC_e Run();
 
-	/*************************************/
-	/* 	End Functions SBR Project		*/
-	/*************************************/
 
-	void enableDebugging(Stream &debugPort = Serial); //Turn on debug printing. If user doesn't specify then Serial will be used.
+    /**
+     * @brief Turn on debug printing. If user doesn't specify then Serial will be used.
+     * 
+     * @return None
+     */
+	void enableDebugging(Stream &debugPort = Serial);
 
-	void softReset();	  //Try to reset the IMU via software
-	uint8_t resetReason(); //Query the IMU for the reason it last reset
+   	/**
+     * @brief try to reset the IMU via software
+     * 
+     * @return None
+     */
+	void softReset();
 
-	float qToFloat(int16_t fixedPointValue, uint8_t qPoint); //Given a Q value, converts fixed point floating to regular floating point number
+	/**
+     * @brief Query the IMU for the reason it last reset
+     * 
+     * @return 1 = POR, 2 = Internal reset, 3 = Watchdog, 4 = External reset, 5 = Other
+     */
+	uint8_t resetReason(); 
 
-	boolean waitForI2C(); //Delay based polling for I2C traffic
-	boolean waitForSPI(); //Delay based polling for INT pin to go low
+	/**
+     * @brief Given a Q value, converts fixed point floating to regular floating point number
+     * 
+     * @return Conversion en float
+     */
+	float qToFloat(int16_t fixedPointValue, uint8_t qPoint); 
+
+	/**
+     * @brief Delay based polling for I2C traffic
+     * 
+     * @return false if failed
+     */
+	boolean waitForI2C(); 
+
+	/**
+     * @brief Delay based polling for INT pin to go low
+     * 
+     * @return True if IMU sent Data
+     */
+	boolean waitForSPI();
+
+	/**
+     * @brief receive the Packet
+     * 
+     * @return true if everything is ok
+     */
 	boolean receivePacket(void);
-	boolean getData(uint16_t bytesRemaining); //Given a number of bytes, send the requests in I2C_BUFFER_LENGTH chunks
-	boolean sendPacket(uint8_t channelNumber, uint8_t dataLength);
-	void printPacket(void); //Prints the current shtp header and data packets
-	void printHeader(void); //Prints the current shtp header (only)
 
+	/**
+     * @brief Given a number of bytes, send the requests in I2C_BUFFER_LENGTH chunks
+     * 
+     * @return true if everything is ok
+     */
+	boolean getData(uint16_t bytesRemaining); 
+
+	/**
+     * @brief send the packet
+     * 
+     * @return true if everything is ok
+     */
+	boolean sendPacket(uint8_t channelNumber, uint8_t dataLength);
+
+	/**
+     * @brief Prints the current shtp header and data packets
+     * 
+     * @return None
+     */
+	void printPacket(void); 
+
+	/**
+     * @brief Prints the current shtp header (only)
+     * 
+     * @return None
+     */
+	void printHeader(void);
+
+	/**
+     * @brief Enable Rotation Vector
+     * 
+     * @return None
+     */
 	void enableRotationVector(uint16_t timeBetweenReports);
+
+	/**
+     * @brief Enable Game Rotation Vector
+     * 
+     * @return None
+     */
 	void enableGameRotationVector(uint16_t timeBetweenReports);
+
+	/**
+     * @brief Enable ARVVR stabilized Rotation Vector
+     * 
+     * @return None
+     */
 	void enableARVRStabilizedRotationVector(uint16_t timeBetweenReports);
+
+	/**
+     * @brief enable ARVR stabilized Game Rotation Vector
+     * 
+     * @return None
+     */
 	void enableARVRStabilizedGameRotationVector(uint16_t timeBetweenReports);
+
+	/**
+     * @brief Enable Accelerometer
+     * 
+     * @return None
+     */
 	void enableAccelerometer(uint16_t timeBetweenReports);
+
+	/**
+     * @brief Enable Linear Accelerometer
+     * 
+     * @return None
+     */
 	void enableLinearAccelerometer(uint16_t timeBetweenReports);
+
+	/**
+     * @brief enable Gyro
+     * 
+     * @return None
+     */
 	void enableGyro(uint16_t timeBetweenReports);
+
+	/**
+     * @brief enable Magnetometer
+     * 
+     * @return None
+     */
 	void enableMagnetometer(uint16_t timeBetweenReports);
+
+	/**
+     * @brief enable Step Counter
+     * 
+     * @return None
+     */
 	void enableStepCounter(uint16_t timeBetweenReports);
+
+	/**
+     * @brief enable Stability Classifier
+     * 
+     * @return None
+     */
 	void enableStabilityClassifier(uint16_t timeBetweenReports);
+
+	/**
+     * @brief enable Activity Classifier
+     * 
+     * @return None
+     */
 	void enableActivityClassifier(uint16_t timeBetweenReports, uint32_t activitiesToEnable, uint8_t (&activityConfidences)[9]);
+	
+	
+	/**
+     * @brief enable Raw Accelerometer
+     * 
+     * @return None
+     */
 	void enableRawAccelerometer(uint16_t timeBetweenReports);
+
+	/**
+     * @brief enable Raw Gyro
+     * 
+     * @return None
+     */
 	void enableRawGyro(uint16_t timeBetweenReports);
+
+	/**
+     * @brief enable Raw Magnetometer
+     * 
+     * @return None
+     */
 	void enableRawMagnetometer(uint16_t timeBetweenReports);
+
+	/**
+     * @brief enable Gyro Integrated Rotation Vector
+     * 
+     * @return None
+     */
 	void enableGyroIntegratedRotationVector(uint16_t timeBetweenReports);
 
+	/**
+     * @brief data Available
+     * 
+     * @return true if everything is ok
+     */
 	bool dataAvailable(void);
-	void parseInputReport(void);   //Parse sensor readings out of report
-	void parseCommandReport(void); //Parse command responses out of report
 
+	/**
+     * @brief Parse sensor readings out of report
+     * 
+     * @return None
+     */
+	void parseInputReport(void);   
+
+	/**
+     * @brief Parse command responses out of report
+     * 
+     * @return None
+     */
+	void parseCommandReport(void); //
+
+	/**
+     * @brief get Quaternion I
+     * 
+     * @return value in float
+     */
 	float getQuatI();
+
+	/**
+     * @brief get Quaternion J
+     * 
+     * @return value in float
+     */
 	float getQuatJ();
+
+	/**
+     * @brief get Quaternion K
+     * 
+     * @return value in float
+     */
 	float getQuatK();
+
+	/**
+     * @brief get Quaternion Real
+     * 
+     * @return value in float
+     */
 	float getQuatReal();
+
+	/**
+     * @brief get quaternion Radian Accuracy
+     * 
+     * @return value in float
+     */
 	float getQuatRadianAccuracy();
+
+	/**
+     * @brief get Quaternion Accuracy
+     * 
+     * @return value in uint8_t
+     */
 	uint8_t getQuatAccuracy();
 
+	/**
+     * @brief get Accel X
+     * 
+     * @return value in float
+     */
 	float getAccelX();
+
+	/**
+     * @brief get Accel Y
+     * 
+     * @return value in float
+     */
 	float getAccelY();
+
+	/**
+     * @brief get Accel Z
+     * 
+     * @return value in float
+     */
 	float getAccelZ();
+
+	/**
+     * @brief get Accel Accuracy
+     * 
+     * @return value in uint8_t
+     */
 	uint8_t getAccelAccuracy();
 
+	/**
+     * @brief get Lin Accel X
+     * 
+     * @return value in float
+     */
 	float getLinAccelX();
+
+	/**
+     * @brief get Lin Accel Y
+     * 
+     * @return value in float
+     */
 	float getLinAccelY();
+
+	/**
+     * @brief get Lin Accel Z
+     * 
+     * @return value in float
+     */
 	float getLinAccelZ();
+
+	/**
+     * @brief get Lin Accel Accuracy
+     * 
+     * @return value in uint8_t
+     */
 	uint8_t getLinAccelAccuracy();
 
+	/**
+     * @brief get Gyro X
+     * 
+     * @return value in float
+     */
 	float getGyroX();
+
+	/**
+     * @brief get Gyro Y
+     * 
+     * @return value in float
+     */
 	float getGyroY();
+
+	/**
+     * @brief get Gyro Z
+     * 
+     * @return value in float
+     */
 	float getGyroZ();
+
+	/**
+     * @brief get Gyro Accuracy
+     * 
+     * @return value in uint8_t
+     */
 	uint8_t getGyroAccuracy();
 
+	/**
+     * @brief get fast Gyro X
+     * 
+     * @return value in float
+     */
 	float getFastGyroX();
+
+	/**
+     * @brief get Fast Gyro Y
+     * 
+     * @return value in float
+     */
 	float getFastGyroY();
+
+	/**
+     * @brief get Fast Gyro Z
+     * 
+     * @return value in float
+     */
 	float getFastGyroZ();
 
+
+	/**
+     * @brief get magnetometer X
+     * 
+     * @return value in float
+     */
 	float getMagX();
+
+	/**
+     * @brief get magnetometer Y
+     * 
+     * @return value in float
+     */
 	float getMagY();
+
+	/**
+     * @brief get magnetometer Z
+     * 
+     * @return value in float
+     */
 	float getMagZ();
+
+	/**
+     * @brief get magnetometer Accuracy
+     * 
+     * @return value in uint8_t
+     */
 	uint8_t getMagAccuracy();
 
+	/**
+     * @brief calibrate Accelerometer
+     * 
+     * @return None
+     */
 	void calibrateAccelerometer();
-	void calibrateGyro();
-	void calibrateMagnetometer();
-	void calibratePlanarAccelerometer();
-	void calibrateAll();
-	void endCalibration();
-	void saveCalibration();
-	void requestCalibrationStatus(); //Sends command to get status
-	boolean calibrationComplete();   //Checks ME Cal response for byte 5, R0 - Status
 
+	/**
+     * @brief Calibrate Gyroscope
+     * 
+     * @return None
+     */
+	void calibrateGyro();
+
+	/**
+     * @brief calibrate Magnetometer
+     * 
+     * @return None
+     */
+	void calibrateMagnetometer();
+
+	/**
+     * @brief calibrate Planar Accelerometer
+     * 
+     * @return None
+     */
+	void calibratePlanarAccelerometer();
+
+	/**
+     * @brief calibrate All
+     * 
+     * @return None
+     */
+	void calibrateAll();
+
+	/**
+     * @brief end Calibration
+     * 
+     * @return None
+     */
+	void endCalibration();
+
+	/**
+     * @brief save Calibration
+     * 
+     * @return None
+     */
+	void saveCalibration();
+
+	/**
+     * @brief Sends command to get status
+     * 
+     * @return None
+     */
+	void requestCalibrationStatus();
+
+	/**
+     * @brief Checks ME Cal response for byte 5, R0 - Status
+     * 
+     * @return true ifeverything is ok
+     */
+	boolean calibrationComplete();   
+
+	/**
+     * @brief get Time Stamp
+     * 
+     * @return value in uint32_t
+     */
 	uint32_t getTimeStamp();
+
+	/**
+     * @brief get Step Count
+     * 
+     * @return value in uint16_t
+     */
 	uint16_t getStepCount();
+
+	/**
+     * @brief get Stability Classifier
+     * 
+     * @return value in uint8_t
+     */
 	uint8_t getStabilityClassifier();
+
+	/**
+     * @brief get Activity Classifier
+     * 
+     * @return value in uint8_t
+     */
 	uint8_t getActivityClassifier();
 
+	/**
+     * @brief get Raw Accel X
+     * 
+     * @return value in int16_t
+     */
 	int16_t getRawAccelX();
+
+	/**
+     * @brief get Raw Accel Y
+     * 
+     * @return value in int16_t
+     */
 	int16_t getRawAccelY();
+
+	/**
+     * @brief get Raw Accel Z
+     * 
+     * @return value in int16_t
+     */
 	int16_t getRawAccelZ();
 
+	/**
+     * @brief get Raw Gyro X
+     * 
+     * @return value in int16_t
+     */
 	int16_t getRawGyroX();
+
+	/**
+     * @brief get Raw Gyro Y
+     * 
+     * @return value in int16_t
+     */
 	int16_t getRawGyroY();
+
+	/**
+     * @brief get Raw Gyro Z
+     * 
+     * @return value in int16_t
+     */
 	int16_t getRawGyroZ();
 
+	/**
+     * @brief get Raw Mag X
+     * 
+     * @return value in int16_t
+     */
 	int16_t getRawMagX();
+
+	/**
+     * @brief get Raw Mag Y
+     * 
+     * @return value in int16_t
+     */
 	int16_t getRawMagY();
+
+	/**
+     * @brief get Raw Mag Z
+     * 
+     * @return value in int16_t
+     */
 	int16_t getRawMagZ();
 
+	/**
+     * @brief get Roll value
+     * 
+     * @return value in float
+     */
 	float getRoll();
+
+	/**
+     * @brief Get Pitch value
+     * 
+     * @return value in float
+     */
 	float getPitch();
+
+	/**
+     * @brief get Yaw value
+     * 
+     * @return value in float
+     */
 	float getYaw();
 
+	/**
+     * @brief set Feature Command
+     * 
+	 * @param reportID	Id 
+	 * @param timeBetweenReports period
+	 * 
+     * @return None
+     */
 	void setFeatureCommand(uint8_t reportID, uint16_t timeBetweenReports);
+
+	/**
+     * @brief set Feature Command
+	 * 
+	 * @param reportID	Id 
+	 * @param timeBetweenReports period
+	 * @param specificConfig Config
+	 * 
+     * @return None
+     */
 	void setFeatureCommand(uint8_t reportID, uint16_t timeBetweenReports, uint32_t specificConfig);
+
+	/**
+     * @brief send Command
+	 *
+	 * @param command command
+     * 
+     * @return None
+     */
 	void sendCommand(uint8_t command);
+
+	/**
+     * @brief send Calibrate command
+	 * 
+	 * @param thingToCalibrate page 50 of reference manual and the 1000-4044 calibration docor
+     * 
+     * @return None
+     */
 	void sendCalibrateCommand(uint8_t thingToCalibrate);
 
 	//Metadata functions
+	/**
+     * @brief get Quaternion 1
+     * 
+	 * @param recordID ID 
+	 * 
+     * @return value in int16_t
+     */
 	int16_t getQ1(uint16_t recordID);
-	int16_t getQ2(uint16_t recordID);
-	int16_t getQ3(uint16_t recordID);
-	float getResolution(uint16_t recordID);
-	float getRange(uint16_t recordID);
-	uint32_t readFRSword(uint16_t recordID, uint8_t wordNumber);
-	void frsReadRequest(uint16_t recordID, uint16_t readOffset, uint16_t blockSize);
-	bool readFRSdata(uint16_t recordID, uint8_t startLocation, uint8_t wordsToRead);
 
-	//Global Variables
-	uint8_t shtpHeader[4]; //Each packet has a header of 4 bytes
-	uint8_t shtpData[MAX_PACKET_SIZE];
-	uint8_t sequenceNumber[6] = {0, 0, 0, 0, 0, 0}; //There are 6 com channels. Each channel has its own seqnum
-	uint8_t commandSequenceNumber = 0;				//Commands have a seqNum as well. These are inside command packet, the header uses its own seqNum per channel
-	uint32_t metaData[MAX_METADATA_SIZE];			//There is more than 10 words in a metadata record but we'll stop at Q point 3
+	/**
+     * @brief get Quaternion 2
+	 * 
+	 * @param recordID ID 
+     * 
+     * @return value in int16_t
+     */
+	int16_t getQ2(uint16_t recordID);
+
+	/**
+     * @brief get Quaternion 3
+	 * 
+	 * @param recordID ID 
+     * 
+     * @return value in int16_t
+     */
+	int16_t getQ3(uint16_t recordID);
+
+	/**
+     * @brief get Resolution
+	 * 
+	 * @param recordID ID 
+     * 
+     * @return value in float
+     */
+	float getResolution(uint16_t recordID);
+
+	/**
+     * @brief get Range
+	 * 
+	 * @param recordID ID 
+     * 
+     * @return value in float
+     */
+	float getRange(uint16_t recordID);
+
+	/**
+     * @brief Read FRS word
+	 * 
+	 * @param recordID ID 
+	 * @param wordNumber Number 
+     * 
+     * @return Value in uint32_t
+     */
+	uint32_t readFRSword(uint16_t recordID, uint8_t wordNumber);
+
+	/**
+     * @brief frs Read Request
+	 * 
+	 * @param recordID ID 
+	 * @param readOffset offset 
+	 * @param blockSize size 
+     * 
+     * @return None
+     */
+	void frsReadRequest(uint16_t recordID, uint16_t readOffset, uint16_t blockSize);
+
+	/**
+     * @brief read FRS data
+	 * 
+	 * @param recordID ID 
+	 * @param startLocation location 
+	 * @param wordsToRead size  
+	 * 
+     * @return None
+     */
+	bool readFRSdata(uint16_t recordID, uint8_t startLocation, uint8_t wordsToRead);
 
 
 
 private:
 
-    // Sensor is connected
-    bool m_isConnected = false;
-	int m_numberOfTurns = 0;
-	uint8_t m_quadrant, m_quadrantPrev;
-	float offsetYaw = 0;
+    bool m_isConnected = false;				/**< IMU is coneceted*/
+	int m_numberOfTurns = 0;				/**< Number of turns */
+	uint8_t m_quadrant, m_quadrantPrev;		/**< quadrant value and previous*/
+	float offsetYaw = 0;					/**< Offset of the Yaw value*/
 
-	//Variables
-	TwoWire *_i2cPort;		//The generic connection to user's chosen I2C hardware
-	uint8_t _deviceAddress; //Keeps track of I2C address. setI2CAddress changes this.
+	TwoWire *_i2cPort;		/**<The generic connection to user's chosen I2C hardware*/
+	uint8_t _deviceAddress; /**<Keeps track of I2C address. setI2CAddress changes this.*/
 
-	Stream *_debugPort;			 //The stream to send debug messages to if enabled. Usually Serial.
-	boolean _printDebug = false; //Flag to print debugging variables
+	Stream *_debugPort;			 /**<The stream to send debug messages to if enabled. Usually Serial.*/
+	boolean _printDebug = false; /**<Flag to print debugging variables*/
 
-	SPIClass* _spiPort;			 //The generic connection to user's chosen SPI hardware
-	unsigned long _spiPortSpeed; //Optional user defined port speed
-	uint8_t _cs;				 //Pins needed for SPI
+	SPIClass* _spiPort;			 /**<The generic connection to user's chosen SPI hardware*/
+	unsigned long _spiPortSpeed; /**<Optional user defined port speed*/
+	uint8_t _cs;				 /**<Pins needed for SPI*/
 	uint8_t _wake;
 	uint8_t _int;
 	uint8_t _rst;
 
-	//These are the raw sensor values (without Q applied) pulled from the user requested Input Report
-	uint16_t rawAccelX, rawAccelY, rawAccelZ, accelAccuracy;
+	
+	uint16_t rawAccelX, rawAccelY, rawAccelZ, accelAccuracy; /**<These are the raw sensor values (without Q applied) pulled from the user requested Input Report*/
 	uint16_t rawLinAccelX, rawLinAccelY, rawLinAccelZ, accelLinAccuracy;
 	uint16_t rawGyroX, rawGyroY, rawGyroZ, gyroAccuracy;
 	uint16_t rawMagX, rawMagY, rawMagZ, magAccuracy;
@@ -311,28 +877,47 @@ private:
 	uint32_t timeStamp;
 	uint8_t stabilityClassifier;
 	uint8_t activityClassifier;
-	uint8_t *_activityConfidences;						  //Array that store the confidences of the 9 possible activities
-	uint8_t calibrationStatus;							  //Byte R0 of ME Calibration Response
-	uint16_t memsRawAccelX, memsRawAccelY, memsRawAccelZ; //Raw readings from MEMS sensor
-	uint16_t memsRawGyroX, memsRawGyroY, memsRawGyroZ;	//Raw readings from MEMS sensor
-	uint16_t memsRawMagX, memsRawMagY, memsRawMagZ;		  //Raw readings from MEMS sensor
+	uint8_t *_activityConfidences;						  /**<Array that store the confidences of the 9 possible activities*/
+	uint8_t calibrationStatus;							  /**<Byte R0 of ME Calibration Response*/
+	uint16_t memsRawAccelX, memsRawAccelY, memsRawAccelZ; /**<Raw readings from MEMS sensor*/
+	uint16_t memsRawGyroX, memsRawGyroY, memsRawGyroZ;	/**<Raw readings from MEMS sensor*/
+	uint16_t memsRawMagX, memsRawMagY, memsRawMagZ;		  /**<aw readings from MEMS sensor*/
 
-	//These Q values are defined in the datasheet but can also be obtained by querying the meta data records
-	//See the read metadata example for more info
+	/**<These Q values are defined in the datasheet but can also be obtained by querying the meta data records*/
+	/**<See the read metadata example for more info*/
 	int16_t rotationVector_Q1 = 14;
-	int16_t rotationVectorAccuracy_Q1 = 12; //Heading accuracy estimate in radians. The Q point is 12.
+	int16_t rotationVectorAccuracy_Q1 = 12; /**<Heading accuracy estimate in radians. The Q point is 12.*/
 	int16_t accelerometer_Q1 = 8;
 	int16_t linear_accelerometer_Q1 = 8;
 	int16_t gyro_Q1 = 9;
 	int16_t magnetometer_Q1 = 4;
 	int16_t angular_velocity_Q1 = 10;
 
-    // Begin
+	/**
+     * @brief Configure for I2C
+     * 
+     * @return None
+     */
     boolean begin(uint8_t deviceAddress = BNO080_DEFAULT_ADDRESS, TwoWire &wirePort = Wire, uint8_t intPin = 255); //By default use the default I2C addres, and use Wire port, and don't declare an INT pin
+	
+	/**
+     * @brief Configure for SPI
+	 * 
+	 * @param user_CSPin Chip Select
+	 * @param user_WAKPin Wake up Pin (PS0)
+	 * @param user_INTPin Interrupt Pin
+	 * @param user_RSTPin Reset Pin
+	 * @param spiPortSpeed Speed (max 3M)
+	 * @param CLK_IMU Clock
+	 * @param MISO_IMU MISO
+	 * @param MOSI_IMU MOSI
+     * 
+     * @return None
+     */
 	boolean beginSPI(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INTPin, uint8_t user_RSTPin, uint32_t spiPortSpeed, uint8_t CLK_IMU, uint8_t MISO_IMU, uint8_t MOSI_IMU);
 
 };
 
-
+#endif // BNO080_H
 
 
