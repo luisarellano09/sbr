@@ -1,15 +1,17 @@
-/*
- * ESP32Encoder.cpp
- *
- *  Created on: Oct 15, 2018
- *      Author: hephaestus
+/**
+ * @file ESP32Encoder.cpp
+ * @author Jorge Salgado (jorgesalgado23@gmail.com)
+ * @brief Class to Manage the Encoder
+ * 		Modified from the original library from ESP32 Encoder.cpp
+ * @version 2.0
+ * @date 09.01.2021
+ * 
+ * 
  */
 
 #include "ESP32Encoder.h"
 
-//static ESP32Encoder *gpio2enc[48];
-//
-//
+
 enum puType ESP32Encoder::useInternalWeakPullResistors=DOWN;
 ESP32Encoder *ESP32Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, NULL, NULL,
 NULL,

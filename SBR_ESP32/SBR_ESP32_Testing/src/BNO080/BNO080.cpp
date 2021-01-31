@@ -1,45 +1,33 @@
-/*
-  This is a library written for the BNO080
-  SparkFun sells these at its website: www.sparkfun.com
-  Do you like this library? Help support SparkFun. Buy a board!
-  https://www.sparkfun.com/products/14686
-
-  Written by Nathan Seidle @ SparkFun Electronics, December 28th, 2017
-
-  The BNO080 IMU is a powerful triple axis gyro/accel/magnetometer coupled with an ARM processor
-  to maintain and complete all the complex calculations for various VR, inertial, step counting,
-  and movement operations.
-
-  This library handles the initialization of the BNO080 and is able to query the sensor
-  for different readings.
-
-  https://github.com/sparkfun/SparkFun_BNO080_Arduino_Library
-
-  Development environment specifics:
-  Arduino IDE 1.8.5
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * @file BNO080.cpp
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @author Jorge Salgado (jorgesalgado23@gmail.com)
+ * @brief Class to BNO080 IMU sensor
+ * this is a library modified from sparkfun library  :
+ * https://github.com/sparkfun/SparkFun_BNO080_Arduino_Library
+ * Product:
+ * https://www.sparkfun.com/products/14686
+ * @version 3.0
+ * @date 28.01.2021
 */
 
+/*******************************************************************************************************************************************
+ *  												INCLUDE
+ *******************************************************************************************************************************************/
 #include "BNO080.h"
+
 /*******************************************************************************************************************************************
  *  												Constructor
  *******************************************************************************************************************************************/
-
-//=====================================================================================================
-
 BNO080::BNO080(){
 }
 
 //=====================================================================================================
 BNO080::~BNO080(){}
 
+/*******************************************************************************************************************************************
+ *  												PUBLIC METHODS
+ *******************************************************************************************************************************************/
 
 //Attempt communication with the device
 //Return true if we got a 'Polo' back from Marco
@@ -1565,10 +1553,6 @@ void BNO080::printHeader(void)
 		_debugPort->println();
 	}
 }
-
-/*********************************************************************************/
-/*		Function added to SBR Project			*/
-/*********************************************************************************/
 
 RC_e BNO080::configure(uint8_t deviceAddress, TwoWire &wirePort, uint8_t intPin, uint8_t PS0_IMU, uint8_t PS1_IMU){
 	
