@@ -80,8 +80,8 @@ int8_t i8DutyCycle = 50;
 double inputPID = 0.0;
 double outputPID = 0.0;
 double SetpointPID = 0.0;
-double Kp = 3.0;
-double Ki = 2.0;
+double Kp = 3.2;
+double Ki = 7.0;
 double Kd = 0;
 int POn = P_ON_E;
 int ControllerDirectionPID = DIRECT;
@@ -106,7 +106,7 @@ void LoopCore0( void * parameter ){
                 myMotors->PWM1(int8_t(outputPID));
                 myMotors->PWM2(int8_t(outputPID));
                 
-                Serial.println(outputPID);
+                //Serial.println(outputPID);
             }
             else{
                 Serial.println("ERROR PID");
@@ -155,7 +155,7 @@ void LoopCore0( void * parameter ){
             {
                 case 'w':
                 case 'W':
-                    Serial.println(" +++++ ESP32 SENSORS +++++");
+                    Serial.println(" +++++ ESP32 CALIBRATION YAW +++++");
                     myIMU->calibrationAngles();
                     break;
                 case 'p':
@@ -183,69 +183,44 @@ void LoopCore0( void * parameter ){
                     switch (Pressed)
 
                     {
-                    case '1':
-                        /* code */
-                        //myPID->GetConsigne(&TestValue);
-                        myPID->kd +=1.0;
-                        //myPID->SetConsigne(TestValue);
-                        Serial.printf("consinge: %ff\n", myPID->kd);
+                    case '1':                
+                        myPID->SetTunings(myPID->GetKp()+0.1, myPID->GetKi(), myPID->GetKd());                        
                         break;
                     case '2':
-                        /* code */
-                        //myPID->GetKp(&TestValue);
-                        TestValue +=1.0f;
-                        //myPID->SetKp(TestValue);
-                        Serial.printf("Kp: %f\n",TestValue);;
+                        myPID->SetTunings(myPID->GetKp(), myPID->GetKi()+0.1, myPID->GetKd());               
                         break;
-                    case '3':
-                        /* code */
-                        //myPID->GetKi(&TestValue);
-                        TestValue +=1.0f;
-                        //myPID->SetKi(TestValue);
-                        Serial.printf("ki: %f\n",TestValue);;
+                    case '3':            
+                        myPID->SetTunings(myPID->GetKp(), myPID->GetKi(), myPID->GetKd()+0.1);                      
                         break;
-                    case '4':
-                        /* code */
-                        //myPID->GetKd(&TestValue);
-                        TestValue +=1.0f;
-                        //myPID->SetKd(TestValue);
-                        Serial.printf("kd: %f\n",TestValue);;
+                    case '4':                                            
+                        //Serial.printf("consinge: %ff\n",  myPID->GetKi());
                         break;
                     }
+                    Serial.printf("Kp: %ff, ",  myPID->GetKp());
+                    Serial.printf("Ki: %ff, ",  myPID->GetKi());
+                    Serial.printf("Kd: %ff, \n",  myPID->GetKd());
+
                 break;  
                 case '-':
                     switch (Pressed)
 
                     {
-                    case '1':
-                        /* code */
-                        //myPID->GetConsigne(&TestValue);
-                        TestValue -=0.1f;
-                        //myPID->SetConsigne(TestValue);
-                        Serial.printf("consinge: %f\n",TestValue);;
+                    case '1':                
+                        myPID->SetTunings(myPID->GetKp()-0.1, myPID->GetKi(), myPID->GetKd());                        
                         break;
                     case '2':
-                        /* code */
-                        //myPID->GetKp(&TestValue);
-                        TestValue -=1.0f;
-                        //myPID->SetKp(TestValue);
-                        Serial.printf("kp: %f\n",TestValue);
+                        myPID->SetTunings(myPID->GetKp(), myPID->GetKi()-0.1, myPID->GetKd());               
                         break;
-                    case '3':
-                        /* code */
-                        //myPID->GetKi(&TestValue);
-                        TestValue -=1.0f;
-                        //myPID->SetKi(TestValue);
-                        Serial.printf("ki: %f\n",TestValue);
+                    case '3':            
+                        myPID->SetTunings(myPID->GetKp(), myPID->GetKi(), myPID->GetKd()-0.1);                      
                         break;
-                    case '4':
-                        /* code */
-                        //myPID->GetKd(&TestValue);
-                        TestValue -=1.0f;
-                        //myPID->SetKd(TestValue);
-                        Serial.printf("kd: %f\n",TestValue);
+                    case '4':                                            
+                        //Serial.printf("consinge: %ff\n",  myPID->GetKi());
                         break;
                     }
+                    Serial.printf("Kp: %ff, ",  myPID->GetKp());
+                    Serial.printf("Ki: %ff, ",  myPID->GetKi());
+                    Serial.printf("Kd: %ff, \n",  myPID->GetKd());
                 break; 
             }
         }
@@ -357,7 +332,7 @@ void setup() {
     //turn the PID on
     myPID->SetMode(AUTOMATIC);
     myPID->SetOutputLimits(-100,+100);
-    myPID->SetSampleTime(1);
+    myPID->SetSampleTime(10);
     /*************************************************************************************************/
 
     ESP32Encoder::useInternalWeakPullResistors = UP;

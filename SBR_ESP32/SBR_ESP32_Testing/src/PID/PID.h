@@ -34,11 +34,6 @@ public:
   #define REVERSE   1   /**< negative forward             */
   #define P_ON_M    0   /**< Proportional on Measurement  */
   #define P_ON_E    1   /**< Proportional on Error        */
-
-
-  double kp;          /**< (P)roportional Tuning Parameter  */
-  double ki;          /**< (I)ntegral Tuning Parameter      */
-  double kd;          /**< (D)erivative Tuning Parameter    */
   
   /**
    * @brief Constructor commonly used functions
@@ -187,6 +182,10 @@ public:
 
   private:
 
+  double kp;          /**< (P)roportional Tuning Parameter  */
+  double ki;          /**< (I)ntegral Tuning Parameter      */
+  double kd;          /**< (D)erivative Tuning Parameter    */
+  
 	double dispKp;				// * we'll hold on to the tuning parameters in user-entered 
 	double dispKi;				//   format for display purposes
 	double dispKd;				//
