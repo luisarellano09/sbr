@@ -24,7 +24,7 @@
 
 #include "./ENCODER/ESP32Encoder.h"
 #include "./BNO080/BNO080.h"
-#include "./PID/PID_v1.h"
+#include "./PID/PID.h"
 
 
 
@@ -68,14 +68,6 @@ bool flagTimer1 = false;
 bool flagTimer2 = false;
 bool flagTimer3 = false;
 
-extern float AccX_Mesured;
-float AccX_Filtered = 0;
-float buffer[SIZE_FILTER];
-float PIDResult = 5.0f;
-float Consigne = 0.0f;
-float myKp = 0.0f;
-float myKi = 0.0f;
-float myKd = 0.0f;
 float TestValue = 0.0f;
 char Pressed = '0';
 /*******************************************************************************************************************************************
@@ -85,14 +77,14 @@ void test_Add_Requests();
 uint32_t test_counter = 0;
 int8_t i8DutyCycle = 50;
 
-double inputPID = 0;
-double outputPID = 0;
-double SetpointPID = 0;
-double Kp = 1;
-double Ki = 1;
-double Kd = 1;
-int POn = 1;
-int ControllerDirectionPID = 1;
+double inputPID = 0.0;
+double outputPID = 0.0;
+double SetpointPID = 0.0;
+double Kp = 3.0;
+double Ki = 2.0;
+double Kd = 0;
+int POn = P_ON_E;
+int ControllerDirectionPID = DIRECT;
 
 /*******************************************************************************************************************************************
  *  												CORE LOOPS
@@ -105,28 +97,20 @@ void LoopCore0( void * parameter ){
         if (flagTimer0){
             flagTimer0 = false;
 
-            if((myIMU->m_Pitch < 0.03)&&(myIMU->m_Pitch > -0.03))
+            if((myIMU->m_Pitch < 3.0)&&(myIMU->m_Pitch > -3.0))
             {
                 myIMU->m_Pitch = 0;
             }
-            /*if(myPID->Compute()){
-
-                if(outputPID>100){
-                    outputPID =100;
-                }
-                else if(outputPID <-100)
-                {
-                    outputPID = -100;
-                }*/
+            if(myPID->Compute()){
                 
-                //myMotors->PWM1(PIDResult);
-                //myMotors->PWM2(PIDResult);
+                myMotors->PWM1(int8_t(outputPID));
+                myMotors->PWM2(int8_t(outputPID));
                 
-                //Serial.println(outputPID);
-            /*}
+                Serial.println(outputPID);
+            }
             else{
                 Serial.println("ERROR PID");
-            }*/
+            }
 
         }
 
@@ -140,7 +124,7 @@ void LoopCore0( void * parameter ){
         /****************************************************/
         if(RC_e::SUCCESS == myIMU->Run()){
             inputPID = myIMU->m_Pitch;
-            Serial.print(F("Roll="));
+            /*Serial.print(F("Roll="));
         	Serial.print(myIMU->m_Roll, 2);
             Serial.print(F("\tPitch="));
             Serial.print(myIMU->m_Pitch, 2);
@@ -153,13 +137,13 @@ void LoopCore0( void * parameter ){
             Serial.print(myIMU->m_absYawCalib, 2);
             Serial.print(F("\tyawcalib="));
             Serial.print(myIMU->m_calibYaw, 2);            
-            Serial.println("\n");
+            Serial.println("\n");*/
         } else {
             Serial.println("IMU not connected!!!");
         }
 
-        Serial.println("Encoder count = "+String((int32_t)encoderLeft.getCount())+" "+String((int32_t)encoderRight.getCount()));
-        delay(10);
+        //Serial.println("Encoder count = "+String((int32_t)encoderLeft.getCount())+" "+String((int32_t)encoderRight.getCount()));
+        //delay(10);
                 
         
         // ========== Code ==========
@@ -202,9 +186,9 @@ void LoopCore0( void * parameter ){
                     case '1':
                         /* code */
                         //myPID->GetConsigne(&TestValue);
-                        TestValue +=0.1f;
+                        myPID->kd +=1.0;
                         //myPID->SetConsigne(TestValue);
-                        Serial.printf("consinge: %f\n",TestValue);
+                        Serial.printf("consinge: %ff\n", myPID->kd);
                         break;
                     case '2':
                         /* code */
@@ -271,10 +255,6 @@ void LoopCore0( void * parameter ){
 
         // Delay to feed WDT
         delay(10);
-        // ==========================
-
-        // Run SPI Slave service
-        //manager->m_spiSlaveManager->ListenRequest();
     }
 }
 
@@ -373,10 +353,11 @@ void setup() {
 
     /************************************************************************************************/
     /* Manager INIT PID*/
-    //myPID = new PID(&inputPID, &outputPID, &SetpointPID, Kp, Ki, Kd, POn, ControllerDirectionPID);
+    myPID = new PID(&inputPID, &outputPID, &SetpointPID, Kp, Ki, Kd, POn, ControllerDirectionPID);
     //turn the PID on
-    //myPID->SetMode(AUTOMATIC);
-    //myPID->SetOutputLimits(-100,+100);
+    myPID->SetMode(AUTOMATIC);
+    myPID->SetOutputLimits(-100,+100);
+    myPID->SetSampleTime(1);
     /*************************************************************************************************/
 
     ESP32Encoder::useInternalWeakPullResistors = UP;
@@ -388,7 +369,7 @@ void setup() {
 #define PINENC2A 22 
 #define PINENC2B 23*/
     encoderLeft.attachFullQuad(34,35);
-    encoderRight.attachSingleEdge(22,23);
+    encoderRight.attachFullQuad(22,23);
     
     encoderRight.setCount(0);
     encoderLeft.clearCount();
