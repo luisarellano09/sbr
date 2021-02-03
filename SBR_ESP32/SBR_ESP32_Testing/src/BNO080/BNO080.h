@@ -108,11 +108,20 @@ const byte CHANNEL_GYRO = 5;
 class BNO080
 {
 public:
+     #define DIRECT_ROLL      0    /**< positive forward in Roll     */
+     #define REVERSE_ROLL     1    /**< negative forward in Roll     */
+     #define DIRECT_PITCH     0    /**< positive forward in Pitch    */
+     #define REVERSE_PITCH    1    /**< negative forward in Pitch    */
+     #define DIRECT_YAW       0    /**< positive forward in Yaw      */
+     #define REVERSE_YAW      1    /**< negative forward in Yaw      */
 
 	float m_quatI, m_QuatJ, m_QuatK, m_QuatReal;		/**< Quaternion Variable */
 	float m_QuatRadianAccuracy, m_quatAccuracy;			
 	float m_Roll, m_Pitch, m_Yaw; 						/**< Euler variables */
 	float m_calibYaw, m_absYaw, m_absYawCalib; 			/**< Yaw Calibration variable */
+     int m_direction_Roll;
+     int m_direction_Pitch;
+     int m_direction_Yaw;
 
 	uint8_t shtpHeader[4]; 								/**<Each packet has a header of 4 bytes*/
 	uint8_t shtpData[MAX_PACKET_SIZE];
@@ -143,19 +152,19 @@ public:
 	 * @brief Configure the BNO080 
 	 * 
 	 * @param user_CSPin Chip Select Pin
-     * @param user_WAKPin Wake up Pin (same pin PS0)
-     * @param user_INTPin Interrupt pin
+      * @param user_WAKPin Wake up Pin (same pin PS0)
+      * @param user_INTPin Interrupt pin
 	 * @param user_RSTPin Reset Pin
-     * @param spiPortSpeed Spi Speed max 3Mbps
-     * @param CLK_IMU Clock Pin 
+      * @param spiPortSpeed Spi Speed max 3Mbps
+      * @param CLK_IMU Clock Pin 
 	 * @param MISO_IMU Master Input Slave Output
-     * @param MOSI_IMU Master Output Slave Input
-     * @param PS0_IMU PS0 Pin select Mode IMU (optional)
+      * @param MOSI_IMU Master Output Slave Input
+      * @param PS0_IMU PS0 Pin select Mode IMU (optional)
 	 * @param PS1_IMU PS1 Pin select Mode IMU (optional)
 	 *  
 	 * @return RC_e Result code
 	 */
-    RC_e configure(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INTPin, uint8_t user_RSTPin, uint32_t spiPortSpeed, uint8_t CLK_IMU, uint8_t MISO_IMU, uint8_t MOSI_IMU, uint8_t PS0_IMU = 255, uint8_t PS1_IMU = 255);
+     RC_e configure(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INTPin, uint8_t user_RSTPin, uint32_t spiPortSpeed, uint8_t CLK_IMU, uint8_t MISO_IMU, uint8_t MOSI_IMU, int DirectionRoll, int DirectionPitch, int DirectionYaw,uint8_t PS0_IMU = 255, uint8_t PS1_IMU = 255);
 	
   	/**
      * @brief Set the YawCalib to zero position

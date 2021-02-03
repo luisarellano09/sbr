@@ -80,9 +80,9 @@ int8_t i8DutyCycle = 50;
 double inputPID = 0.0;
 double outputPID = 0.0;
 double SetpointPID = 0.0;
-double Kp = 3.2;
-double Ki = 7.0;
-double Kd = 0;
+double Kp = 3.4;
+double Ki = 2.9;
+double Kd = 0.001;
 int POn = P_ON_E;
 int ControllerDirectionPID = DIRECT;
 
@@ -97,14 +97,14 @@ void LoopCore0( void * parameter ){
         if (flagTimer0){
             flagTimer0 = false;
 
-            if((myIMU->m_Pitch < 3.0)&&(myIMU->m_Pitch > -3.0))
+            if((myIMU->m_Pitch < 2.5)&&(myIMU->m_Pitch > -2.5))
             {
                 myIMU->m_Pitch = 0;
             }
             if(myPID->Compute()){
                 
-                myMotors->PWM1(int8_t(outputPID));
-                myMotors->PWM2(int8_t(outputPID));
+                myMotors->PWM1(int8_t(-outputPID));
+                myMotors->PWM2(int8_t(-outputPID));
                 
                 //Serial.println(outputPID);
             }
@@ -190,7 +190,7 @@ void LoopCore0( void * parameter ){
                         myPID->SetTunings(myPID->GetKp(), myPID->GetKi()+0.1, myPID->GetKd());               
                         break;
                     case '3':            
-                        myPID->SetTunings(myPID->GetKp(), myPID->GetKi(), myPID->GetKd()+0.1);                      
+                        myPID->SetTunings(myPID->GetKp(), myPID->GetKi(), myPID->GetKd()+0.001);                      
                         break;
                     case '4':                                            
                         //Serial.printf("consinge: %ff\n",  myPID->GetKi());
@@ -212,7 +212,7 @@ void LoopCore0( void * parameter ){
                         myPID->SetTunings(myPID->GetKp(), myPID->GetKi()-0.1, myPID->GetKd());               
                         break;
                     case '3':            
-                        myPID->SetTunings(myPID->GetKp(), myPID->GetKi(), myPID->GetKd()-0.1);                      
+                        myPID->SetTunings(myPID->GetKp(), myPID->GetKi(), myPID->GetKd()-0.001);                      
                         break;
                     case '4':                                            
                         //Serial.printf("consinge: %ff\n",  myPID->GetKi());
@@ -317,7 +317,7 @@ void setup() {
     /*****************************************************************************************/
     /* Manager INIT IMU*/
     myIMU = new BNO080();
-    myIMU->configure(32, 18, 26, 27, 3000000, 14, 25, 13,18,12);
+    myIMU->configure(32, 18, 26, 27, 3000000, 14, 25, 13, DIRECT_ROLL, REVERSE_PITCH, REVERSE_YAW, 18,12);
     myIMU->enableRotationVector(5);
     /*****************************************************************************************/
     myMotors = new MotorManager();
@@ -331,18 +331,13 @@ void setup() {
     myPID = new PID(&inputPID, &outputPID, &SetpointPID, Kp, Ki, Kd, POn, ControllerDirectionPID);
     //turn the PID on
     myPID->SetMode(AUTOMATIC);
-    myPID->SetOutputLimits(-100,+100);
+    myPID->SetOutputLimits(-100,100);
     myPID->SetSampleTime(10);
     /*************************************************************************************************/
 
     ESP32Encoder::useInternalWeakPullResistors = UP;
     
-/* rotary encoder */
-/*#define PINENC1A 34 
-#define PINENC1B 35
-
-#define PINENC2A 22 
-#define PINENC2B 23*/
+    /* rotary encoder */
     encoderLeft.attachFullQuad(34,35);
     encoderRight.attachFullQuad(22,23);
     

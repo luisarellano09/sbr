@@ -479,6 +479,11 @@ float BNO080::getRoll()
 	float t1 = +1.0 - 2.0 * (dqx * dqx + ysqr);
 	float roll = atan2(t0, t1);
 
+	if(m_direction_Roll == REVERSE_ROLL)
+	{
+		roll = (0 - roll);
+	}
+
 	return (roll);
 }
 
@@ -503,6 +508,11 @@ float BNO080::getPitch()
 	t2 = t2 > 1.0 ? 1.0 : t2;
 	t2 = t2 < -1.0 ? -1.0 : t2;
 	float pitch = asin(t2);
+
+	if(m_direction_Pitch == REVERSE_PITCH)
+	{
+		pitch = (0 - pitch);
+	}
 
 	return (pitch);
 }
@@ -529,7 +539,12 @@ float BNO080::getYaw()
 	float yaw = atan2(t3, t4);
 
 	/*[JSA]: sign changed*/
-	return (-yaw);
+	if(m_direction_Yaw == REVERSE_YAW)
+	{
+		yaw = (0 - yaw);
+	}
+
+	return (yaw);
 }
 
 //Return the rotation vector quaternion I
@@ -1577,7 +1592,7 @@ RC_e BNO080::configure(uint8_t deviceAddress, TwoWire &wirePort, uint8_t intPin,
 	return SUCCESS;
 }
 
-RC_e BNO080::configure(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INTPin, uint8_t user_RSTPin, uint32_t spiPortSpeed, uint8_t CLK_IMU, uint8_t MISO_IMU, uint8_t MOSI_IMU, uint8_t PS0_IMU, uint8_t PS1_IMU){
+RC_e BNO080::configure(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INTPin, uint8_t user_RSTPin, uint32_t spiPortSpeed, uint8_t CLK_IMU, uint8_t MISO_IMU, uint8_t MOSI_IMU, int DirectionRoll, int DirectionPitch, int DirectionYaw, uint8_t PS0_IMU, uint8_t PS1_IMU){
 
     /*DIOD PS0 PS1 IMU to choose SPI*/
 	if (PS0_IMU != 255) {
@@ -1595,7 +1610,9 @@ RC_e BNO080::configure(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INT
 		/*test [JSA]*/		
         return RC_e::ERROR;
     }
-
+	m_direction_Roll = DirectionRoll;
+	m_direction_Pitch = DirectionPitch;
+	m_direction_Yaw = DirectionYaw;
     m_isConnected = true;
     return SUCCESS;
 	
