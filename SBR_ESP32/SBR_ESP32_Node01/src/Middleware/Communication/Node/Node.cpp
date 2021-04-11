@@ -1,7 +1,7 @@
 /**
  * @file Node.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief class to Manage the nodes
+ * @brief Class to manage the node
  * @version 2.0
  * @date 09.01.2021
  * 
@@ -56,11 +56,17 @@ RC_e Node::AddRequest(DEVICE_e nodeId, COM_REQUEST_TYPE_e reqType, COM_REQUEST_R
 }
 
 //=====================================================================================================
-RC_e Node::AddRequest(Request request){
+RC_e Node::AddRequest(Request* request){
     // Result code
     RC_e retCode = RC_e::ERROR;
 
-    if ((retCode = this->AddRequest((DEVICE_e)request.nodeId, (COM_REQUEST_TYPE_e)request.reqType, (COM_REQUEST_REG_ID_e)request.regId, request.data)) != RC_e::SUCCESS) {
+    // Check if the pointer is null
+    if (request == NULL){
+        Debug("Error: ERROR_NULL_POINTER in Node::AddRequest()");
+        return RC_e::ERROR_NULL_POINTER;
+    }
+
+    if ((retCode = this->AddRequest((DEVICE_e)request->nodeId, (COM_REQUEST_TYPE_e)request->reqType, (COM_REQUEST_REG_ID_e)request->regId, request->data)) != RC_e::SUCCESS) {
         Debug("Error: AddRequest in Node::AddRequest()");
         return retCode;
     }
@@ -73,32 +79,99 @@ RC_e Node::SendNextRequest(){
     // Result code
     RC_e retCode = RC_e::ERROR;
 
-    Request* request = new Request();
+    Request request;
 
-    if ((retCode = this->m_requestBuffer->ConsumeRequest(request)) != RC_e::SUCCESS) {
+    if ((retCode = this->m_requestBuffer->ConsumeRequest(&request)) != RC_e::SUCCESS) {
         Debug("Error: ConsumeRequest in Node::SendNextRequest()");
         return retCode;
     }
 
-    if (request != NULL){
-        this->SendRequest(*request);
+    if (request.nodeId != DEVICE_e::NONE_DEVICE){
+        if ((retCode = this->SendRequest(&request)) != RC_e::SUCCESS) {
+            Debug("Error: SendRequest in Node::SendNextRequest()");
+            return retCode;
+        }
     }
-    
+
     return RC_e::SUCCESS;
 }
 
 //=====================================================================================================
-RC_e Node::Listen(){
+RC_e Node::ReadNextRequest(Request* request){
     // Result code
     RC_e retCode = RC_e::ERROR;
 
+    // Check if the pointer is null
+    if (request == NULL){
+        Debug("Error: ERROR_NULL_POINTER in Node::ReadNextRequest()");
+        return RC_e::ERROR_NULL_POINTER;
+    }
+
+    // Check for incomming data
     if (this->m_serial->available()){
+        if ((retCode = this->ReadRequest(request)) != RC_e::SUCCESS){
+            Debug("Error: ReadRequest in Node::ReadNextRequest()");
+            return retCode;
+        }
+    } else {
+        request->nodeId = DEVICE_e::NONE_DEVICE;
+    }
+
+    return RC_e::SUCCESS;
+}
+
+//=====================================================================================================
+RC_e Node::Run(){
+    // Result code
+    RC_e retCode = RC_e::ERROR;
+
+    if (this->m_start){
+        
         Request request;
-        if ((retCode = this->ReadNextRequest(&request)) == RC_e::SUCCESS){
-            this->HandleRequest(&request);
+
+        // Read Request
+        if ((retCode = this->ReadNextRequest(&request)) != RC_e::SUCCESS){
+            Debug("Error: ReadNextRequest in Node::Run()");
+            return retCode;
+        }
+
+        // Check if request was read
+        if (request.nodeId != DEVICE_e::NONE_DEVICE) {
+            // Check if the NodeId of the request belogns to the device
+            if (request.nodeId == NODE_ID){
+                if ((retCode = this->HandleRequest(&request)) != RC_e::SUCCESS){
+                    Debug("Error: HandleRequest in Node::Run()");
+                    return retCode;
+                }
+            } else {
+                if (NODE_ID != DEVICE_e::MANAGER){
+                    if ((retCode = this->AddRequest(&request)) != RC_e::SUCCESS){
+                        Debug("Error: AddRequest in Node::Run()");
+                        return retCode;
+                    }
+                }
+            }
+        }
+
+        // Write Request
+        if ((retCode = SendNextRequest()) != RC_e::SUCCESS){
+            Debug("Error: SendNextRequest in Node::Run()");
+            return retCode;
         }
     }
 
+    return RC_e::SUCCESS;
+}
+
+//=====================================================================================================
+RC_e Node::Start(){
+    this->m_start = true;
+    return RC_e::SUCCESS;
+}
+
+//=====================================================================================================
+RC_e Node::Stop(){
+    this->m_start = false;
     return RC_e::SUCCESS;
 }
 
@@ -110,8 +183,7 @@ RC_e Node::PrintBuffer(){
         return RC_e::ERROR_NULL_POINTER;
     }
 
-    // Iterate through the requests
-    m_requestBuffer->PrintBuffer();
+    this->m_requestBuffer->PrintBuffer();
 
     return RC_e::SUCCESS;
 }  
@@ -146,12 +218,22 @@ RC_e Node::DisableDebugMode(){
     return RC_e::SUCCESS;
 }
 
+//=====================================================================================================
+RC_e Node::Debug(char* msg){
+    if (this->m_debugMode){
+        Serial.println(msg);
+    }
+    
+    return RC_e::SUCCESS;
+}
+
 /*******************************************************************************************************************************************
  *  												PRIVATE METHODS
  *******************************************************************************************************************************************/
 
 RC_e Node::ConfigureSerial(uint32_t baud, uint8_t RX, uint8_t TX){
 
+    // Config Pins
     pinMode(RX, PULLUP);
     pinMode(TX, PULLUP);
 
@@ -162,16 +244,22 @@ RC_e Node::ConfigureSerial(uint32_t baud, uint8_t RX, uint8_t TX){
 }
 
 //=====================================================================================================
-RC_e Node::SendRequest(Request request){
+RC_e Node::SendRequest(Request* request){
     // Result code
     RC_e retCode = RC_e::ERROR;
+
+    // Check if the pointer is null
+    if (request == NULL){
+        Debug("Error: ERROR_NULL_POINTER in Node::SendRequest()");
+        return RC_e::ERROR_NULL_POINTER;
+    }
 
     // Buffer
     uint8_t _buffer[NODE_REQUEST_SIZE] = {0};;
 
     // Convert request to buffer  
-    if ((retCode = RequestToBuffer(&request, _buffer)) != RC_e::SUCCESS){
-        Debug("Error: RequestToBuffer in Node::SPI_SendWriteRequest()");
+    if ((retCode = RequestToBuffer(request, _buffer)) != RC_e::SUCCESS){
+        Debug("Error: RequestToBuffer in Node::SendRequest()");
         return retCode;
     }
     
@@ -188,7 +276,7 @@ RC_e Node::ReadRequest(Request* request){
 
     // Check if pointer is null
     if (request == NULL){
-        Debug("Error: ERROR_NULL_POINTER in Node::SPI_ReadSlaveRequest()");
+        Debug("Error: ERROR_NULL_POINTER in Node::ReadRequest()");
         return RC_e::ERROR_NULL_POINTER;
     }
 
@@ -206,31 +294,10 @@ RC_e Node::ReadRequest(Request* request){
 
     // Check CRC
     if (!CheckCRC(request)){
-        Debug("Error: CalculateCrcFromRequest in Node::ReadRequest()");
+        Debug("Error: CheckCRC in Node::ReadRequest()");
         return RC_e::ERROR_CRC;
     }
 
     return RC_e::SUCCESS;
 }
 
-//=====================================================================================================
-RC_e Node::ReadNextRequest(Request* request){
-    // Result code
-    RC_e retCode = RC_e::ERROR;
-
-    if ((retCode = this->ReadRequest(request)) != RC_e::SUCCESS) {
-        Debug("Error: ReadRequest in Node::ReadNextRequest()");
-        return retCode;
-    }
-
-    return RC_e::SUCCESS;
-}
-
-//=====================================================================================================
-RC_e Node::Debug(char* msg){
-    if (this->m_debugMode){
-        Serial.println(msg);
-    }
-    
-    return RC_e::SUCCESS;
-}

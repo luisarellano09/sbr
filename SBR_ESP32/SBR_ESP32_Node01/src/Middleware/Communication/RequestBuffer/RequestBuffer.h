@@ -16,6 +16,7 @@
  *******************************************************************************************************************************************/
 #include "../../../Definition/GlobalDef.h"
 #include "../../../Definition/LocalDef.h"
+
 #include "../Request/Request.h"
 
 /*******************************************************************************************************************************************
@@ -30,13 +31,13 @@ class RequestBuffer {
 public:  
 
     /**
-     * @brief Construct a new spi slave object
+     * @brief Constructor
      * 
      */
     RequestBuffer();
 
     /**
-     * @brief Destroy the spi slave object
+     * @brief Destructor
      * 
      */
     ~RequestBuffer();
@@ -55,10 +56,10 @@ public:
     /**
      * @brief Add request to the buffer
      * 
-     * @param request Request
+     * @param request Pointer of request
      * @return RC_e Result code
      */
-    RC_e AddRequest(Request request);  
+    RC_e AddRequest(Request* request);  
 
     /**
      * @brief Consume request from the buffer
@@ -98,14 +99,15 @@ public:
 
 private:
 
-    Request m_RequestsArray[REQUEST_BUFFER_SIZE];      /**< Array of requests. */
-    int16_t m_RequestsArrayIndex;                      /**< Index of array of requests. */
+    Request m_RequestsArray[REQUEST_BUFFER_SIZE];       /**< \brief Array of requests. */
+    int16_t m_RequestsArrayIndex;                       /**< \brief Index of array of requests. */
 
-    bool m_debugMode = false;           /**< Debug Mode */
+    bool m_debugMode = false;                           /**< \brief Debug Mode */
 
     /**
      * @brief Function to print the debug message
      * 
+     * @param msg Message
      * @return RC_e Result code
      */
     RC_e Debug(char* msg);

@@ -1,7 +1,7 @@
 /**
  * @file Register.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief Class to describe a register of the Data Table in Runtime
+ * @brief Class to describe a register
  * @version 2.0
  * @date 09.01.2021
  * 
@@ -34,13 +34,13 @@ public:
     int8_t m_subscribers_index;                         /**< \brief Subscribers index*/
 
     /**
-     * @brief Construct a new Register RT object
+     * @brief Constructor
      * 
      */
     Register();
 
     /**
-     * @brief Destroy the Register R T object
+     * @brief Destructor
      * 
      */
     ~Register();
@@ -63,6 +63,7 @@ public:
     /**
      * @brief Print
      * 
+     * @param regId Register ID
      * @return RC_e Result code
      */
     RC_e Print(COM_REQUEST_REG_ID_e regId = COM_REQUEST_REG_ID_e::NONE_REG_ID);
@@ -83,11 +84,12 @@ public:
    
 private:
 
-    bool m_debugMode = false;           /**< Debug Mode */
+    bool m_debugMode = false;           /**< \brief Debug Mode */
 
     /**
      * @brief Function to print the debug message
      * 
+     * @param msg Message
      * @return RC_e Result code
      */
     RC_e Debug(char* msg);

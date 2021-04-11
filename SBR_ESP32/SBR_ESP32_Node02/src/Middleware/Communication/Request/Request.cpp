@@ -1,66 +1,55 @@
 /**
- * @file Node01.cpp
+ * @file Request.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief class to Manage the Node01
+ * @brief Class to describe a request
  * @version 2.0
  * @date 09.01.2021
  * 
  * 
  */
 
-
 /*******************************************************************************************************************************************
  *  												INCLUDE
  *******************************************************************************************************************************************/
-#include "Node01.h"
+#include "./Request.h"
 
 /*******************************************************************************************************************************************
  *  												CONSTRUCTOR
  *******************************************************************************************************************************************/
 
-Node01::Node01(HardwareSerial* serial, uint32_t baud, uint8_t RX, uint8_t TX) : Node(serial, baud, RX, TX){    
-
-
+Request::Request(){
+    this->Clean();
 }
 
 //=====================================================================================================
-Node01::~Node01(){}
+Request::~Request(){}
 
 /*******************************************************************************************************************************************
  *  												PUBLIC METHODS
  *******************************************************************************************************************************************/
 
-void Node01::clear(){
-    for (int i=0; i<10000; i++){
-        test[i] = -1;
-    }
-    index = 0;
+RC_e Request::Clean(){
+    this->nodeId = DEVICE_e::NONE_DEVICE;
+    this->reqType = COM_REQUEST_TYPE_e::NONE;
+    this->regId = COM_REQUEST_REG_ID_e::NONE_REG_ID;
+    this->data = 0;
+    this->CRC = 0;
+    return RC_e::SUCCESS;
 }
 
-void Node01::printtest(){
-    for (int i=0; i<10000; i++){
-        if (test[i] != -1){
-            Serial.printf("Data[%d]: %d\r\n", i, test[i]);
-        }
-    }
-
+//=====================================================================================================
+RC_e Request::Print(){
+    Serial.println("*****************");
+    Serial.printf("* nodeId: %d\r\n", this->nodeId);
+    Serial.printf("* reqType: %d\r\n", this->reqType);  
+    Serial.printf("* regId: %d\r\n", this->regId);
+    Serial.printf("* data: %d\r\n", this->data);
+    Serial.printf("* CRC: %d\r\n", this->CRC);
+    Serial.println("*****************");
+    return RC_e::SUCCESS;
 }
 
 /*******************************************************************************************************************************************
  *  												PRIVATE METHODS
  *******************************************************************************************************************************************/
-
-RC_e Node01::HandleRequest(Request* request){
-
-    if (index>=10000){
-        index = 9999;
-    }
-    test[index] = request->data;
-    index++;
-
-
-    return RC_e::SUCCESS;
-    bool startTest = false;
-
-}
 

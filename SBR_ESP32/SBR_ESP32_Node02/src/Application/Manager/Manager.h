@@ -15,11 +15,12 @@
  *  												INCLUDE
  *******************************************************************************************************************************************/
 
-#include "../../lib/Definition/GlobalDef.h"
+#include "../../Definition/GlobalDef.h"
 #include "../../Definition/LocalDef.h"
 
-#include "../../lib/Middleware/WifiManager/WifiManager.h"
-#include "../../Middleware/RegisterManager/RegisterManager.h"
+#include "../../Middleware/WifiManager/WifiManager.h"
+
+#include "../Communication/Node01/Node01.h"
 
 /*******************************************************************************************************************************************
  *  												CLASS
@@ -33,7 +34,7 @@ class Manager {
 public:  
 
     WifiManager* m_wifiManager = NULL;              /**< Instance for Wifimanager */
-    RegisterManager* m_registerManager = NULL;      /**< Instance for RegisterManager */
+    Node01* m_node01 = NULL;
 
     /**
      * @brief Construct a new Manager object
@@ -43,6 +44,7 @@ public:
 
     /**
      * @brief Destroy the Manager object
+     * saga falabella peru 
      * 
      */
     ~Manager();
@@ -66,7 +68,7 @@ public:
      * 
      * @return RC_e Result code
      */
-    RC_e CommunicationTestAnswer();
+    RC_e CommunicationTestAnswer(COM_REQUEST_REG_ID_e regId, int32_t data);
 
     /**
      * @brief Enable the debug mode of the class

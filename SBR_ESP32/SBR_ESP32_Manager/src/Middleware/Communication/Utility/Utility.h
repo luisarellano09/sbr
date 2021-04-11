@@ -150,15 +150,21 @@ static uint16_t CalculateCrcFromRequest(Request* request){
     RequestToBuffer(request, _buffer);
 
     // Sum all CRC values
-    return 
-        Calc16CrcTab[_buffer[0]] +
-        Calc16CrcTab[_buffer[1]] +
-        Calc16CrcTab[_buffer[2]] +
-        Calc16CrcTab[_buffer[3]] +
-        Calc16CrcTab[_buffer[4]] +
-        Calc16CrcTab[_buffer[5]];
+    return  Calc16CrcTab[_buffer[0]] +
+            Calc16CrcTab[_buffer[1]] +
+            Calc16CrcTab[_buffer[2]] +
+            Calc16CrcTab[_buffer[3]] +
+            Calc16CrcTab[_buffer[4]] +
+            Calc16CrcTab[_buffer[5]];
 }
 
+//=====================================================================================================
+/**
+ * @brief Check if CRC is Ok
+ * 
+ * @param request Reference of a request object
+ * @return bool true=Ok, false=NotOK
+ */
 static bool CheckCRC(Request* request){
 
     // Check if pointer is null

@@ -15,9 +15,6 @@
 #include "soc/soc.h"
 #include "soc/rtc_cntl_reg.h"
 
-/*******************************************************************************************************************************************
- *  												INCLUDES - SBR
- *******************************************************************************************************************************************/
 #include "./Application/Manager/Manager.h"
 
 /*******************************************************************************************************************************************
@@ -45,7 +42,6 @@ bool flagTimer1 = false;
 bool flagTimer2 = false;
 bool flagTimer3 = false;
 
-
 /*******************************************************************************************************************************************
  *  												TEST
  *******************************************************************************************************************************************/
@@ -56,7 +52,9 @@ bool flagTimer3 = false;
  *******************************************************************************************************************************************/
 // Loop of core 0
 void LoopCore0( void * parameter ){
-    while(true) {
+    disableLoopWDT();
+    disableCore0WDT();
+    while (true) {
         // Code for Timer 0 interruption
         if (flagTimer0){
             flagTimer0 = false;
@@ -71,19 +69,20 @@ void LoopCore0( void * parameter ){
             flagTimer1 = false;
 
             // ========== Code ==========
-                if(Serial.available()){
+                if (Serial.available()){
                     Serial.println("checking Serial");
                     char incomingByte = Serial.read();
                     Serial.flush();
-                    switch (incomingByte)
-                    {
+                    switch (incomingByte) {
                         case 'w':
                         case 'W':
-                            Serial.println(" +++++ ESP32 SENSOR +++++");
+                            Serial.println(" +++++ ESP32 NODE02 +++++");
                             break;
 
                         case 'p':
                         case 'P':
+                            Serial.println("Programming Mode.....");
+                            manager->m_node01->Start();
                             manager->m_wifiManager->Connect();
                             break;
 
@@ -109,33 +108,54 @@ void LoopCore0( void * parameter ){
                         case 'K':
                             manager->DisableDebugMode();
                             Serial.println("Disable Debug...");
+                            break;             
+
+                        case '2':
+                            manager->m_node01->AddRequest(DEVICE_e::MANAGER, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::REGISTER_100, 200);
+                            manager->m_node01->SendNextRequest();
                             break;
 
+                        case '3':
+                            manager->m_node01->clear();
+                            break;
+
+                        case '4':
+                            manager->m_node01->printtest();
+                            break;
+
+                        case '5':          
+                            manager->m_node01->Start();
+                            break; 
+
+                        case 'i':
+                            manager->m_node01->PrintBuffer();
+                            break;
                     }
                 }
 
                 // Run OTA service
                 manager->m_wifiManager->RunOTA();
 
-                // Delay to feed WDT
-                delay(1);
             // ==========================
         }
 
-        // Run SPI Slave service
-        manager->m_registerManager->Listen();
+        manager->m_node01->Run();
+
+        feedLoopWDT();
     }
 }
 
 // Loop of core 1
 void LoopCore1( void * parameter ){
+    disableLoopWDT();
+    disableCore1WDT();
     while(true) {
         // Code for Timer 2 interruption
         if (flagTimer2){
             flagTimer2 = false;
 
             // ========== Code ==========
-            manager->CommunicationTestPublish();
+            //manager->CommunicationTestPublish();
 
             // ==========================
         }
@@ -149,8 +169,7 @@ void LoopCore1( void * parameter ){
             // ==========================
         }
 
-        // Delay to feed WDT
-        delay(1);
+        feedLoopWDT();
     }
 }
 
@@ -203,7 +222,7 @@ void setup() {
 
     // Serial Port
     Serial.begin(115200);
-    Serial.println(" +++++ ESP32 SENSOR +++++");
+    Serial.println(" +++++ ESP32 NODE02 +++++");
 
     // Manager
     manager = new Manager();
@@ -231,10 +250,7 @@ void setup() {
         1,          /* Priority of the task */
         &TaskCore1, /* Task handle. */
         1);         /* Core where the task should run */
-
-    disableCore0WDT();
-    disableCore1WDT();
-
+    
     // Timer0
     timer0 = timerBegin(0, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer0, &onTimer0, true); // edge (not level) triggered 
@@ -248,7 +264,7 @@ void setup() {
     // Timer2
     timer2 = timerBegin(2, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer2, &onTimer2, true); // edge (not level) triggered 
-    timerAlarmWrite(timer2, 100000, true); // 1000000 * 1 us = 1 s, autoreload true
+    timerAlarmWrite(timer2, 100000, true); //   1 us = 1 s, autoreload true
 
     // Timer3
     timer3 = timerBegin(3, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
@@ -259,7 +275,8 @@ void setup() {
     timerAlarmEnable(timer0); // enable
     timerAlarmEnable(timer1); // enable
     timerAlarmEnable(timer2); // enable
-    //timerAlarmEnable(timer3); // enable
+    timerAlarmEnable(timer3); // enable
+
 }
 
 /*******************************************************************************************************************************************

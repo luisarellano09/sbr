@@ -1,7 +1,7 @@
 /**
  * @file Register.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief Class to describe a register of the Data Table in Runtime
+ * @brief Class to describe a register
  * @version 2.0
  * @date 09.01.2021
  * 
@@ -72,16 +72,20 @@ RC_e Register::Clean(){
 
 //=====================================================================================================
 RC_e Register::Print(COM_REQUEST_REG_ID_e regId){
+
     if (regId==NONE_REG_ID){
         Serial.println("*****************");
     } else {
         Serial.printf("[%d]*****************\r\n", regId);
     }
+
     Serial.printf("* value: %d\r\n", this->m_value);
     Serial.printf("* number of subscribers: %d\r\n", this->m_subscribers_index);  
+
     for (int i=0; i<=this->m_subscribers_index; i++){
         Serial.printf("* subs(%d) = %d\r\n", i, this->m_subscribers[this->m_subscribers_index]);
     }
+    
     Serial.println("*****************");
     return RC_e::SUCCESS;
 }

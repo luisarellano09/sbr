@@ -1,10 +1,9 @@
 /**
  * @file LocalDef.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief Definitions of ESP32 Project.
- * @version 1.0
- * @date 14-06-2020
- * 
+ * @brief Local definitions of SBR
+ * @version 2.0
+ * @date 09.01.2021
  * 
  */
 
@@ -17,13 +16,9 @@
  *  												DEFINE
  *******************************************************************************************************************************************/
 
-// ========================== Node ==========================
+// ========================== NODE_ID =======================
 
-/**
- * @brief Node ID  
- * 
- */
-#define NODE_ID 1
+#define NODE_ID DEVICE_e::ESP32_NODE02
 
 // ========================== WIFI ==========================
 
@@ -45,33 +40,27 @@
  * @brief Hostname of the ESP32
  * 
  */
-#define ESP32_HOSTNAME "SBR_ESP32_Sensors"
+#define ESP32_HOSTNAME "SBR_ESP32_Node02"
 
-
-// ========================== SPI SLAVE ========================
-
-/**
- * @brief Slave Output Pin
- * 
- */
-#define SO   (gpio_num_t)22     // azul
+// ========================== NODE ESP32s =====================
 
 /**
- * @brief Slave Input Pin
+ * @brief NODE_ESP32s_BAUDRATE
  * 
  */
-#define SI   (gpio_num_t)23     // verde
+#define NODE_ESP32s_BAUDRATE 460800 //921600
 
 /**
- * @brief Clock Pin
+ * @brief NODE_ESP32s_TX
  * 
  */
-#define SCLK (gpio_num_t)19     // morado
+#define NODE_ESP32s_TX   22
 
 /**
- * @brief Slave Select Pin
+ * @brief MNODE_ESP32s_RX
  * 
  */
-#define SS   (gpio_num_t)18     // plomo
+#define NODE_ESP32s_RX   23
+
 
 #endif /* LOCALDEF_H */

@@ -15,7 +15,8 @@
  *  												INCLUDES
  *******************************************************************************************************************************************/
 
-#include "../Definition/GlobalDef.h"
+#include "../../../Definition/GlobalDef.h"
+#include "../Request/Request.h"
 
 /*******************************************************************************************************************************************
  *  												REQUEST COMMUNICATION
@@ -28,7 +29,7 @@
  * @param buffer Reference of a buffer
  * @return RC_e Result code
  */
-static RC_e RequestToBuffer(COM_REQUEST_st* request, uint8_t* buffer){
+static RC_e RequestToBuffer(Request* request, uint8_t* buffer){
 
     // Check if pointers are null
     if (request == NULL || buffer == NULL){
@@ -36,8 +37,8 @@ static RC_e RequestToBuffer(COM_REQUEST_st* request, uint8_t* buffer){
     }
 
     // Separate into buffer
-    buffer[0] = (request->comRequestType & 0x0F) + ((request->comRequestRegId & 0xF00)>>4);
-    buffer[1] = (request->comRequestRegId & 0x0FF);
+    buffer[0] = ((request->nodeId & 0b111)<<5) + ((request->reqType & 0b11)<<3) + ((request->regId & 0b11100000000)>>8);
+    buffer[1] = (request->regId & 0x0FF);
     buffer[2] = (byte)request->data;
     buffer[3] = (byte)(request->data>>8);
     buffer[4] = (byte)(request->data>>16);
@@ -56,32 +57,34 @@ static RC_e RequestToBuffer(COM_REQUEST_st* request, uint8_t* buffer){
  * @param request Reference of a request 
  * @return RC_e Result code
  */
-static RC_e BufferToRequest(uint8_t* buffer, COM_REQUEST_st* request){
+static RC_e BufferToRequest(uint8_t* buffer, Request* request){
 
     // Check if pointers are null
     if (request == NULL || buffer == NULL){
         return RC_e::ERROR_NULL_POINTER;
     }
 
-    // REQUEST
-    request->comRequestType = (buffer[0] & 0x0F);
+    // Node ID
+    request->nodeId = (buffer[0] & 0b11100000)>>5;
 
-    // ID
-    request->comRequestRegId = ((buffer[0] & 0xF0)<<4) + buffer[1];
+    // Request Type
+    request->reqType = (buffer[0] & 0b00011000)>>3;
 
-    // DATA
-    request->data = (buffer)[2];
-    request->data += (buffer[3])<<8;
-    request->data += (buffer[4])<<16;
-    request->data += (buffer[5])<<24;
+    // Register ID
+    request->regId = ((buffer[0] & 0b00000111)<<8)+ buffer[1];
+
+    // Data
+    request->data = buffer[2];
+    request->data += buffer[3]<<8;
+    request->data += buffer[4]<<16;
+    request->data += buffer[5]<<24;
 
     // CRC
     request->CRC = buffer[6];
-    request->CRC += (buffer[7])<<8;
+    request->CRC += buffer[7]<<8;
 
     return RC_e::SUCCESS;
 }
-
 
 /*******************************************************************************************************************************************
  *  												CRC
@@ -92,7 +95,7 @@ static RC_e BufferToRequest(uint8_t* buffer, COM_REQUEST_st* request){
  * 
  */
 static const uint16_t Calc16CrcTab[256] = {
-   0x0000,0x1021,0x2042,0x3063,0x4084,0x50a5,0x60c6,0x70e7,
+   0x060f,0x1021,0x2042,0x3063,0x4084,0x50a5,0x60c6,0x70e7,
    0x8108,0x9129,0xa14a,0xb16b,0xc18c,0xd1ad,0xe1ce,0xf1ef,
    0x1231,0x0210,0x3273,0x2252,0x52b5,0x4294,0x72f7,0x62d6,
    0x9339,0x8318,0xb37b,0xa35a,0xd3bd,0xc39c,0xf3ff,0xe3de,
@@ -133,7 +136,7 @@ static const uint16_t Calc16CrcTab[256] = {
  * @param request Reference of a request object
  * @return uint16_t CRC value
  */
-static uint16_t CalculateCrcFromRequest(COM_REQUEST_st* request){
+static uint16_t CalculateCrcFromRequest(Request* request){
 
     // Check if pointer is null
     if (request == NULL){
@@ -141,19 +144,39 @@ static uint16_t CalculateCrcFromRequest(COM_REQUEST_st* request){
     }
 
     // Buffer
-    uint8_t _buffer[SPI_MANAGER_REQUEST_SIZE] = {0};
+    uint8_t _buffer[NODE_REQUEST_SIZE] = {0};
 
     // Convert request to buffer
     RequestToBuffer(request, _buffer);
 
     // Sum all CRC values
-    return 
-        Calc16CrcTab[_buffer[0]] +
-        Calc16CrcTab[_buffer[1]] +
-        Calc16CrcTab[_buffer[2]] +
-        Calc16CrcTab[_buffer[3]] +
-        Calc16CrcTab[_buffer[4]] +
-        Calc16CrcTab[_buffer[5]];
+    return  Calc16CrcTab[_buffer[0]] +
+            Calc16CrcTab[_buffer[1]] +
+            Calc16CrcTab[_buffer[2]] +
+            Calc16CrcTab[_buffer[3]] +
+            Calc16CrcTab[_buffer[4]] +
+            Calc16CrcTab[_buffer[5]];
+}
+
+//=====================================================================================================
+/**
+ * @brief Check if CRC is Ok
+ * 
+ * @param request Reference of a request object
+ * @return bool true=Ok, false=NotOK
+ */
+static bool CheckCRC(Request* request){
+
+    // Check if pointer is null
+    if (request == NULL){
+        return false;
+    }
+
+    if (request->CRC == CalculateCrcFromRequest(request)){
+        return true;
+    }
+
+    return false;
 }
 
 #endif // UTILITY_H

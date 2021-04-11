@@ -19,10 +19,10 @@
 #include "../../Definition/LocalDef.h"
 
 #include "../../Middleware/WifiManager/WifiManager.h"
-#include "../../Middleware/Communication/TableRegister/TableRegister.h"
 
 #include "../Communication/NodeEsp32/NodeEsp32.h"
 #include "../Communication/NodeLinux/NodeLinux.h"
+#include "../Communication/TableRegister/TableRegister.h"
 
 /*******************************************************************************************************************************************
  *  												CLASS

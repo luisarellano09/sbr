@@ -21,7 +21,7 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
-#include "../Definition/GlobalDef.h"
+#include "../../Definition/GlobalDef.h"
 
 /*******************************************************************************************************************************************
  *  												CLASS

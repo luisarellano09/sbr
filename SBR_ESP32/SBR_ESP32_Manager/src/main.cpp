@@ -81,7 +81,6 @@ void testNode(){
 }
 
 void testTable(){
-    manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_01, 100);
     manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_10, 1000);
 
     manager->m_tableRegister->PrintTable();
@@ -107,9 +106,7 @@ void LoopCore0( void * parameter ){
         if (flagTimer0){
             flagTimer0 = false;
 
-            // ========== Code ==========
-                //Serial.println("Core0");
-            // ==========================
+            manager->m_nodeESP32->HeartBitMonitoring();
         }
 
         // Code for Timer 1 interruption
@@ -131,6 +128,7 @@ void LoopCore0( void * parameter ){
                         case 'p':
                         case 'P':
                             Serial.println("Programming Mode.....");
+                            manager->m_nodeESP32->Stop();
                             manager->m_wifiManager->Connect();
                             break;
 
@@ -163,18 +161,24 @@ void LoopCore0( void * parameter ){
                             break;
 
                         case '2':
-                            manager->m_nodeESP32->AddRequest(DEVICE_e::ESP32_NODE01, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::REGISTER_10, 20);
+                            manager->m_nodeESP32->AddRequest(DEVICE_e::MANAGER, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::REGISTER_10, 20);
                             manager->m_nodeESP32->SendNextRequest();
                             break;
 
                         case '3':
-                            Serial.println(millis());
-                            for (int i=0; i<1000; i++){
-                                manager->m_nodeESP32->AddRequest(DEVICE_e::ESP32_NODE01, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::REGISTER_10, i);
-                                manager->m_nodeESP32->SendNextRequest();
+                            Serial.println("Testing...");
+                            for (int i=0; i<500; i++){
+                                manager->m_nodeESP32->AddRequest(DEVICE_e::MANAGER, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::NODE_ESP32_HEART_BIT01, i);
                             }
-                            Serial.println(millis());
                             break;
+
+                        case '4':          
+                            manager->m_nodeESP32->PrintBuffer();
+                            break; 
+
+                        case '5':          
+                            manager->m_nodeESP32->Start();
+                            break; 
 
                     }
                 }
@@ -185,7 +189,7 @@ void LoopCore0( void * parameter ){
             // ==========================
         }
 
-        manager->m_nodeESP32->Listen();
+        manager->m_nodeESP32->Run();
         
         feedLoopWDT();
     }
@@ -311,7 +315,7 @@ void setup() {
     // Timer0
     timer0 = timerBegin(0, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp
     timerAttachInterrupt(timer0, &onTimer0, true); // edge (not level) triggered 
-    timerAlarmWrite(timer0, 1000000, true); // 1000000 * 1 us = 1 s, autoreload true
+    timerAlarmWrite(timer0, 10000, true); // 1000000 * 1 us = 1 s, autoreload true
 
     // Timer1
     timer1 = timerBegin(1, 80, true);  // timer 0, MWDT clock period = 12.5 ns * TIMGn_Tx_WDT_CLK_PRESCALE -> 12.5 ns * 80 -> 1000 ns = 1 us, countUp

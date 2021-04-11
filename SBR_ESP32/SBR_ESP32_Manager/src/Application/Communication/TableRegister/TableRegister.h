@@ -1,7 +1,7 @@
 /**
  * @file TableRegister.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief Class to describe the Data Table in Runtime
+ * @brief Class to describe the Data Table
  * @version 2.0
  * @date 09.01.2021
  * 
@@ -17,33 +17,31 @@
 
 #include "../../../Definition/GlobalDef.h"
 #include "../../../Definition/LocalDef.h"
-#include "../Request/Request.h"
 
-#include "../Register/Register.h"
-#include "../Node/Node.h"
-
+#include "../../../Middleware/Communication/Register/Register.h"
+#include "../../../Middleware/Communication/Node/Node.h"
 
 /*******************************************************************************************************************************************
  *  												CLASS
  *******************************************************************************************************************************************/
 
 /**
- * @brief Class to describe the Data Table in Runtime
+ * @brief Class to describe the Data Table
  * 
  */
 class TableRegister {
 public:  
-
-    Register m_registers[COM_REQUEST_REG_ID_e::LENGTH_REG_ID];   /**< \brief Array of registers*/
     
+    Register m_registers[COM_REQUEST_REG_ID_e::LENGTH_REG_ID];      /**< \brief Array of registers*/
+
     /**
-     * @brief Construct a new Table RT object
+     * @brief Constructor
      * 
      */
     TableRegister(Node* NodeESP32, Node* NodeLinux);
 
     /**
-     * @brief Destroy the Table RT object
+     * @brief Destructor
      * 
      */
     ~TableRegister();
@@ -67,7 +65,7 @@ public:
     RC_e UpdateRegister(COM_REQUEST_REG_ID_e regId, int32_t data);
 
     /**
-     * @brief Function to handle a read slave request
+     * @brief Function to handle a request
      * 
      * @param request Reference of a request object
      * @return RC_e Result code
@@ -105,10 +103,10 @@ public:
 
 private:
 
-    Node* m_NodeESP32 = NULL;
-    Node* m_NodeLinux = NULL;
+    Node* m_NodeESP32 = NULL;                                       /**< \brief Esp32 node*/
+    Node* m_NodeLinux = NULL;                                       /**< \brief Linux node*/
 
-    bool m_debugMode = false;           /**< Debug Mode */
+    bool m_debugMode = false;                                       /**< \brief Debug Mode */
 
     /**
      * @brief Clean registers
@@ -129,6 +127,7 @@ private:
     /**
      * @brief Function to print the debug message
      * 
+     * @param msg Message
      * @return RC_e Result code
      */
     RC_e Debug(char* msg);

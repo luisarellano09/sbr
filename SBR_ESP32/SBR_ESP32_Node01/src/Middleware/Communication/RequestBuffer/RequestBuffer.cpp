@@ -60,11 +60,17 @@ RC_e RequestBuffer::AddRequest(DEVICE_e nodeId, COM_REQUEST_TYPE_e reqType, COM_
 }  
 
 //=====================================================================================================
-RC_e RequestBuffer::AddRequest(Request request){
+RC_e RequestBuffer::AddRequest(Request* request){
     // Result code
     RC_e retCode = RC_e::ERROR;
 
-    if ((retCode = this->AddRequest((DEVICE_e)request.nodeId, (COM_REQUEST_TYPE_e)request.reqType, (COM_REQUEST_REG_ID_e)request.regId, request.data)) != RC_e::SUCCESS){
+    // Check if the pointer is null
+    if (request == NULL){
+        Debug("Error: ERROR_NULL_POINTER in RequestBuffer::AddRequest()");
+        return RC_e::ERROR_NULL_POINTER;
+    }
+
+    if ((retCode = this->AddRequest((DEVICE_e)request->nodeId, (COM_REQUEST_TYPE_e)request->reqType, (COM_REQUEST_REG_ID_e)request->regId, request->data)) != RC_e::SUCCESS){
         Debug("Error: AddRequest in RequestBuffer::AddRequest()");
         return retCode;
     }
@@ -74,19 +80,23 @@ RC_e RequestBuffer::AddRequest(Request request){
 //=====================================================================================================
 RC_e RequestBuffer::ConsumeRequest(Request* request){
     if (m_RequestsArrayIndex < 0){
-        request = NULL; 
+        // Set to NULL the pointer when there is no request
+        request->nodeId = DEVICE_e::NONE_DEVICE; 
     } else {
+        // Check if the pointer is null
         if (request == NULL){
-            Debug("Error: ERROR_NULL_POINTER in NodesManager::SPI_ReadSlaveRequest()");
+            Debug("Error: ERROR_NULL_POINTER in RequestBuffer::ConsumeRequest()");
             return RC_e::ERROR_NULL_POINTER;
         }
 
+        // Assign values
         request->nodeId     = this->m_RequestsArray[0].nodeId;
         request->reqType    = this->m_RequestsArray[0].reqType;
         request->regId      = this->m_RequestsArray[0].regId;
         request->data       = this->m_RequestsArray[0].data;
         request->CRC        = this->m_RequestsArray[0].CRC;
 
+        // Move the requests in the buffer
         for (int i=1; i<=m_RequestsArrayIndex; i++){
             this->m_RequestsArray[i-1].nodeId   = this->m_RequestsArray[i].nodeId;
             this->m_RequestsArray[i-1].reqType  = this->m_RequestsArray[i].reqType;
@@ -95,6 +105,7 @@ RC_e RequestBuffer::ConsumeRequest(Request* request){
             this->m_RequestsArray[i-1].CRC      = this->m_RequestsArray[i].CRC;
         }
 
+        // Clean 
         this->m_RequestsArray[m_RequestsArrayIndex].Clean();
         this->m_RequestsArrayIndex--;
     }

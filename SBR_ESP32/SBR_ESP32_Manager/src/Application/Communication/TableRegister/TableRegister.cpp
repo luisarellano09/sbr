@@ -1,7 +1,7 @@
 /**
  * @file TableRegister.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief Class to describe the Data Table in Runtime
+ * @brief Class to describe the Data Table
  * @version 2.0
  * @date 09.01.2021
  * 
@@ -20,12 +20,12 @@
 TableRegister::TableRegister(Node* NodeESP32, Node* NodeLinux){
     // Check if the pointer is null
     if (NodeESP32 == NULL){
-        Debug("Error: NodeESP32 is NULL_POINTER in Node::HandleReadRequest()");
+        Debug("Error: NodeESP32 is NULL_POINTER in TableRegister::TableRegister()");
     }
 
     // Check if the pointer is null
     if (NodeLinux == NULL){
-        Debug("Error: NodeLinux NULL_POINTER in Node::HandleReadRequest()");
+        Debug("Error: NodeLinux NULL_POINTER in TableRegister::TableRegister()");
     }
 
     this->m_NodeESP32 = NodeESP32;
@@ -84,10 +84,10 @@ RC_e TableRegister::UpdateRegister(COM_REQUEST_REG_ID_e regId, int32_t data){
     this->m_registers[regId].m_value = data;
 
     // Add request to subscribers
-        if ((retCode = this->AddRequestToSubscribers(regId, data)) != RC_e::SUCCESS){
-            Debug("Error: AddRequestToSubscribers in Node::UpdateRegister()");
-            return retCode;
-        }
+    if ((retCode = this->AddRequestToSubscribers(regId, data)) != RC_e::SUCCESS){
+        Debug("Error: AddRequestToSubscribers in TableRegister::UpdateRegister()");
+        return retCode;
+    }
 
     return RC_e::SUCCESS;
 }
@@ -105,7 +105,7 @@ RC_e TableRegister::HandleRequest(Request* request){
     }
 
     if (request->regId >= COM_REQUEST_REG_ID_e::LENGTH_REG_ID || request->regId <= COM_REQUEST_REG_ID_e::NONE_REG_ID){
-        Debug("Error: ERROR_INVALID_REG_ID in Node::HandleReadRequest()");
+        Debug("Error: ERROR_INVALID_REG_ID in TableRegister::HandleRequest()");
         return RC_e::ERROR_INVALID_REG_ID;
     }
 
@@ -113,7 +113,7 @@ RC_e TableRegister::HandleRequest(Request* request){
     if (request->reqType == COM_REQUEST_TYPE_e::WRITE){
         // Update Register
         if ((retCode = this->UpdateRegister((COM_REQUEST_REG_ID_e)request->regId, request->data)) != RC_e::SUCCESS){
-            Debug("Error: UpdateRegister in Node::HandleReadRequest()");
+            Debug("Error: UpdateRegister in TableRegister::HandleRequest()");
             return retCode;
         }
     } else if (request->reqType == COM_REQUEST_TYPE_e::READ){
@@ -125,7 +125,6 @@ RC_e TableRegister::HandleRequest(Request* request){
 
 //=====================================================================================================
 RC_e TableRegister::AddRequestToSubscribers(COM_REQUEST_REG_ID_e regId, int32_t data){
-
     // Result code
     RC_e retCode = RC_e::ERROR;
 
@@ -164,7 +163,7 @@ RC_e TableRegister::Print(COM_REQUEST_REG_ID_e regId){
 
     // Check Register
     if (regId >= COM_REQUEST_REG_ID_e::LENGTH_REG_ID || regId <= COM_REQUEST_REG_ID_e::NONE_REG_ID){
-        Debug("Error: INVALID_REG_ID in TableRegister::AddRequestToSubscribers()");
+        Debug("Error: INVALID_REG_ID in TableRegister::Print()");
         return RC_e::ERROR_INVALID_REG_ID;
     }
 
@@ -181,9 +180,9 @@ RC_e TableRegister::PrintTable(){
     // Result code
     RC_e retCode = RC_e::ERROR;
 
-    for (int i=(COM_REQUEST_REG_ID_e::NONE_REG_ID+1); i<COM_REQUEST_REG_ID_e::LENGTH_REG_ID; i++){
+    for (uint16_t i=(COM_REQUEST_REG_ID_e::NONE_REG_ID+1); i<COM_REQUEST_REG_ID_e::LENGTH_REG_ID; i++){
         if ((retCode = this->m_registers[i].Print((COM_REQUEST_REG_ID_e)i)) != RC_e::SUCCESS){
-            Debug("Error: Print in TableRegister::Print()");
+            Debug("Error: Print in TableRegister::PrintTable()");
             return retCode;
         }
     }
@@ -199,7 +198,7 @@ RC_e TableRegister::EnableDebugMode(){
     this->m_debugMode = true;
 
     // Iterate all registers
-    for (int i=0; i<COM_REQUEST_REG_ID_e::LENGTH_REG_ID; i++){
+    for (uint16_t i=0; i<COM_REQUEST_REG_ID_e::LENGTH_REG_ID; i++){
         if ((retCode = this->m_registers[i].EnableDebugMode()) != RC_e::SUCCESS){
             Debug("Error: EnableDebugMode in TableRegister::EnableDebugMode()");
             return retCode;
@@ -217,7 +216,7 @@ RC_e TableRegister::DisableDebugMode(){
     this->m_debugMode = false;
 
     // Iterate all registers
-    for (int i=0; i<COM_REQUEST_REG_ID_e::LENGTH_REG_ID; i++){
+    for (uint16_t i=0; i<COM_REQUEST_REG_ID_e::LENGTH_REG_ID; i++){
         if ((retCode = this->m_registers[i].DisableDebugMode()) != RC_e::SUCCESS){
             Debug("Error: DisableDebugMode in TableRegister::DisableDebugMode()");
             return retCode;
@@ -236,7 +235,7 @@ RC_e TableRegister::CleanRegisters(){
     RC_e retCode = RC_e::ERROR;
 
     // Iterate all registers
-    for (int i=0; i<COM_REQUEST_REG_ID_e::LENGTH_REG_ID; i++){
+    for (uint16_t i=0; i<COM_REQUEST_REG_ID_e::LENGTH_REG_ID; i++){
         if ((retCode = this->m_registers[i].Clean()) != RC_e::SUCCESS){
             Debug("Error: Clean in TableRegister::CleanRegisters()");
             return retCode;

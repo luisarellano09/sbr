@@ -1,7 +1,7 @@
 /**
  * @file Node.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief class to Manage the nodes
+ * @brief Class to manage the node
  * @version 2.0
  * @date 09.01.2021
  * 
@@ -21,7 +21,6 @@
 #include "../../../Definition/GlobalDef.h"
 #include "../../../Definition/LocalDef.h"
 
-#include "../Request/Request.h"
 #include "../RequestBuffer/RequestBuffer.h"
 
 /*******************************************************************************************************************************************
@@ -29,20 +28,22 @@
  *******************************************************************************************************************************************/
 
 /**
- * @brief Class to Manage the SPI Master
+ * @brief Class to manage the node
  * 
  */
 class Node {
 public:  
 
+    bool m_start = false;                           /**< \brief Start command*/
+    
     /**
-     * @brief Construct a new spi mastermanager object
+     * @brief Constructor
      * 
      */
     Node(HardwareSerial* serial, uint32_t baud, uint8_t RX, uint8_t TX);
 
     /**
-     * @brief Destroy the spi mastermanager object
+     * @brief Destructor
      * 
      */
     ~Node();
@@ -59,12 +60,12 @@ public:
     RC_e AddRequest(DEVICE_e nodeId, COM_REQUEST_TYPE_e reqType, COM_REQUEST_REG_ID_e regId, uint32_t data);
 
     /**
-     * @brief Function add a request
+     * @brief Add request to the buffer
      * 
-     * @param request Node ID
+     * @param request Pointer of request
      * @return RC_e Result code
      */
-    RC_e AddRequest(Request request);
+    RC_e AddRequest(Request* request);  
 
     /**
      * @brief Function to send the next request
@@ -74,11 +75,33 @@ public:
     RC_e SendNextRequest();
 
     /**
-     * @brief Function to listen for request
+     * @brief Function to read the next request
+     * 
+     * @param request Reference of a request object
+     * @return RC_e Result code
+     */
+    RC_e ReadNextRequest(Request* request);
+
+    /**
+     * @brief Function to Run the Node
      * 
      * @return RC_e Result code
      */
-    RC_e Listen();
+    RC_e Run();
+
+    /**
+     * @brief Function to start Run
+     * 
+     * @return RC_e Result code
+     */
+    RC_e Start();
+
+    /**
+     * @brief Function to stop Run
+     * 
+     * @return RC_e Result code
+     */
+    RC_e Stop();
 
     /**
      * @brief Print Buffer of requests
@@ -101,16 +124,27 @@ public:
      */
     RC_e DisableDebugMode();
 
+    /**
+     * @brief Function to print the debug message
+     * 
+     * @param msg Message
+     * @return RC_e Result code
+     */
+    RC_e Debug(char* msg);
+
 private:
 
-    HardwareSerial* m_serial;                       /**< \brief SPI master object */
-    RequestBuffer* m_requestBuffer = NULL;                     /**< \brief Array of SPI Slaves */
+    HardwareSerial* m_serial;                       /**< \brief Reference of Serial Port */
+    RequestBuffer* m_requestBuffer = NULL;          /**< \brief Request Buffer object */
 
-    bool m_debugMode = false;                                   /**< Debug Mode */
+    bool m_debugMode = false;                       /**< \brief Debug Mode */
 
     /**
      * @brief Function to configure serial port
      * 
+     * @param baud Baud rate speed
+     * @param RX RX pin
+     * @param TX TX pin
      * @return RC_e Result code
      */
     RC_e ConfigureSerial(uint32_t baud, uint8_t RX, uint8_t TX);
@@ -118,10 +152,10 @@ private:
     /**
      * @brief Function to send a request
      * 
-     * @param request Request
+     * @param request Reference of a request object
      * @return RC_e Result code
      */
-    RC_e SendRequest(Request request);
+    RC_e SendRequest(Request* request);
 
     /**
      * @brief Function to read a request
@@ -132,20 +166,12 @@ private:
     RC_e ReadRequest(Request* request);
 
     /**
-     * @brief Function to read the next request
+     * @brief Virtual function to handle the respuest
      * 
+     * @param request Reference of a request object
      * @return RC_e Result code
      */
-    RC_e ReadNextRequest(Request* request);
-
     RC_e virtual HandleRequest(Request* request) = 0;
-
-    /**
-     * @brief Function to print the debug message
-     * 
-     * @return RC_e Result code
-     */
-    RC_e Debug(char* msg);
 
 };
 

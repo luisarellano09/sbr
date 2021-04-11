@@ -84,10 +84,10 @@ enum COM_REQUEST_TYPE_e {
  */
 enum COM_REQUEST_REG_ID_e {
     NONE_REG_ID = 0,
-	REGISTER_01,                        /** REGISTER 01 */
-    REGISTER_02,	                    /** REGISTER 02 */
-    REGISTER_03,	                    /** REGISTER 03 */
-    REGISTER_04,	                    /** REGISTER 04 */
+	NODE_ESP32_HEART_BIT01,                  /** REGISTER 01 */
+    NODE_ESP32_HEART_BIT02,	                /** REGISTER 02 */
+    NODE_ESP32_HEART_BIT_STATUS,	            /** REGISTER 03 */
+    NODE_ESP32_HEART_BIT_ERRORS,	                    /** REGISTER 04 */
     REGISTER_05,	                    /** REGISTER 05 */
     REGISTER_06,	                    /** REGISTER 06 */
     REGISTER_07,	                    /** REGISTER 07 */
@@ -184,7 +184,7 @@ enum COM_REQUEST_REG_ID_e {
     REGISTER_98,	                    /** REGISTER 98 */
     REGISTER_99,	                    /** REGISTER 99 */
     REGISTER_100,	                    /** REGISTER 100 */
-	LENGTH_REG_ID = 1000                /** Number of registers */					            
+	LENGTH_REG_ID = 3000                /** Number of registers */					            
 };
 
 #endif /* GLOBALDEF_H */

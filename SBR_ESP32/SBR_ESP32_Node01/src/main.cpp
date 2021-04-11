@@ -81,6 +81,8 @@ void LoopCore0( void * parameter ){
 
                         case 'p':
                         case 'P':
+                            Serial.println("Programming Mode.....");
+                            manager->m_node01->Start();
                             manager->m_wifiManager->Connect();
                             break;
 
@@ -113,6 +115,18 @@ void LoopCore0( void * parameter ){
                             manager->m_node01->SendNextRequest();
                             break;
 
+                        case '3':
+                            manager->m_node01->clear();
+                            break;
+
+                        case '4':
+                            manager->m_node01->printtest();
+                            break;
+
+                        case '5':          
+                            manager->m_node01->Start();
+                            break; 
+
                         case 'i':
                             manager->m_node01->PrintBuffer();
                             break;
@@ -125,7 +139,7 @@ void LoopCore0( void * parameter ){
             // ==========================
         }
 
-        manager->m_node01->Listen();
+        manager->m_node01->Run();
 
         feedLoopWDT();
     }
