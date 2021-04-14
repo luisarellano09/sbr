@@ -26,13 +26,13 @@
  * @brief Wifi name
  * 
  */
-#define WIFI_SSID "ap01"
+#define WIFI_SSID "sbrap"
 
 /**
  * @brief Wifi password
  * 
  */
-#define WIFI_PASSWORD "12345678"
+#define WIFI_PASSWORD "La123456"
 
 // ========================== HOSTNAME =======================
 

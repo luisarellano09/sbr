@@ -36,9 +36,9 @@ class Manager {
 public:  
 
     WifiManager* m_wifiManager = NULL;              /**< \brief Instance for Wifimanager. */
-    NodeEsp32* m_nodeESP32 = NULL;  /**< \brief Instance for SPI Master Manager. */
-    NodeLinux* m_nodeLinux = NULL;  /**< \brief Instance for SPI Master Manager. */
-    TableRegister* m_tableRegister = NULL;                      /**< \brief Instance for RT table. */
+    NodeEsp32* m_nodeESP32 = NULL;                  /**< \brief Instance for SPI Master Manager. */
+    NodeLinux* m_nodeLinux = NULL;                  /**< \brief Instance for SPI Master Manager. */
+    TableRegister* m_tableRegister = NULL;          /**< \brief Instance for RT table. */
 
     /**
      * @brief Construct a new Manager object
