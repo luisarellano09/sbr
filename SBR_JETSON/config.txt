@@ -21,8 +21,7 @@ SSD
 	https://github.com/NVIDIA-AI-IOT/jetson-cloudnative-demo
 
 
-VNC
-	https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-18-04#step-4-%E2%80%94-running-vnc-as-a-system-service
+
 
 D435
 	https://github.com/IntelRealSense/librealsense/blob/master/doc/installation_jetson.md
