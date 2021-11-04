@@ -14,7 +14,7 @@
 #       User: nx
 #       Password: La1123.
 #       Hostname: SBRNX
-#       Wireless LAN: sbrapp / La123456
+#       Wireless LAN: sbrapp / La12345678
 #
 #   copy the config.sh in the root and execute.
 
@@ -43,6 +43,9 @@ if [ ! -f exec01 ]; then
     sudo apt install htop
     sudo apt install nano
 
+    echo "****** Installing Serial lib ******"
+    sudo apt install libudev-dev
+
     echo "****** Setup Docker ******"
     sudo apt-get install \
     apt-transport-https \
@@ -59,6 +62,9 @@ if [ ! -f exec01 ]; then
     sudo pip3 install setuptools_rust
     pip install --upgrade pip
     sudo pip3 -v install docker-compose
+
+    sudo systemctl enable docker.service
+    sudo systemctl enable containerd.service
 
     echo "****** Setup NVMe ******"
     sudo mkfs.ext4 /dev/nvme0n1

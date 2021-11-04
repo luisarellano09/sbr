@@ -11,7 +11,7 @@
 # Previous Steps
 #   sudo raspi-config
 #       System Options
-#           Wireless LAN: sbrapp / La123456
+#           Wireless LAN: sbrapp / La12345678
 #           Password: La1123.
 #           Hostname: SBRPI
 #           Boot/Auto Login: B2 Console Autologin
@@ -62,6 +62,8 @@ sudo apt-get install -y python3 python3-pip
 sudo apt-get remove python-configparser
 sudo pip3 -v install docker-compose
 
+echo "****** Installing Serial lib ******"
+sudo apt install libudev-dev
 
 
 exit 0
