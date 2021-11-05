@@ -9,7 +9,15 @@ use termios::{Termios, TCSANOW, ECHO, ICANON, tcsetattr};
 
 
 pub fn run(){
-    let mut serial1_read: Serial = Serial::new(String::from("/dev/ttyUSB0"), 115200, 3000).unwrap();
+    let mut port; 
+    loop {
+        port = select_port_terminal();
+        if port != "" {
+            break;
+        }
+    }
+    
+    let mut serial1_read: Serial = Serial::new(port, 115200, 3000000).unwrap();
     let mut serial1_write: Serial = Serial::clone(&serial1_read).unwrap();
 
     // Send 
@@ -39,4 +47,43 @@ pub fn read_char_terminal() -> u8 {
     reader.read_exact(&mut buffer).unwrap();
     tcsetattr(stdin, TCSANOW, & termios).unwrap();
     buffer[0]
+}
+
+fn select_port_terminal() -> String {
+
+    let list_ports: Vec<String>;
+
+    println!("\r\nSelect the serial port:");
+
+    list_ports = Serial::get_ports().unwrap();
+
+    if list_ports.len() < 1 {
+        panic!("No ports detected");
+    }
+
+    let mut cnt = 0;
+    for port in &list_ports{
+        println!("{}: {}", cnt, port);
+        cnt = cnt+1;
+    }
+
+    let mut input_text = String::new();
+    io::stdin()
+        .read_line(&mut input_text)
+        .expect("failed to read from stdin");
+
+    let trimmed = input_text.trim();
+    match trimmed.parse::<usize>() {
+        Ok(num) => {
+            if num < list_ports.len() {
+                return list_ports[num].clone();
+            }
+        },
+        Err(..) => {
+            
+        },
+    };
+
+    eprintln!("Wrong option: {}", trimmed);
+    String::from("")
 }

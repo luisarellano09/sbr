@@ -9,6 +9,12 @@ use serialport::{available_ports, SerialPort};
 use std::time::Duration;
 
 /*******************************************************************************************************************************************
+ *  												CONST
+ *******************************************************************************************************************************************/
+const NO_TIMEOUT: u64 = 600000;
+
+
+/*******************************************************************************************************************************************
  *  												ENUMS
  *******************************************************************************************************************************************/
 
@@ -58,8 +64,8 @@ impl Serial {
             }
         };
 
-        let temp_port = match serialport::new(&portname, baudrate)
-            .timeout(Duration::from_secs(timeout))
+        let mut temp_port = match serialport::new(&portname, baudrate)
+            .timeout(Duration::from_millis(timeout))
             .open(){
                 Ok(port) => port,
                 Err(er) => {
@@ -68,7 +74,9 @@ impl Serial {
                     return Err(e.into());
                 }
         };
-                            
+
+        temp_port.write_request_to_send(false).unwrap();
+                  
         Ok(Serial{
             m_portname : portname.clone(),
             m_baudrate: baudrate,
@@ -177,6 +185,27 @@ impl Serial {
         }
 
         Ok(())
+    }
+
+//=====================================================================================================
+    pub fn get_ports() -> Result<Vec<String>, Box<dyn Error>> {
+        match available_ports() {
+            Ok(ports) => {
+                
+                let mut res_ports: Vec<String> = vec![];
+
+                for p in ports {
+                    res_ports.push(p.port_name);
+                }
+
+                Ok(res_ports)
+            },
+            Err(er) => {
+                let e = format!("Error: {:?}, available_ports() <- list_ports()", er);
+                eprintln!("{}",e);
+                return Err(e.into());
+            }
+        }
     }
 
 //=====================================================================================================
