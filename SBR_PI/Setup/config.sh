@@ -11,7 +11,7 @@
 # Previous Steps
 #   sudo raspi-config
 #       System Options
-#           Wireless LAN: sbrapp / La12345678
+#           Wireless LAN: sbrap / La123456
 #           Password: La1123.
 #           Hostname: SBRPI
 #           Boot/Auto Login: B2 Console Autologin
@@ -28,6 +28,8 @@
 #   copy the config.sh in the root and execute.
 #
 
+# In Host
+# ssh-copy-id pi@sbrpi.local
 
 
 clear

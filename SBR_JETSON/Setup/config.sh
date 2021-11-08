@@ -18,6 +18,12 @@
 #
 #   copy the config.sh in the root and execute.
 
+# In Host
+# ssh-copy-id nx@sbrnx.local
+
+# NVMe SSD Boot
+# https://www.jetsonhacks.com/2021/08/25/native-boot-for-jetson-xaviers/
+
 
 if [ ! -f exec01 ]; then
     # run your scripts here
@@ -30,6 +36,7 @@ if [ ! -f exec01 ]; then
     sudo apt update
     sudo apt upgrade
     sudo apt dist-upgrade
+    sudo apt autoremove
 
     echo "****** Creating Folders ******"
     mkdir SBR
@@ -42,6 +49,10 @@ if [ ! -f exec01 ]; then
     echo "****** Installing Applications ******"
     sudo apt install htop
     sudo apt install nano
+
+    echo "****** Installing video******"
+    sudo apt-get install xorg-dev libglu1-mesa-dev
+    sudo apt-get install v4l-utils
 
     echo "****** Installing Serial lib ******"
     sudo apt install libudev-dev
@@ -58,19 +69,19 @@ if [ ! -f exec01 ]; then
 
     sudo apt-get install -y libffi-dev libssl-dev
     sudo apt-get install -y python3 python3-pip
-    sudo apt-get remove python-configparser
+    sudo pip3 install --upgrade pip
     sudo pip3 install setuptools_rust
-    pip install --upgrade pip
     sudo pip3 -v install docker-compose
 
     sudo systemctl enable docker.service
     sudo systemctl enable containerd.service
 
-    echo "****** Setup NVMe ******"
-    sudo mkfs.ext4 /dev/nvme0n1
-    sudo mkdir /home/nx/nvme
-    sudo mount /dev/nvme0n1 /home/nx/nvme
-    echo "/dev/nvme0n1 /home/nx/nvme ext4 defaults 0 1" | sudo tee -a /etc/fstab
+    echo "****** Installing IntelRealSense ******"
+    cd
+    git clone https://github.com/JetsonHacksNano/installLibrealsense.git
+    cd installLibrealsense
+    ./installLibrealsense.sh 
+
 
     # create a flag file to check if we are resuming from reboot.
     cd
@@ -80,10 +91,6 @@ fi
 
 if [ ! -f exec02 ]; then
     # run your scripts here
-
-    echo "****** Setup Docker in NVMe ******"
-    sudo mv /var/lib/docker /home/nx/nvme
-    sudo ln -s /home/nx/nvme/docker /var/lib/docker
 
     echo "****** Turn off zram ******"
     cd /etc/systemd
@@ -100,6 +107,7 @@ if [ ! -f exec03 ]; then
     # run your scripts here
 
     echo "****** Create swap file on NVMe ******"
+    mkdir nvme
     sudo fallocate -l 100G /home/nx/nvme/swapfile
     sudo chmod 600 /home/nx/nvme/swapfile
     sudo mkswap /home/nx/nvme/swapfile
