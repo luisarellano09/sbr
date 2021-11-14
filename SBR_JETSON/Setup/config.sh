@@ -57,6 +57,9 @@ if [ ! -f exec01 ]; then
     echo "****** Installing Serial lib ******"
     sudo apt install libudev-dev
 
+    echo "****** Installing Rust ******"
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
     echo "****** Setup Docker ******"
     sudo apt-get install \
     apt-transport-https \
