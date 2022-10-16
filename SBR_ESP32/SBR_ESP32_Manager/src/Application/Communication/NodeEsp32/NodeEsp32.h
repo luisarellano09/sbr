@@ -2,9 +2,8 @@
  * @file NodeEsp32.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to Manage the NodeEsp32
- * @version 2.0
- * @date 09.01.2021
- * 
+ * @version 1.0
+ * @date 16.10.2022
  * 
  */
 
@@ -45,19 +44,12 @@ public:
     ~NodeEsp32();
 
     /**
-     * @brief Function to connect with a Table Register object.
+     * @brief Function to connect with a Table Register.
      * 
-     * @param tableRegister Reference of a Table Register object
+     * @param tableRegister Reference of a Table Register
      * @return RC_e Result code
      */
     RC_e ConnectTableRegister(TableRegister* tableRegister);
-
-    /**
-     * @brief Function to execute the heart bit monitoring.
-     * 
-     * @return RC_e Result code
-     */
-    RC_e HeartBitMonitoring();
 
 private:
 

@@ -1,8 +1,0 @@
-<map id="call_matcher_after_transmission" name="call_matcher_after_transmission">
-<area shape="rect" id="node1" title=" " alt="" coords="5,49,149,90"/>
-<area shape="rect" id="node2" href="$class_slave_s_p_i.html#a34c5782fcfe6013cb0841d70467e5234" title=" " alt="" coords="197,56,455,83"/>
-<area shape="rect" id="node3" href="$class_slave_s_p_i.html#adc3f47f2217e77a343af65b46fbb367d" title=" " alt="" coords="503,49,696,90"/>
-<area shape="rect" id="node4" href="$class_simple_array.html#a7d77eb820300d1bbb8c762b728a4805c" title=" " alt="" coords="744,5,915,32"/>
-<area shape="rect" id="node5" href="$class_simple_array.html#a106276f7c1a207d2fc14c073516e3540" title=" " alt="" coords="754,56,905,83"/>
-<area shape="rect" id="node6" href="$class_simple_array.html#a3f99098b5dc871ebf39e22963be71810" title=" " alt="" coords="750,107,909,133"/>
-</map>

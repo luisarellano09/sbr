@@ -1,6 +1,0 @@
-<map id="RegisterRT::AddSubscriber" name="RegisterRT::AddSubscriber">
-<area shape="rect" id="node1" title="Add subscriber to a register." alt="" coords="653,5,847,32"/>
-<area shape="rect" id="node2" href="$class_table_r_t.html#a78cff888b3be4a6de827340520a3a016" title="Add subscriber to a register." alt="" coords="432,5,605,32"/>
-<area shape="rect" id="node3" href="$class_manager.html#a4baa69f1bf4f283ab0915a4865dc1f36" title="Add Subscribers to the Table." alt="" coords="197,5,384,32"/>
-<area shape="rect" id="node4" href="$class_manager.html#a1658ff9f18e38ccd9cb8b0b371b9c20b" title="Construct a new Manager object." alt="" coords="5,5,149,32"/>
-</map>

@@ -2,8 +2,8 @@
  * @file WifiManager.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to Manage the ESP32 Wifi
- * @version 2.0
- * @date 09.01.2021
+ * @version 1.0
+ * @date 16.10.2022
  * 
  * 
  */
@@ -50,28 +50,28 @@ public:
     ~WifiManager();
 
     /**
-     * @brief Connect to Wifi services
+     * @brief Function to connect to Wifi services
      * 
      * @return RC_e Result code
      */
     RC_e Connect();
 
     /**
-     * @brief Run OTA service
+     * @brief Function to run OTA service
      * 
      * @return RC_e Result code
      */
     RC_e RunOTA();
 
     /**
-     * @brief Enable the debug mode of the class
+     * @brief Function to enable the debug mode of the class
      * 
      * @return RC_e Result code
      */
     RC_e EnableDebugMode();
 
     /**
-     * @brief Disable the debug mode of the class
+     * @brief Function to disable the debug mode of the class
      * 
      * @return RC_e Result code
      */
@@ -85,14 +85,14 @@ private:
     bool m_debugMode = false;   /**< Debug Mode */
 
     /**
-     * @brief Configure the Wifi
+     * @brief Function to configure the Wifi
      * 
      * @return RC_e Ressult code
      */
     RC_e ConfigureWifi();
 
     /**
-     * @brief Connect to a Wifi
+     * @brief Function to connect to a Wifi
      * 
      * @return RC_e Result code
      */
@@ -107,7 +107,7 @@ private:
     void WiFiEvent(WiFiEvent_t event,system_event_info_t info);
 
     /**
-     * @brief Configure the OTA service
+     * @brief Function to configure the OTA service
      * 
      * @return RC_e Result code
      */

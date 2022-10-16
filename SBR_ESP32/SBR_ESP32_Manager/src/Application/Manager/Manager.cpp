@@ -39,10 +39,6 @@ Manager::~Manager(){}
  *  												PUBLIC METHODS
  *******************************************************************************************************************************************/
 
-void Manager::CommunicationTestStart(){
-    m_TestingMode = true;
-    this->CommunicationTestInit();    
-}
 
 //=====================================================================================================
 RC_e Manager::EnableDebugMode(){
@@ -71,29 +67,9 @@ RC_e Manager::DisableDebugMode(){
 //=====================================================================================================
 RC_e Manager::AddSubscribers(){
 
+    this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::REGISTER_50, DEVICE_e::ESP32_NODE01);
+    this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::REGISTER_51, DEVICE_e::ESP32_NODE02);
     return RC_e::SUCCESS;
-}
-
-//=====================================================================================================
-void Manager::CommunicationTestInit(){
-
-    // for (uint16_t i=0; i<COM_REQUEST_REG_ID_e::LENGTH_REG_ID; i++ ){
-    //     // Cleaning Subscribers
-    //     this->m_tableRegister->m_registers[i].Clean();
-    // }
-
-    // // Iterate through Nodes to add subscribers
-    // int nodeNumber = 2;
-    // for (int node=0; node<nodeNumber; node++){
-    //     for (int nodeSubs=0; nodeSubs<nodeNumber; nodeSubs++){
-    //         if (nodeSubs != node){
-    //             for (int registerOffset=0; registerOffset<10; registerOffset++){
-    //                 int tempRegister = 100*nodeSubs + registerOffset;
-    //                 this->m_tableRegister->AddSubscriber((COM_REQUEST_REG_ID_e)tempRegister, (DEVICE_e)node);
-    //             }
-    //         }
-    //     }
-    // }
 }
 
 //=====================================================================================================

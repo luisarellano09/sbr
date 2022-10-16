@@ -1,5 +1,0 @@
-<map id="SPI_MasterManager::SetSlaveCS" name="SPI_MasterManager::SetSlaveCS">
-<area shape="rect" id="node1" title="SFunction to set the Slave chip select." alt="" coords="417,5,576,47"/>
-<area shape="rect" id="node2" href="$class_manager.html#acf2b29e91d0d4fb28f3b8fd6eeebe6b7" title="Add Chip Select of the Slaves." alt="" coords="197,13,369,39"/>
-<area shape="rect" id="node3" href="$class_manager.html#a1658ff9f18e38ccd9cb8b0b371b9c20b" title="Construct a new Manager object." alt="" coords="5,13,149,39"/>
-</map>

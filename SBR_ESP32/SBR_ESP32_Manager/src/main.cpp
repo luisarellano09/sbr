@@ -46,51 +46,6 @@ bool flagTimer3 = false;
  *  												TEST
  *******************************************************************************************************************************************/
 
-void testNode(){
-    manager->m_nodeESP32->AddRequest(DEVICE_e::ESP32_NODE01, COM_REQUEST_TYPE_e::READ, COM_REQUEST_REG_ID_e::REGISTER_10, 100);
-    manager->m_nodeESP32->AddRequest(DEVICE_e::ESP32_NODE02, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::REGISTER_20, 200);
-    manager->m_nodeESP32->AddRequest(DEVICE_e::MANAGER, COM_REQUEST_TYPE_e::READ, COM_REQUEST_REG_ID_e::REGISTER_30, 300);
-    manager->m_nodeESP32->PrintBuffer();
-
-
-    if (manager->m_nodeESP32->SendNextRequest() == RC_e::SUCCESS){
-        Serial.println("SUCCESS");
-    }
-    manager->m_nodeESP32->PrintBuffer();
-
-    if (manager->m_nodeESP32->SendNextRequest() == RC_e::SUCCESS){
-        Serial.println("SUCCESS");
-    }
-    manager->m_nodeESP32->PrintBuffer();
-
-    if (manager->m_nodeESP32->SendNextRequest() == RC_e::SUCCESS){
-        Serial.println("SUCCESS");
-    }
-    manager->m_nodeESP32->PrintBuffer();
-
-    if (manager->m_nodeESP32->SendNextRequest() == RC_e::SUCCESS){
-        Serial.println("SUCCESS");
-    }
-    manager->m_nodeESP32->PrintBuffer();
-
-    if (manager->m_nodeESP32->SendNextRequest() == RC_e::SUCCESS){
-        Serial.println("SUCCESS");
-    }
-    manager->m_nodeESP32->PrintBuffer();
-
-}
-
-void testTable(){
-    manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_10, 1000);
-
-    manager->m_tableRegister->PrintTable();
-}
-
-
-void test(){
-    //testNode();
-    testTable();
-}
 
 
 
@@ -106,7 +61,7 @@ void LoopCore0( void * parameter ){
         if (flagTimer0){
             flagTimer0 = false;
 
-            manager->m_nodeESP32->HeartBitMonitoring();
+
         }
 
         // Code for Timer 1 interruption
@@ -138,12 +93,6 @@ void LoopCore0( void * parameter ){
                             ESP.restart();
                             break;
 
-                        case 't':
-                        case 'T':
-                            manager->CommunicationTestStart();
-                            Serial.println("Testing...");
-                            break;
-
                         case 'l':
                         case 'L':
                             manager->EnableDebugMode();
@@ -156,29 +105,31 @@ void LoopCore0( void * parameter ){
                             Serial.println("Disable Debug...");
                             break;
 
+                        case 's': 
+                        case 'S':        
+                            manager->m_nodeESP32->Start();
+                            Serial.println("Stating ESP32 Node...");
+                            break; 
+
                         case '1':
-                            test();
+                            manager->m_tableRegister->PrintTable();
                             break;
 
                         case '2':
-                            manager->m_nodeESP32->AddRequest(DEVICE_e::MANAGER, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::REGISTER_10, 20);
-                            manager->m_nodeESP32->SendNextRequest();
+                            manager->m_nodeESP32->AddRequest(DEVICE_e::ESP32_NODE01, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::REGISTER_10, 69);
+                            manager->m_nodeESP32->PrintBuffer();
                             break;
 
                         case '3':
-                            Serial.println("Testing...");
-                            for (int i=0; i<500; i++){
-                                manager->m_nodeESP32->AddRequest(DEVICE_e::MANAGER, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::NODE_ESP32_HEART_BIT01, i);
-                            }
+                            manager->m_nodeESP32->AddRequest(DEVICE_e::ESP32_NODE02, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::REGISTER_20, 90);
+                            manager->m_nodeESP32->PrintBuffer();
                             break;
 
-                        case '4':          
-                            manager->m_nodeESP32->PrintBuffer();
-                            break; 
-
-                        case '5':          
-                            manager->m_nodeESP32->Start();
-                            break; 
+                        case '4':
+                            manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_50, 150);
+                            manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_51, 151);
+                            manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_52, 152);
+                            break;
 
                     }
                 }

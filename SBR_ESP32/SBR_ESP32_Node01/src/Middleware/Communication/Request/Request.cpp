@@ -2,9 +2,8 @@
  * @file Request.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to describe a request
- * @version 2.0
- * @date 09.01.2021
- * 
+ * @version 1.0
+ * @date 14.09.2022
  * 
  */
 

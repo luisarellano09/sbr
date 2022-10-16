@@ -2,8 +2,8 @@
  * @file GlobalDef.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Global definitions of SBR
- * @version 2.0
- * @date 09.01.2021
+ * @version 1.0
+ * @date 16.10.2022
  * 
  */
 
@@ -59,8 +59,6 @@ enum DEVICE_e {
     NONE_DEVICE = 0,    /** None*/
 	ESP32_NODE01,       /** ESP32 Node01*/
 	ESP32_NODE02,       /** ESP32 Node02*/
-	//ESP32_NODE03,     /** ESP32 Node03*/
-    BROADCAST_ESP32,    /** ESP32 Broadcast*/
     LINUX,              /** Linux*/
     MANAGER,            /** Manager*/
     LENGTH_DEVICE       /** Length*/
@@ -84,10 +82,10 @@ enum COM_REQUEST_TYPE_e {
  */
 enum COM_REQUEST_REG_ID_e {
     NONE_REG_ID = 0,
-	NODE_ESP32_HEART_BIT01,                  /** REGISTER 01 */
-    NODE_ESP32_HEART_BIT02,	                /** REGISTER 02 */
-    NODE_ESP32_HEART_BIT_STATUS,	            /** REGISTER 03 */
-    NODE_ESP32_HEART_BIT_ERRORS,	                    /** REGISTER 04 */
+	NODE_ESP32_HEART_BIT01,             /** REGISTER 01 */
+    NODE_ESP32_HEART_BIT02,	            /** REGISTER 02 */
+    NODE_ESP32_HEART_BIT_STATUS,	    /** REGISTER 03 */
+    NODE_ESP32_HEART_BIT_ERRORS,	    /** REGISTER 04 */
     REGISTER_05,	                    /** REGISTER 05 */
     REGISTER_06,	                    /** REGISTER 06 */
     REGISTER_07,	                    /** REGISTER 07 */
@@ -184,7 +182,7 @@ enum COM_REQUEST_REG_ID_e {
     REGISTER_98,	                    /** REGISTER 98 */
     REGISTER_99,	                    /** REGISTER 99 */
     REGISTER_100,	                    /** REGISTER 100 */
-	LENGTH_REG_ID = 3000                /** Number of registers */					            
+	LENGTH_REG_ID                       /** Number of registers */					            
 };
 
 #endif /* GLOBALDEF_H */

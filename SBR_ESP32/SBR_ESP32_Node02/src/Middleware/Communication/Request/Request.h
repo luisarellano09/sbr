@@ -2,9 +2,8 @@
  * @file Request.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to describe a request
- * @version 2.0
- * @date 09.01.2021
- * 
+ * @version 1.0
+ * @date 14.09.2022
  * 
  */
 
@@ -33,7 +32,7 @@ public:
     uint8_t reqType;    /**< \brief Request type: Read or Write. */
     uint16_t regId;     /**< \brief Request ID. */
     int32_t data;       /**< \brief Data payload. */
-    uint16_t CRC;       /**< \brief Frame consistency. */
+    uint16_t CRC;       /**< \brief CRC. */
    
     /**
      * @brief Constructor
@@ -48,14 +47,14 @@ public:
     ~Request();
 
     /**
-     * @brief Clean request
+     * @brief Function to clean the request
      * 
      * @return RC_e Result code
      */
     RC_e Clean();  
 
     /**
-     * @brief Print request
+     * @brief Function to print the request
      * 
      * @return RC_e Result code
      */

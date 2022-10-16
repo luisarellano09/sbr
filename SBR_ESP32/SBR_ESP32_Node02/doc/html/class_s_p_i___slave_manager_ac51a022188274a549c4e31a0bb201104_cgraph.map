@@ -1,6 +1,0 @@
-<map id="SPI_SlaveManager::AddWriteRequest" name="SPI_SlaveManager::AddWriteRequest">
-<area shape="rect" id="node1" title="Add a write&#45;type request to the buffer." alt="" coords="5,5,216,47"/>
-<area shape="rect" id="node2" href="$class_s_p_i___slave_manager.html#a1e921446d5a4d5cf154d3c2994b6b7da" title="Add request to the buffer." alt="" coords="264,13,492,39"/>
-<area shape="rect" id="node3" href="$_utility_8h.html#a92fd1cc3fb432cde66fb1af15078cc16" title="Calculate CRC of a request." alt="" coords="540,13,731,39"/>
-<area shape="rect" id="node4" href="$_utility_8h.html#a16e3637a67aa53dc443e5c33a34b9c3d" title="Convert Request to Buffer format." alt="" coords="779,13,908,39"/>
-</map>

@@ -38,10 +38,8 @@ NodeLinux::~NodeLinux(){}
 
 RC_e NodeLinux::HandleRequest(Request* request){
 
-    Serial.printf("Ohh yeah: %d\r\n", request->data);
+    request->Print();
 
     return RC_e::SUCCESS;
-bool startTest = false;
-
 }
 

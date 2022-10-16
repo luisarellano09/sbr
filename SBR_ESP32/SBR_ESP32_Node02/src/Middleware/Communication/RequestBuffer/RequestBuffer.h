@@ -2,8 +2,8 @@
  * @file RequestBuffer.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to describe the Buffer of requests
- * @version 2.0
- * @date 09.01.2021
+ * @version 1.0
+ * @date 16.10.2022
  * 
  * 
  */
@@ -43,7 +43,7 @@ public:
     ~RequestBuffer();
 
     /**
-     * @brief Add request to the buffer
+     * @brief Function to add request to the buffer
      * 
      * @param nodeId Node ID
      * @param reqType Request type
@@ -54,7 +54,7 @@ public:
     RC_e AddRequest(DEVICE_e nodeId, COM_REQUEST_TYPE_e reqType, COM_REQUEST_REG_ID_e regID, uint32_t data);  
 
     /**
-     * @brief Add request to the buffer
+     * @brief Function to add request to the buffer
      * 
      * @param request Pointer of request
      * @return RC_e Result code
@@ -62,7 +62,7 @@ public:
     RC_e AddRequest(Request* request);  
 
     /**
-     * @brief Consume request from the buffer
+     * @brief Function to consume request from the buffer
      * 
      * @param request Pointer of request
      * @return RC_e Result code
@@ -70,28 +70,28 @@ public:
     RC_e ConsumeRequest(Request* request);  
 
     /**
-     * @brief Clean Buffer of requests
+     * @brief Function to clean Buffer of requests
      * 
      * @return RC_e 
      */
     RC_e CleanBuffer();  
 
     /**
-     * @brief Print Buffer of requests
+     * @brief Function to print Buffer of requests
      * 
      * @return RC_e 
      */
     RC_e PrintBuffer();  
 
     /**
-     * @brief Enable the debug mode of the class
+     * @brief Function to enable the debug mode of the class
      * 
      * @return RC_e Result code
      */
     RC_e EnableDebugMode();
 
     /**
-     * @brief Disable the debug mode of the class
+     * @brief Function to disable the debug mode of the class
      * 
      * @return RC_e Result code
      */

@@ -2,8 +2,8 @@
  * @file RequestBuffer.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to describe the Buffer of requests
- * @version 2.0
- * @date 09.01.2021
+ * @version 1.0
+ * @date 16.10.2022
  * 
  * 
  */
@@ -19,11 +19,9 @@
  *******************************************************************************************************************************************/
 
 RequestBuffer::RequestBuffer(){
-    // Error code
-    RC_e retCode = RC_e::ERROR;
-
-    if ((retCode = CleanBuffer()) != RC_e::SUCCESS){
-        Debug("Error: CleanBuffer in RequestBuffer::RequestBuffer()");     
+    // Clean Buffer
+    if (this->CleanBuffer() != RC_e::SUCCESS){
+        Debug("Error: CleanBuffer() in RequestBuffer::RequestBuffer()");     
     }
 }
 
@@ -35,7 +33,7 @@ RequestBuffer::~RequestBuffer(){}
  *******************************************************************************************************************************************/
 
 RC_e RequestBuffer::AddRequest(DEVICE_e nodeId, COM_REQUEST_TYPE_e reqType, COM_REQUEST_REG_ID_e regID, uint32_t data){
-    // Check if array is null
+    // Check if Request-Array is null
     if (this->m_RequestsArray == NULL){
         Debug("Error: ERROR_NULL_POINTER in RequestBuffer::AddRequest()");
         return RC_e::ERROR_NULL_POINTER;
@@ -47,6 +45,7 @@ RC_e RequestBuffer::AddRequest(DEVICE_e nodeId, COM_REQUEST_TYPE_e reqType, COM_
         return RC_e::ERROR_MAX_NODE_REQUEST_INDEX;
     }
 
+    // Increase index
     this->m_RequestsArrayIndex++;
 
     // Add request
@@ -62,7 +61,7 @@ RC_e RequestBuffer::AddRequest(DEVICE_e nodeId, COM_REQUEST_TYPE_e reqType, COM_
 //=====================================================================================================
 RC_e RequestBuffer::AddRequest(Request* request){
     // Result code
-    RC_e retCode = RC_e::ERROR;
+    RC_e retCode = RC_e::SUCCESS;
 
     // Check if the pointer is null
     if (request == NULL){
@@ -70,15 +69,17 @@ RC_e RequestBuffer::AddRequest(Request* request){
         return RC_e::ERROR_NULL_POINTER;
     }
 
+    // Add Request
     if ((retCode = this->AddRequest((DEVICE_e)request->nodeId, (COM_REQUEST_TYPE_e)request->reqType, (COM_REQUEST_REG_ID_e)request->regId, request->data)) != RC_e::SUCCESS){
-        Debug("Error: AddRequest in RequestBuffer::AddRequest()");
+        Debug("Error: AddRequest(...) in RequestBuffer::AddRequest()");
         return retCode;
     }
-    return RC_e::SUCCESS;
+    return retCode;
 }  
 
 //=====================================================================================================
 RC_e RequestBuffer::ConsumeRequest(Request* request){
+    // Check if index is valid
     if (m_RequestsArrayIndex < 0){
         // Set to NULL the pointer when there is no request
         request->nodeId = DEVICE_e::NONE_DEVICE; 
@@ -107,6 +108,8 @@ RC_e RequestBuffer::ConsumeRequest(Request* request){
 
         // Clean 
         this->m_RequestsArray[m_RequestsArrayIndex].Clean();
+
+        // Decrease index
         this->m_RequestsArrayIndex--;
     }
 
@@ -165,9 +168,12 @@ RC_e RequestBuffer::DisableDebugMode(){
  *******************************************************************************************************************************************/
 
 RC_e RequestBuffer::Debug(char* msg){
+    // Check if Debug mode is active
     if (this->m_debugMode){
+        // Print message
         Serial.println(msg);
     }
     
     return RC_e::SUCCESS;
 }
+

@@ -2,9 +2,8 @@
  * @file Manager.h
  * @author Luis Arellano - luis.arellano09@gmail.com
  * @brief Class to Manage the ESP32
- * @version 2.0
- * @date 10.01.2021
- * 
+ * @version 1.0
+ * @date 16.10.2022
  * 
  */
 
@@ -20,7 +19,7 @@
 
 #include "../../Middleware/WifiManager/WifiManager.h"
 
-#include "../Communication/Node01/Node01.h"
+#include "../Communication/NodeEsp32/NodeEsp32.h"
 
 /*******************************************************************************************************************************************
  *  												CLASS
@@ -34,7 +33,7 @@ class Manager {
 public:  
 
     WifiManager* m_wifiManager = NULL;              /**< Instance for Wifimanager */
-    Node01* m_node01 = NULL;
+    NodeEsp32* m_nodeESP32 = NULL;
 
     /**
      * @brief Construct a new Manager object
@@ -48,27 +47,6 @@ public:
      * 
      */
     ~Manager();
-
-    /**
-     * @brief Function to start testing the communication system
-     * 
-     * @return RC_e Result code
-     */
-    RC_e CommunicationTestStart();
-
-    /**
-     * @brief Function to publish registers to test the communication system
-     * 
-     * @return RC_e Result code
-     */
-    RC_e CommunicationTestPublish();
-
-    /**
-     * @brief Function to check the test of the communication system
-     * 
-     * @return RC_e Result code
-     */
-    RC_e CommunicationTestAnswer(COM_REQUEST_REG_ID_e regId, int32_t data);
 
     /**
      * @brief Enable the debug mode of the class
@@ -87,8 +65,6 @@ public:
    
 private:
 
-    bool m_TestingMode = false;     /**< Flag of testing mode. */
-    int32_t m_TestingCounter = 0;   /**< Counter of testing mode. */
     bool m_debugMode = false;       /**< Debug Mode */
 
     /**

@@ -1,10 +1,9 @@
 /**
  * @file TableRegister.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief Class to describe the Data Table
- * @version 2.0
- * @date 09.01.2021
- * 
+ * @brief Class to manage a Table of registers
+ * @version 1.0
+ * @date 16.10.2022
  * 
  */
 
@@ -26,7 +25,7 @@
  *******************************************************************************************************************************************/
 
 /**
- * @brief Class to describe the Data Table
+ * @brief Class to manage a Table of registers
  * 
  */
 class TableRegister {
@@ -47,7 +46,7 @@ public:
     ~TableRegister();
 
     /**
-     * @brief Add subscriber to a register
+     * @brief Function to add subscriber to a register
      * 
      * @param regId Register ID
      * @param subscriber Subscriber device
@@ -56,7 +55,7 @@ public:
     RC_e AddSubscriber(COM_REQUEST_REG_ID_e regId, DEVICE_e subscriber);  
 
     /**
-     * @brief Update Register
+     * @brief Function to update Register
      * 
      * @param regId Register ID
      * @param data Data Value
@@ -73,29 +72,30 @@ public:
     RC_e HandleRequest(Request* request);
 
     /**
-     * @brief Print
+     * @brief Function to print Register
+     * 
      * @param regId Register ID
      * 
      * @return RC_e Result code
      */
-    RC_e Print(COM_REQUEST_REG_ID_e regId);
+    RC_e PrintRegister(COM_REQUEST_REG_ID_e regId);
 
     /**
-     * @brief Print
+     * @brief Function to print the table
      * 
      * @return RC_e Result code
      */
     RC_e PrintTable();
 
     /**
-     * @brief Enable the debug mode of the class
+     * @brief Function to enable the debug mode of the class
      * 
      * @return RC_e Result code
      */
     RC_e EnableDebugMode();
 
     /**
-     * @brief Disable the debug mode of the class
+     * @brief Function to disable the debug mode of the class
      * 
      * @return RC_e Result code
      */
@@ -109,7 +109,7 @@ private:
     bool m_debugMode = false;                                       /**< \brief Debug Mode */
 
     /**
-     * @brief Clean registers
+     * @brief Function to clean registers
      * 
      * @return RC_e Result code
      */
@@ -120,6 +120,7 @@ private:
      * 
      * @param regId Register ID
      * @param data Data Value
+     * 
      * @return RC_e Result code
      */
     RC_e AddRequestToSubscribers(COM_REQUEST_REG_ID_e regId, int32_t data);
@@ -128,6 +129,7 @@ private:
      * @brief Function to print the debug message
      * 
      * @param msg Message
+     * 
      * @return RC_e Result code
      */
     RC_e Debug(char* msg);

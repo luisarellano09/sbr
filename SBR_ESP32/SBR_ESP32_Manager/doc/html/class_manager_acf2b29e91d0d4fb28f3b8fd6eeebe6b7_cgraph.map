@@ -1,4 +1,0 @@
-<map id="Manager::AddSlavesCS" name="Manager::AddSlavesCS">
-<area shape="rect" id="node1" title="Add Chip Select of the Slaves." alt="" coords="5,13,177,39"/>
-<area shape="rect" id="node2" href="$class_s_p_i___master_manager.html#a3744131e5a3f2532257028d025fbf5b0" title="SFunction to set the Slave chip select." alt="" coords="225,5,384,47"/>
-</map>

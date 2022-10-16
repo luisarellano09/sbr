@@ -1,10 +1,9 @@
 /**
  * @file Node.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief Class to manage the node
- * @version 2.0
- * @date 09.01.2021
- * 
+ * @brief Class to manage the communication node
+ * @version 1.0
+ * @date 10.09.2022
  * 
  */
 
@@ -28,7 +27,7 @@
  *******************************************************************************************************************************************/
 
 /**
- * @brief Class to manage the node
+ * @brief Class to manage the communication node
  * 
  */
 class Node {
@@ -39,6 +38,10 @@ public:
     /**
      * @brief Constructor
      * 
+     * @param serial Pointer of serialport
+     * @param baud Baud rate speed
+     * @param RX RX GPIO
+     * @param TX TX GPIO
      */
     Node(HardwareSerial* serial, uint32_t baud, uint8_t RX, uint8_t TX);
 
@@ -60,7 +63,7 @@ public:
     RC_e AddRequest(DEVICE_e nodeId, COM_REQUEST_TYPE_e reqType, COM_REQUEST_REG_ID_e regId, uint32_t data);
 
     /**
-     * @brief Add request to the buffer
+     * @brief Function to add request to the buffer
      * 
      * @param request Pointer of request
      * @return RC_e Result code
@@ -111,14 +114,14 @@ public:
     RC_e PrintBuffer();  
 
     /**
-     * @brief Enable the debug mode of the class
+     * @brief Function to enable the debug mode of the class
      * 
      * @return RC_e Result code
      */
     RC_e EnableDebugMode();
 
     /**
-     * @brief Disable the debug mode of the class
+     * @brief Function to disable the debug mode of the class
      * 
      * @return RC_e Result code
      */
@@ -134,7 +137,7 @@ public:
 
 private:
 
-    HardwareSerial* m_serial;                       /**< \brief Reference of Serial Port */
+    HardwareSerial* m_serial;                       /**< \brief Reference pointer of Serial Port */
     RequestBuffer* m_requestBuffer = NULL;          /**< \brief Request Buffer object */
 
     bool m_debugMode = false;                       /**< \brief Debug Mode */
@@ -143,8 +146,8 @@ private:
      * @brief Function to configure serial port
      * 
      * @param baud Baud rate speed
-     * @param RX RX pin
-     * @param TX TX pin
+     * @param RX RX GPIO
+     * @param TX TX GPIO
      * @return RC_e Result code
      */
     RC_e ConfigureSerial(uint32_t baud, uint8_t RX, uint8_t TX);
@@ -166,7 +169,7 @@ private:
     RC_e ReadRequest(Request* request);
 
     /**
-     * @brief Virtual function to handle the respuest
+     * @brief Virtual-Function to handle the respuest
      * 
      * @param request Reference of a request object
      * @return RC_e Result code

@@ -48,19 +48,19 @@
  * @brief NODE_ESP32s_BAUDRATE
  * 
  */
-#define NODE_ESP32s_BAUDRATE 460800 //921600
+#define NODE_ESP32s_BAUDRATE 460800
 
 /**
  * @brief NODE_ESP32s_TX
  * 
  */
-#define NODE_ESP32s_TX   22
+#define NODE_ESP32s_TX   19
 
 /**
  * @brief MNODE_ESP32s_RX
  * 
  */
-#define NODE_ESP32s_RX   23
+#define NODE_ESP32s_RX   21
 
 
 #endif /* LOCALDEF_H */

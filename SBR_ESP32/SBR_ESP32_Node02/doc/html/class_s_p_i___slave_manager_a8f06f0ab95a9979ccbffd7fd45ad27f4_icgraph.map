@@ -1,4 +1,0 @@
-<map id="SPI_SlaveManager::SPIConfigure" name="SPI_SlaveManager::SPIConfigure">
-<area shape="rect" id="node1" title="Configure the SPI Slave." alt="" coords="224,13,457,39"/>
-<area shape="rect" id="node2" href="$class_s_p_i___slave_manager.html#a8c0e202194281d3290695c7fc4bc95d1" title="Construct a new spi slavemanager object." alt="" coords="5,5,176,47"/>
-</map>

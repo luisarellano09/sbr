@@ -2,8 +2,8 @@
  * @file WifiManager.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to Manage the ESP32 Wifi
- * @version 2.0
- * @date 09.01.2021
+ * @version 1.0
+ * @date 16.10.2022
  * 
  * 
  */
@@ -18,7 +18,7 @@
  *******************************************************************************************************************************************/
 
 WifiManager::WifiManager(char* ssid, char* password, char* hostName){
-    // Set values
+    // Set Wifi values
     this->m_ssid = ssid;
     this->m_password = password;
     this->m_hostName = hostName;
@@ -32,8 +32,8 @@ WifiManager::~WifiManager(){}
  *******************************************************************************************************************************************/
 
 RC_e WifiManager::Connect(){
-    // Error code
-    RC_e retCode = RC_e::ERROR;
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
 
     // Check if the Wifi is connected
     if (WiFi.status() != WL_CONNECTED) {
@@ -54,24 +54,24 @@ RC_e WifiManager::Connect(){
         }
     }
 
-    return RC_e::SUCCESS;  
+    return retCode;  
 }
 
 //=====================================================================================================
 RC_e WifiManager::RunOTA(){
-    // Error code
-    RC_e retCode = RC_e::ERROR;
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
 
     // Check if the Wifi is connected
     if (WiFi.status() == WL_CONNECTED) {
-        // OTA
+        // OTA Handling
         if ((retCode = HandleOTA()) != RC_e::SUCCESS){
             Debug("Error: HandleOTA in WifiManager::RunOTA()");
             return retCode;        
         }
     }
 
-    return RC_e::SUCCESS;
+    return retCode;
 }
 
 //=====================================================================================================
@@ -266,7 +266,9 @@ RC_e WifiManager::HandleOTA(){
 
 //=====================================================================================================
 RC_e WifiManager::Debug(char* msg){
-    if (this->m_debugMode) {
+    // Check if Debug mode is active
+    if (this->m_debugMode){
+        // Print message
         Serial.println(msg);
     }
     

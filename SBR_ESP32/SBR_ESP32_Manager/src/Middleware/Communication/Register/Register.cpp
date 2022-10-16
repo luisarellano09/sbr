@@ -2,9 +2,8 @@
  * @file Register.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to describe a register
- * @version 2.0
- * @date 09.01.2021
- * 
+ * @version 1.0
+ * @date 14.09.2022
  * 
  */
 
@@ -23,7 +22,7 @@ Register::Register(){
     this->m_subscribers_index = -1;
 
     if (Clean() != RC_e::SUCCESS){
-        Debug("Error: Clean in Register::Register()");
+        Debug("Error: Clean() in Register::Register()");
     }
 }
 
@@ -58,13 +57,15 @@ RC_e Register::AddSubscriber(DEVICE_e subscriber){
 
 //=====================================================================================================
 RC_e Register::Clean(){
-    
+    // Init Value
     this->m_value = 0;
 
+    // Loop each subscribed device
     for (int i=0; i<DEVICE_e::LENGTH_DEVICE; i++){
         this->m_subscribers[i] = DEVICE_e::NONE_DEVICE;
     }
 
+    // Init index
     this->m_subscribers_index = -1;
 
     return RC_e::SUCCESS;
@@ -80,10 +81,10 @@ RC_e Register::Print(COM_REQUEST_REG_ID_e regId){
     }
 
     Serial.printf("* value: %d\r\n", this->m_value);
-    Serial.printf("* number of subscribers: %d\r\n", this->m_subscribers_index);  
+    Serial.printf("* number of subscribers: %d\r\n", this->m_subscribers_index+1);  
 
     for (int i=0; i<=this->m_subscribers_index; i++){
-        Serial.printf("* subs(%d) = %d\r\n", i, this->m_subscribers[this->m_subscribers_index]);
+        Serial.printf("* subs(%d) = %d\r\n", i+1, this->m_subscribers[this->m_subscribers_index]);
     }
     
     Serial.println("*****************");
@@ -107,7 +108,9 @@ RC_e Register::DisableDebugMode(){
  *******************************************************************************************************************************************/
 
 RC_e Register::Debug(char* msg){
+    // Check if debug mode is active
     if (this->m_debugMode){
+        // Print message
         Serial.println(msg);
     }
     

@@ -14,7 +14,7 @@
 #       User: nx
 #       Password: La1123.
 #       Hostname: SBRNX
-#       Wireless LAN: sbrapp / La12345678
+#       Wireless LAN: sbrap / La123456
 #
 #   copy the config.sh in the root and execute.
 

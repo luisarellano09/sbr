@@ -2,8 +2,8 @@
  * @file Utility.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Library with various functions
- * @version 2.0
- * @date 09-01-2021
+ * @version 1.0
+ * @date 16.10.2022
  * 
  * 
  */
@@ -23,7 +23,7 @@
  *******************************************************************************************************************************************/
 
 /**
- * @brief Convert Request to Buffer format
+ * @brief Function to convert Request to Buffer format
  * 
  * @param request Reference of a request 
  * @param buffer Reference of a buffer
@@ -51,7 +51,7 @@ static RC_e RequestToBuffer(Request* request, uint8_t* buffer){
 
 //=====================================================================================================
 /**
- * @brief Convert buffer to request format
+ * @brief Function to convert buffer to request format
  * 
  * @param buffer Reference of a buffer
  * @param request Reference of a request 
@@ -131,7 +131,7 @@ static const uint16_t Calc16CrcTab[256] = {
 
 //=====================================================================================================
 /**
- * @brief Calculate CRC of a request
+ * @brief Function to calculate CRC of a request
  * 
  * @param request Reference of a request object
  * @return uint16_t CRC value
@@ -144,23 +144,23 @@ static uint16_t CalculateCrcFromRequest(Request* request){
     }
 
     // Buffer
-    uint8_t _buffer[NODE_REQUEST_SIZE] = {0};
+    uint8_t tempBuffer[NODE_REQUEST_SIZE] = {0};
 
     // Convert request to buffer
-    RequestToBuffer(request, _buffer);
+    RequestToBuffer(request, tempBuffer);
 
     // Sum all CRC values
-    return  Calc16CrcTab[_buffer[0]] +
-            Calc16CrcTab[_buffer[1]] +
-            Calc16CrcTab[_buffer[2]] +
-            Calc16CrcTab[_buffer[3]] +
-            Calc16CrcTab[_buffer[4]] +
-            Calc16CrcTab[_buffer[5]];
+    return  Calc16CrcTab[tempBuffer[0]] +
+            Calc16CrcTab[tempBuffer[1]] +
+            Calc16CrcTab[tempBuffer[2]] +
+            Calc16CrcTab[tempBuffer[3]] +
+            Calc16CrcTab[tempBuffer[4]] +
+            Calc16CrcTab[tempBuffer[5]];
 }
 
 //=====================================================================================================
 /**
- * @brief Check if CRC is Ok
+ * @brief Function to check if CRC is Ok
  * 
  * @param request Reference of a request object
  * @return bool true=Ok, false=NotOK

@@ -1,6 +1,0 @@
-<map id="SPI_MasterManager::SPI_ReadSlaveRequest" name="SPI_MasterManager::SPI_ReadSlaveRequest">
-<area shape="rect" id="node1" title="Function to send a request." alt="" coords="5,23,176,65"/>
-<area shape="rect" id="node2" href="$_utility_8h.html#ade6249093f0f5ac0cdb96bc71b80d70b" title="Convert buffer to request format." alt="" coords="255,5,384,32"/>
-<area shape="rect" id="node3" href="$_utility_8h.html#a92fd1cc3fb432cde66fb1af15078cc16" title="Calculate CRC of a request." alt="" coords="224,56,415,83"/>
-<area shape="rect" id="node4" href="$_utility_8h.html#a16e3637a67aa53dc443e5c33a34b9c3d" title="Convert Request to Buffer format." alt="" coords="463,56,592,83"/>
-</map>

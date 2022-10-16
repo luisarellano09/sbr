@@ -1,5 +1,0 @@
-<map id="SPI_MasterManager::HandleReadSlaveRequest" name="SPI_MasterManager::HandleReadSlaveRequest">
-<area shape="rect" id="node1" title="Function to handle a read slave request." alt="" coords="5,35,196,76"/>
-<area shape="rect" id="node2" href="$class_s_p_i___master_manager.html#a6055fe8af2033935fc74f54eabcfb86d" title="Function to add a request to the subscribed slaves." alt="" coords="244,5,433,47"/>
-<area shape="rect" id="node3" href="$class_table_r_t.html#a5b8b00d171486702545bc9b58de2eb28" title="Update Register." alt="" coords="248,71,429,98"/>
-</map>

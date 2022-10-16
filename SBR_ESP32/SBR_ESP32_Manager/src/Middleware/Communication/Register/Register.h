@@ -2,9 +2,8 @@
  * @file Register.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to describe a register
- * @version 2.0
- * @date 09.01.2021
- * 
+ * @version 1.0
+ * @date 14.09.2022
  * 
  */
 
@@ -23,7 +22,7 @@
  *******************************************************************************************************************************************/
 
 /**
- * @brief Class to describe the Data Table in Runtime
+ * @brief Class to describe a register
  * 
  */
 class Register {
@@ -46,7 +45,7 @@ public:
     ~Register();
 
     /**
-     * @brief Add subscriber to a register
+     * @brief Function to add subscriber to a register
      * 
      * @param subscriber Subscriber device
      * @return RC_e Result code
@@ -54,14 +53,14 @@ public:
     RC_e AddSubscriber(DEVICE_e subscriber);  
 
     /**
-     * @brief Clean register
+     * @brief Function to clean register
      * 
      * @return RC_e Result code
      */
     RC_e Clean();  
 
     /**
-     * @brief Print
+     * @brief Function to print the register
      * 
      * @param regId Register ID
      * @return RC_e Result code
@@ -69,14 +68,14 @@ public:
     RC_e Print(COM_REQUEST_REG_ID_e regId = COM_REQUEST_REG_ID_e::NONE_REG_ID);
 
     /**
-     * @brief Enable the debug mode of the class
+     * @brief Function to enable the debug mode of the class
      * 
      * @return RC_e Result code
      */
     RC_e EnableDebugMode();
 
     /**
-     * @brief Disable the debug mode of the class
+     * @brief Function to disable the debug mode of the class
      * 
      * @return RC_e Result code
      */

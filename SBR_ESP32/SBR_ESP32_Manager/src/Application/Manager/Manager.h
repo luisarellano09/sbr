@@ -53,18 +53,6 @@ public:
     ~Manager();
 
     /**
-     * @brief Function to start testing the communication system
-     * 
-     */
-    void CommunicationTestStart();
-
-    /**
-     * @brief Function to check the communication system
-     * 
-     */
-    void CommunicationTestCheck();
-
-    /**
      * @brief Enable the debug mode of the class
      * 
      * @return RC_e Result code
@@ -78,14 +66,8 @@ public:
      */
     RC_e DisableDebugMode();
    
-
-    int32_t m_TestingNodeValues[10] = {0};
-    int32_t m_TestingNodeResultCorrect[10] = {0};
-    int32_t m_TestingNodeResultError[10] = {-1, -1, -1, -1, -1};
-
 private:
 
-    bool m_TestingMode = false;   /**< \brief Flag of testing mode. */
     bool m_debugMode = false;     /**< Debug Mode */
 
     /**
@@ -102,11 +84,6 @@ private:
      */
     RC_e AddSlavesCS();
 
-    /**
-     * @brief Function to init the test of the communication system
-     * 
-     */
-    void CommunicationTestInit();
 
     /**
      * @brief Function to print the debug message

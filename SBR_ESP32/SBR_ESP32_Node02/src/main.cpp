@@ -82,7 +82,7 @@ void LoopCore0( void * parameter ){
                         case 'p':
                         case 'P':
                             Serial.println("Programming Mode.....");
-                            manager->m_node01->Start();
+                            manager->m_nodeESP32->Stop();
                             manager->m_wifiManager->Connect();
                             break;
 
@@ -90,12 +90,6 @@ void LoopCore0( void * parameter ){
                         case 'R':
                             Serial.println("Restarting...");
                             ESP.restart();
-                            break;
-
-                        case 't':
-                        case 'T':
-                            manager->CommunicationTestStart();
-                            Serial.println("Testing...");
                             break;
 
                         case 'l':
@@ -108,27 +102,20 @@ void LoopCore0( void * parameter ){
                         case 'K':
                             manager->DisableDebugMode();
                             Serial.println("Disable Debug...");
-                            break;             
+                            break;    
 
-                        case '2':
-                            manager->m_node01->AddRequest(DEVICE_e::MANAGER, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::REGISTER_100, 200);
-                            manager->m_node01->SendNextRequest();
-                            break;
-
-                        case '3':
-                            manager->m_node01->clear();
-                            break;
-
-                        case '4':
-                            manager->m_node01->printtest();
-                            break;
-
-                        case '5':          
-                            manager->m_node01->Start();
-                            break; 
+                        case 's': 
+                        case 'S':        
+                            manager->m_nodeESP32->Start();
+                            Serial.println("Stating ESP32 Node...");
+                            break;  
 
                         case 'i':
-                            manager->m_node01->PrintBuffer();
+                            manager->m_nodeESP32->PrintBuffer();
+                            break;        
+
+                        case '1':
+                            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_50, 250);
                             break;
                     }
                 }
@@ -139,7 +126,7 @@ void LoopCore0( void * parameter ){
             // ==========================
         }
 
-        manager->m_node01->Run();
+        manager->m_nodeESP32->Run();
 
         feedLoopWDT();
     }
