@@ -102,6 +102,8 @@ void LoopCore0( void * parameter ){
                         case 'K':
                             manager->DisableDebugMode();
                             Serial.println("Disable Debug...");
+
+
                             break;    
 
                         case 's':
