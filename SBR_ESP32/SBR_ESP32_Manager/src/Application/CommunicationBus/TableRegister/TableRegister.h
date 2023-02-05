@@ -17,8 +17,8 @@
 #include "../../../Definition/GlobalDef.h"
 #include "../../../Definition/LocalDef.h"
 
-#include "../../../Middleware/Communication/Register/Register.h"
-#include "../../../Middleware/Communication/Node/Node.h"
+#include "../../../Middleware/CommunicationBus/Register/Register.h"
+#include "../../../Middleware/CommunicationBus/Node/Node.h"
 
 /*******************************************************************************************************************************************
  *  												CLASS

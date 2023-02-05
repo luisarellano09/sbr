@@ -18,7 +18,7 @@
 
 #include <Arduino.h>
 
-#include "../../../Middleware/Communication/Node/Node.h"
+#include "../../../Middleware/CommunicationBus/Node/Node.h"
 
 /*******************************************************************************************************************************************
  *  												CLASS

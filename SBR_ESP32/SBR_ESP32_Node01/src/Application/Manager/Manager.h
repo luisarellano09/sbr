@@ -19,7 +19,7 @@
 
 #include "../../Middleware/WifiManager/WifiManager.h"
 
-#include "../Communication/NodeEsp32/NodeEsp32.h"
+#include "../CommunicationBus/NodeEsp32/NodeEsp32.h"
 
 /*******************************************************************************************************************************************
  *  												CLASS

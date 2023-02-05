@@ -20,9 +20,9 @@
 
 #include "../../Middleware/WifiManager/WifiManager.h"
 
-#include "../Communication/NodeEsp32/NodeEsp32.h"
-#include "../Communication/NodeLinux/NodeLinux.h"
-#include "../Communication/TableRegister/TableRegister.h"
+#include "../CommunicationBus/NodeEsp32/NodeEsp32.h"
+#include "../CommunicationBus/NodeLinux/NodeLinux.h"
+#include "../CommunicationBus/TableRegister/TableRegister.h"
 
 /*******************************************************************************************************************************************
  *  												CLASS
@@ -76,14 +76,6 @@ private:
      * @return RC_e Result code
      */
     RC_e AddSubscribers();
-
-    /**
-     * @brief Add Chip Select of the Slaves
-     * 
-     * @return RC_e Result code
-     */
-    RC_e AddSlavesCS();
-
 
     /**
      * @brief Function to print the debug message
