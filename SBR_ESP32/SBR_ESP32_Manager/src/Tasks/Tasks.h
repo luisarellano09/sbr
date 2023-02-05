@@ -23,15 +23,26 @@
  *  												DECLARATION
  *******************************************************************************************************************************************/
 
+// Functions
+
 void InitTasks();
 void TaskCLI(void *parameter);
 void TaskOTA(void *parameter);
 void TaskNodeESP32(void *parameter);
 
 
+// Task Handlers
+
 TaskHandle_t TaskCLIHandle;
 TaskHandle_t TaskOTAHandle;
 TaskHandle_t TaskNodeESP32Handle;
+
+
+// Task Timers (T)
+
+TickType_t TimerTaskCLI = 1000 / portTICK_PERIOD_MS;
+TickType_t TimerTaskOTA = 2000 / portTICK_PERIOD_MS;
+TickType_t TimerTaskNodeESP32 = 1;
 
 
 /*******************************************************************************************************************************************
@@ -50,25 +61,35 @@ TaskHandle_t TaskNodeESP32Handle;
 
 */
 
+/**
+ * @brief InitTasks 
+ * 
+ */
 void InitTasks(){
+
     disableLoopWDT();
     disableCore0WDT();
     disableCore1WDT();
     xTaskCreatePinnedToCore(TaskCLI,            "TaskCLI",          2000,   NULL, 1, &TaskCLIHandle,        1);         
     xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",          2000,   NULL, 1, &TaskOTAHandle,        1);  
     xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",    10000,  NULL, 1, &TaskNodeESP32Handle,  0);          
-
 }
 
 
 //=====================================================================================================
-
+/**
+ * @brief TaskCLI 
+ * 
+ */
 void TaskCLI(void *parameter){
+
     Serial.println(" +++++ ESP32 MANAGER +++++");
     
+    TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
 
-        //Serial.printf("\r\nTaskCLI %d", xPortGetCoreID());
+        vTaskDelayUntil(&xLastWakeTime, TimerTaskCLI);
+
         if(Serial.available()) {
             Serial.println("checking Serial");
             char incomingByte = Serial.read();
@@ -132,26 +153,33 @@ void TaskCLI(void *parameter){
 
             }
         }
-
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
 
 
-
+//=====================================================================================================
+/**
+ * @brief TaskOTA 
+ * 
+ */
 void TaskOTA(void *parameter){
+    TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
-        // Run OTA service
+        vTaskDelayUntil(&xLastWakeTime, TimerTaskOTA);
         manager->m_wifiManager->RunOTA();
-        vTaskDelay(2000 / portTICK_PERIOD_MS);
     }
 }
 
 
+//=====================================================================================================
+/**
+ * @brief TaskNodeESP32 
+ * 
+ */
 void TaskNodeESP32(void *parameter){
     while(true) {
         manager->m_nodeESP32->Run();
-        vTaskDelay(1);
+        vTaskDelay(TimerTaskNodeESP32);
     }
 }
 

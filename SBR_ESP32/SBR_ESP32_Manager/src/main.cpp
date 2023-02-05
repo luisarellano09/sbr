@@ -46,8 +46,6 @@ void Init(){
 
     // Manager
     manager = new Manager();
-
-    
 }
 
 
