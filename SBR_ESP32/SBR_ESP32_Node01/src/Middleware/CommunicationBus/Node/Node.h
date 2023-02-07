@@ -33,7 +33,7 @@
 class Node {
 public:  
 
-    bool m_start = false;                           /**< \brief Start command*/
+    bool m_start = false;                           /**@brief Start command*/
     
     /**
      * @brief Constructor
@@ -137,10 +137,10 @@ public:
 
 private:
 
-    HardwareSerial* m_serial;                       /**< \brief Reference pointer of Serial Port */
-    RequestBuffer* m_requestBuffer = NULL;          /**< \brief Request Buffer object */
+    HardwareSerial* m_serial;                       /**@brief Reference pointer of Serial Port */
+    RequestBuffer* m_requestBuffer = NULL;          /**@brief Request Buffer object */
 
-    bool m_debugMode = false;                       /**< \brief Debug Mode */
+    bool m_debugMode = false;                       /**@brief Debug Mode */
 
     /**
      * @brief Function to configure serial port

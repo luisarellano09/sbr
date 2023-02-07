@@ -99,10 +99,10 @@ public:
 
 private:
 
-    Request m_RequestsArray[REQUEST_BUFFER_SIZE];       /**< \brief Array of requests. */
-    int16_t m_RequestsArrayIndex;                       /**< \brief Index of array of requests. */
+    Request m_RequestsArray[REQUEST_BUFFER_SIZE];       /**@brief Array of requests. */
+    int16_t m_RequestsArrayIndex;                       /**@brief Index of array of requests. */
 
-    bool m_debugMode = false;                           /**< \brief Debug Mode */
+    bool m_debugMode = false;                           /**@brief Debug Mode */
 
     /**
      * @brief Function to print the debug message

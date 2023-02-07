@@ -53,7 +53,7 @@ public:
 
 private:
 
-    TableRegister* m_tableRegister = NULL;          /**< \brief Reference of Table Register object */
+    TableRegister* m_tableRegister = NULL;          /**@brief Reference of Table Register object */
 
     /**
      * @brief Function to handle a request

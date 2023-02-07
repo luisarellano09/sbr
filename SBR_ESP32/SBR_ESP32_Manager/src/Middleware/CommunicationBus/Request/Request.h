@@ -28,11 +28,11 @@
 class Request {
 public:  
 
-    uint8_t nodeId;     /**< \brief Node ID. */
-    uint8_t reqType;    /**< \brief Request type: Read or Write. */
-    uint16_t regId;     /**< \brief Request ID. */
-    int32_t data;       /**< \brief Data payload. */
-    uint16_t CRC;       /**< \brief CRC. */
+    uint8_t nodeId;     /**@brief Node ID. */
+    uint8_t reqType;    /**@brief Request type: Read or Write. */
+    uint16_t regId;     /**@brief Request ID. */
+    int32_t data;       /**@brief Data payload. */
+    uint16_t CRC;       /**@brief CRC. */
    
     /**
      * @brief Constructor

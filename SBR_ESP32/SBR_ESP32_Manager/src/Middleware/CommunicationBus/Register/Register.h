@@ -28,9 +28,9 @@
 class Register {
 public:  
 
-    uint32_t m_value;                                   /**< \brief Register value*/
-    DEVICE_e m_subscribers[DEVICE_e::LENGTH_DEVICE];    /**< \brief Subscribers array*/
-    int8_t m_subscribers_index;                         /**< \brief Subscribers index*/
+    uint32_t m_value;                                   /**@brief Register value*/
+    DEVICE_e m_subscribers[DEVICE_e::LENGTH_DEVICE];    /**@brief Subscribers array*/
+    int8_t m_subscribers_index;                         /**@brief Subscribers index*/
 
     /**
      * @brief Constructor
@@ -83,7 +83,7 @@ public:
    
 private:
 
-    bool m_debugMode = false;           /**< \brief Debug Mode */
+    bool m_debugMode = false;           /**@brief Debug Mode */
 
     /**
      * @brief Function to print the debug message

@@ -31,7 +31,7 @@
 class TableRegister {
 public:  
     
-    Register m_registers[COM_REQUEST_REG_ID_e::LENGTH_REG_ID];      /**< \brief Array of registers*/
+    Register m_registers[COM_REQUEST_REG_ID_e::LENGTH_REG_ID];      /**@brief Array of registers*/
 
     /**
      * @brief Constructor
@@ -103,10 +103,10 @@ public:
 
 private:
 
-    Node* m_NodeESP32 = NULL;                                       /**< \brief Esp32 node*/
-    Node* m_NodeLinux = NULL;                                       /**< \brief Linux node*/
+    Node* m_NodeESP32 = NULL;                                       /**@brief Esp32 node*/
+    Node* m_NodeLinux = NULL;                                       /**@brief Linux node*/
 
-    bool m_debugMode = false;                                       /**< \brief Debug Mode */
+    bool m_debugMode = false;                                       /**@brief Debug Mode */
 
     /**
      * @brief Function to clean registers
