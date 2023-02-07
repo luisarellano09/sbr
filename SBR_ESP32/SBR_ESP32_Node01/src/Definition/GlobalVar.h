@@ -1,35 +1,31 @@
 /**
- * @file main.h
+ * @file GlobalVar.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief main
+ * @brief Global variables of SBR
  * @version 1.0
- * @date 03.02.2023
- * 
+ * @date 07.02.2023
  * 
  */
 
-#ifndef MAIN_H
-#define MAIN_H
-
-/*******************************************************************************************************************************************
- *  												INCLUDES
- *******************************************************************************************************************************************/
+#ifndef GLOBALVAR_H
+#define GLOBALVAR_H
 
 #include <Arduino.h>
-#include "soc/rtc_cntl_reg.h"
 
-#include "./Tasks/Tasks.h"
-#include "./Definition/GlobalVar.h"
+#include "./Application/Manager/Manager.h"
 
 /*******************************************************************************************************************************************
- *  												DECLARATION
+ *  												DEFINE
  *******************************************************************************************************************************************/
 
-/**
- * @brief Init 
- * 
- */
-void Init();
+
+/*******************************************************************************************************************************************
+ *  												GLOBAL VARIABLES
+ *******************************************************************************************************************************************/
+
+static Manager* manager;                    /**@brief Instance of the manager */
+static SemaphoreHandle_t semaphoreMutex;    /**@brief Semaphore to Mutex */
+static volatile int counter = 0;            /**@brief Example */
 
 
-#endif // MAIN_H
+#endif /* GLOBALVAR_H */

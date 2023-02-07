@@ -17,7 +17,7 @@
 
 #include <Arduino.h>
 #include "soc/soc.h"
-#include "./main.h"
+#include "./Definition/GlobalVar.h"
 
 /*******************************************************************************************************************************************
  *  												DECLARATION

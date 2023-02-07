@@ -17,7 +17,7 @@
 
 #include <Arduino.h>
 #include "soc/soc.h"
-#include "./main.h"
+#include "./Definition/GlobalVar.h"
 
 /*******************************************************************************************************************************************
  *  												DECLARATION
@@ -29,6 +29,7 @@ void InitTasks();
 void TaskCLI(void *parameter);
 void TaskOTA(void *parameter);
 void TaskNodeESP32(void *parameter);
+void TaskTest(void *parameter);
 
 
 // Task Handlers
@@ -36,7 +37,7 @@ void TaskNodeESP32(void *parameter);
 TaskHandle_t TaskCLIHandle;
 TaskHandle_t TaskOTAHandle;
 TaskHandle_t TaskNodeESP32Handle;
-
+TaskHandle_t TaskTestHandle;
 
 // Task Timers (T)
 
@@ -72,7 +73,8 @@ void InitTasks(){
     disableCore1WDT();
     xTaskCreatePinnedToCore(TaskCLI,            "TaskCLI",          2000,   NULL, 1, &TaskCLIHandle,        1);         
     xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",          2000,   NULL, 1, &TaskOTAHandle,        1);  
-    xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",    10000,  NULL, 1, &TaskNodeESP32Handle,  0);          
+    xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",    10000,  NULL, 1, &TaskNodeESP32Handle,  0); 
+    xTaskCreatePinnedToCore(TaskTest,           "TaskTest",         10000,  NULL, 1, &TaskTestHandle,       1);              
 }
 
 
@@ -151,6 +153,16 @@ void TaskCLI(void *parameter){
                     manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_52, 152);
                     break;
 
+                case '5':
+                    if (xSemaphoreTake(semaphoreMutex, 0) == pdTRUE){
+                        counter++;
+                    }
+                    break;
+
+                case '6':
+                    xSemaphoreGive(semaphoreMutex);
+                    break;
+
             }
         }
     }
@@ -183,6 +195,26 @@ void TaskNodeESP32(void *parameter){
     }
 }
 
+
+//=====================================================================================================
+/**
+ * @brief TaskTest 
+ * 
+ */
+void TaskTest(void *parameter){
+    while(true) {
+        
+        if (xSemaphoreTake(semaphoreMutex, 0) == pdTRUE){
+            Serial.println(counter);
+            xSemaphoreGive(semaphoreMutex);
+        } else {
+            Serial.println(".");
+        }
+        
+
+        vTaskDelay(1000);
+    }
+}
 
 
 #endif // TASKS_H
