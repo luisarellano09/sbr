@@ -8,7 +8,6 @@
  * 
  */
 
-
 /*******************************************************************************************************************************************
  *  												INCLUDE
  *******************************************************************************************************************************************/
@@ -19,7 +18,6 @@
  *******************************************************************************************************************************************/
 
 NodeEsp32::NodeEsp32(HardwareSerial* serial, uint32_t baud, uint8_t RX, uint8_t TX) : Node(serial, baud, RX, TX){    
-
 
 }
 
@@ -41,7 +39,7 @@ RC_e NodeEsp32::UpdateRegister(COM_REQUEST_REG_ID_e regId, int32_t data){
     }
 
     // Add request to manager
-    if ((retCode = this->AddRequest(DEVICE_e::MANAGER, COM_REQUEST_TYPE_e::WRITE, regId, data)) != RC_e::SUCCESS){
+    if ((retCode = this->AddRequest(DEVICE_e::NODE_MANAGER, COM_REQUEST_TYPE_e::WRITE, regId, data)) != RC_e::SUCCESS){
         Debug("Error: this->AddRequest(...) in NodeEsp32::UpdateRegister()");
         return retCode;
     }

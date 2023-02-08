@@ -1,28 +1,33 @@
 /**
- * @file LocalDef.h
+ * @file LocalConfig.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief Local definitions of SBR
+ * @brief Local Config
  * @version 1.0
  * @date 16.10.2022
  * 
  */
 
-#ifndef LOCALDEF_H
-#define LOCALDEF_H
+#ifndef LOCALCONFIG_H
+#define LOCALCONFIG_H
 
+/*******************************************************************************************************************************************
+ *  												INCLUDE
+ *******************************************************************************************************************************************/
 #include <Arduino.h>
-#include "./GlobalDef.h"
+#include "../Global/Devices.h"
 
 /*******************************************************************************************************************************************
  *  												DEFINE
  *******************************************************************************************************************************************/
 
 // ========================== NODE_ID =======================
-
-#define NODE_ID DEVICE_e::MANAGER
+/**
+ * @brief Node ID
+ * 
+ */
+#define NODE_ID DEVICE_e::NODE_MANAGER
 
 // ========================== WIFI ==========================
-
 /**
  * @brief Wifi name
  * 
@@ -36,7 +41,6 @@
 #define WIFI_PASSWORD "La123456"
 
 // ========================== HOSTNAME =======================
-
 /**
  * @brief Hostname of the ESP32
  * 
@@ -44,7 +48,6 @@
 #define ESP32_HOSTNAME "SBR_ESP32_Manager"
 
 // ========================== NODE ESP32s =====================
-
 /**
  * @brief NODE_ESP32s_BAUDRATE
  * 
@@ -64,4 +67,4 @@
 #define NODE_ESP32s_RX   21
 
 
-#endif /* LOCALDEF_H */
+#endif /* LOCALCONFIG_H */

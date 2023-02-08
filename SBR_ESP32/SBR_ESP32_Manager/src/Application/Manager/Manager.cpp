@@ -12,6 +12,7 @@
  *  												INCLUDE
  *******************************************************************************************************************************************/
 #include "Manager.h"
+#include "../../Definition/Local/LocalConfig.h"
 
 /*******************************************************************************************************************************************
  *  												CONSTRUCTOR
@@ -26,10 +27,10 @@ Manager::Manager(){
     this->m_nodeLinux = new NodeLinux(&Serial2, NODE_ESP32s_BAUDRATE, 5, 18);
 
     // Table RT
-    this->m_tableRegister = new TableRegister(this->m_nodeESP32, this->m_nodeLinux);
+    this->m_tableRegister = new RegisterTable(this->m_nodeESP32, this->m_nodeLinux);
     this->AddSubscribers();
 
-    this->m_nodeESP32->ConnectTableRegister(this->m_tableRegister);
+    this->m_nodeESP32->ConnectRegisterTable(this->m_tableRegister);
 }
 
 //=====================================================================================================

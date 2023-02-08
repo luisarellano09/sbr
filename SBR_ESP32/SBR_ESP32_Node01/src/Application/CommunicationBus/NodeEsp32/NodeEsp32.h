@@ -1,23 +1,19 @@
 /**
  * @file NodeEsp32.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief Class to Manage the Node
+ * @brief Class to Manage the NodeEsp32
  * @version 1.0
  * @date 16.10.2022
  * 
- * 
  */
 
-
-#ifndef NodeEsp32_H
-#define NodeEsp32_H
+#ifndef NODEESP32_H
+#define NODEESP32_H
 
 /*******************************************************************************************************************************************
  *  												INCLUDE
  *******************************************************************************************************************************************/
-
 #include <Arduino.h>
-
 #include "../../../Middleware/CommunicationBus/Node/Node.h"
 
 /*******************************************************************************************************************************************

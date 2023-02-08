@@ -8,15 +8,17 @@
  * 
  */
 
-#ifndef RequestBuffer_H
-#define RequestBuffer_H
+#ifndef REQUESTBUFFER_H
+#define REQUESTBUFFER_H
 
 /*******************************************************************************************************************************************
  *  												INCLUDE
  *******************************************************************************************************************************************/
-#include "../../../Definition/GlobalDef.h"
-#include "../../../Definition/LocalDef.h"
-
+#include "../../../Definition/Global/RC.h"
+#include "../../../Definition/Global/Devices.h"
+#include "../../../Definition/Global/RegisterTableDef.h"
+#include "../../../Definition/Global/GlobalConfig.h"
+#include "../Request/Definition.h"
 #include "../Request/Request.h"
 
 /*******************************************************************************************************************************************
@@ -114,4 +116,4 @@ private:
 
 };
 
-#endif // RequestBuffer_H
+#endif // REQUESTBUFFER_H

@@ -12,7 +12,9 @@
  *  												INCLUDE
  *******************************************************************************************************************************************/
 #include "Node.h"
-#include "../Utility/Utility.h"
+#include "../Util/CommunicationBusUtil.h"
+#include "../../../Definition/Global/Devices.h"
+#include "../../../Definition/Local/LocalConfig.h"
 
 /*******************************************************************************************************************************************
  *  												CONSTRUCTOR
@@ -134,7 +136,7 @@ RC_e Node::Run(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
-    if (this->m_start){
+    if (this->m_start == true){
         
         // Temp request
         Request tempRequest;
@@ -156,7 +158,7 @@ RC_e Node::Run(){
                 }
             } else {
                 // Check if the node is not the Manager
-                if (NODE_ID != DEVICE_e::MANAGER){
+                if (NODE_ID != DEVICE_e::NODE_MANAGER){
                     // Add the request to the buffer
                     if ((retCode = this->AddRequest(&tempRequest)) != RC_e::SUCCESS){
                         Debug("Error: AddRequest(...) in Node::Run()");

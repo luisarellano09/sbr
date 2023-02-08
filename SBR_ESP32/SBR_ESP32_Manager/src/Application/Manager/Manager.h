@@ -14,22 +14,18 @@
 /*******************************************************************************************************************************************
  *  												INCLUDE
  *******************************************************************************************************************************************/
-
-#include "../../Definition/GlobalDef.h"
-#include "../../Definition/LocalDef.h"
-
+#include "../../Definition/Global/RC.h"
 #include "../../Middleware/WifiManager/WifiManager.h"
-
 #include "../CommunicationBus/NodeEsp32/NodeEsp32.h"
 #include "../CommunicationBus/NodeLinux/NodeLinux.h"
-#include "../CommunicationBus/TableRegister/TableRegister.h"
+#include "../CommunicationBus/RegisterTable/RegisterTable.h"
 
 /*******************************************************************************************************************************************
  *  												CLASS
  *******************************************************************************************************************************************/
 
 /**
- * @brief lass to Manage the ESP32
+ * @brief Class to Manage the ESP32
  * 
  */
 class Manager {
@@ -38,7 +34,7 @@ public:
     WifiManager* m_wifiManager = NULL;              /**@brief Instance for Wifimanager. */
     NodeEsp32* m_nodeESP32 = NULL;                  /**@brief Instance for SPI Master Manager. */
     NodeLinux* m_nodeLinux = NULL;                  /**@brief Instance for SPI Master Manager. */
-    TableRegister* m_tableRegister = NULL;          /**@brief Instance for RT table. */
+    RegisterTable* m_tableRegister = NULL;          /**@brief Instance for RT table. */
 
     /**
      * @brief Construct a new Manager object

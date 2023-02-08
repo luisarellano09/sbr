@@ -7,18 +7,15 @@
  * 
  */
 
-
-#ifndef NodeEsp32_H
-#define NodeEsp32_H
+#ifndef NODEESP32_H
+#define NODEESP32_H
 
 /*******************************************************************************************************************************************
  *  												INCLUDE
  *******************************************************************************************************************************************/
-
 #include <Arduino.h>
-
 #include "../../../Middleware/CommunicationBus/Node/Node.h"
-#include "../TableRegister/TableRegister.h"
+#include "../RegisterTable/RegisterTable.h"
 
 /*******************************************************************************************************************************************
  *  												CLASS
@@ -49,11 +46,11 @@ public:
      * @param tableRegister Reference of a Table Register
      * @return RC_e Result code
      */
-    RC_e ConnectTableRegister(TableRegister* tableRegister);
+    RC_e ConnectRegisterTable(RegisterTable* tableRegister);
 
 private:
 
-    TableRegister* m_tableRegister = NULL;          /**@brief Reference of Table Register object */
+    RegisterTable* m_tableRegister = NULL;          /**@brief Reference of Table Register object */
 
     /**
      * @brief Function to handle a request
@@ -65,4 +62,4 @@ private:
 
 };
 
-#endif // NodeEsp32_H
+#endif // NODEESP32_H

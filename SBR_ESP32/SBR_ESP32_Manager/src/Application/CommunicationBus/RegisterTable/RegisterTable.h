@@ -1,5 +1,5 @@
 /**
- * @file TableRegister.h
+ * @file RegisterTable.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to manage a Table of registers
  * @version 1.0
@@ -7,16 +7,13 @@
  * 
  */
 
-#ifndef TableRegister_H
-#define TableRegister_H
+#ifndef REGISTERTABLE_H
+#define REGISTERTABLE_H
 
 /*******************************************************************************************************************************************
  *  												INCLUDE
  *******************************************************************************************************************************************/
-
-#include "../../../Definition/GlobalDef.h"
-#include "../../../Definition/LocalDef.h"
-
+#include "../../../Definition/Global/RC.h"
 #include "../../../Middleware/CommunicationBus/Register/Register.h"
 #include "../../../Middleware/CommunicationBus/Node/Node.h"
 
@@ -28,7 +25,7 @@
  * @brief Class to manage a Table of registers
  * 
  */
-class TableRegister {
+class RegisterTable {
 public:  
     
     Register m_registers[COM_REQUEST_REG_ID_e::LENGTH_REG_ID];      /**@brief Array of registers*/
@@ -37,13 +34,13 @@ public:
      * @brief Constructor
      * 
      */
-    TableRegister(Node* NodeESP32, Node* NodeLinux);
+    RegisterTable(Node* NodeESP32, Node* NodeLinux);
 
     /**
      * @brief Destructor
      * 
      */
-    ~TableRegister();
+    ~RegisterTable();
 
     /**
      * @brief Function to add subscriber to a register
@@ -136,4 +133,4 @@ private:
 
 };
 
-#endif // TableRegister_H
+#endif // REGISTERTABLE_H

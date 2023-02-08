@@ -8,14 +8,14 @@
  * 
  */
 
-#ifndef UTILITY_H
-#define UTILITY_H
+#ifndef COMMUNICATIONBUSUTIL_H
+#define COMMUNICATIONBUSUTIL_H
 
 /*******************************************************************************************************************************************
  *  												INCLUDES
  *******************************************************************************************************************************************/
-
-#include "../../../Definition/GlobalDef.h"
+#include "../../../Definition/Global/RC.h"
+#include "../../../Definition/Global/GlobalConfig.h"
 #include "../Request/Request.h"
 
 /*******************************************************************************************************************************************
@@ -179,4 +179,4 @@ static bool CheckCRC(Request* request){
     return false;
 }
 
-#endif // UTILITY_H
+#endif // COMMUNICATIONBUSUTIL_H

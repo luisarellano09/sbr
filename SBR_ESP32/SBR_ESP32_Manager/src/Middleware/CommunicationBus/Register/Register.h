@@ -7,15 +7,16 @@
  * 
  */
 
-#ifndef Register_H
-#define Register_H
+#ifndef REGISTER_H
+#define REGISTER_H
 
 /*******************************************************************************************************************************************
  *  												INCLUDE
  *******************************************************************************************************************************************/
-
-#include "../../../Definition/GlobalDef.h"
-#include "../../../Definition/LocalDef.h"
+#include <Arduino.h>
+#include "../../../Definition/Global/RC.h"
+#include "../../../Definition/Global/Devices.h"
+#include "../../../Definition/Global/RegisterTableDef.h"
 
 /*******************************************************************************************************************************************
  *  												CLASS
@@ -95,4 +96,4 @@ private:
 
 };
 
-#endif // Register_H
+#endif // REGISTER_H
