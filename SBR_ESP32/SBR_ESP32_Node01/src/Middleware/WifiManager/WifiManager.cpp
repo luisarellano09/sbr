@@ -98,10 +98,10 @@ RC_e WifiManager::ConfigureWifi(){
     
     // Define Event
     WiFi.onEvent(
-        [this](WiFiEvent_t event,system_event_info_t info) {
+        [this](WiFiEvent_t event,WiFiEventInfo_t info) {
             this->WiFiEvent(event, info);
         });
-
+    
     return RC_e::SUCCESS;
 }
 
@@ -131,7 +131,7 @@ RC_e WifiManager::ConnectWifi(){
 }
 
 //=====================================================================================================
-void WifiManager::WiFiEvent(WiFiEvent_t event,system_event_info_t info){
+void WifiManager::WiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info){
     Serial.printf("[WiFi-event] event: %d\r\n", event);
 
     switch (event) 

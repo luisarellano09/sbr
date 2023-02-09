@@ -103,7 +103,7 @@ private:
      * @param event Wifi event
      * @param info System information about the event
      */
-    void WiFiEvent(WiFiEvent_t event,system_event_info_t info);
+    void WiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info);
 
     /**
      * @brief Function to configure the OTA service
