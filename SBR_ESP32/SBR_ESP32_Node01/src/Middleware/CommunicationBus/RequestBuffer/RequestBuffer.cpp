@@ -19,6 +19,9 @@
  *******************************************************************************************************************************************/
 
 RequestBuffer::RequestBuffer(){
+    // Create Semaphore
+    semaphoreMutex = xSemaphoreCreateMutex();
+
     // Clean Buffer
     if (this->CleanBuffer() != RC_e::SUCCESS){
         Debug("Error: CleanBuffer() in RequestBuffer::RequestBuffer()");     
@@ -33,6 +36,9 @@ RequestBuffer::~RequestBuffer(){}
  *******************************************************************************************************************************************/
 
 RC_e RequestBuffer::AddRequest(DEVICE_e nodeId, COM_REQUEST_TYPE_e reqType, COM_REQUEST_REG_ID_e regID, uint32_t data){
+
+    xSemaphoreTake(semaphoreMutex, 10);
+
     // Check if Request-Array is null
     if (this->m_RequestsArray == NULL){
         Debug("Error: ERROR_NULL_POINTER in RequestBuffer::AddRequest()");
@@ -54,6 +60,8 @@ RC_e RequestBuffer::AddRequest(DEVICE_e nodeId, COM_REQUEST_TYPE_e reqType, COM_
     this->m_RequestsArray[this->m_RequestsArrayIndex].regId = regID;
     this->m_RequestsArray[this->m_RequestsArrayIndex].data = data;
     this->m_RequestsArray[this->m_RequestsArrayIndex].CRC = CalculateCrcFromRequest(&this->m_RequestsArray[this->m_RequestsArrayIndex]);
+
+    xSemaphoreGive(semaphoreMutex);
 
     return RC_e::SUCCESS;
 }  
@@ -79,6 +87,9 @@ RC_e RequestBuffer::AddRequest(Request* request){
 
 //=====================================================================================================
 RC_e RequestBuffer::ConsumeRequest(Request* request){
+
+    xSemaphoreTake(semaphoreMutex, 10);
+
     // Check if index is valid
     if (m_RequestsArrayIndex < 0){
         // Set to NULL the pointer when there is no request
@@ -113,11 +124,16 @@ RC_e RequestBuffer::ConsumeRequest(Request* request){
         this->m_RequestsArrayIndex--;
     }
 
+    xSemaphoreGive(semaphoreMutex);
+
     return RC_e::SUCCESS;
 }  
 
 //=====================================================================================================
 RC_e RequestBuffer::CleanBuffer(){
+
+    xSemaphoreTake(semaphoreMutex, 10);
+
     // Check if array is null
     if (this->m_RequestsArray == NULL){
         Debug("Error: ERROR_NULL_POINTER in RequestBuffer::CleanBuffer()");
@@ -132,11 +148,16 @@ RC_e RequestBuffer::CleanBuffer(){
     // Init index
     this->m_RequestsArrayIndex = -1;
 
+    xSemaphoreGive(semaphoreMutex);
+
     return RC_e::SUCCESS;
 }  
 
 //=====================================================================================================
 RC_e RequestBuffer::PrintBuffer(){
+
+    xSemaphoreTake(semaphoreMutex, 10);
+    
     // Check if array is null
     if (this->m_RequestsArray == NULL){
         Debug("Error: ERROR_NULL_POINTER in RequestBuffer::PrintBuffer()");
@@ -147,6 +168,8 @@ RC_e RequestBuffer::PrintBuffer(){
     for (int i=0; i<=m_RequestsArrayIndex; i++){
         this->m_RequestsArray[i].Print();
     }
+
+    xSemaphoreGive(semaphoreMutex);
 
     return RC_e::SUCCESS;
 }  
