@@ -70,7 +70,7 @@ void InitTasks(){
     disableCore0WDT();
     disableCore1WDT();
     xTaskCreatePinnedToCore(TaskCLI,            "TaskCLI",          2000,   NULL, 1, &TaskCLIHandle,        1);         
-    xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",          2000,   NULL, 1, &TaskOTAHandle,        1);  
+    xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",          10000,   NULL, 1, &TaskOTAHandle,        0);  
     xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",    10000,  NULL, 1, &TaskNodeESP32Handle,  0);          
 
 }
