@@ -85,37 +85,13 @@ public:
      */
     RC_e PrintBuffer();  
 
-    /**
-     * @brief Function to enable the debug mode of the class
-     * 
-     * @return RC_e Result code
-     */
-    RC_e EnableDebugMode();
-
-    /**
-     * @brief Function to disable the debug mode of the class
-     * 
-     * @return RC_e Result code
-     */
-    RC_e DisableDebugMode();
-
 
 private:
 
     Request m_RequestsArray[REQUEST_BUFFER_SIZE];       /**@brief Array of requests. */
     int16_t m_RequestsArrayIndex;                       /**@brief Index of array of requests. */
     SemaphoreHandle_t semaphoreMutex;                   /**@brief Semaphore to Mutex */
-
-    bool m_debugMode = false;                           /**@brief Debug Mode */
-
-    /**
-     * @brief Function to print the debug message
-     * 
-     * @param msg Message
-     * @return RC_e Result code
-     */
-    RC_e Debug(char* msg);
-
+    
 };
 
 #endif // REQUESTBUFFER_H

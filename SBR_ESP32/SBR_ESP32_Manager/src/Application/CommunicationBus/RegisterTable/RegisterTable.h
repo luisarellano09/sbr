@@ -84,26 +84,11 @@ public:
      */
     RC_e PrintTable();
 
-    /**
-     * @brief Function to enable the debug mode of the class
-     * 
-     * @return RC_e Result code
-     */
-    RC_e EnableDebugMode();
-
-    /**
-     * @brief Function to disable the debug mode of the class
-     * 
-     * @return RC_e Result code
-     */
-    RC_e DisableDebugMode();
 
 private:
 
     Node* m_NodeESP32 = NULL;                                       /**@brief Esp32 node*/
     Node* m_NodeLinux = NULL;                                       /**@brief Linux node*/
-
-    bool m_debugMode = false;                                       /**@brief Debug Mode */
 
     /**
      * @brief Function to clean registers
@@ -121,15 +106,6 @@ private:
      * @return RC_e Result code
      */
     RC_e AddRequestToSubscribers(COM_REQUEST_REG_ID_e regId, int32_t data);
-
-    /**
-     * @brief Function to print the debug message
-     * 
-     * @param msg Message
-     * 
-     * @return RC_e Result code
-     */
-    RC_e Debug(char* msg);
 
 };
 

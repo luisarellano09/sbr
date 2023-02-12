@@ -42,11 +42,17 @@ void Init(){
     // Serial Port
     Serial.begin(115200);
 
+    // Logging
+    Log.begin(LOG_LEVEL_VERBOSE, &Serial);
+    Log.setLevel(LOG_LEVEL_SILENT);
+
     // Create mutex 
-    semaphoreMutex = xSemaphoreCreateMutex();
+    semaphoreMutexGlobVar = xSemaphoreCreateMutex();
 
     // Manager
     manager = new Manager();
+
+
 }
 
 

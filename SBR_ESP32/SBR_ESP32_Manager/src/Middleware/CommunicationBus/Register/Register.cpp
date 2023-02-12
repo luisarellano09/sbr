@@ -11,6 +11,7 @@
  *  												INCLUDE
  *******************************************************************************************************************************************/
 #include "Register.h"
+#include <ArduinoLog.h>
 
 /*******************************************************************************************************************************************
  *  												Constructor
@@ -22,11 +23,12 @@ Register::Register(){
     this->m_subscribers_index = -1;
 
     if (Clean() != RC_e::SUCCESS){
-        Debug("Error: Clean() in Register::Register()");
+        Log.errorln("[Register::Register] Error in Clean()");
     }
 }
 
 //=====================================================================================================
+
 Register::~Register(){}
 
 /*******************************************************************************************************************************************
@@ -36,13 +38,13 @@ Register::~Register(){}
 RC_e Register::AddSubscriber(DEVICE_e subscriber){
     // Check subscriber
     if (subscriber >= DEVICE_e::LENGTH_DEVICE || subscriber < DEVICE_e::NONE_DEVICE){
-        Debug("Error: INVALID_SUBSCRIBER in Register::AddSubscriber()");
+        Log.errorln("[Register::AddSubscriber] subscriber INVALID_SUBSCRIBER");
         return RC_e::ERROR_INVALID_SUBSCRIBER;
     }
 
     // Check if max index is reached
     if (this->m_subscribers_index >= DEVICE_e::LENGTH_DEVICE){
-        Debug("Error: MAX_NUMBER_SUBSCRIBERS in Register::AddSubscriber()");
+        Log.errorln("[Register::AddSubscriber] m_subscribers_index MAX_NUMBER_SUBSCRIBERS");
         return RC_e::ERROR_MAX_NUMBER_SUBSCRIBERS;
     }
 
@@ -55,7 +57,9 @@ RC_e Register::AddSubscriber(DEVICE_e subscriber){
     return RC_e::SUCCESS;
 }
 
+
 //=====================================================================================================
+
 RC_e Register::Clean(){
     // Init Value
     this->m_value = 0;
@@ -91,28 +95,3 @@ RC_e Register::Print(COM_REQUEST_REG_ID_e regId){
     return RC_e::SUCCESS;
 }
 
-//=====================================================================================================
-RC_e Register::EnableDebugMode(){
-    this->m_debugMode = 1;
-    return RC_e::SUCCESS;
-}
-
-//=====================================================================================================
-RC_e Register::DisableDebugMode(){
-    this->m_debugMode = 0;
-    return RC_e::SUCCESS;
-}
-
-/*******************************************************************************************************************************************
- *  												Private Methods
- *******************************************************************************************************************************************/
-
-RC_e Register::Debug(char* msg){
-    // Check if debug mode is active
-    if (this->m_debugMode){
-        // Print message
-        Serial.println(msg);
-    }
-    
-    return RC_e::SUCCESS;
-}

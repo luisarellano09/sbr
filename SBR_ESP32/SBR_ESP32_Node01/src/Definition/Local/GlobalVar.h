@@ -20,9 +20,9 @@
  *  												GLOBAL VARIABLES
  *******************************************************************************************************************************************/
 
-static Manager* manager;                    /**@brief Instance of the manager */
-static SemaphoreHandle_t semaphoreMutex;    /**@brief Semaphore to Mutex */
-static volatile int counter = 0;            /**@brief Example */
+static Manager* manager;                            /**@brief Instance of the manager */
+static SemaphoreHandle_t semaphoreMutexGlobVar;     /**@brief Semaphore to Mutex for Global Variables*/
+static volatile int counter = 0;                    /**@brief Example */
 
 
 #endif /* GLOBALVAR_H */

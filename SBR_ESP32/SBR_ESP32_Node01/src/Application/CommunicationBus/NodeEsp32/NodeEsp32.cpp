@@ -12,6 +12,7 @@
  *  												INCLUDE
  *******************************************************************************************************************************************/
 #include "NodeEsp32.h"
+#include <ArduinoLog.h>
 
 /*******************************************************************************************************************************************
  *  												CONSTRUCTOR
@@ -21,8 +22,11 @@ NodeEsp32::NodeEsp32(HardwareSerial* serial, uint32_t baud, uint8_t RX, uint8_t 
 
 }
 
+
 //=====================================================================================================
+
 NodeEsp32::~NodeEsp32(){}
+
 
 /*******************************************************************************************************************************************
  *  												PUBLIC METHODS
@@ -34,18 +38,19 @@ RC_e NodeEsp32::UpdateRegister(COM_REQUEST_REG_ID_e regId, int32_t data){
 
     // Check register ID validity
     if (regId >= COM_REQUEST_REG_ID_e::LENGTH_REG_ID || regId <= COM_REQUEST_REG_ID_e::NONE_REG_ID){
-        Debug("Error: INVALID_REG_ID in NodeEsp32::UpdateRegister()");
+        Log.fatalln("[NodeEsp32::UpdateRegister] redId ERROR_INVALID_REG_ID");
         return RC_e::ERROR_INVALID_REG_ID;
     }
 
     // Add request to manager
     if ((retCode = this->AddRequest(DEVICE_e::NODE_MANAGER, COM_REQUEST_TYPE_e::WRITE, regId, data)) != RC_e::SUCCESS){
-        Debug("Error: this->AddRequest(...) in NodeEsp32::UpdateRegister()");
+        Log.errorln("[NodeEsp32::UpdateRegister] Error in AddRequest()");
         return retCode;
     }
 
     return retCode;
 }
+
 
 /*******************************************************************************************************************************************
  *  												PRIVATE METHODS

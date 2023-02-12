@@ -13,6 +13,7 @@
  *******************************************************************************************************************************************/
 #include "RequestBuffer.h"
 #include "../Util/CommunicationBusUtil.h"
+#include <ArduinoLog.h>
 
 /*******************************************************************************************************************************************
  *  												CONSTRUCTOR
@@ -24,11 +25,12 @@ RequestBuffer::RequestBuffer(){
 
     // Clean Buffer
     if (this->CleanBuffer() != RC_e::SUCCESS){
-        Debug("Error: CleanBuffer() in RequestBuffer::RequestBuffer()");     
+        Log.errorln("[RequestBuffer::RequestBuffer] Error in CleanBuffer()");     
     }
 }
 
 //=====================================================================================================
+
 RequestBuffer::~RequestBuffer(){}
 
 /*******************************************************************************************************************************************
@@ -36,18 +38,18 @@ RequestBuffer::~RequestBuffer(){}
  *******************************************************************************************************************************************/
 
 RC_e RequestBuffer::AddRequest(DEVICE_e nodeId, COM_REQUEST_TYPE_e reqType, COM_REQUEST_REG_ID_e regID, uint32_t data){
-
+    // Block semaphore
     xSemaphoreTake(semaphoreMutex, 10);
 
     // Check if Request-Array is null
     if (this->m_RequestsArray == NULL){
-        Debug("Error: ERROR_NULL_POINTER in RequestBuffer::AddRequest()");
+        Log.fatalln("[RequestBuffer::AddRequest] m_RequestsArray ERROR_NULL_POINTER");
         return RC_e::ERROR_NULL_POINTER;
     }
 
     // Check if max index is reached
     if (this->m_RequestsArrayIndex >= REQUEST_BUFFER_SIZE){
-        Debug("Error: MAX_NODE_REQUEST_INDEX in RequestBuffer::AddRequest()");
+        Log.fatalln("[RequestBuffer::AddRequest] m_RequestsArrayIndex MAX_NODE_REQUEST_INDEX");
         return RC_e::ERROR_MAX_NODE_REQUEST_INDEX;
     }
 
@@ -61,33 +63,38 @@ RC_e RequestBuffer::AddRequest(DEVICE_e nodeId, COM_REQUEST_TYPE_e reqType, COM_
     this->m_RequestsArray[this->m_RequestsArrayIndex].data = data;
     this->m_RequestsArray[this->m_RequestsArrayIndex].CRC = CalculateCrcFromRequest(&this->m_RequestsArray[this->m_RequestsArrayIndex]);
 
+    // Unblock semaphore
     xSemaphoreGive(semaphoreMutex);
 
     return RC_e::SUCCESS;
-}  
+} 
+
 
 //=====================================================================================================
+
 RC_e RequestBuffer::AddRequest(Request* request){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
     // Check if the pointer is null
     if (request == NULL){
-        Debug("Error: ERROR_NULL_POINTER in RequestBuffer::AddRequest()");
+        Log.errorln("[RequestBuffer::AddRequest] request ERROR_NULL_POINTER");
         return RC_e::ERROR_NULL_POINTER;
     }
 
     // Add Request
     if ((retCode = this->AddRequest((DEVICE_e)request->nodeId, (COM_REQUEST_TYPE_e)request->reqType, (COM_REQUEST_REG_ID_e)request->regId, request->data)) != RC_e::SUCCESS){
-        Debug("Error: AddRequest(...) in RequestBuffer::AddRequest()");
+        Log.errorln("[RequestBuffer::AddRequest] Error in AddRequest()");
         return retCode;
     }
     return retCode;
 }  
 
-//=====================================================================================================
-RC_e RequestBuffer::ConsumeRequest(Request* request){
 
+//=====================================================================================================
+
+RC_e RequestBuffer::ConsumeRequest(Request* request){
+    // Block semaphore
     xSemaphoreTake(semaphoreMutex, 10);
 
     // Check if index is valid
@@ -97,7 +104,7 @@ RC_e RequestBuffer::ConsumeRequest(Request* request){
     } else {
         // Check if the pointer is null
         if (request == NULL){
-            Debug("Error: ERROR_NULL_POINTER in RequestBuffer::ConsumeRequest()");
+            Log.fatalln("[RequestBuffer::ConsumeRequest] request ERROR_NULL_POINTER");
             return RC_e::ERROR_NULL_POINTER;
         }
 
@@ -124,19 +131,22 @@ RC_e RequestBuffer::ConsumeRequest(Request* request){
         this->m_RequestsArrayIndex--;
     }
 
+    // Unblock semaphore
     xSemaphoreGive(semaphoreMutex);
 
     return RC_e::SUCCESS;
 }  
 
-//=====================================================================================================
-RC_e RequestBuffer::CleanBuffer(){
 
+//=====================================================================================================
+
+RC_e RequestBuffer::CleanBuffer(){
+    // Block semaphore
     xSemaphoreTake(semaphoreMutex, 10);
 
     // Check if array is null
     if (this->m_RequestsArray == NULL){
-        Debug("Error: ERROR_NULL_POINTER in RequestBuffer::CleanBuffer()");
+        Log.fatalln("[RequestBuffer::CleanBuffer] m_RequestsArray ERROR_NULL_POINTER");
         return RC_e::ERROR_NULL_POINTER;
     }
 
@@ -148,19 +158,22 @@ RC_e RequestBuffer::CleanBuffer(){
     // Init index
     this->m_RequestsArrayIndex = -1;
 
+    // Unblock semaphore
     xSemaphoreGive(semaphoreMutex);
 
     return RC_e::SUCCESS;
 }  
 
-//=====================================================================================================
-RC_e RequestBuffer::PrintBuffer(){
 
+//=====================================================================================================
+
+RC_e RequestBuffer::PrintBuffer(){
+    // Block semaphore
     xSemaphoreTake(semaphoreMutex, 10);
     
     // Check if array is null
     if (this->m_RequestsArray == NULL){
-        Debug("Error: ERROR_NULL_POINTER in RequestBuffer::PrintBuffer()");
+        Log.fatalln("[RequestBuffer::PrintBuffer] m_RequestsArray ERROR_NULL_POINTER");
         return RC_e::ERROR_NULL_POINTER;
     }
 
@@ -169,34 +182,9 @@ RC_e RequestBuffer::PrintBuffer(){
         this->m_RequestsArray[i].Print();
     }
 
+    // Unblock semaphore
     xSemaphoreGive(semaphoreMutex);
 
     return RC_e::SUCCESS;
 }  
-
-//=====================================================================================================
-RC_e RequestBuffer::EnableDebugMode(){
-    this->m_debugMode = true;
-    return RC_e::SUCCESS;
-}
-
-//=====================================================================================================
-RC_e RequestBuffer::DisableDebugMode(){
-    this->m_debugMode = false;
-    return RC_e::SUCCESS;
-}
-
-/*******************************************************************************************************************************************
- *  												PRIVATE METHODS
- *******************************************************************************************************************************************/
-
-RC_e RequestBuffer::Debug(char* msg){
-    // Check if Debug mode is active
-    if (this->m_debugMode){
-        // Print message
-        Serial.println(msg);
-    }
-    
-    return RC_e::SUCCESS;
-}
 

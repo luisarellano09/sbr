@@ -62,26 +62,11 @@ public:
      */
     RC_e RunOTA();
 
-    /**
-     * @brief Function to enable the debug mode of the class
-     * 
-     * @return RC_e Result code
-     */
-    RC_e EnableDebugMode();
-
-    /**
-     * @brief Function to disable the debug mode of the class
-     * 
-     * @return RC_e Result code
-     */
-    RC_e DisableDebugMode();
 
 private:
-    char* m_ssid;               /**< Wifi name */
-    char* m_password;           /**< Wifi password */ 
-    char* m_hostName;           /**< ESP32 Hostname */
-
-    bool m_debugMode = false;   /**< Debug Mode */
+    char* m_ssid;               /**@brief Wifi name */
+    char* m_password;           /**@brief Password */ 
+    char* m_hostName;           /**@brief ESP32 Hostname */
 
     /**
      * @brief Function to configure the Wifi
@@ -118,13 +103,6 @@ private:
      * @return RC_e Result code
      */
     RC_e HandleOTA();
-
-    /**
-     * @brief Function to print the debug message
-     * 
-     * @return RC_e Result code
-     */
-    RC_e Debug(char* msg);
 
 };
 

@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "*.tsx": "typescriptreact",
-        "new": "cpp"
+        "new": "cpp",
+        "*.tcc": "cpp",
+        "cmath": "cpp"
     }
 }

@@ -15,6 +15,7 @@
  *  												INCLUDES
  *******************************************************************************************************************************************/
 #include <Arduino.h>
+#include <ArduinoLog.h>
 #include "soc/rtc_cntl_reg.h"
 #include "./Tasks/Tasks.h"
 

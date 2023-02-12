@@ -15,6 +15,7 @@
  *  												INCLUDES
  *******************************************************************************************************************************************/
 #include <Arduino.h>
+#include <ArduinoLog.h>
 #include "soc/soc.h"
 #include "./Definition/Local/GlobalVar.h"
 
@@ -114,18 +115,6 @@ void TaskCLI(void *parameter){
                     ESP.restart();
                     break;
 
-                case 'l':
-                case 'L':
-                    manager->EnableDebugMode();
-                    Serial.println("Enable Debug...");
-                    break;
-
-                case 'k':
-                case 'K':
-                    manager->DisableDebugMode();
-                    Serial.println("Disable Debug...");
-                    break;
-
                 case 's': 
                 case 'S':        
                     manager->m_nodeESP32->Start();
@@ -142,25 +131,59 @@ void TaskCLI(void *parameter){
                     break;
 
                 case '3':
-                    manager->m_nodeESP32->AddRequest(DEVICE_e::ESP32_NODE02, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::REGISTER_20, 90);
-                    manager->m_nodeESP32->PrintBuffer();
-                    break;
-
-                case '4':
                     manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_50, 150);
                     manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_51, 151);
                     manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_52, 152);
                     break;
 
-                case '5':
-                    if (xSemaphoreTake(semaphoreMutex, 0) == pdTRUE){
+                case 'j':
+                    if (xSemaphoreTake(semaphoreMutexGlobVar, 0) == pdTRUE){
                         counter++;
                     }
                     break;
 
-                case '6':
-                    xSemaphoreGive(semaphoreMutex);
+                case 'k':
+                    xSemaphoreGive(semaphoreMutexGlobVar);
                     break;
+
+                case 'l': 
+                    Log.fatalln("Fatal");           
+                    Log.errorln("Error");
+                    Log.warningln("Warning");
+                    Log.infoln("Info %d", counter);
+                    Log.noticeln("Notice");
+                    Log.traceln("Trace");
+                    Log.verboseln("Verbose");
+                    break;
+
+                case '4': 
+                    Log.setLevel(LOG_LEVEL_FATAL);
+                    break;
+
+                case '5': 
+                    Log.setLevel(LOG_LEVEL_ERROR);
+                    break;
+
+                case '6': 
+                    Log.setLevel(LOG_LEVEL_WARNING);
+                    break;
+
+                case '7': 
+                    Log.setLevel(LOG_LEVEL_INFO);
+                    break;
+
+                case '8': 
+                    Log.setLevel(LOG_LEVEL_NOTICE);
+                    break;
+
+                case '9': 
+                    Log.setLevel(LOG_LEVEL_TRACE);
+                    break;
+
+                case '0': 
+                    Log.setLevel(LOG_LEVEL_VERBOSE);
+                    break;
+
 
             }
         }
@@ -203,11 +226,11 @@ void TaskNodeESP32(void *parameter){
 void TaskTest(void *parameter){
     while(true) {
         
-        if (xSemaphoreTake(semaphoreMutex, 0) == pdTRUE){
-            Serial.println(counter);
-            xSemaphoreGive(semaphoreMutex);
+        if (xSemaphoreTake(semaphoreMutexGlobVar, 0) == pdTRUE){
+            //Serial.println(counter);
+            xSemaphoreGive(semaphoreMutexGlobVar);
         } else {
-            Serial.println(".");
+            //Serial.println(".");
         }
         
 

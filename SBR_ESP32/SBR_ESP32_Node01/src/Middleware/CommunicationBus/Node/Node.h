@@ -29,7 +29,7 @@
 class Node {
 public:  
 
-    bool m_start = false;                           /**@brief Start command*/
+    bool m_start = false;   /**@brief Start command*/
     
     /**
      * @brief Constructor
@@ -109,34 +109,11 @@ public:
      */
     RC_e PrintBuffer();  
 
-    /**
-     * @brief Function to enable the debug mode of the class
-     * 
-     * @return RC_e Result code
-     */
-    RC_e EnableDebugMode();
-
-    /**
-     * @brief Function to disable the debug mode of the class
-     * 
-     * @return RC_e Result code
-     */
-    RC_e DisableDebugMode();
-
-    /**
-     * @brief Function to print the debug message
-     * 
-     * @param msg Message
-     * @return RC_e Result code
-     */
-    RC_e Debug(char* msg);
 
 private:
 
     HardwareSerial* m_serial;                       /**@brief Reference pointer of Serial Port */
     RequestBuffer* m_requestBuffer = NULL;          /**@brief Request Buffer object */
-
-    bool m_debugMode = false;                       /**@brief Debug Mode */
 
     /**
      * @brief Function to configure serial port

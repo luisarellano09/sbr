@@ -11,6 +11,7 @@
  *  												INCLUDE
  *******************************************************************************************************************************************/
 #include "NodeEsp32.h"
+#include <ArduinoLog.h>
 
 /*******************************************************************************************************************************************
  *  												CONSTRUCTOR
@@ -21,6 +22,7 @@ NodeEsp32::NodeEsp32(HardwareSerial* serial, uint32_t baud, uint8_t RX, uint8_t 
 }
 
 //=====================================================================================================
+
 NodeEsp32::~NodeEsp32(){}
 
 
@@ -44,23 +46,22 @@ RC_e NodeEsp32::HandleRequest(Request* request){
 
     // Check if the pointer is null
     if (this->m_tableRegister == NULL){
-        Node::Debug("Error: m_tableRegister is NULL_POINTER in NodeEsp32::HandleRequest()");
+        Log.fatalln("[NodeEsp32::HandleRequest] m_tableRegister ERROR_NULL_POINTER");
         return RC_e::ERROR_NULL_POINTER;
     }
 
     // Check if the pointer is null
     if (request == NULL){
-        Node::Debug("Error: request is NULL_POINTER in NodeEsp32::HandleRequest()");
+        Log.fatalln("[NodeEsp32::HandleRequest] request ERROR_NULL_POINTER");
         return RC_e::ERROR_NULL_POINTER;
     }
 
     // Handle request in table Register
     if ((retCode = this->m_tableRegister->HandleRequest(request)) != RC_e::SUCCESS){
-        Debug("Error: HandleRequest in NodeEsp32::HandleRequest()");
+        Log.fatalln("[NodeEsp32::HandleRequest] Error in HandleRequest()");
         return retCode;
     }
     
-
     return retCode;
 }
 

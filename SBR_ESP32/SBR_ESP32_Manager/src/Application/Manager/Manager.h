@@ -32,8 +32,8 @@ class Manager {
 public:  
 
     WifiManager* m_wifiManager = NULL;              /**@brief Instance for Wifimanager. */
-    NodeEsp32* m_nodeESP32 = NULL;                  /**@brief Instance for SPI Master Manager. */
-    NodeLinux* m_nodeLinux = NULL;                  /**@brief Instance for SPI Master Manager. */
+    NodeEsp32* m_nodeESP32 = NULL;                  /**@brief Instance for the node ESP32. */
+    NodeLinux* m_nodeLinux = NULL;                  /**@brief Instance for the node Manager. */
     RegisterTable* m_tableRegister = NULL;          /**@brief Instance for RT table. */
 
     /**
@@ -48,23 +48,8 @@ public:
      */
     ~Manager();
 
-    /**
-     * @brief Enable the debug mode of the class
-     * 
-     * @return RC_e Result code
-     */
-    RC_e EnableDebugMode();
 
-    /**
-     * @brief Disable the debug mode of the class
-     * 
-     * @return RC_e Result code
-     */
-    RC_e DisableDebugMode();
-   
 private:
-
-    bool m_debugMode = false;     /**< Debug Mode */
 
     /**
      * @brief Add Subscribers to the Table
@@ -72,13 +57,6 @@ private:
      * @return RC_e Result code
      */
     RC_e AddSubscribers();
-
-    /**
-     * @brief Function to print the debug message
-     * 
-     * @return RC_e Result code
-     */
-    RC_e Debug(char* msg);
 
 };
 

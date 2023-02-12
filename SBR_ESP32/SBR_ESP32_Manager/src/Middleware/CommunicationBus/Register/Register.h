@@ -68,32 +68,6 @@ public:
      */
     RC_e Print(COM_REQUEST_REG_ID_e regId = COM_REQUEST_REG_ID_e::NONE_REG_ID);
 
-    /**
-     * @brief Function to enable the debug mode of the class
-     * 
-     * @return RC_e Result code
-     */
-    RC_e EnableDebugMode();
-
-    /**
-     * @brief Function to disable the debug mode of the class
-     * 
-     * @return RC_e Result code
-     */
-    RC_e DisableDebugMode();
-   
-private:
-
-    bool m_debugMode = false;           /**@brief Debug Mode */
-
-    /**
-     * @brief Function to print the debug message
-     * 
-     * @param msg Message
-     * @return RC_e Result code
-     */
-    RC_e Debug(char* msg);
-
 };
 
 #endif // REGISTER_H

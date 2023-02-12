@@ -12,6 +12,7 @@
  *  												INCLUDE
  *******************************************************************************************************************************************/
 #include "WifiManager.h"
+#include <ArduinoLog.h>
 
 /*******************************************************************************************************************************************
  *  												CONSTRUCTOR
@@ -25,6 +26,7 @@ WifiManager::WifiManager(char* ssid, char* password, char* hostName){
 }
 
 //=====================================================================================================
+
 WifiManager::~WifiManager(){}
 
 /*******************************************************************************************************************************************
@@ -39,17 +41,17 @@ RC_e WifiManager::Connect(){
     if (WiFi.status() != WL_CONNECTED) {
 
         if ((retCode = ConfigureWifi()) != RC_e::SUCCESS){
-            Debug("Error: ConfigureWifi in WifiManager::Connect()");
+            Log.errorln("[WifiManager::Connect] Error in ConfigureWifi()");
             return retCode;        
         }
 
         if ((retCode = ConfigureOTA()) != RC_e::SUCCESS){
-            Debug("Error: ConfigureOTA in WifiManager::Connect()");
+            Log.errorln("[WifiManager::Connect] Error in ConfigureOTA()");
             return retCode;        
         }
 
         if ((retCode = ConnectWifi()) != RC_e::SUCCESS){
-            Debug("Error: ConnectWifi in WifiManager::Connect()");
+            Log.errorln("[WifiManager::Connect] Error in ConnectWifi()");
             return retCode;        
         }
     }
@@ -57,7 +59,9 @@ RC_e WifiManager::Connect(){
     return retCode;  
 }
 
+
 //=====================================================================================================
+
 RC_e WifiManager::RunOTA(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
@@ -66,24 +70,12 @@ RC_e WifiManager::RunOTA(){
     if (WiFi.status() == WL_CONNECTED) {
         // OTA Handling
         if ((retCode = HandleOTA()) != RC_e::SUCCESS){
-            Debug("Error: HandleOTA in WifiManager::RunOTA()");
+            Log.errorln("[WifiManager::RunOTA] Error in HandleOTA()");
             return retCode;        
         }
     }
 
     return retCode;
-}
-
-//=====================================================================================================
-RC_e WifiManager::EnableDebugMode(){
-    this->m_debugMode = true;
-    return RC_e::SUCCESS;
-}
-
-//=====================================================================================================
-RC_e WifiManager::DisableDebugMode(){
-    this->m_debugMode = false;
-    return RC_e::SUCCESS;
 }
 
 
@@ -105,7 +97,9 @@ RC_e WifiManager::ConfigureWifi(){
     return RC_e::SUCCESS;
 }
 
+
 //=====================================================================================================
+
 RC_e WifiManager::ConnectWifi(){
     // Check if Wifi is connected
     if (WiFi.status() != WL_CONNECTED) {
@@ -120,7 +114,7 @@ RC_e WifiManager::ConnectWifi(){
         WiFi.setAutoConnect(false);
         WiFi.setAutoReconnect(false);
 
-        Serial.println("Connecting...");
+        Log.infoln("[WifiManager::ConnectWifi] Connecting...");
 
         // Set Hostname
         MDNS.begin(this->m_hostName);
@@ -130,9 +124,12 @@ RC_e WifiManager::ConnectWifi(){
     return RC_e::SUCCESS;  
 }
 
+
 //=====================================================================================================
+
 void WifiManager::WiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info){
-    Serial.printf("[WiFi-event] event: %d\r\n", event);
+    // Wifi evento info
+    Log.infoln("[WifiManager::WiFiEvent] WifiEvent: %d", event);
 
     switch (event) 
     {
@@ -143,24 +140,25 @@ void WifiManager::WiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info){
             //Serial.println("Completed scan for access points");
             break;
         case SYSTEM_EVENT_STA_START:
-            //Serial.println("WiFi client started");
+            Log.infoln("[WifiManager::WiFiEvent] WiFi started");
             break;
         case SYSTEM_EVENT_STA_STOP:
             //Serial.println("WiFi clients stopped");
             break;
         case SYSTEM_EVENT_STA_CONNECTED:
-            //Serial.println("Connected to access point");
+            Log.infoln("[WifiManager::WiFiEvent] Wifi connected");
             break;
         case SYSTEM_EVENT_STA_DISCONNECTED:
-            Serial.println("Disconnected from WiFi access point");
+            Log.infoln("[WifiManager::WiFiEvent] Wifi disconnected");
             break;
         case SYSTEM_EVENT_STA_AUTHMODE_CHANGE:
             //Serial.println("Authentication mode of access point has changed");
             break;
         case SYSTEM_EVENT_STA_GOT_IP:
-            Serial.print("Obtained IP address: ");
-            Serial.println(WiFi.localIP());
-            Serial.println(WiFi.macAddress());
+            Log.info("[WifiManager::WiFiEvent] IP address assigned: ");
+            if (Log.getLevel() >= LOG_LEVEL_INFO) Serial.println(WiFi.localIP());
+            Log.info("[WifiManager::WiFiEvent] MAC: ");
+            if (Log.getLevel() >= LOG_LEVEL_INFO) Serial.println(WiFi.macAddress());
             break;
         case SYSTEM_EVENT_STA_LOST_IP:
             //Serial.println("Lost IP address and IP address is reset to 0");
@@ -218,7 +216,9 @@ void WifiManager::WiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info){
     }
 }
 
+
 //=====================================================================================================
+
 RC_e WifiManager::ConfigureOTA(){
     // Hostname
     ArduinoOTA.setHostname(this->m_hostName);
@@ -235,21 +235,23 @@ RC_e WifiManager::ConfigureOTA(){
             type = "filesystem";
 
         // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-        Serial.println("Start updating " + type);
+        Log.infoln("[WifiManager::ConfigureOTA] Start updating %s", type);
     })
     .onEnd([]() {
-        Serial.println("\nEnd");
+        if (Log.getLevel() >= LOG_LEVEL_INFO) Serial.println("");
+        Log.infoln("[WifiManager::ConfigureOTA] End");
     })
     .onProgress([](unsigned int progress, unsigned int total) {
-        Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+        //Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+        Log.info("[WifiManager::ConfigureOTA] Progress: %u%%\r", (progress / (total / 100)));
     })
     .onError([](ota_error_t error) {
-        Serial.printf("Error[%u]: ", error);
-        if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
-        else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
-        else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
-        else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
-        else if (error == OTA_END_ERROR) Serial.println("End Failed");
+        Log.errorln("[WifiManager::ConfigureOTA] Error[%u]: ", error);
+        if (error == OTA_AUTH_ERROR) Log.errorln("[WifiManager::ConfigureOTA] Auth Failed");
+        else if (error == OTA_BEGIN_ERROR) Log.errorln("[WifiManager::ConfigureOTA] Begin Failed");
+        else if (error == OTA_CONNECT_ERROR) Log.errorln("[WifiManager::ConfigureOTA] Connect Failed");
+        else if (error == OTA_RECEIVE_ERROR) Log.errorln("[WifiManager::ConfigureOTA] Receive Failed");
+        else if (error == OTA_END_ERROR) Log.errorln("[WifiManager::ConfigureOTA] End Failed");
     });
 
     ArduinoOTA.begin();
@@ -257,20 +259,11 @@ RC_e WifiManager::ConfigureOTA(){
     return RC_e::SUCCESS;
 }
 
+
 //=====================================================================================================
+
 RC_e WifiManager::HandleOTA(){
     ArduinoOTA.handle();
     delay(10);
-    return RC_e::SUCCESS;
-}
-
-//=====================================================================================================
-RC_e WifiManager::Debug(char* msg){
-    // Check if Debug mode is active
-    if (this->m_debugMode){
-        // Print message
-        Serial.println(msg);
-    }
-    
     return RC_e::SUCCESS;
 }

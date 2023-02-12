@@ -13,6 +13,7 @@
  *******************************************************************************************************************************************/
 #include "Manager.h"
 #include "../../Definition/Local/LocalConfig.h"
+#include <ArduinoLog.h>
 
 /*******************************************************************************************************************************************
  *  												CONSTRUCTOR
@@ -33,51 +34,24 @@ Manager::Manager(){
     this->m_nodeESP32->ConnectRegisterTable(this->m_tableRegister);
 }
 
+
 //=====================================================================================================
+
 Manager::~Manager(){}
+
 
 /*******************************************************************************************************************************************
  *  												PUBLIC METHODS
  *******************************************************************************************************************************************/
 
 
-//=====================================================================================================
-RC_e Manager::EnableDebugMode(){
-    this->m_debugMode = true;
-    this->m_wifiManager->EnableDebugMode();
-    this->m_nodeESP32->EnableDebugMode();
-    this->m_nodeLinux->EnableDebugMode();
-    this->m_tableRegister->EnableDebugMode();
-    return RC_e::SUCCESS;
-}
-
-//=====================================================================================================
-RC_e Manager::DisableDebugMode(){
-    this->m_debugMode = false;
-    this->m_wifiManager->DisableDebugMode();
-    this->m_nodeESP32->DisableDebugMode();
-    this->m_nodeLinux->DisableDebugMode();
-    this->m_tableRegister->DisableDebugMode();
-    return RC_e::SUCCESS;
-}
 
 /*******************************************************************************************************************************************
  *  												PRIVATE METHODS
  *******************************************************************************************************************************************/
 
-//=====================================================================================================
 RC_e Manager::AddSubscribers(){
-
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::REGISTER_50, DEVICE_e::ESP32_NODE01);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::REGISTER_51, DEVICE_e::ESP32_NODE02);
-    return RC_e::SUCCESS;
-}
-
-//=====================================================================================================
-RC_e Manager::Debug(char* msg){
-    if (this->m_debugMode){
-        Serial.println(msg);
-    }
-    
     return RC_e::SUCCESS;
 }

@@ -11,6 +11,7 @@
  *  												INCLUDE
  *******************************************************************************************************************************************/
 #include "RegisterTable.h"
+#include <ArduinoLog.h>
 
 /*******************************************************************************************************************************************
  *  												CONSTRUCTOR
@@ -19,12 +20,14 @@
 RegisterTable::RegisterTable(Node* NodeESP32, Node* NodeLinux){
     // Check if the pointer is null
     if (NodeESP32 == NULL){
-        Debug("Error: NodeESP32 is NULL_POINTER in RegisterTable::RegisterTable()");
+        Log.fatalln("[RegisterTable::RegisterTable] NodeESP32 NULL_POINTER");
+        return;
     }
 
     // Check if the pointer is null
     if (NodeLinux == NULL){
-        Debug("Error: NodeLinux NULL_POINTER in RegisterTable::RegisterTable()");
+        Log.fatalln("[RegisterTable::RegisterTable] NodeLinux NULL_POINTER");
+        return;
     }
 
     this->m_NodeESP32 = NodeESP32;
@@ -32,12 +35,15 @@ RegisterTable::RegisterTable(Node* NodeESP32, Node* NodeLinux){
 
     // Clean all registers
     if (CleanRegisters() != RC_e::SUCCESS){
-        Debug("Error: CleanRegisters in RegisterTable::RegisterTable()");
+        Log.errorln("[RegisterTable::RegisterTable] Error in CleanRegisters()");
     }
 }
 
+
 //=====================================================================================================
+
 RegisterTable::~RegisterTable(){}
+
 
 /*******************************************************************************************************************************************
  *  												PUBLIC METHODS
@@ -49,33 +55,35 @@ RC_e RegisterTable::AddSubscriber(COM_REQUEST_REG_ID_e regId, DEVICE_e subscribe
 
     // Check Register
     if (regId >= COM_REQUEST_REG_ID_e::LENGTH_REG_ID || regId <= COM_REQUEST_REG_ID_e::NONE_REG_ID){
-        Debug("Error: INVALID_REG_ID in RegisterTable::AddSubscriber()");
+        Log.fatalln("[RegisterTable::AddSubscriber] regId ERROR_INVALID_REG_ID");
         return RC_e::ERROR_INVALID_REG_ID;
     }
 
     // Check subscriber
     if (subscriber >= DEVICE_e::LENGTH_DEVICE || subscriber < DEVICE_e::NONE_DEVICE){
-        Debug("Error: INVALID_SUBSCRIBER in RegisterTable::AddSubscriber()");
+        Log.fatalln("[RegisterTable::AddSubscriber] subscriber ERROR_INVALID_SUBSCRIBER");
         return RC_e::ERROR_INVALID_SUBSCRIBER;
     }
 
     // Add subscriber
     if ((retCode = this->m_registers[regId].AddSubscriber(subscriber)) != RC_e::SUCCESS){
-        Debug("Error: m_registers[regId].AddSubscriber(...) in RegisterTable::AddSubscriber()");
+        Log.errorln("[RegisterTable::AddSubscriber] Error in AddSubscriber()");
         return retCode;
     }
 
     return retCode;
 }
 
+
 //=====================================================================================================
+
 RC_e RegisterTable::UpdateRegister(COM_REQUEST_REG_ID_e regId, int32_t data){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
     // Check register ID validity
     if (regId >= COM_REQUEST_REG_ID_e::LENGTH_REG_ID || regId <= COM_REQUEST_REG_ID_e::NONE_REG_ID){
-        Debug("Error: INVALID_REG_ID in RegisterTable::UpdateRegister()");
+        Log.fatalln("[RegisterTable::UpdateRegister] regId ERROR_INVALID_REG_ID");
         return RC_e::ERROR_INVALID_REG_ID;
     }
 
@@ -84,27 +92,29 @@ RC_e RegisterTable::UpdateRegister(COM_REQUEST_REG_ID_e regId, int32_t data){
 
     // Add request to subscribers
     if ((retCode = this->AddRequestToSubscribers(regId, data)) != RC_e::SUCCESS){
-        Debug("Error: AddRequestToSubscribers(...) in RegisterTable::UpdateRegister()");
+        Log.errorln("[RegisterTable::UpdateRegister] Error in AddRequestToSubscribers()");
         return retCode;
     }
 
     return retCode;
 }
 
+
 //=====================================================================================================
+
 RC_e RegisterTable::HandleRequest(Request* request){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
     
     // Check if the pointer is null
     if (request == NULL){
-        Debug("Error: ERROR_NULL_POINTER in RegisterTable::HandleRequest()");
+        Log.fatalln("[RegisterTable::HandleRequest] request ERROR_NULL_POINTER");
         return RC_e::ERROR_NULL_POINTER;
     }
 
     // Check register ID validity
     if (request->regId >= COM_REQUEST_REG_ID_e::LENGTH_REG_ID || request->regId <= COM_REQUEST_REG_ID_e::NONE_REG_ID){
-        Debug("Error: ERROR_INVALID_REG_ID in RegisterTable::HandleRequest()");
+        Log.fatalln("[RegisterTable::HandleRequest] regId ERROR_INVALID_REG_ID");
         return RC_e::ERROR_INVALID_REG_ID;
     }
 
@@ -112,7 +122,7 @@ RC_e RegisterTable::HandleRequest(Request* request){
     if (request->reqType == COM_REQUEST_TYPE_e::WRITE){
         // Update Register
         if ((retCode = this->UpdateRegister((COM_REQUEST_REG_ID_e)request->regId, request->data)) != RC_e::SUCCESS){
-            Debug("Error: UpdateRegister(...) in RegisterTable::HandleRequest()");
+            Log.errorln("[RegisterTable::HandleRequest] Error in UpdateRegister()");
             return retCode;
         }
     } else if (request->reqType == COM_REQUEST_TYPE_e::READ){
@@ -122,14 +132,16 @@ RC_e RegisterTable::HandleRequest(Request* request){
     return retCode;
 }
 
+
 //=====================================================================================================
+
 RC_e RegisterTable::AddRequestToSubscribers(COM_REQUEST_REG_ID_e regId, int32_t data){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
     // Check register ID validity
     if (regId >= COM_REQUEST_REG_ID_e::LENGTH_REG_ID || regId <= COM_REQUEST_REG_ID_e::NONE_REG_ID){
-        Debug("Error: INVALID_REG_ID in RegisterTable::AddRequestToSubscribers()");
+        Log.fatalln("[RegisterTable::AddRequestToSubscribers] regId ERROR_INVALID_REG_ID");
         return RC_e::ERROR_INVALID_REG_ID;
     }
 
@@ -141,12 +153,12 @@ RC_e RegisterTable::AddRequestToSubscribers(COM_REQUEST_REG_ID_e regId, int32_t 
         // Select the device to add the request
         if (subscriber == DEVICE_e::LINUX){
             if ((retCode = this->m_NodeLinux->AddRequest((DEVICE_e)subscriber, COM_REQUEST_TYPE_e::WRITE, (COM_REQUEST_REG_ID_e)regId, data)) != RC_e::SUCCESS){
-                Debug("Error: this->m_NodeLinux->AddRequest(...) in RegisterTable::AddRequestToSubscribers()");
+                Log.errorln("[RegisterTable::AddRequestToSubscribers] Error in AddRequest()");
                 return retCode;
             }
         } else if (subscriber>DEVICE_e::NONE_DEVICE || subscriber<DEVICE_e::LINUX){
             if ((retCode = this->m_NodeESP32->AddRequest((DEVICE_e)subscriber, COM_REQUEST_TYPE_e::WRITE, (COM_REQUEST_REG_ID_e)regId, data)) != RC_e::SUCCESS){
-                Debug("Error: this->m_NodeESP32->AddRequest(...) in RegisterTable::AddRequestToSubscribers()");
+                Log.errorln("[RegisterTable::AddRequestToSubscribers] Error in AddRequest()");
                 return retCode;
             }
         }
@@ -155,27 +167,31 @@ RC_e RegisterTable::AddRequestToSubscribers(COM_REQUEST_REG_ID_e regId, int32_t 
     return retCode;
 }
 
+
 //=====================================================================================================
+
 RC_e RegisterTable::PrintRegister(COM_REQUEST_REG_ID_e regId){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
     // Check register ID validity
     if (regId >= COM_REQUEST_REG_ID_e::LENGTH_REG_ID || regId <= COM_REQUEST_REG_ID_e::NONE_REG_ID){
-        Debug("Error: INVALID_REG_ID in RegisterTable::PrintRegister()");
+        Log.fatalln("[RegisterTable::PrintRegister] redId ERROR_INVALID_REG_ID");
         return RC_e::ERROR_INVALID_REG_ID;
     }
 
     // Print register
     if ((retCode = this->m_registers[regId].Print(regId)) != RC_e::SUCCESS){
-        Debug("Error: this->m_registers[regId].Print(...) in RegisterTable::PrintRegister()");
+        Log.errorln("[RegisterTable::PrintRegister] Error in Print()");
         return retCode;
     }
 
     return retCode;
 }
 
+
 //=====================================================================================================
+
 RC_e RegisterTable::PrintTable(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
@@ -184,7 +200,7 @@ RC_e RegisterTable::PrintTable(){
     for (uint16_t i=(COM_REQUEST_REG_ID_e::NONE_REG_ID+1); i<COM_REQUEST_REG_ID_e::LENGTH_REG_ID; i++){
         // Print register
         if ((retCode = this->m_registers[i].Print((COM_REQUEST_REG_ID_e)i)) != RC_e::SUCCESS){
-            Debug("Error: this->m_registers[i].Print(...) in RegisterTable::PrintTable()");
+            Log.errorln("[RegisterTable::PrintTable] Error in Print()");
             return retCode;
         }
     }
@@ -192,45 +208,6 @@ RC_e RegisterTable::PrintTable(){
     return retCode;
 }
 
-//=====================================================================================================
-RC_e RegisterTable::EnableDebugMode(){
-    // Result code
-    RC_e retCode = RC_e::SUCCESS;
-
-    // Enable debug mode
-    this->m_debugMode = true;
-
-    // Iterate all registers
-    for (uint16_t i=0; i<COM_REQUEST_REG_ID_e::LENGTH_REG_ID; i++){
-        // Enable debug mode in registers
-        if ((retCode = this->m_registers[i].EnableDebugMode()) != RC_e::SUCCESS){
-            Debug("Error: EnableDebugMode in RegisterTable::EnableDebugMode()");
-            return retCode;
-        }
-    }
-
-    return retCode;
-}
-
-//=====================================================================================================
-RC_e RegisterTable::DisableDebugMode(){
-    // Result code
-    RC_e retCode = RC_e::SUCCESS;
-
-    // Disable debug mode
-    this->m_debugMode = false;
-
-    // Iterate all registers
-    for (uint16_t i=0; i<COM_REQUEST_REG_ID_e::LENGTH_REG_ID; i++){
-        // Disable debug mode in registres
-        if ((retCode = this->m_registers[i].DisableDebugMode()) != RC_e::SUCCESS){
-            Debug("Error: DisableDebugMode in RegisterTable::DisableDebugMode()");
-            return retCode;
-        }
-    }
-
-    return retCode;
-}
 
 /*******************************************************************************************************************************************
  *  												PRIVATE METHODS
@@ -244,21 +221,10 @@ RC_e RegisterTable::CleanRegisters(){
     for (uint16_t i=0; i<COM_REQUEST_REG_ID_e::LENGTH_REG_ID; i++){
         // Clean register
         if ((retCode = this->m_registers[i].Clean()) != RC_e::SUCCESS){
-            Debug("Error: Clean in RegisterTable::CleanRegisters()");
+            Log.errorln("[RegisterTable::CleanRegisters] Error in Clean()");
             return retCode;
         }
     }
 
     return retCode;
-}
-
-//=====================================================================================================
-RC_e RegisterTable::Debug(char* msg){
-    // Check if debug mode is active
-    if (this->m_debugMode){
-        // Print message
-        Serial.println(msg);
-    }
-    
-    return RC_e::SUCCESS;
 }
