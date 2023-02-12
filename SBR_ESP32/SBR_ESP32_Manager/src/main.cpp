@@ -38,20 +38,20 @@ void Init(){
 
     // Disable brownout detector
     WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); 
+    Log.traceln("Disable brownout detector");
 
     // Serial Port
     Serial.begin(115200);
 
     // Logging
     Log.begin(LOG_LEVEL_VERBOSE, &Serial);
-    Log.setLevel(LOG_LEVEL_SILENT);
+    Log.setLevel(LOG_LEVEL_TRACE);
 
     // Create mutex 
     semaphoreMutexGlobVar = xSemaphoreCreateMutex();
 
-    // Manager
+    // Manager Instance
     manager = new Manager();
-
 
 }
 

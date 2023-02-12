@@ -22,9 +22,13 @@ Manager::Manager(){
 
     // Wifi
     this->m_wifiManager = new WifiManager(WIFI_SSID, WIFI_PASSWORD, ESP32_HOSTNAME);
+    Log.traceln("[Manager::Manager] WifiManager instanced");
 
     // Node
     this->m_nodeESP32 = new NodeEsp32(&Serial1, NODE_ESP32s_BAUDRATE, NODE_ESP32s_RX, NODE_ESP32s_TX);
+    Log.traceln("[Manager::Manager] NodeEsp32 instanced");
+
+    Log.traceln("[Manager::Manager] Manager initialization finished");
 }
 
 

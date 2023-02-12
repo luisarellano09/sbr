@@ -32,6 +32,7 @@ NodeEsp32::~NodeEsp32(){}
 
 RC_e NodeEsp32::ConnectRegisterTable(RegisterTable* tableRegister){
     this->m_tableRegister = tableRegister;
+    Log.traceln("[NodeEsp32::ConnectRegisterTable] Register Table connected");
     return RC_e::SUCCESS;
 }
 
@@ -56,11 +57,15 @@ RC_e NodeEsp32::HandleRequest(Request* request){
         return RC_e::ERROR_NULL_POINTER;
     }
 
+    Log.traceln("[NodeEsp32::HandleRequest] Request received: nodeId=%d, reqType=%d, regId=%d, data=%d, CRC=%d", request->nodeId, request->reqType, request->regId, request->data, request->CRC);
+
     // Handle request in table Register
     if ((retCode = this->m_tableRegister->HandleRequest(request)) != RC_e::SUCCESS){
         Log.fatalln("[NodeEsp32::HandleRequest] Error in HandleRequest()");
         return retCode;
     }
+
+    Log.traceln("[NodeEsp32::HandleRequest] Request handled:");
     
     return retCode;
 }

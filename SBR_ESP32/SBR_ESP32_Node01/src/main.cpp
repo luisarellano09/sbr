@@ -45,12 +45,12 @@ void Init(){
 
     // Logging
     Log.begin(LOG_LEVEL_VERBOSE, &Serial);
-    Log.setLevel(LOG_LEVEL_SILENT);
+    Log.setLevel(LOG_LEVEL_TRACE);
 
     // Create mutex 
     semaphoreMutexGlobVar = xSemaphoreCreateMutex();
 
-    // Manager
+    // Manager Instance
     manager = new Manager();
 }
 

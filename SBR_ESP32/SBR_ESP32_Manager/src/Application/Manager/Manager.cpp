@@ -22,16 +22,27 @@
 Manager::Manager(){
     // Wifi Manager
     this->m_wifiManager = new WifiManager(WIFI_SSID, WIFI_PASSWORD, ESP32_HOSTNAME);
+    Log.traceln("[Manager::Manager] WifiManager instanced");
 
     // Nodes Manager
     this->m_nodeESP32 = new NodeEsp32(&Serial1, NODE_ESP32s_BAUDRATE, NODE_ESP32s_RX, NODE_ESP32s_TX);
+    Log.traceln("[Manager::Manager] NodeEsp32 instanced");
     this->m_nodeLinux = new NodeLinux(&Serial2, NODE_ESP32s_BAUDRATE, 5, 18);
+    Log.traceln("[Manager::Manager] NodeLinux instanced");
 
     // Table RT
     this->m_tableRegister = new RegisterTable(this->m_nodeESP32, this->m_nodeLinux);
-    this->AddSubscribers();
+    Log.traceln("[Manager::Manager] RegisterTable instanced");
 
+    // Add Subscribers
+    this->AddSubscribers();
+    Log.traceln("[Manager::Manager] Subscribers added");
+
+    // Connect table to Nodes
     this->m_nodeESP32->ConnectRegisterTable(this->m_tableRegister);
+    Log.traceln("[Manager::Manager] Table connected to node ESP32");
+
+    Log.traceln("[Manager::Manager] Manager initialization finished");
 }
 
 

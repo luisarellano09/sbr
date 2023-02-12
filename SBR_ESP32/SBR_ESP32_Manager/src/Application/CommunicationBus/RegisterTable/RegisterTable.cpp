@@ -37,6 +37,8 @@ RegisterTable::RegisterTable(Node* NodeESP32, Node* NodeLinux){
     if (CleanRegisters() != RC_e::SUCCESS){
         Log.errorln("[RegisterTable::RegisterTable] Error in CleanRegisters()");
     }
+
+    Log.traceln("[RegisterTable::RegisterTable] RegisterTable initialization finished");
 }
 
 
@@ -71,6 +73,8 @@ RC_e RegisterTable::AddSubscriber(COM_REQUEST_REG_ID_e regId, DEVICE_e subscribe
         return retCode;
     }
 
+    Log.traceln("[RegisterTable::AddSubscriber] Subscriber added Subscriber[%d]->Register[%d]", subscriber, regId);
+
     return retCode;
 }
 
@@ -96,6 +100,8 @@ RC_e RegisterTable::UpdateRegister(COM_REQUEST_REG_ID_e regId, int32_t data){
         return retCode;
     }
 
+    Log.traceln("[RegisterTable::UpdateRegister] Register updated: [%u]=%d", regId, data);
+
     return retCode;
 }
 
@@ -118,6 +124,8 @@ RC_e RegisterTable::HandleRequest(Request* request){
         return RC_e::ERROR_INVALID_REG_ID;
     }
 
+    Log.traceln("[RegisterTable::HandleRequest] Request received: nodeId=%d, reqType=%d, regId=%d, data=%d, CRC=%d", request->nodeId, request->reqType, request->regId, request->data, request->CRC);
+
     // Evaluate type of Request from node
     if (request->reqType == COM_REQUEST_TYPE_e::WRITE){
         // Update Register
@@ -128,6 +136,8 @@ RC_e RegisterTable::HandleRequest(Request* request){
     } else if (request->reqType == COM_REQUEST_TYPE_e::READ){
         //ToDo implement read request
     }
+
+    Log.traceln("[RegisterTable::HandleRequest] Request handled:");
 
     return retCode;
 }
@@ -152,15 +162,26 @@ RC_e RegisterTable::AddRequestToSubscribers(COM_REQUEST_REG_ID_e regId, int32_t 
 
         // Select the device to add the request
         if (subscriber == DEVICE_e::LINUX){
+
+            Log.traceln("[RegisterTable::AddRequestToSubscribers] Adding request to Linux Node: [%u]=%d", regId, data);
+
             if ((retCode = this->m_NodeLinux->AddRequest((DEVICE_e)subscriber, COM_REQUEST_TYPE_e::WRITE, (COM_REQUEST_REG_ID_e)regId, data)) != RC_e::SUCCESS){
                 Log.errorln("[RegisterTable::AddRequestToSubscribers] Error in AddRequest()");
                 return retCode;
             }
+
+            Log.traceln("[RegisterTable::AddRequestToSubscribers] Request added Linux Node");
+
         } else if (subscriber>DEVICE_e::NONE_DEVICE || subscriber<DEVICE_e::LINUX){
+
+            Log.traceln("[RegisterTable::AddRequestToSubscribers] Adding request to ESP32 Node[%u]: [%u]=%d", subscriber, regId, data);
+            
             if ((retCode = this->m_NodeESP32->AddRequest((DEVICE_e)subscriber, COM_REQUEST_TYPE_e::WRITE, (COM_REQUEST_REG_ID_e)regId, data)) != RC_e::SUCCESS){
                 Log.errorln("[RegisterTable::AddRequestToSubscribers] Error in AddRequest()");
                 return retCode;
             }
+            
+            Log.traceln("[RegisterTable::AddRequestToSubscribers] Request added to ESP32 Node[%u]", subscriber);
         }
     }
 
@@ -186,6 +207,8 @@ RC_e RegisterTable::PrintRegister(COM_REQUEST_REG_ID_e regId){
         return retCode;
     }
 
+    Log.traceln("[RegisterTable::PrintRegister] Register printed");
+
     return retCode;
 }
 
@@ -204,6 +227,8 @@ RC_e RegisterTable::PrintTable(){
             return retCode;
         }
     }
+
+    Log.traceln("[RegisterTable::PrintTable] Table printed");
 
     return retCode;
 }
@@ -225,6 +250,8 @@ RC_e RegisterTable::CleanRegisters(){
             return retCode;
         }
     }
+
+    Log.traceln("[RegisterTable::CleanRegisters] Registers cleaned");
 
     return retCode;
 }

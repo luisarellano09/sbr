@@ -42,11 +42,15 @@ RC_e NodeEsp32::UpdateRegister(COM_REQUEST_REG_ID_e regId, int32_t data){
         return RC_e::ERROR_INVALID_REG_ID;
     }
 
+    Log.traceln("[NodeEsp32::UpdateRegister] Sending update register: [%u]=%d", regId, data);
+
     // Add request to manager
     if ((retCode = this->AddRequest(DEVICE_e::NODE_MANAGER, COM_REQUEST_TYPE_e::WRITE, regId, data)) != RC_e::SUCCESS){
         Log.errorln("[NodeEsp32::UpdateRegister] Error in AddRequest()");
         return retCode;
     }
+
+    Log.traceln("[NodeEsp32::UpdateRegister] Register update sent");
 
     return retCode;
 }
@@ -57,9 +61,19 @@ RC_e NodeEsp32::UpdateRegister(COM_REQUEST_REG_ID_e regId, int32_t data){
  *******************************************************************************************************************************************/
 
 RC_e NodeEsp32::HandleRequest(Request* request){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    // Check if the pointer is null
+    if (request == NULL){
+        Log.fatalln("[NodeEsp32::HandleRequest] request ERROR_NULL_POINTER");
+        return RC_e::ERROR_NULL_POINTER;
+    }
+
+    Log.traceln("[NodeEsp32::HandleRequest] Request received: nodeId=%d, reqType=%d, regId=%d, data=%d, CRC=%d", request->nodeId, request->reqType, request->regId, request->data, request->CRC);
 
     request->Print();
-    return RC_e::SUCCESS;
 
+    return retCode;
 }
 
