@@ -92,6 +92,7 @@ RC_e Register::Print(COM_REQUEST_REG_ID_e regId){
     }
     
     Serial.println("*****************");
+    
     return RC_e::SUCCESS;
 }
 
