@@ -23,27 +23,12 @@
  *  												DECLARATION
  *******************************************************************************************************************************************/
 
-// Functions
-
 void InitTasks();
+void InitQueues();
 void TaskCLI(void *parameter);
 void TaskOTA(void *parameter);
 void TaskNodeESP32(void *parameter);
-
-
-// Task Handlers
-
-TaskHandle_t TaskCLIHandle;
-TaskHandle_t TaskOTAHandle;
-TaskHandle_t TaskNodeESP32Handle;
-
-
-// Task Timers (T)
-
-TickType_t TimerTaskCLI = 1000 / portTICK_PERIOD_MS;
-TickType_t TimerTaskOTA = 2000 / portTICK_PERIOD_MS;
-TickType_t TimerTaskNodeESP32 = 1;
-
+void TaskReg10(void *parameter);
 
 /*******************************************************************************************************************************************
  *  												DEFINITION
@@ -66,14 +51,25 @@ TickType_t TimerTaskNodeESP32 = 1;
  * 
  */
 void InitTasks(){
-
+    InitQueues();
     disableLoopWDT();
     disableCore0WDT();
     disableCore1WDT();
     xTaskCreatePinnedToCore(TaskCLI,            "TaskCLI",          2000,       NULL, 1, &TaskCLIHandle,        1);         
     xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",          10000,      NULL, 1, &TaskOTAHandle,        0);  
     xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",    10000,      NULL, 1, &TaskNodeESP32Handle,  0);          
+    xTaskCreatePinnedToCore(TaskReg10,          "TaskReg10",        10000,      NULL, 1, &TaskReg10Handle,  1);          
 
+}
+
+
+//=====================================================================================================
+/**
+ * @brief Initialiyation of Queues 
+ * 
+ */
+void InitQueues(){
+    queue_Register10 = xQueueCreate(10,sizeof(double));
 }
 
 
@@ -132,7 +128,7 @@ void TaskCLI(void *parameter){
                     Log.fatalln("Fatal");           
                     Log.errorln("Error");
                     Log.warningln("Warning");
-                    Log.infoln("Info %d", counter);
+                    Log.infoln("Info %d");
                     Log.noticeln("Notice");
                     Log.traceln("Trace");
                     Log.verboseln("Verbose");
@@ -195,6 +191,27 @@ void TaskNodeESP32(void *parameter){
     while(true) {
         manager->m_nodeESP32->Run();
         vTaskDelay(TimerTaskNodeESP32);
+    }
+}
+
+
+//=====================================================================================================
+/**
+ * @brief TaskReg10 
+ * 
+ */
+void TaskReg10(void *parameter){
+    while(true) {
+        double data_Register10 = 0.0;
+        if (xQueueReceive(queue_Register10, &data_Register10, 0) == pdTRUE){
+            Log.infoln("New reg10: %D", data_Register10);
+            manager->counter = data_Register10;
+        }
+
+        manager->counter = manager->counter + 0.1;
+        Log.infoln("Reg10: %D", manager->counter);
+        
+        vTaskDelay(1000);
     }
 }
 

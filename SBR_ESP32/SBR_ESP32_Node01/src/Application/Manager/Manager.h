@@ -30,6 +30,7 @@ public:
 
     WifiManager* m_wifiManager = NULL;              /**@brief Instance for Wifimanager. */
     NodeEsp32* m_nodeESP32 = NULL;                  /**@brief Instance for the node ESP32. */
+    double counter=0;
 
     /**
      * @brief Construct a new Manager object

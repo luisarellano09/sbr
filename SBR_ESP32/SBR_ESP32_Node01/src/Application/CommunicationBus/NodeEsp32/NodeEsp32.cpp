@@ -72,7 +72,16 @@ RC_e NodeEsp32::HandleRequest(Request* request){
 
     Log.traceln("[NodeEsp32::HandleRequest] Request received: nodeId=%d, reqType=%d, regId=%d, data=%d, CRC=%d", request->nodeId, request->reqType, request->regId, request->data, request->CRC);
 
-    request->Print();
+    // Check if the function is null
+    if (this->ExtHandler == NULL){
+        Log.fatalln("[NodeEsp32::HandleRequest] ExtHandler ERROR_NULL_POINTER");
+        return RC_e::ERROR_NULL_POINTER;
+    }
+
+    if ((retCode = this->ExtHandler(request)) != RC_e::SUCCESS){
+        Log.errorln("[NodeEsp32::HandleRequest] Error in ExtHandler()");
+        return retCode;
+    }
 
     return retCode;
 }

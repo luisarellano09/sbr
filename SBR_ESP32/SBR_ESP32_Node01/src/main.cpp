@@ -52,5 +52,6 @@ void Init(){
 
     // Manager Instance
     manager = new Manager();
+    manager->m_nodeESP32->ExtHandler = ExtHandler;
 }
 

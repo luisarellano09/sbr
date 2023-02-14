@@ -21,8 +21,19 @@
  *******************************************************************************************************************************************/
 
 static Manager* manager;                            /**@brief Instance of the manager */
-static SemaphoreHandle_t semaphoreMutexGlobVar;     /**@brief Semaphore to Mutex for Global Variables */
-static volatile int counter = 0;                    /**@brief Example */
+
+// Task Handlers
+
+TaskHandle_t TaskCLIHandle;
+TaskHandle_t TaskOTAHandle;
+TaskHandle_t TaskNodeESP32Handle;
+TaskHandle_t TaskTestHandle;
+
+// Task Timers (T)
+
+TickType_t TimerTaskCLI = 1000 / portTICK_PERIOD_MS;
+TickType_t TimerTaskOTA = 2000 / portTICK_PERIOD_MS;
+TickType_t TimerTaskNodeESP32 = 1;
 
 
 #endif /* GLOBALVAR_H */

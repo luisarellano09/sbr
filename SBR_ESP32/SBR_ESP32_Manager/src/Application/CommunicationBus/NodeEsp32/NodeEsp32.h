@@ -48,6 +48,7 @@ public:
      */
     RC_e ConnectRegisterTable(RegisterTable* tableRegister);
 
+
 private:
 
     RegisterTable* m_tableRegister = NULL;          /**@brief Reference of Table Register object */

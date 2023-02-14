@@ -47,9 +47,6 @@ void Init(){
     Log.begin(LOG_LEVEL_VERBOSE, &Serial);
     Log.setLevel(LOG_LEVEL_TRACE);
 
-    // Create mutex 
-    semaphoreMutexGlobVar = xSemaphoreCreateMutex();
-
     // Manager Instance
     manager = new Manager();
 

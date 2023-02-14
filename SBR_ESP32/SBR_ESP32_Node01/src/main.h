@@ -18,6 +18,7 @@
 #include <ArduinoLog.h>
 #include "soc/rtc_cntl_reg.h"
 #include "./Tasks/Tasks.h"
+#include "./Application/CommunicationBus/NodeEsp32/NodeHandler.h"
 
 /*******************************************************************************************************************************************
  *  												DECLARATION

@@ -29,21 +29,6 @@ void InitTasks();
 void TaskCLI(void *parameter);
 void TaskOTA(void *parameter);
 void TaskNodeESP32(void *parameter);
-void TaskTest(void *parameter);
-
-
-// Task Handlers
-
-TaskHandle_t TaskCLIHandle;
-TaskHandle_t TaskOTAHandle;
-TaskHandle_t TaskNodeESP32Handle;
-TaskHandle_t TaskTestHandle;
-
-// Task Timers (T)
-
-TickType_t TimerTaskCLI = 1000 / portTICK_PERIOD_MS;
-TickType_t TimerTaskOTA = 2000 / portTICK_PERIOD_MS;
-TickType_t TimerTaskNodeESP32 = 1;
 
 
 /*******************************************************************************************************************************************
@@ -73,8 +58,7 @@ void InitTasks(){
     disableCore1WDT();
     xTaskCreatePinnedToCore(TaskCLI,            "TaskCLI",          2000,   NULL, 1, &TaskCLIHandle,        1);         
     xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",          5000,   NULL, 1, &TaskOTAHandle,        0);  
-    xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",    10000,  NULL, 1, &TaskNodeESP32Handle,  0); 
-    xTaskCreatePinnedToCore(TaskTest,           "TaskTest",         10000,  NULL, 1, &TaskTestHandle,       1);              
+    xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",    10000,  NULL, 1, &TaskNodeESP32Handle,  0);             
 }
 
 
@@ -136,27 +120,17 @@ void TaskCLI(void *parameter){
                     manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_52, 152);
                     break;
 
-                case 'j':
-                    if (xSemaphoreTake(semaphoreMutexGlobVar, 0) == pdTRUE){
-                        counter++;
-                    }
-                    break;
-
-                case 'k':
-                    xSemaphoreGive(semaphoreMutexGlobVar);
-                    break;
-
                 case 'l': 
                     Log.fatalln("Fatal");           
                     Log.errorln("Error");
                     Log.warningln("Warning");
-                    Log.infoln("Info %d", counter);
+                    Log.infoln("Info");
                     Log.noticeln("Notice");
                     Log.traceln("Trace");
                     Log.verboseln("Verbose");
                     break;
 
-                case '4': 
+                case '4':
                     Log.setLevel(LOG_LEVEL_FATAL);
                     break;
 
@@ -172,9 +146,10 @@ void TaskCLI(void *parameter){
                     Log.setLevel(LOG_LEVEL_INFO);
                     break;
 
-                case '8': 
+                case '8': {
                     Log.setLevel(LOG_LEVEL_NOTICE);
                     break;
+                }
 
                 case '9': 
                     Log.setLevel(LOG_LEVEL_TRACE);
@@ -214,27 +189,6 @@ void TaskNodeESP32(void *parameter){
     while(true) {
         manager->m_nodeESP32->Run();
         vTaskDelay(TimerTaskNodeESP32);
-    }
-}
-
-
-//=====================================================================================================
-/**
- * @brief TaskTest 
- * 
- */
-void TaskTest(void *parameter){
-    while(true) {
-        
-        if (xSemaphoreTake(semaphoreMutexGlobVar, 0) == pdTRUE){
-            //Serial.println(counter);
-            xSemaphoreGive(semaphoreMutexGlobVar);
-        } else {
-            //Serial.println(".");
-        }
-        
-
-        vTaskDelay(1000);
     }
 }
 

@@ -179,7 +179,7 @@ RC_e Node::Run(){
                 }
             }
         }
-
+        
         // Write Request
         if ((retCode = SendNextRequest()) != RC_e::SUCCESS){
             Log.errorln("[Node::Run] Error in SendNextRequest()");
