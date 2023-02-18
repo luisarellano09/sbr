@@ -18,7 +18,7 @@
 #include <ArduinoLog.h>
 #include "soc/soc.h"
 #include "../../Definition/Local/GlobalVar.h"
-#include "../CLI/CLI.h"
+#include "../CLI/CLIConfig.h"
 
 
 /*******************************************************************************************************************************************
@@ -26,6 +26,8 @@
  *******************************************************************************************************************************************/
 
 void InitTasks();
+void TaskMonitoring();
+void TaskInfoPrint(TaskHandle_t* task);
 void TaskCLI(void *parameter);
 void TaskOTA(void *parameter);
 void TaskNodeESP32(void *parameter);
@@ -59,6 +61,32 @@ void InitTasks(){
     xTaskCreatePinnedToCore(TaskCLI,            "TaskCLI",          2000,   NULL,   1,      &TaskCLIHandle,         1);         
     xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",          5000,   NULL,   1,      &TaskOTAHandle,         0);  
     xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",    10000,  NULL,   10,     &TaskNodeESP32Handle,   0);             
+}
+
+
+//=====================================================================================================
+
+/**
+ * 
+ * @brief Task Monitoring
+ * 
+ */
+void TaskMonitoring(){
+    TaskInfoPrint(&TaskCLIHandle);
+    TaskInfoPrint(&TaskOTAHandle);
+    TaskInfoPrint(&TaskNodeESP32Handle);
+}
+
+
+//=====================================================================================================
+
+/**
+ * 
+ * @brief Print Task information
+ * 
+ */
+void TaskInfoPrint(TaskHandle_t* task){
+    Serial.println( "|Task: " + String(pcTaskGetName(*task)) + " | State: " + String(eTaskGetState(*task)) + " | Prio: " + String(uxTaskPriorityGet(*task)) + " | FreeStack: " + String(uxTaskGetStackHighWaterMark(*task)) );    
 }
 
 

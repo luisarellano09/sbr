@@ -18,7 +18,7 @@
 #include <ArduinoLog.h>
 #include "soc/soc.h"
 #include "./Definition/Local/GlobalVar.h"
-#include "../CLI/CLI.h"
+#include "../CLI/CLIConfig.h"
 
 
 /*******************************************************************************************************************************************
@@ -27,6 +27,8 @@
 
 void InitTasks();
 void InitQueues();
+void TaskMonitoring();
+void TaskInfoPrint(TaskHandle_t* task);
 void TaskCLI(void *parameter);
 void TaskOTA(void *parameter);
 void TaskNodeESP32(void *parameter);
@@ -75,6 +77,32 @@ void InitTasks(){
  */
 void InitQueues(){
     queue_Register10 = xQueueCreate(10,sizeof(double));
+}
+
+
+//=====================================================================================================
+
+/**
+ * 
+ * @brief Task Monitoring
+ * 
+ */
+void TaskMonitoring(){
+    TaskInfoPrint(&TaskCLIHandle);
+    TaskInfoPrint(&TaskOTAHandle);
+    TaskInfoPrint(&TaskNodeESP32Handle);
+}
+
+
+//=====================================================================================================
+
+/**
+ * 
+ * @brief Print Task information
+ * 
+ */
+void TaskInfoPrint(TaskHandle_t* task){
+    Serial.println( "|Task: " + String(pcTaskGetName(*task)) + " | State: " + String(eTaskGetState(*task)) + " | Prio: " + String(uxTaskPriorityGet(*task)) + " | FreeStack: " + String(uxTaskGetStackHighWaterMark(*task)) );    
 }
 
 

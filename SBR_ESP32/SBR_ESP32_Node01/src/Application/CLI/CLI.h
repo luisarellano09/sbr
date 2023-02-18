@@ -20,50 +20,7 @@
 #include "CLIConfig.h"
 #include "../../Definition/Local/GlobalVar.h"
 #include "../../Definition/Local/LocalConfig.h"
-
-
-/*******************************************************************************************************************************************
- *  												DECLARATION FUNCTIONS
- *******************************************************************************************************************************************/
-
-void InitCLI();
-void RunCLI();
-void F_CLI_GotoHome();
-void F_CLI_GotoPrevious();
-void F_CLI_Info();
-void F_CLI_Hello();
-void F_CLI_Status();
-void F_CLI_Modes();
-void F_CLI_Modes_Program();
-void F_CLI_Modes_Restart();		                 
-void F_CLI_Settings();		                 
-void F_CLI_Settings_Read();		                   
-void F_CLI_Settings_Write();		                  
-void F_CLI_Settings_Write_WifiName();		                    
-void F_CLI_Settings_Write_WifiPassword();		                       
-void F_CLI_Monitor();		                   
-void F_CLI_Monitor_Tasks();
-void F_CLI_Monitor_Memory();		                     	                   
-void F_CLI_Monitor_Communication();		                    
-void F_CLI_Monitor_Communication_PrintBufferEsp32();		  
-void F_CLI_Debug();
-void F_CLI_Debug_GetLogLevel();
-void F_CLI_Debug_SetLogLevelFatal();      
-void F_CLI_Debug_SetLogLevelError();  
-void F_CLI_Debug_SetLogLevelWarning();  
-void F_CLI_Debug_SetLogLevelInfo();    
-void F_CLI_Debug_SetLogLevelTrace();
-void F_CLI_Debug_SetLogLevelVerbose();
-void F_CLI_Test();
-void F_CLI_Test_Test1();
-void F_CLI_Test_Test2();
-void F_CLI_Test_Test3();
-void F_CLI_Test_Test4();
-void F_CLI_Test_Test5();
-void F_CLI_Test_Test6();
-void F_CLI_Test_Test7();
-void F_CLI_Test_Test8();
-void F_CLI_Test_Test9();
+#include "../Tasks/Tasks.h"
 
 
 /*******************************************************************************************************************************************
@@ -132,11 +89,15 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Monitor_Tasks].text = "Tasks";
     CLIOptions[CLIOptions_e::CLI_Monitor_Tasks].Callback = F_CLI_Monitor_Tasks;
 
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication].path = "42";
+    CLIOptions[CLIOptions_e::CLI_Monitor_Memory].path = "42";
+    CLIOptions[CLIOptions_e::CLI_Monitor_Memory].text = "Memory";
+    CLIOptions[CLIOptions_e::CLI_Monitor_Memory].Callback = F_CLI_Monitor_Memory;
+
+    CLIOptions[CLIOptions_e::CLI_Monitor_Communication].path = "43";
     CLIOptions[CLIOptions_e::CLI_Monitor_Communication].text = "Communication ->";
     CLIOptions[CLIOptions_e::CLI_Monitor_Communication].Callback = F_CLI_Monitor_Communication;
 
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication_PrintBufferEsp32].path = "422";
+    CLIOptions[CLIOptions_e::CLI_Monitor_Communication_PrintBufferEsp32].path = "431";
     CLIOptions[CLIOptions_e::CLI_Monitor_Communication_PrintBufferEsp32].text = "Print Buffer ESP32";
     CLIOptions[CLIOptions_e::CLI_Monitor_Communication_PrintBufferEsp32].Callback = F_CLI_Monitor_Communication_PrintBufferEsp32;
 
@@ -389,14 +350,14 @@ void F_CLI_Monitor(){
 //=====================================================================================================
 
 void F_CLI_Monitor_Tasks(){
-    Serial.println("F_CLI_Monitor_Tasks");
+    TaskMonitoring();
 }
 		                   
 
 //=====================================================================================================
 
 void F_CLI_Monitor_Memory(){
-    Serial.println("F_CLI_Monitor_Memory");
+    Serial.println("Free Heap: " + String(ESP.getFreeHeap()) + "/" + String(ESP.getHeapSize()));
 }
 		                     
 
