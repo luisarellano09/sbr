@@ -137,7 +137,7 @@ RC_e RegisterTable::HandleRequest(Request* request){
         //ToDo implement read request
     }
 
-    Log.traceln("[RegisterTable::HandleRequest] Request handled:");
+    Log.traceln("[RegisterTable::HandleRequest] Request handled");
 
     return retCode;
 }

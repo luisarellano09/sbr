@@ -30,28 +30,3 @@ void loop() {
     vTaskDelete(NULL);
 }
 
-
-/*******************************************************************************************************************************************
- *  												DEFINITIONS
- *******************************************************************************************************************************************/
-
-void Init(){
-
-    // Disable brownout detector
-    WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); 
-
-    // Serial Port
-    Serial.begin(115200);
-
-    // Logging
-    Log.begin(LOG_LEVEL_VERBOSE, &Serial);
-    Log.setLevel(LOG_LEVEL_TRACE);
-
-    // Create mutex 
-    semaphoreMutexGlobVar = xSemaphoreCreateMutex();
-
-    // Manager Instance
-    manager = new Manager();
-    manager->m_nodeESP32->ExtHandler = ExtHandler;
-}
-
