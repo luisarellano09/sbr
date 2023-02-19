@@ -20,6 +20,8 @@
 #include "./Definition/Local/GlobalVar.h"
 #include "./Application/Tasks/Tasks.h"
 #include "./Application/CLI/CLI.h"
+#include "./Application/Modes/Modes.h"
+
 
 /*******************************************************************************************************************************************
  *  												DECLARATION
@@ -56,6 +58,9 @@ void InitMain(){
 
     // Init Tasks
     InitTasks();
+
+    // Init Modes
+    InitModes();
 
 }
 

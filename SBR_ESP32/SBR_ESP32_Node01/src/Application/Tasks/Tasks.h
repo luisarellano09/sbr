@@ -20,6 +20,7 @@
 #include "soc/soc.h"
 #include "./Definition/Local/GlobalVar.h"
 #include "../CLI/CLIConfig.h"
+#include "../Modes/ModesConfig.h"
 
 
 /*******************************************************************************************************************************************
@@ -47,10 +48,11 @@ void InitTasks(){
     disableLoopWDT();
     disableCore0WDT();
     disableCore1WDT();
-    xTaskCreatePinnedToCore(TaskCLI,            "TaskCLI",          2000,   NULL,   1,      &TaskCLIHandle,         1);         
+    xTaskCreatePinnedToCore(TaskCLI,            "TaskCLI",          5000,   NULL,   1,      &TaskCLIHandle,         1);         
     xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",          5000,   NULL,   1,      &TaskOTAHandle,         0);  
     xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",    10000,  NULL,   10,     &TaskNodeESP32Handle,   0);         
     //xTaskCreatePinnedToCore(TaskReg10,          "TaskReg10",        10000,  NULL,   1,      &TaskReg10Handle,       1);          
+    xTaskCreatePinnedToCore(TaskModes,          "TaskModes",        10000,  NULL,   1,      &TaskModesHandle,       1);
 }
 
 
@@ -159,6 +161,20 @@ void TaskReg10(void *parameter){
         Log.infoln("Reg10: %D", manager->counter);
         
         vTaskDelay(1000);
+    }
+}
+
+
+//=====================================================================================================
+
+/**
+ * @brief Task Modes
+ * 
+ */
+void TaskModes(void *parameter){
+    while(true) {
+        RunModes();
+        vTaskDelay(TimerTaskModes);
     }
 }
 

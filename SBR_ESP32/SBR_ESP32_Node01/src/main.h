@@ -20,6 +20,8 @@
 #include "./Application/Tasks/Tasks.h"
 #include "./Application/CLI/CLI.h"
 #include "./Application/CommunicationBus/NodeEsp32/NodeHandler.h"
+#include "./Application/Modes/Modes.h"
+
 
 /*******************************************************************************************************************************************
  *  												DECLARATION
@@ -53,6 +55,9 @@ void Init(){
 
     // Init CLI
     InitCLI();
+
+    // Init Modes
+    InitModes();
 
 }
 

@@ -29,5 +29,6 @@ void TaskInfoPrint(TaskHandle_t* task);
 void TaskCLI(void *parameter);
 void TaskOTA(void *parameter);
 void TaskNodeESP32(void *parameter);
+void TaskModes(void *parameter);
 
 #endif // TASKSCONFIG_H

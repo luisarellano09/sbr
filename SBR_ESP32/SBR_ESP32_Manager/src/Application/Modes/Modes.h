@@ -1,0 +1,118 @@
+/**
+ * @file Modes.h
+ * @author Luis Arellano (luis.arellano09@gmail.com)
+ * @brief Modes
+ * @version 1.0
+ * @date 19.02.2023
+ * 
+ * 
+ */
+
+#ifndef MODES_H
+#define MODES_H
+
+
+/*******************************************************************************************************************************************
+ *  												INCLUDES
+ *******************************************************************************************************************************************/
+#include <Arduino.h>
+#include <ArduinoLog.h>
+#include "ModesConfig.h"
+#include "../../Definition/Local/GlobalVar.h"
+
+
+/*******************************************************************************************************************************************
+ *  												DEFINITION FUNCTIONS
+ *******************************************************************************************************************************************/
+
+void InitModes(){
+
+    Modes[Modes_e::Mode_Idle].status = 1;
+
+    Modes[Modes_e::Mode_Idle].Callback = SM_ModeIdle;
+    Modes[Modes_e::Mode_Program].Callback = SM_ModeProgram;
+
+}
+
+
+//=====================================================================================================
+
+void RunModes(){
+    for (int i=0;i<Modes_e::LENGTH_MODES;i++){
+        if (Modes[i].status == 1) {
+            Modes[i].Callback(i);
+        }
+    }
+}
+
+
+//=====================================================================================================
+
+void SM_ModeIdle(int indexMode){
+    
+    stateModeIdle = NextStateModeIdle;
+
+    switch(stateModeIdle){
+
+        case StateModeIdle_e::StateModeIdle_Idle:
+            NextStateModeIdle = StateModeIdle_e::StateModeIdle_DeactivateTasks;
+            break;
+
+        case StateModeIdle_e::StateModeIdle_DeactivateTasks:
+            vTaskSuspend(TaskOTAHandle);
+            NextStateModeIdle = StateModeIdle_e::StateModeIdle_ActivateTaskCLI;
+            break;
+
+        case StateModeIdle_e::StateModeIdle_ActivateTaskCLI:
+            vTaskResume(TaskCLIHandle);
+            NextStateModeIdle = StateModeIdle_e::StateModeIdle_ActivateTaskNodeESP32;
+            break;
+
+        case StateModeIdle_e::StateModeIdle_ActivateTaskNodeESP32:
+            vTaskResume(TaskNodeESP32Handle);
+            NextStateModeIdle = StateModeIdle_e::StateModeIdle_ChangeStatusToInactive;
+            break;
+
+        case StateModeIdle_e::StateModeIdle_ChangeStatusToInactive:
+            Modes[indexMode].status = 0;
+            NextStateModeIdle = StateModeIdle_e::StateModeIdle_Idle;
+            break;
+    }
+}
+
+
+//=====================================================================================================
+
+void SM_ModeProgram(int indexMode){
+
+    stateModeProgram = NextStateModeProgram;
+
+    switch(stateModeProgram){
+
+        case StateModeProgram_e::StateModeProgram_Idle:
+            NextStateModeProgram = StateModeProgram_e::StateModeProgram_DeactivateTasks;
+            break;
+
+        case StateModeProgram_e::StateModeProgram_DeactivateTasks:
+            vTaskSuspend(TaskNodeESP32Handle);
+            NextStateModeProgram = StateModeProgram_e::StateModeProgram_ActivateWifi;
+            break;
+
+        case StateModeProgram_e::StateModeProgram_ActivateWifi:
+            manager->m_wifiManager->Connect();
+            NextStateModeProgram = StateModeProgram_e::StateModeProgram_ActivateTaskOTA;
+            break;
+
+        case StateModeProgram_e::StateModeProgram_ActivateTaskOTA:
+            vTaskResume(TaskOTAHandle);
+            NextStateModeProgram = StateModeProgram_e::StateModeProgram_ChangeStatusToInactive;
+            break;
+
+        case StateModeProgram_e::StateModeProgram_ChangeStatusToInactive:
+            Modes[indexMode].status = 0;
+            NextStateModeProgram = StateModeProgram_e::StateModeProgram_Idle;
+            break;
+    }
+}
+
+#endif // MODES_H

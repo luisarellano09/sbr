@@ -42,6 +42,9 @@ Manager::Manager(){
     this->m_nodeESP32->ConnectRegisterTable(this->m_tableRegister);
     Log.traceln("[Manager::Manager] Table connected to node ESP32");
 
+    // Start Node 
+    this->m_nodeESP32->Start();
+
     Log.traceln("[Manager::Manager] Manager initialization finished");
 }
 

@@ -293,8 +293,7 @@ void F_CLI_Modes(){
 
 void F_CLI_Modes_Program(){
     Serial.println("Program Mode.....");
-    manager->m_nodeESP32->Stop();
-    manager->m_wifiManager->Connect();
+    Modes[Modes_e::Mode_Program].status = 1;
 }
 		                 
 
