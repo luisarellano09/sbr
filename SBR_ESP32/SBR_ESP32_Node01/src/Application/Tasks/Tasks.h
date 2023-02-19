@@ -14,25 +14,12 @@
 /*******************************************************************************************************************************************
  *  												INCLUDES
  *******************************************************************************************************************************************/
+#include "TasksConfig.h"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include "soc/soc.h"
 #include "./Definition/Local/GlobalVar.h"
 #include "../CLI/CLIConfig.h"
-
-
-/*******************************************************************************************************************************************
- *  												DECLARATION
- *******************************************************************************************************************************************/
-
-void InitTasks();
-void InitQueues();
-void TaskMonitoring();
-void TaskInfoPrint(TaskHandle_t* task);
-void TaskCLI(void *parameter);
-void TaskOTA(void *parameter);
-void TaskNodeESP32(void *parameter);
-void TaskReg10(void *parameter);
 
 
 /*******************************************************************************************************************************************
@@ -64,7 +51,6 @@ void InitTasks(){
     xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",          5000,   NULL,   1,      &TaskOTAHandle,         0);  
     xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",    10000,  NULL,   10,     &TaskNodeESP32Handle,   0);         
     //xTaskCreatePinnedToCore(TaskReg10,          "TaskReg10",        10000,  NULL,   1,      &TaskReg10Handle,       1);          
-
 }
 
 

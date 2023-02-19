@@ -14,23 +14,12 @@
 /*******************************************************************************************************************************************
  *  												INCLUDES
  *******************************************************************************************************************************************/
+#include "TasksConfig.h"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include "soc/soc.h"
 #include "../../Definition/Local/GlobalVar.h"
 #include "../CLI/CLIConfig.h"
-
-
-/*******************************************************************************************************************************************
- *  												DECLARATION
- *******************************************************************************************************************************************/
-
-void InitTasks();
-void TaskMonitoring();
-void TaskInfoPrint(TaskHandle_t* task);
-void TaskCLI(void *parameter);
-void TaskOTA(void *parameter);
-void TaskNodeESP32(void *parameter);
 
 
 /*******************************************************************************************************************************************
@@ -54,7 +43,6 @@ void TaskNodeESP32(void *parameter);
  * 
  */
 void InitTasks(){
-
     disableLoopWDT();
     disableCore0WDT();
     disableCore1WDT();

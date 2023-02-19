@@ -17,6 +17,7 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include "soc/rtc_cntl_reg.h"
+#include "./Definition/Local/GlobalVar.h"
 #include "./Application/Tasks/Tasks.h"
 #include "./Application/CLI/CLI.h"
 
@@ -52,6 +53,9 @@ void InitMain(){
 
     // Init CLI
     InitCLI();
+
+    // Init Tasks
+    InitTasks();
 
 }
 

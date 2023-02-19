@@ -20,6 +20,7 @@
 #include "CLIConfig.h"
 #include "../../Definition/Local/GlobalVar.h"
 #include "../../Definition/Local/LocalConfig.h"
+#include "../Tasks/TasksConfig.h"
 
 
 /*******************************************************************************************************************************************
