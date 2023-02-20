@@ -293,7 +293,7 @@ void F_CLI_Modes(){
 
 void F_CLI_Modes_Program(){
     Serial.println("Program Mode.....");
-    Modes[Modes_e::Mode_Program].status = 1;
+    StartMode(Modes_e::Mode_Program);
 }
 		                 
 

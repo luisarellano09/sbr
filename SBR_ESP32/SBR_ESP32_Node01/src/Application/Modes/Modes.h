@@ -26,12 +26,24 @@
  *******************************************************************************************************************************************/
 
 void InitModes(){
-
-    Modes[Modes_e::Mode_Idle].status = 1;
-
     Modes[Modes_e::Mode_Idle].Callback = SM_ModeIdle;
     Modes[Modes_e::Mode_Program].Callback = SM_ModeProgram;
 
+    StartMode(Modes_e::Mode_Idle);
+}
+
+
+//=====================================================================================================
+
+void StartMode(Modes_e mode){
+    Modes[mode].status = 1;
+}
+
+
+//=====================================================================================================
+
+void StopMode(Modes_e mode){
+    Modes[mode].status = 0;
 }
 
 
@@ -40,7 +52,7 @@ void InitModes(){
 void RunModes(){
     for (int i=0;i<Modes_e::LENGTH_MODES;i++){
         if (Modes[i].status == 1) {
-            Modes[i].Callback(i);
+            Modes[i].Callback((Modes_e)i);
         }
     }
 }
@@ -48,7 +60,7 @@ void RunModes(){
 
 //=====================================================================================================
 
-void SM_ModeIdle(int indexMode){
+void SM_ModeIdle(Modes_e mode){
     
     stateModeIdle = NextStateModeIdle;
 
@@ -74,7 +86,7 @@ void SM_ModeIdle(int indexMode){
             break;
 
         case StateModeIdle_e::StateModeIdle_ChangeStatusToInactive:
-            Modes[indexMode].status = 0;
+            StopMode(mode);
             NextStateModeIdle = StateModeIdle_e::StateModeIdle_Idle;
             break;
     }
@@ -83,7 +95,7 @@ void SM_ModeIdle(int indexMode){
 
 //=====================================================================================================
 
-void SM_ModeProgram(int indexMode){
+void SM_ModeProgram(Modes_e mode){
 
     stateModeProgram = NextStateModeProgram;
 
@@ -109,7 +121,7 @@ void SM_ModeProgram(int indexMode){
             break;
 
         case StateModeProgram_e::StateModeProgram_ChangeStatusToInactive:
-            Modes[indexMode].status = 0;
+            StopMode(mode);
             NextStateModeProgram = StateModeProgram_e::StateModeProgram_Idle;
             break;
     }
