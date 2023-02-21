@@ -27,6 +27,7 @@ void TaskMonitoring();
 void TaskInfoPrint(TaskHandle_t* task);
 
 void TaskCLI(void *parameter);
+void TaskGetValueCLI(void *parameter);
 void TaskOTA(void *parameter);
 void TaskNodeESP32(void *parameter);
 void TaskModes(void *parameter);

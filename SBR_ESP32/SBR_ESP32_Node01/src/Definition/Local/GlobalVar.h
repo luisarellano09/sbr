@@ -31,10 +31,11 @@ QueueHandle_t queue_Register10;
 //=====================================================================================================
 
 TaskHandle_t TaskCLIHandle;             /**@brief Handle of Task CLI */
+TaskHandle_t TaskGetValueCLIHandle;     /**@brief Handle of Task Get Value CLI */
 TaskHandle_t TaskOTAHandle;             /**@brief Handle of Task OTA */
 TaskHandle_t TaskNodeESP32Handle;       /**@brief Handle of Task Node ESP32 */  
+TaskHandle_t TaskModesHandle;           /**@brief Handle of Task Modes*/  
 TaskHandle_t TaskReg10Handle;
-TaskHandle_t TaskModesHandle;           /**@brief Handle of Task Node ESP32 */  
 
 TickType_t TimerTaskCLI = 500 / portTICK_PERIOD_MS;         /**@brief Timer of Task CLI */
 TickType_t TimerTaskOTA = 2000 / portTICK_PERIOD_MS;        /**@brief Timer of Task OTA */

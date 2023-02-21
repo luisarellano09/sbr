@@ -72,6 +72,7 @@ void SM_ModeIdle(Modes_e mode){
 
         case StateModeIdle_e::StateModeIdle_DeactivateTasks:
             vTaskSuspend(TaskOTAHandle);
+            vTaskSuspend(TaskGetValueCLIHandle);
             NextStateModeIdle = StateModeIdle_e::StateModeIdle_ActivateTaskCLI;
             break;
 

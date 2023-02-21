@@ -88,6 +88,7 @@ enum CLIOptions_e {
 CLIOption_t CLIOptions[CLIOptions_e::LENGTH_CLI_OPTIONS];   /**@brief Array of CLI Options */
 String currentCLIPath = "";                                 /**@brief Current CLI path */
 char incomingCharCLI = ' ';                                 /**@brief Incomming character in the CLI*/
+String insertedValueCLI = "";                               /**@brief Inserted value in the CLI*/
 
 
 /*******************************************************************************************************************************************
@@ -96,6 +97,10 @@ char incomingCharCLI = ' ';                                 /**@brief Incomming 
 
 void InitCLI();
 void RunCLI();
+void MenuModeCLI();
+void GetValueCLI();
+void ActivateGetValueModeCLI();
+void DeactivateGetValueModeCLI();
 void F_CLI_GotoHome();
 void F_CLI_GotoPrevious();
 void F_CLI_Info();

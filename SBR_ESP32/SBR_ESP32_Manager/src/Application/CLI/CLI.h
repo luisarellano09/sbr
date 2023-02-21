@@ -182,6 +182,14 @@ void InitCLI(){
 //=====================================================================================================
 
 void RunCLI(){
+    MenuModeCLI();
+}
+
+
+//=====================================================================================================
+
+void MenuModeCLI(){
+
     if(Serial.available()) {
 
         incomingCharCLI = Serial.read();
@@ -200,8 +208,45 @@ void RunCLI(){
                     return;
                 }
             }
+        }    
+    }
+}
+
+
+//=====================================================================================================
+
+void GetValueCLI(){
+
+    if(Serial.available()) {
+
+        incomingCharCLI = Serial.read();
+        Serial.flush();
+        Serial.print(incomingCharCLI);
+
+        if (incomingCharCLI == '\n' || incomingCharCLI == '\r'){
+            Serial.println("Value: " + insertedValueCLI);
+            DeactivateGetValueModeCLI();
+        } else {         
+            insertedValueCLI = insertedValueCLI + String(incomingCharCLI);
         }
     }
+}
+
+
+//=====================================================================================================
+
+void ActivateGetValueModeCLI(){
+    insertedValueCLI = "";
+    vTaskResume(TaskGetValueCLIHandle);
+    vTaskSuspend(TaskCLIHandle);
+}
+
+
+//=====================================================================================================
+
+void DeactivateGetValueModeCLI(){
+    vTaskResume(TaskCLIHandle);
+    vTaskSuspend(TaskGetValueCLIHandle);
 }
 
 
@@ -491,7 +536,14 @@ void F_CLI_Test_Test3(){
 //=====================================================================================================
 
 void F_CLI_Test_Test4(){
-    
+    float res = 0.0;
+    Serial.println("Enter first Value:");
+    ActivateGetValueModeCLI();
+    res = insertedValueCLI.toFloat();
+    Serial.println("Enter second Value:");
+    ActivateGetValueModeCLI();
+    res += insertedValueCLI.toFloat();
+    Serial.println("Result: " + String(res));
 }
 
 

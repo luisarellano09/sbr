@@ -49,6 +49,7 @@ void InitTasks(){
     disableCore0WDT();
     disableCore1WDT();
     xTaskCreatePinnedToCore(TaskCLI,            "TaskCLI",          5000,   NULL,   1,      &TaskCLIHandle,         1);         
+    xTaskCreatePinnedToCore(TaskGetValueCLI,    "TaskGetValueCLI",  1000,   NULL,   1,      &TaskGetValueCLIHandle, 1);  
     xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",          5000,   NULL,   1,      &TaskOTAHandle,         0);  
     xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",    10000,  NULL,   10,     &TaskNodeESP32Handle,   0);         
     //xTaskCreatePinnedToCore(TaskReg10,          "TaskReg10",        10000,  NULL,   1,      &TaskReg10Handle,       1);          
@@ -110,6 +111,23 @@ void TaskCLI(void *parameter){
     while(true) {
         vTaskDelayUntil(&xLastWakeTime, TimerTaskCLI);
         RunCLI();
+    }
+}
+
+
+//=====================================================================================================
+
+/**
+ * 
+ * @brief TaskGetValueCLI 
+ * 
+ */
+void TaskGetValueCLI(void *parameter){
+    
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+    while(true) {
+        vTaskDelayUntil(&xLastWakeTime, TimerTaskCLI);
+        GetValueCLI();
     }
 }
 
