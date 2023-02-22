@@ -78,8 +78,10 @@ void InitQueues(){
  */
 void TaskMonitoring(){
     TaskInfoPrint(&TaskCLIHandle);
+    TaskInfoPrint(&TaskGetValueCLIHandle);
     TaskInfoPrint(&TaskOTAHandle);
     TaskInfoPrint(&TaskNodeESP32Handle);
+    TaskInfoPrint(&TaskModesHandle);
 }
 
 
