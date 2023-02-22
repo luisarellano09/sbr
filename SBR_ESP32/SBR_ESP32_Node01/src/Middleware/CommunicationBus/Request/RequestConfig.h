@@ -7,8 +7,8 @@
  * 
  */
 
-#ifndef DEFNITION_H
-#define DEFNITION_H
+#ifndef REQUESTCONFIG_H
+#define REQUESTCONFIG_H
 
 /*******************************************************************************************************************************************
  *  												ENUMERATION
@@ -19,10 +19,10 @@
  * 
  */
 enum COM_REQUEST_TYPE_e {
-    NONE = 0,   /** None operation*/   
-	READ,	    /** Read operation*/
-	WRITE,		/** Write operation*/                   
+    NONE = 0,       /**@brief None operation*/ 
+	READ,	        /**@brief Read operation*/
+	WRITE,		    /**@brief Write operation*/                   
 };
 
 
-#endif /* DEFNITION_H */
+#endif /* REQUESTCONFIG_H */

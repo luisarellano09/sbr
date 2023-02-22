@@ -1,32 +1,35 @@
 /**
- * @file main.cpp
+ * @file TasksConfig.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief main class
- * @version 
- * @date 13-06-2020
+ * @brief Tasks
+ * @version 1.0
+ * @date 03.02.2023
  * 
  * 
  */
 
+#ifndef TASKSCONFIG_H
+#define TASKSCONFIG_H
+
 /*******************************************************************************************************************************************
  *  												INCLUDES
  *******************************************************************************************************************************************/
+#include <Arduino.h>
+#include "soc/soc.h"
 
-#include "main.h"
-
-/*******************************************************************************************************************************************
- *  												SETUP
- *******************************************************************************************************************************************/
-void setup() {
-    Init();
-    InitTasks();
-}
 
 /*******************************************************************************************************************************************
- *  												Main Loop
+ *  												DECLARATION
  *******************************************************************************************************************************************/
-// Loop not used
-void loop() {
-    vTaskDelete(NULL);
-}
 
+void InitTasks();
+void TaskMonitoring();
+void TaskInfoPrint(TaskHandle_t* task);
+
+void TaskCLI(void *parameter);
+void TaskGetValueCLI(void *parameter);
+void TaskOTA(void *parameter);
+void TaskNodeESP32(void *parameter);
+void TaskModes(void *parameter);
+
+#endif // TASKSCONFIG_H

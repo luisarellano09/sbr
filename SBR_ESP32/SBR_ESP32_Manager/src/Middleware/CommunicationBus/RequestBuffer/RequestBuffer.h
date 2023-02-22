@@ -18,7 +18,7 @@
 #include "../../../Definition/Global/Devices.h"
 #include "../../../Definition/Global/RegisterTableDef.h"
 #include "../../../Definition/Global/GlobalConfig.h"
-#include "../Request/Definition.h"
+#include "../Request/RequestConfig.h"
 #include "../Request/Request.h"
 
 /*******************************************************************************************************************************************

@@ -65,7 +65,7 @@ RC_e NodeEsp32::HandleRequest(Request* request){
         return retCode;
     }
 
-    Log.traceln("[NodeEsp32::HandleRequest] Request handled:");
+    Log.traceln("[NodeEsp32::HandleRequest] Request handled");
     
     return retCode;
 }

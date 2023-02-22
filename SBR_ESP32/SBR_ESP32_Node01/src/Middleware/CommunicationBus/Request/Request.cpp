@@ -11,7 +11,7 @@
  *  												INCLUDE
  *******************************************************************************************************************************************/
 #include "Request.h"
-#include "Definition.h"
+#include "RequestConfig.h"
 #include "../../../Definition/Global/RC.h"
 #include "../../../Definition/Global/Devices.h"
 #include "../../../Definition/Global/RegisterTableDef.h"
