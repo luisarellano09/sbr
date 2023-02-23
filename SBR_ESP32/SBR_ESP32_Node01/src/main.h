@@ -46,11 +46,19 @@ void Init(){
     // Serial Port
     Serial.begin(115200);
 
+    // Preferences
+    preferences.begin("SBR", false);
+
     // Logging
     Log.begin(LOG_LEVEL_VERBOSE, &Serial);
 
     // Manager Instance
     manager = new Manager();
+
+    // Wifi Config
+    manager->m_wifiManager->SetWifiCredencials(preferences.getString("WifiName"), preferences.getString("WifiPass"), String(ESP32_HOSTNAME));
+
+    // External Handler
     manager->m_nodeESP32->ExtHandler = ExtHandler;
 
     // Init CLI

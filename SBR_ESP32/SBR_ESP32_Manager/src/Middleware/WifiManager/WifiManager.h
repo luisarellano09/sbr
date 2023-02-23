@@ -40,7 +40,13 @@ public:
      * @param password Wifi password
      * @param hostName ESP32 hostname
      */
-    WifiManager(char* ssid, char* password, char* hostName);
+    WifiManager(String ssid, String password, String hostName);
+
+    /**
+     * @brief Constructor
+     * 
+     */
+    WifiManager();
 
     /**
      * @brief Destructor
@@ -62,11 +68,18 @@ public:
      */
     RC_e RunOTA();
 
+    /**
+     * @brief Function to set the Wifi credencials
+     * 
+     * @return RC_e Result code
+     */
+    RC_e SetWifiCredencials(String ssid, String password, String hostName);
+
 
 private:
-    char* m_ssid;               /**@brief Wifi name */
-    char* m_password;           /**@brief Password */ 
-    char* m_hostName;           /**@brief ESP32 Hostname */
+    String m_ssid;               /**@brief Wifi name */
+    String m_password;           /**@brief Password */ 
+    String m_hostName;           /**@brief ESP32 Hostname */
 
     /**
      * @brief Function to configure the Wifi

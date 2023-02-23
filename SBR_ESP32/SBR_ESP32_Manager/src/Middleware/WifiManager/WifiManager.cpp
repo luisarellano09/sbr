@@ -18,16 +18,24 @@
  *  												CONSTRUCTOR
  *******************************************************************************************************************************************/
 
-WifiManager::WifiManager(char* ssid, char* password, char* hostName){
+WifiManager::WifiManager(String ssid, String password, String hostName){
     // Set Wifi values
     this->m_ssid = ssid;
     this->m_password = password;
     this->m_hostName = hostName;
 }
 
+
+//=====================================================================================================
+
+WifiManager::WifiManager(){
+}
+
+
 //=====================================================================================================
 
 WifiManager::~WifiManager(){}
+
 
 /*******************************************************************************************************************************************
  *  												PUBLIC METHODS
@@ -79,6 +87,20 @@ RC_e WifiManager::RunOTA(){
 }
 
 
+//=====================================================================================================
+
+RC_e WifiManager::SetWifiCredencials(String ssid, String password, String hostName){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_ssid = ssid;
+    this->m_password = password;
+    this->m_hostName = hostName;
+
+    return retCode;
+}
+
+
 /*******************************************************************************************************************************************
  *  												PRIVATE METHODS
  *******************************************************************************************************************************************/
@@ -108,7 +130,7 @@ RC_e WifiManager::ConnectWifi(){
         WiFi.mode(WIFI_STA);
 
         // Start Wifi
-        WiFi.begin(m_ssid, m_password);
+        WiFi.begin(m_ssid.c_str(), m_password.c_str());
 
         // Disable reconnection
         WiFi.setAutoConnect(false);
@@ -117,8 +139,8 @@ RC_e WifiManager::ConnectWifi(){
         Log.infoln("[WifiManager::ConnectWifi] Connecting...");
 
         // Set Hostname
-        MDNS.begin(this->m_hostName);
-        WiFi.setHostname(this->m_hostName);
+        MDNS.begin(this->m_hostName.c_str());
+        WiFi.setHostname(this->m_hostName.c_str());
     }
 
     return RC_e::SUCCESS;  
@@ -221,7 +243,7 @@ void WifiManager::WiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info){
 
 RC_e WifiManager::ConfigureOTA(){
     // Hostname
-    ArduinoOTA.setHostname(this->m_hostName);
+    ArduinoOTA.setHostname(this->m_hostName.c_str());
 
     // Set OTA Port
     ArduinoOTA.setPort(8080);

@@ -27,18 +27,6 @@
  */
 #define NODE_ID DEVICE_e::NODE_MANAGER
 
-// ========================== WIFI ==========================
-/**
- * @brief Wifi name
- * 
- */
-#define WIFI_SSID "sbrap"
-
-/**
- * @brief Wifi password
- * 
- */
-#define WIFI_PASSWORD "La123456"
 
 // ========================== HOSTNAME =======================
 /**
@@ -46,6 +34,7 @@
  * 
  */
 #define ESP32_HOSTNAME "SBR_ESP32_Manager"
+
 
 // ========================== NODE ESP32s =====================
 /**
