@@ -357,7 +357,8 @@ void F_CLI_Settings(){
 //=====================================================================================================
 
 void F_CLI_Settings_Read(){
-    Serial.println("F_CLI_Settings_Read");
+    Serial.println(" - WifiName: " + preferences.getString("WifiName"));
+    Serial.println(" - WifiPass: " + preferences.getString("WifiPass"));
 }
 		                   
 
@@ -372,14 +373,20 @@ void F_CLI_Settings_Write(){
 //=====================================================================================================
 
 void F_CLI_Settings_Write_WifiName(){
-    Serial.println("F_CLI_Settings_Write_WifiName");
+    Serial.println("Enter WifiName: ");
+    ActivateGetValueModeCLI();
+    preferences.putString("WifiName", insertedValueCLI);
+    Serial.println("WifiName: " + preferences.getString("WifiName"));
 }
 		                    
 
 //=====================================================================================================
 
 void F_CLI_Settings_Write_WifiPassword(){
-    Serial.println("F_CLI_Settings_Write_WifiPassword");
+    Serial.println("Enter WifiPass: ");
+    ActivateGetValueModeCLI();
+    preferences.putString("WifiPass", insertedValueCLI);
+    Serial.println("WifiPass: " + preferences.getString("WifiPass"));
 }
 		                       
 
