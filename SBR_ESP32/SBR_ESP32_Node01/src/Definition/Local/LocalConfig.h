@@ -50,7 +50,7 @@
 #define NODE_ESP32s_TX   19
 
 /**
- * @brief MNODE_ESP32s_RX
+ * @brief NODE_ESP32s_RX
  * 
  */
 #define NODE_ESP32s_RX   21
