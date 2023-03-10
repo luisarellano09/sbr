@@ -50,10 +50,47 @@
 #define NODE_ESP32s_TX   19
 
 /**
- * @brief MNODE_ESP32s_RX
+ * @brief NODE_ESP32s_RX
  * 
  */
 #define NODE_ESP32s_RX   21
 
+
+// ========================== MOTORS =====================
+/**
+ * @brief PWM GPIO of the left Motor
+ * 
+ */
+#define MOTOR_LEFT_PWM_GPIO 4
+
+/**
+ * @brief PWM GPIO of the right Motor
+ * 
+ */
+#define MOTOR_RIGHT_PWM_GPIO 15
+
+/**
+ * @brief GPIO to control the direction of the left Motor
+ * 
+ */
+#define MOTOR_LEFT_DIR_GPIO 5
+
+/**
+ * @brief GPIO to control the direction of the right Motor
+ * 
+ */
+#define MOTOR_RIGHT_DIR_GPIO 2
+
+/**
+ * @brief Motor PWM Frequency
+ * 
+ */
+#define MOTOR_PWM_FREQUENCY 20000
+
+/**
+ * @brief Motor PWM Resolution
+ * 
+ */
+#define MOTOR_PWM_RESOLUTION 10
 
 #endif /* LOCALCONFIG_H */
