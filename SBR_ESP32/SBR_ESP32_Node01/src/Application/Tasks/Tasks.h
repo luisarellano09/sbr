@@ -174,11 +174,11 @@ void TaskReg10(void *parameter){
         double data_Register10 = 0.0;
         if (xQueueReceive(queue_Register10, &data_Register10, 0) == pdTRUE){
             Log.infoln("New reg10: %D", data_Register10);
-            manager->counter = data_Register10;
+            //manager->counter = data_Register10;
         }
 
-        manager->counter = manager->counter + 0.1;
-        Log.infoln("Reg10: %D", manager->counter);
+        //manager->counter = manager->counter + 0.1;
+        //Log.infoln("Reg10: %D", manager->counter);
         
         vTaskDelay(1000);
     }

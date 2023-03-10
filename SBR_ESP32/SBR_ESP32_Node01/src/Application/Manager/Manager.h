@@ -16,6 +16,7 @@
 #include "../../Definition/Global/RC.h"
 #include "../../Middleware/WifiManager/WifiManager.h"
 #include "../CommunicationBus/NodeEsp32/NodeEsp32.h"
+#include "../../Middleware/Motor/Motor.h"
 
 /*******************************************************************************************************************************************
  *  												CLASS
@@ -30,7 +31,8 @@ public:
 
     WifiManager* m_wifiManager = NULL;              /**@brief Instance for Wifimanager. */
     NodeEsp32* m_nodeESP32 = NULL;                  /**@brief Instance for the node ESP32. */
-    double counter=0;
+    Motor* m_motorLeft = NULL;
+    Motor* m_motorRight = NULL;
 
     /**
      * @brief Construct a new Manager object

@@ -101,35 +101,51 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Monitor_Communication_PrintBufferEsp32].text = "Print Buffer ESP32";
     CLIOptions[CLIOptions_e::CLI_Monitor_Communication_PrintBufferEsp32].Callback = F_CLI_Monitor_Communication_PrintBufferEsp32;
 
-    CLIOptions[CLIOptions_e::CLI_Debug].path = "5";
+    CLIOptions[CLIOptions_e::CLI_Modules].path = "5";
+    CLIOptions[CLIOptions_e::CLI_Modules].text = "Modules ->";
+    CLIOptions[CLIOptions_e::CLI_Modules].Callback = F_CLI_Modules;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motors].path = "51";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motors].text = "Motors ->";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motors].Callback = F_CLI_Modules_Motors;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motors_SetSpeedMotorLeft].path = "511";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motors_SetSpeedMotorLeft].text = "Set Speed Motor Left";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motors_SetSpeedMotorLeft].Callback = F_CLI_Modules_Motors_SetSpeedMotorLeft;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motors_SetSpeedMotorRight].path = "512";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motors_SetSpeedMotorRight].text = "Set Speed Motor Right";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motors_SetSpeedMotorRight].Callback = F_CLI_Modules_Motors_SetSpeedMotorRight;
+
+    CLIOptions[CLIOptions_e::CLI_Debug].path = "6";
     CLIOptions[CLIOptions_e::CLI_Debug].text = "Debug ->";
     CLIOptions[CLIOptions_e::CLI_Debug].Callback = F_CLI_Debug;
 
-    CLIOptions[CLIOptions_e::CLI_Debug_GetLogLevel].path = "50";
+    CLIOptions[CLIOptions_e::CLI_Debug_GetLogLevel].path = "60";
     CLIOptions[CLIOptions_e::CLI_Debug_GetLogLevel].text = "Get Log Level";
     CLIOptions[CLIOptions_e::CLI_Debug_GetLogLevel].Callback = F_CLI_Debug_GetLogLevel;
 
-    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelFatal].path = "51";
+    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelFatal].path = "61";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelFatal].text = "Set FATAL Log level";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelFatal].Callback = F_CLI_Debug_SetLogLevelFatal;
     
-    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelError].path = "52";
+    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelError].path = "62";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelError].text = "Set ERROR Log level";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelError].Callback = F_CLI_Debug_SetLogLevelError;
 
-    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelWarning].path = "53";
+    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelWarning].path = "63";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelWarning].text = "Set WARNING Log level";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelWarning].Callback = F_CLI_Debug_SetLogLevelWarning;
 
-    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelInfo].path = "54";
+    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelInfo].path = "64";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelInfo].text = "Set INFO Log level";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelInfo].Callback = F_CLI_Debug_SetLogLevelInfo;
 
-    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelTrace].path = "55";
+    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelTrace].path = "65";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelTrace].text = "Set TRACE Log level";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelTrace].Callback = F_CLI_Debug_SetLogLevelTrace;
 
-    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelVerbose].path = "56";
+    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelVerbose].path = "66";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelVerbose].text = "Set VERBOSE Log level";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelVerbose].Callback = F_CLI_Debug_SetLogLevelVerbose;
 
@@ -418,12 +434,50 @@ void F_CLI_Monitor_Communication(){
     currentCLIPath = currentCLIPath + String(incomingCharCLI);
     F_CLI_Info();
 }
-                   
+
 
 //=====================================================================================================
 
 void F_CLI_Monitor_Communication_PrintBufferEsp32(){
     manager->m_nodeESP32->PrintBuffer();
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules(){
+    currentCLIPath = currentCLIPath + String(incomingCharCLI);
+    F_CLI_Info();
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Motors(){
+    currentCLIPath = currentCLIPath + String(incomingCharCLI);
+    F_CLI_Info();
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Motors_SetSpeedMotorLeft(){
+    float res = 0.0;
+    Serial.println("Enter Speed of the left Motor:");
+    ActivateGetValueModeCLI();
+    res = insertedValueCLI.toFloat();
+    manager->m_motorLeft->SetSpeed(res);
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Motors_SetSpeedMotorRight(){
+    float res = 0.0;
+    Serial.println("Enter Speed of the right Motor:");
+    ActivateGetValueModeCLI();
+    res = insertedValueCLI.toFloat();
+    manager->m_motorRight->SetSpeed(res);
 }
 
 
@@ -529,35 +583,35 @@ void F_CLI_Test_Test3(){
 //=====================================================================================================
 
 void F_CLI_Test_Test4(){
-    
+
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Test_Test5(){
-    
+
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Test_Test6(){
-    
+
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Test_Test7(){
-    
+
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Test_Test8(){
-    
+
 }
 
 
