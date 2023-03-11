@@ -93,47 +93,55 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Monitor_Memory].text = "Memory";
     CLIOptions[CLIOptions_e::CLI_Monitor_Memory].Callback = F_CLI_Monitor_Memory;
 
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication].path = "43";
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication].text = "Communication ->";
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication].Callback = F_CLI_Monitor_Communication;
+    CLIOptions[CLIOptions_e::CLI_Modules].path = "5";
+    CLIOptions[CLIOptions_e::CLI_Modules].text = "Modules ->";
+    CLIOptions[CLIOptions_e::CLI_Modules].Callback = F_CLI_Modules;
 
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication_PrintTable].path = "431";
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication_PrintTable].text = "Print Table";
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication_PrintTable].Callback = F_CLI_Monitor_Communication_PrintTable;
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication].path = "51";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication].text = "Communication ->";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication].Callback = F_CLI_Modules_Communication;
 
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication_PrintBufferEsp32].path = "432";
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication_PrintBufferEsp32].text = "Print Buffer ESP32";
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication_PrintBufferEsp32].Callback = F_CLI_Monitor_Communication_PrintBufferEsp32;
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_PrintTable].path = "511";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_PrintTable].text = "Print Table";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_PrintTable].Callback = F_CLI_Modules_Communication_PrintTable;
 
-    CLIOptions[CLIOptions_e::CLI_Debug].path = "5";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_PrintBufferEsp32].path = "512";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_PrintBufferEsp32].text = "Print Buffer ESP32";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_PrintBufferEsp32].Callback = F_CLI_Modules_Communication_PrintBufferEsp32;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_Registers].path = "513";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_Registers].text = "Registers ->";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_Registers].Callback = F_CLI_Modules_Communication_Registers;
+
+    CLIOptions[CLIOptions_e::CLI_Debug].path = "6";
     CLIOptions[CLIOptions_e::CLI_Debug].text = "Debug ->";
     CLIOptions[CLIOptions_e::CLI_Debug].Callback = F_CLI_Debug;
 
-    CLIOptions[CLIOptions_e::CLI_Debug_GetLogLevel].path = "50";
+    CLIOptions[CLIOptions_e::CLI_Debug_GetLogLevel].path = "60";
     CLIOptions[CLIOptions_e::CLI_Debug_GetLogLevel].text = "Get Log Level";
     CLIOptions[CLIOptions_e::CLI_Debug_GetLogLevel].Callback = F_CLI_Debug_GetLogLevel;
 
-    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelFatal].path = "51";
+    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelFatal].path = "61";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelFatal].text = "Set FATAL Log level";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelFatal].Callback = F_CLI_Debug_SetLogLevelFatal;
     
-    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelError].path = "52";
+    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelError].path = "62";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelError].text = "Set ERROR Log level";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelError].Callback = F_CLI_Debug_SetLogLevelError;
 
-    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelWarning].path = "53";
+    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelWarning].path = "63";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelWarning].text = "Set WARNING Log level";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelWarning].Callback = F_CLI_Debug_SetLogLevelWarning;
 
-    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelInfo].path = "54";
+    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelInfo].path = "64";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelInfo].text = "Set INFO Log level";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelInfo].Callback = F_CLI_Debug_SetLogLevelInfo;
 
-    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelTrace].path = "55";
+    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelTrace].path = "65";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelTrace].text = "Set TRACE Log level";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelTrace].Callback = F_CLI_Debug_SetLogLevelTrace;
 
-    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelVerbose].path = "56";
+    CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelVerbose].path = "66";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelVerbose].text = "Set VERBOSE Log level";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelVerbose].Callback = F_CLI_Debug_SetLogLevelVerbose;
 
@@ -252,6 +260,14 @@ void DeactivateGetValueModeCLI(){
 
 //=====================================================================================================
 
+void GoIntoNewPath(){
+    currentCLIPath = currentCLIPath + String(incomingCharCLI);
+    F_CLI_Info();
+}
+
+
+//=====================================================================================================
+
 void F_CLI_GotoHome(){
     currentCLIPath.clear();
     F_CLI_Info();
@@ -329,8 +345,7 @@ void F_CLI_Status(){
 //=====================================================================================================
 
 void F_CLI_Modes(){
-    currentCLIPath = currentCLIPath + String(incomingCharCLI);
-    F_CLI_Info();
+    GoIntoNewPath();
 }
 		          
 
@@ -353,8 +368,7 @@ void F_CLI_Modes_Restart(){
 //=====================================================================================================
 
 void F_CLI_Settings(){
-    currentCLIPath = currentCLIPath + String(incomingCharCLI);
-    F_CLI_Info();
+    GoIntoNewPath();
 }
 		                 
 
@@ -369,8 +383,7 @@ void F_CLI_Settings_Read(){
 //=====================================================================================================
 
 void F_CLI_Settings_Write(){
-    currentCLIPath = currentCLIPath + String(incomingCharCLI);
-    F_CLI_Info();
+    GoIntoNewPath();
 }
 		                  
 
@@ -397,8 +410,7 @@ void F_CLI_Settings_Write_WifiPassword(){
 //=====================================================================================================
 
 void F_CLI_Monitor(){
-    currentCLIPath = currentCLIPath + String(incomingCharCLI);
-    F_CLI_Info();
+    GoIntoNewPath();
 }
 		                   
 
@@ -418,38 +430,43 @@ void F_CLI_Monitor_Memory(){
 
 //=====================================================================================================
 
-void F_CLI_Monitor_Communication(){
-    currentCLIPath = currentCLIPath + String(incomingCharCLI);
-    F_CLI_Info();
+void F_CLI_Modules(){
+    GoIntoNewPath();
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Communication(){
+    GoIntoNewPath();
 }
 		                    
 
 //=====================================================================================================
 
-void F_CLI_Monitor_Communication_PrintTable(){
+void F_CLI_Modules_Communication_PrintTable(){
     manager->m_tableRegister->PrintTable();
 }
 		                   
 
 //=====================================================================================================
 
-void F_CLI_Monitor_Communication_PrintBufferEsp32(){
+void F_CLI_Modules_Communication_PrintBufferEsp32(){
     manager->m_nodeESP32->PrintBuffer();
 }
 		  
 
 //=====================================================================================================
 
-void F_CLI_Monitor_Communication_Variables(){
-    Serial.println("F_CLI_Monitor_Communication_Variables");
+void F_CLI_Modules_Communication_Registers(){
+    Serial.println("F_CLI_Modules_Communication_Registers");
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Debug(){
-    currentCLIPath = currentCLIPath + String(incomingCharCLI);
-    F_CLI_Info();
+    GoIntoNewPath();
 }
 
 
@@ -510,8 +527,7 @@ void F_CLI_Debug_SetLogLevelVerbose(){
 //=====================================================================================================
 
 void F_CLI_Test(){
-    currentCLIPath = currentCLIPath + String(incomingCharCLI);
-    F_CLI_Info();
+    GoIntoNewPath();
 }
 
 
