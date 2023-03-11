@@ -93,27 +93,27 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Monitor_Memory].text = "Memory";
     CLIOptions[CLIOptions_e::CLI_Monitor_Memory].Callback = F_CLI_Monitor_Memory;
 
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication].path = "43";
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication].text = "Communication ->";
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication].Callback = F_CLI_Monitor_Communication;
-
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication_PrintBufferEsp32].path = "431";
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication_PrintBufferEsp32].text = "Print Buffer ESP32";
-    CLIOptions[CLIOptions_e::CLI_Monitor_Communication_PrintBufferEsp32].Callback = F_CLI_Monitor_Communication_PrintBufferEsp32;
-
     CLIOptions[CLIOptions_e::CLI_Modules].path = "5";
     CLIOptions[CLIOptions_e::CLI_Modules].text = "Modules ->";
     CLIOptions[CLIOptions_e::CLI_Modules].Callback = F_CLI_Modules;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Motors].path = "51";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication].path = "51";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication].text = "Communication ->";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication].Callback = F_CLI_Modules_Communication;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_PrintBufferEsp32].path = "511";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_PrintBufferEsp32].text = "Print Buffer ESP32";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_PrintBufferEsp32].Callback = F_CLI_Modules_Communication_PrintBufferEsp32;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motors].path = "52";
     CLIOptions[CLIOptions_e::CLI_Modules_Motors].text = "Motors ->";
     CLIOptions[CLIOptions_e::CLI_Modules_Motors].Callback = F_CLI_Modules_Motors;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Motors_SetSpeedMotorLeft].path = "511";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motors_SetSpeedMotorLeft].path = "521";
     CLIOptions[CLIOptions_e::CLI_Modules_Motors_SetSpeedMotorLeft].text = "Set Speed Motor Left";
     CLIOptions[CLIOptions_e::CLI_Modules_Motors_SetSpeedMotorLeft].Callback = F_CLI_Modules_Motors_SetSpeedMotorLeft;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Motors_SetSpeedMotorRight].path = "512";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motors_SetSpeedMotorRight].path = "522";
     CLIOptions[CLIOptions_e::CLI_Modules_Motors_SetSpeedMotorRight].text = "Set Speed Motor Right";
     CLIOptions[CLIOptions_e::CLI_Modules_Motors_SetSpeedMotorRight].Callback = F_CLI_Modules_Motors_SetSpeedMotorRight;
 
@@ -264,6 +264,13 @@ void DeactivateGetValueModeCLI(){
 
 //=====================================================================================================
 
+void GoIntoNewPath(){
+    currentCLIPath = currentCLIPath + String(incomingCharCLI);
+    F_CLI_Info();
+}
+
+//=====================================================================================================
+
 void F_CLI_GotoHome(){
     currentCLIPath.clear();
     F_CLI_Info();
@@ -290,7 +297,6 @@ void F_CLI_GotoPrevious(){
 //=====================================================================================================
 
 void F_CLI_Info(){
-
     String fullpathCLI = "/";
     String tempPath = "";
     for (int indexPath=0; indexPath<currentCLIPath.length(); indexPath++){
@@ -341,8 +347,7 @@ void F_CLI_Status(){
 //=====================================================================================================
 
 void F_CLI_Modes(){
-    currentCLIPath = currentCLIPath + String(incomingCharCLI);
-    F_CLI_Info();
+    GoIntoNewPath();
 }
 		          
 
@@ -365,8 +370,7 @@ void F_CLI_Modes_Restart(){
 //=====================================================================================================
 
 void F_CLI_Settings(){
-    currentCLIPath = currentCLIPath + String(incomingCharCLI);
-    F_CLI_Info();
+    GoIntoNewPath();
 }
 		                 
 
@@ -381,8 +385,7 @@ void F_CLI_Settings_Read(){
 //=====================================================================================================
 
 void F_CLI_Settings_Write(){
-    currentCLIPath = currentCLIPath + String(incomingCharCLI);
-    F_CLI_Info();
+    GoIntoNewPath();
 }
 		                  
 
@@ -409,8 +412,7 @@ void F_CLI_Settings_Write_WifiPassword(){
 //=====================================================================================================
 
 void F_CLI_Monitor(){
-    currentCLIPath = currentCLIPath + String(incomingCharCLI);
-    F_CLI_Info();
+    GoIntoNewPath();
 }
 		                   
 
@@ -426,36 +428,33 @@ void F_CLI_Monitor_Tasks(){
 void F_CLI_Monitor_Memory(){
     Serial.println("Free Heap: " + String(ESP.getFreeHeap()) + "/" + String(ESP.getHeapSize()));
 }
-		                     
+
 
 //=====================================================================================================
 
-void F_CLI_Monitor_Communication(){
-    currentCLIPath = currentCLIPath + String(incomingCharCLI);
-    F_CLI_Info();
+void F_CLI_Modules(){
+    GoIntoNewPath();
 }
 
 
 //=====================================================================================================
 
-void F_CLI_Monitor_Communication_PrintBufferEsp32(){
+void F_CLI_Modules_Communication(){
+    GoIntoNewPath();
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Communication_PrintBufferEsp32(){
     manager->m_nodeESP32->PrintBuffer();
 }
 
 
 //=====================================================================================================
 
-void F_CLI_Modules(){
-    currentCLIPath = currentCLIPath + String(incomingCharCLI);
-    F_CLI_Info();
-}
-
-
-//=====================================================================================================
-
 void F_CLI_Modules_Motors(){
-    currentCLIPath = currentCLIPath + String(incomingCharCLI);
-    F_CLI_Info();
+    GoIntoNewPath();
 }
 
 
@@ -484,8 +483,7 @@ void F_CLI_Modules_Motors_SetSpeedMotorRight(){
 //=====================================================================================================
 
 void F_CLI_Debug(){
-    currentCLIPath = currentCLIPath + String(incomingCharCLI);
-    F_CLI_Info();
+    GoIntoNewPath();
 }
 
 
@@ -546,8 +544,7 @@ void F_CLI_Debug_SetLogLevelVerbose(){
 //=====================================================================================================
 
 void F_CLI_Test(){
-    currentCLIPath = currentCLIPath + String(incomingCharCLI);
-    F_CLI_Info();
+    GoIntoNewPath();
 }
 
 

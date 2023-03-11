@@ -57,9 +57,9 @@ enum CLIOptions_e {
     CLI_Monitor,
     CLI_Monitor_Tasks,
     CLI_Monitor_Memory,
-    CLI_Monitor_Communication,
-    CLI_Monitor_Communication_PrintBufferEsp32,
     CLI_Modules,
+    CLI_Modules_Communication,
+    CLI_Modules_Communication_PrintBufferEsp32,
     CLI_Modules_Motors,
     CLI_Modules_Motors_SetSpeedMotorLeft,
     CLI_Modules_Motors_SetSpeedMotorRight,
@@ -105,6 +105,7 @@ void MenuModeCLI();
 void GetValueCLI();
 void ActivateGetValueModeCLI();
 void DeactivateGetValueModeCLI();
+void GoIntoNewPath();
 void F_CLI_GotoHome();
 void F_CLI_GotoPrevious();
 void F_CLI_Info();
@@ -121,9 +122,9 @@ void F_CLI_Settings_Write_WifiPassword();
 void F_CLI_Monitor();
 void F_CLI_Monitor_Tasks();
 void F_CLI_Monitor_Memory();
-void F_CLI_Monitor_Communication();
-void F_CLI_Monitor_Communication_PrintBufferEsp32();
 void F_CLI_Modules();
+void F_CLI_Modules_Communication();
+void F_CLI_Modules_Communication_PrintBufferEsp32();
 void F_CLI_Modules_Motors();
 void F_CLI_Modules_Motors_SetSpeedMotorLeft();
 void F_CLI_Modules_Motors_SetSpeedMotorRight();
