@@ -63,6 +63,7 @@ enum CLIOptions_e {
     CLI_Modules_Motors,
     CLI_Modules_Motors_SetSpeedMotorLeft,
     CLI_Modules_Motors_SetSpeedMotorRight,
+    CLI_Modules_Motors_PrintInfo,
     CLI_Debug,
     CLI_Debug_GetLogLevel,
     CLI_Debug_SetLogLevelFatal,
@@ -128,6 +129,7 @@ void F_CLI_Modules_Communication_PrintBufferEsp32();
 void F_CLI_Modules_Motors();
 void F_CLI_Modules_Motors_SetSpeedMotorLeft();
 void F_CLI_Modules_Motors_SetSpeedMotorRight();
+void F_CLI_Modules_Motors_PrintInfo();
 void F_CLI_Debug();
 void F_CLI_Debug_GetLogLevel();
 void F_CLI_Debug_SetLogLevelFatal();
