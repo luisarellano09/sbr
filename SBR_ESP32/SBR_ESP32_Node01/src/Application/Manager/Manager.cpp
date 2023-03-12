@@ -31,9 +31,11 @@ Manager::Manager(){
     // Motors
     this->m_motorLeft = new Motor(PWMChannel_e::PWM1, MOTOR_LEFT_PWM_GPIO, MOTOR_PWM_FREQUENCY, MOTOR_PWM_RESOLUTION, 0, MOTOR_LEFT_DIR_GPIO);
     this->m_motorRight = new Motor(PWMChannel_e::PWM2, MOTOR_RIGHT_PWM_GPIO, MOTOR_PWM_FREQUENCY, MOTOR_PWM_RESOLUTION, 0, MOTOR_RIGHT_DIR_GPIO, MotorDirection_e::INVERTED);
+    Log.traceln("[Manager::Manager] Motors instanced");
 
     // Start Node 
     this->m_nodeESP32->Start();
+    Log.traceln("[Manager::Manager] NodeEsp32 started");
     
     Log.traceln("[Manager::Manager] Manager initialization finished");
 }

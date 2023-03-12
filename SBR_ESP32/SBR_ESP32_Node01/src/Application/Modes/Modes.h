@@ -30,6 +30,7 @@ void InitModes(){
     Modes[Modes_e::Mode_Program].Callback = SM_ModeProgram;
 
     StartMode(Modes_e::Mode_Idle);
+    Log.traceln("[Modes::InitModes] Mode Idle started");
 }
 
 

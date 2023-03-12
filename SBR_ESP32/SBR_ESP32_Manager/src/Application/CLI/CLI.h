@@ -355,6 +355,7 @@ void F_CLI_Modes(){
 void F_CLI_Modes_Program(){
     Serial.println("Program Mode.....");
     StartMode(Modes_e::Mode_Program);
+    Log.traceln("[CLI::F_CLI_Modes_Program] Mode Program started");
 }
 
 
