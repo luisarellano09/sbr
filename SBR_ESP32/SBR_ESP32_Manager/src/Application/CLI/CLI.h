@@ -273,7 +273,7 @@ void F_CLI_GotoHome(){
     currentCLIPath.clear();
     F_CLI_Info();
 }
-           
+
 
 //=====================================================================================================
 
@@ -334,21 +334,21 @@ void F_CLI_Info(){
 void F_CLI_Hello(){
     Serial.println("======= " + String(ESP32_HOSTNAME) + " =======");
 }
-		                  
+
 
 //=====================================================================================================
 
 void F_CLI_Status(){
     Serial.println("F_CLI_Status");
 }
-		               
+
 
 //=====================================================================================================
 
 void F_CLI_Modes(){
     GoIntoNewPath();
 }
-		          
+
 
 //=====================================================================================================
 
@@ -356,7 +356,7 @@ void F_CLI_Modes_Program(){
     Serial.println("Program Mode.....");
     StartMode(Modes_e::Mode_Program);
 }
-		                 
+
 
 //=====================================================================================================
 
@@ -364,14 +364,14 @@ void F_CLI_Modes_Restart(){
     Serial.println("Restarting...");
     ESP.restart();
 }
-		                 
+
 
 //=====================================================================================================
 
 void F_CLI_Settings(){
     GoIntoNewPath();
 }
-		                 
+
 
 //=====================================================================================================
 
@@ -379,14 +379,14 @@ void F_CLI_Settings_Read(){
     Serial.println(" - WifiName: " + preferences.getString("WifiName"));
     Serial.println(" - WifiPass: " + preferences.getString("WifiPass"));
 }
-		                   
+
 
 //=====================================================================================================
 
 void F_CLI_Settings_Write(){
     GoIntoNewPath();
 }
-		                  
+
 
 //=====================================================================================================
 
@@ -396,7 +396,7 @@ void F_CLI_Settings_Write_WifiName(){
     preferences.putString("WifiName", insertedValueCLI);
     Serial.println("WifiName: " + preferences.getString("WifiName"));
 }
-		                    
+
 
 //=====================================================================================================
 
@@ -406,28 +406,28 @@ void F_CLI_Settings_Write_WifiPassword(){
     preferences.putString("WifiPass", insertedValueCLI);
     Serial.println("WifiPass: " + preferences.getString("WifiPass"));
 }
-		                       
+
 
 //=====================================================================================================
 
 void F_CLI_Monitor(){
     GoIntoNewPath();
 }
-		                   
+
 
 //=====================================================================================================
 
 void F_CLI_Monitor_Tasks(){
     MonitorTasks();
 }
-		                   
+
 
 //=====================================================================================================
 
 void F_CLI_Monitor_Memory(){
     Serial.println("Free Heap: " + String(ESP.getFreeHeap()) + "/" + String(ESP.getHeapSize()));
 }
-		                     
+
 
 //=====================================================================================================
 
@@ -441,21 +441,21 @@ void F_CLI_Modules(){
 void F_CLI_Modules_Communication(){
     GoIntoNewPath();
 }
-		                    
+
 
 //=====================================================================================================
 
 void F_CLI_Modules_Communication_PrintTable(){
     manager->m_tableRegister->PrintTable();
 }
-		                   
+
 
 //=====================================================================================================
 
 void F_CLI_Modules_Communication_PrintBufferEsp32(){
     manager->m_nodeESP32->PrintBuffer();
 }
-		  
+
 
 //=====================================================================================================
 
@@ -484,7 +484,7 @@ void F_CLI_Debug_SetLogLevelFatal(){
     Log.setLevel(LOG_LEVEL_FATAL);
     F_CLI_Debug_GetLogLevel();
 }
-      
+
 
 //=====================================================================================================
 
@@ -492,7 +492,7 @@ void F_CLI_Debug_SetLogLevelError(){
     Log.setLevel(LOG_LEVEL_ERROR);
     F_CLI_Debug_GetLogLevel();
 }
-  
+
 
 //=====================================================================================================
 
@@ -500,7 +500,7 @@ void F_CLI_Debug_SetLogLevelWarning(){
     Log.setLevel(LOG_LEVEL_WARNING);
     F_CLI_Debug_GetLogLevel();
 }
-  
+
 
 //=====================================================================================================
 
@@ -508,7 +508,8 @@ void F_CLI_Debug_SetLogLevelInfo(){
     Log.setLevel(LOG_LEVEL_INFO);
     F_CLI_Debug_GetLogLevel();
 }
-  
+
+
 //=====================================================================================================
 
 void F_CLI_Debug_SetLogLevelTrace(){
