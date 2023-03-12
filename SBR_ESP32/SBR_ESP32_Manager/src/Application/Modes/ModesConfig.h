@@ -71,8 +71,8 @@ enum StateModeProgram_e {
  * 
  */
 struct Mode_t{
-    uint8_t status = 0;                 /**@brief Status of the Mode. 0=inactive; 1=active*/
-    void (*Callback)(Modes_e) = NULL;      /**@brief Function callback of the Mode*/
+    uint8_t status = 0;                     /**@brief Status of the Mode. 0=inactive; 1=active*/
+    void (*Callback)(Modes_e) = NULL;       /**@brief Function callback of the Mode*/
 };
 
 

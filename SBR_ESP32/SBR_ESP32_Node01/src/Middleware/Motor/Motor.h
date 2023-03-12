@@ -27,7 +27,7 @@
 class Motor {
 public:  
 
-    PWMChannel_e m_pwmChannel;      /**@brief Request type: Read or Write */
+    PWMChannel_e m_pwmChannel;      /**@brief PWM Channel */
     uint8_t m_pwmPin;               /**@brief PWM Pin */
     double m_frequency;             /**@brief PWM Frecuency */
     uint8_t m_resolution;           /**@brief PWM resolution 1-20 bits */

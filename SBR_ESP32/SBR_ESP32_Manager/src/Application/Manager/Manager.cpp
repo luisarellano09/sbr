@@ -45,6 +45,7 @@ Manager::Manager(){
 
     // Start Node 
     this->m_nodeESP32->Start();
+    Log.traceln("[Manager::Manager] NodeEsp32 started");
 
     Log.traceln("[Manager::Manager] Manager initialization finished");
 }

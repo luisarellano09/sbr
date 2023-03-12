@@ -10,6 +10,7 @@
  *  												INCLUDE
  *******************************************************************************************************************************************/
 #include "Motor.h"
+#include <ArduinoLog.h>
 
 
 /*******************************************************************************************************************************************
@@ -27,7 +28,6 @@ Motor::Motor(PWMChannel_e pwmChannel, uint8_t pwmPin, double frequency, uint8_t 
 
     // Init Motor
     this->Init();
-
 }
 
 
@@ -46,7 +46,7 @@ RC_e Motor::SetSpeed(double speed){
     RC_e retCode = RC_e::SUCCESS;
 
     if(speed > -100.0 || speed < 100.0){
-        // Warning
+        Log.warningln("[Motor::SetSpeed] Motor[%d] speed out of range: %D%", this->m_pwmChannel, speed);
     }
     
     double tempModSpeed = this->m_offset + abs(speed) * (100.0 - this->m_offset) / 100.0;
@@ -65,6 +65,8 @@ RC_e Motor::SetSpeed(double speed){
         digitalWrite(this->m_dirPin, LOW); 
     }
 
+    Log.traceln("[Motor::SetSpeed] Motor[%d] speed setted to %D%", this->m_pwmChannel, speed);
+
     return retCode;
 }
 
@@ -78,6 +80,8 @@ RC_e Motor::Stop(){
     digitalWrite(this->m_dirPin, LOW); 
     ledcWrite(this->m_pwmChannel,0);
 
+    Log.traceln("[Motor::SetSpeed] Motor[%d] stopped", this->m_pwmChannel);
+
     return retCode;
 }
 
@@ -88,6 +92,16 @@ RC_e Motor::Print(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
+    Serial.println("*****************");
+    Serial.printf("Motor[%d] Info:\r\n", this->m_pwmChannel);
+    Serial.printf(" - PWM Channel: %d\r\n", this->m_pwmChannel);
+    Serial.printf(" - PWM GPIO Pin: %d\r\n", this->m_pwmPin);
+    Serial.printf(" - PWM Frequency: %.1f\r\n", this->m_frequency);
+    Serial.printf(" - PWM Resolution: %d\r\n", this->m_resolution);
+    Serial.printf(" - Speed Offset: %d\r\n", this->m_offset);
+    Serial.printf(" - Direction GPIO Pin: %d\r\n", this->m_dirPin);
+    Serial.printf(" - Direction (Inverted) : %d\r\n", this->m_direction);
+    Serial.println("*****************");
     
     return retCode;
 }
