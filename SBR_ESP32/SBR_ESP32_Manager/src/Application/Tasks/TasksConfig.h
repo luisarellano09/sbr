@@ -22,14 +22,52 @@
  *  												DECLARATION
  *******************************************************************************************************************************************/
 
+/**
+ * @brief InitTasks 
+ * 
+ */
 void InitTasks();
-void TaskMonitoring();
-void TaskInfoPrint(TaskHandle_t* task);
 
+/**
+ * @brief MonitorTasks
+ * 
+ */
+void MonitorTasks();
+
+/**
+ * @brief Print Task information
+ * 
+ */
+void PrintTaskInfo(TaskHandle_t* task);
+
+/**
+ * @brief TaskCLI 
+ * 
+ */
 void TaskCLI(void *parameter);
+
+/**
+ * @brief TaskGetValueCLI 
+ * 
+ */
 void TaskGetValueCLI(void *parameter);
+
+/**
+ * @brief TaskOTA 
+ * 
+ */
 void TaskOTA(void *parameter);
+
+/**
+ * @brief TaskNodeESP32 
+ * 
+ */
 void TaskNodeESP32(void *parameter);
+
+/**
+ * @brief Task Modes
+ * 
+ */
 void TaskModes(void *parameter);
 
 #endif // TASKSCONFIG_H

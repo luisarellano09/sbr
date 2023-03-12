@@ -1,7 +1,7 @@
 /**
- * @file Definition.h
+ * @file RequestConfig.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief Definitions for the Communication Bus
+ * @brief Declaration for the request class
  * @version 1.0
  * @date 08.02.2023
  * 

@@ -39,10 +39,6 @@
 
 */
 
-/**
- * @brief InitTasks 
- * 
- */
 void InitTasks(){
     disableLoopWDT();
     disableCore0WDT();
@@ -57,38 +53,24 @@ void InitTasks(){
 
 //=====================================================================================================
 
-/**
- * 
- * @brief Task Monitoring
- * 
- */
-void TaskMonitoring(){
-    TaskInfoPrint(&TaskCLIHandle);
-    TaskInfoPrint(&TaskGetValueCLIHandle);
-    TaskInfoPrint(&TaskOTAHandle);
-    TaskInfoPrint(&TaskNodeESP32Handle);
-    TaskInfoPrint(&TaskModesHandle);
+void MonitorTasks(){
+    PrintTaskInfo(&TaskCLIHandle);
+    PrintTaskInfo(&TaskGetValueCLIHandle);
+    PrintTaskInfo(&TaskOTAHandle);
+    PrintTaskInfo(&TaskNodeESP32Handle);
+    PrintTaskInfo(&TaskModesHandle);
 }
 
 
 //=====================================================================================================
 
-/**
- * 
- * @brief Print Task information
- * 
- */
-void TaskInfoPrint(TaskHandle_t* task){
+void PrintTaskInfo(TaskHandle_t* task){
     Serial.println( "|Task: " + String(pcTaskGetName(*task)) + " | State: " + String(eTaskGetState(*task)) + " | Prio: " + String(uxTaskPriorityGet(*task)) + " | FreeStack: " + String(uxTaskGetStackHighWaterMark(*task)) );    
 }
 
 
 //=====================================================================================================
 
-/**
- * @brief TaskCLI 
- * 
- */
 void TaskCLI(void *parameter){
 
     F_CLI_Hello();
@@ -104,11 +86,6 @@ void TaskCLI(void *parameter){
 
 //=====================================================================================================
 
-/**
- * 
- * @brief TaskGetValueCLI 
- * 
- */
 void TaskGetValueCLI(void *parameter){
     
     TickType_t xLastWakeTime = xTaskGetTickCount();
@@ -121,10 +98,6 @@ void TaskGetValueCLI(void *parameter){
 
 //=====================================================================================================
 
-/**
- * @brief TaskOTA 
- * 
- */
 void TaskOTA(void *parameter){
     TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
@@ -136,10 +109,6 @@ void TaskOTA(void *parameter){
 
 //=====================================================================================================
 
-/**
- * @brief TaskNodeESP32 
- * 
- */
 void TaskNodeESP32(void *parameter){
     while(true) {
         manager->m_nodeESP32->Run();
@@ -150,10 +119,6 @@ void TaskNodeESP32(void *parameter){
 
 //=====================================================================================================
 
-/**
- * @brief Task Modes
- * 
- */
 void TaskModes(void *parameter){
     while(true) {
         RunModes();

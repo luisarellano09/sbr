@@ -1,20 +1,20 @@
 /**
- * @file MotorDef.h
+ * @file MotorConfig.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief Definitions for the Motor Class
+ * @brief Config for the Motor Class
  * @date 26.02.2023
  * 
  */
 
-#ifndef MOTORDEF_H
-#define MOTORDEF_H
+#ifndef MOTORCONFIG_H
+#define MOTORCONFIG_H
 
 /*******************************************************************************************************************************************
  *  												ENUMERATION
  *******************************************************************************************************************************************/
 
 /**
- * @brief Defines the PWM Channel
+ * @brief Enumeration for the PWM Channel
  * 
  */
 enum PWMChannel_e {
@@ -38,7 +38,7 @@ enum PWMChannel_e {
 
 //=====================================================================================================
 /**
- * @brief Defines the Motor direction.
+ * @brief Enumeration for the Motor direction.
  * 
  */
 enum MotorDirection_e {
@@ -46,4 +46,4 @@ enum MotorDirection_e {
     INVERTED
 };
 
-#endif /* MOTORDEF_H */
+#endif /* MOTORCONFIG_H */
