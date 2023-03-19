@@ -47,8 +47,9 @@ enum CLIOptions_e {
 	CLI_Hello,
   	CLI_Status,
     CLI_Modes,
-    CLI_Modes_Program,
     CLI_Modes_Restart,
+    CLI_Modes_Program,
+    CLI_Modes_Motion,
     CLI_Settings,
     CLI_Settings_Read,
     CLI_Settings_Write,
@@ -113,8 +114,9 @@ void F_CLI_Info();
 void F_CLI_Hello();
 void F_CLI_Status();
 void F_CLI_Modes();
-void F_CLI_Modes_Program();
 void F_CLI_Modes_Restart();
+void F_CLI_Modes_Program();
+void F_CLI_Modes_Motion();
 void F_CLI_Settings();
 void F_CLI_Settings_Read();
 void F_CLI_Settings_Write();
