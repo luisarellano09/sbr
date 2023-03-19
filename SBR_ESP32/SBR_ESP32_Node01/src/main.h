@@ -58,6 +58,9 @@ void Init(){
     // Wifi Config
     manager->m_wifiManager->SetWifiCredencials(preferences.getString("WifiName"), preferences.getString("WifiPass"), String(ESP32_HOSTNAME));
 
+    // IMU
+    manager->m_IMU->SetCycleRotationVector(TimerTaskIMU*2);
+
     // External Handler
     manager->m_nodeESP32->ExtHandler = ExtHandler;
 

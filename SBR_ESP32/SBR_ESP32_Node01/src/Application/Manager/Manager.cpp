@@ -33,6 +33,9 @@ Manager::Manager(){
     this->m_motorRight = new Motor(PWMChannel_e::PWM2, MOTOR_RIGHT_PWM_GPIO, MOTOR_PWM_FREQUENCY, MOTOR_PWM_RESOLUTION, 0, MOTOR_RIGHT_DIR_GPIO, MotorDirection_e::INVERTED);
     Log.traceln("[Manager::Manager] Motors instanced");
 
+    // IMU
+    this->m_IMU = new IMU(IMU_CS_GPIO, IMU_WAK_GPIO, IMU_INT_GPIO, IMU_RST_GPIO, IMU_SPI_PORT_SPEED, IMU_CLK_GPIO, IMU_MISO_GPIO, IMU_MOSI_GPIO, IMU_PS0_GPIO, IMU_PS1_GPIO);
+
     // Start Node 
     this->m_nodeESP32->Start();
     Log.traceln("[Manager::Manager] NodeEsp32 started");
@@ -44,6 +47,7 @@ Manager::Manager(){
 //=====================================================================================================
 
 Manager::~Manager(){}
+
 
 /*******************************************************************************************************************************************
  *  												PUBLIC METHODS

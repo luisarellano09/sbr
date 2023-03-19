@@ -93,4 +93,67 @@
  */
 #define MOTOR_PWM_RESOLUTION 10
 
+
+// ========================== IMU =====================
+/**
+ * @brief IMU CS
+ * 
+ */
+#define IMU_CS_GPIO 32
+
+/**
+ * @brief IMU WAK
+ * 
+ */
+#define IMU_WAK_GPIO 18
+
+/**
+ * @brief IMU INT
+ * 
+ */
+#define IMU_INT_GPIO 26
+
+/**
+ * @brief IMU RST
+ * 
+ */
+#define IMU_RST_GPIO 27
+
+/**
+ * @brief IMU SPI PORT SPEED
+ * 
+ */
+#define IMU_SPI_PORT_SPEED 3000000
+
+/**
+ * @brief IMU CLK
+ * 
+ */
+#define IMU_CLK_GPIO 14
+
+/**
+ * @brief IMU MISO
+ * 
+ */
+#define IMU_MISO_GPIO 25
+
+/**
+ * @brief IMU MOSI
+ * 
+ */
+#define IMU_MOSI_GPIO 13
+
+/**
+ * @brief IMU PS0
+ * 
+ */
+#define IMU_PS0_GPIO 18
+
+/**
+ * @brief IMU PS1
+ * 
+ */
+#define IMU_PS1_GPIO 12
+
+
 #endif /* LOCALCONFIG_H */

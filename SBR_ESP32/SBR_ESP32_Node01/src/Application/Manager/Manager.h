@@ -17,6 +17,8 @@
 #include "../../Middleware/WifiManager/WifiManager.h"
 #include "../CommunicationBus/NodeEsp32/NodeEsp32.h"
 #include "../../Middleware/Motor/Motor.h"
+#include "../../Middleware/IMU/IMU.h"
+
 
 /*******************************************************************************************************************************************
  *  												CLASS
@@ -33,6 +35,7 @@ public:
     NodeEsp32* m_nodeESP32 = NULL;                  /**@brief Instance for the node ESP32. */
     Motor* m_motorLeft = NULL;                      /**@brief Instance for the left motor. */  
     Motor* m_motorRight = NULL;                     /**@brief Instance for the right motor. */
+    IMU* m_IMU = NULL;                              /**@brief Instance for the IMU. */
 
     /**
      * @brief Construct a new Manager object
@@ -52,4 +55,4 @@ private:
 
 };
 
-#endif // LOGGER_H
+#endif // MANAGER_H
