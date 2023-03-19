@@ -69,7 +69,6 @@ private:
 
     BNO080* m_BNO080 = NULL;        /**@brief Instance of the BNO080 IMU sensor. */
 
-
     /**
      * @brief Calculate the IMU values
      * 
