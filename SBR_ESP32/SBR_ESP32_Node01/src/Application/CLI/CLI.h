@@ -126,6 +126,14 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Modules_Motors_PrintInfo].text = "Print Motors Info";
     CLIOptions[CLIOptions_e::CLI_Modules_Motors_PrintInfo].Callback = F_CLI_Modules_Motors_PrintInfo;
 
+    CLIOptions[CLIOptions_e::CLI_Modules_IMU].path = "53";
+    CLIOptions[CLIOptions_e::CLI_Modules_IMU].text = "IMU ->";
+    CLIOptions[CLIOptions_e::CLI_Modules_IMU].Callback = F_CLI_Modules_IMU;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_IMU_RotationVector].path = "531";
+    CLIOptions[CLIOptions_e::CLI_Modules_IMU_RotationVector].text = "Show Rotation vector";
+    CLIOptions[CLIOptions_e::CLI_Modules_IMU_RotationVector].Callback = F_CLI_Modules_IMU_RotationVector;
+
     CLIOptions[CLIOptions_e::CLI_Debug].path = "6";
     CLIOptions[CLIOptions_e::CLI_Debug].text = "Debug ->";
     CLIOptions[CLIOptions_e::CLI_Debug].Callback = F_CLI_Debug;
@@ -509,6 +517,20 @@ void F_CLI_Modules_Motors_PrintInfo(){
 
 //=====================================================================================================
 
+void F_CLI_Modules_IMU(){
+    GoIntoNewPath();
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_IMU_RotationVector(){
+    Serial.printf("m_Pitch= %f, m_Roll= %f, m_Yaw= %f\r\n", manager->m_IMU->m_Pitch, manager->m_IMU->m_Roll, manager->m_IMU->m_Yaw);
+}
+
+
+//=====================================================================================================
+
 void F_CLI_Debug(){
     GoIntoNewPath();
 }
@@ -579,8 +601,7 @@ void F_CLI_Test(){
 //=====================================================================================================
 
 void F_CLI_Test_Test1(){
-    manager->m_nodeESP32->Start();
-    Serial.println("Stating ESP32 Node...");
+
 }
 
 
@@ -608,7 +629,7 @@ void F_CLI_Test_Test3(){
 //=====================================================================================================
 
 void F_CLI_Test_Test4(){
-    Serial.printf("m_Pitch= %f, m_Roll= %f, m_Yaw= %f, m_quadrant= %d, m_numberOfTurns= %d\r\n", manager->m_IMU->m_Pitch, manager->m_IMU->m_Roll, manager->m_IMU->m_Yaw, manager->m_IMU->m_quadrant, manager->m_IMU->m_numberOfTurns);
+    
 }
 
 
