@@ -47,8 +47,8 @@ void InitTasks(){
     xTaskCreatePinnedToCore(TaskCLI,            "TaskCLI",          5000,   NULL,   1,      &TaskCLIHandle,         1);         
     xTaskCreatePinnedToCore(TaskGetValueCLI,    "TaskGetValueCLI",  1000,   NULL,   1,      &TaskGetValueCLIHandle, 1);  
     xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",          5000,   NULL,   1,      &TaskOTAHandle,         0);  
-    xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",    10000,  NULL,   10,     &TaskNodeESP32Handle,   0);         
-    //xTaskCreatePinnedToCore(TaskReg10,          "TaskReg10",        10000,  NULL,   1,      &TaskReg10Handle,       1);          
+    xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",    10000,  NULL,   2,      &TaskNodeESP32Handle,   0);         
+    xTaskCreatePinnedToCore(TaskIMU,            "TaskIMU",          2000,   NULL,   1,      &TaskIMUHandle,         1);          
     xTaskCreatePinnedToCore(TaskModes,          "TaskModes",        10000,  NULL,   1,      &TaskModesHandle,       1);
 }
 
@@ -67,6 +67,7 @@ void MonitorTasks(){
     PrintTaskInfo(&TaskGetValueCLIHandle);
     PrintTaskInfo(&TaskOTAHandle);
     PrintTaskInfo(&TaskNodeESP32Handle);
+    PrintTaskInfo(&TaskIMUHandle);
     PrintTaskInfo(&TaskModesHandle);
 }
 
@@ -128,6 +129,16 @@ void TaskNodeESP32(void *parameter){
 
 //=====================================================================================================
 
+void TaskIMU(void *parameter){
+    while(true) {
+        manager->m_IMU->Run();
+        vTaskDelay(TimerTaskIMU);
+    }
+}
+
+
+//=====================================================================================================
+
 void TaskModes(void *parameter){
     while(true) {
         RunModes();
@@ -140,16 +151,16 @@ void TaskModes(void *parameter){
 
 void TaskReg10(void *parameter){
     while(true) {
-        double data_Register10 = 0.0;
-        if (xQueueReceive(queue_Register10, &data_Register10, 0) == pdTRUE){
-            Log.infoln("New reg10: %D", data_Register10);
-            //manager->counter = data_Register10;
-        }
+        // double data_Register10 = 0.0;
+        // if (xQueueReceive(queue_Register10, &data_Register10, 0) == pdTRUE){
+        //     Log.infoln("New reg10: %D", data_Register10);
+        //     //manager->counter = data_Register10;
+        // }
 
         //manager->counter = manager->counter + 0.1;
         //Log.infoln("Reg10: %D", manager->counter);
-        
-        vTaskDelay(1000);
+        //manager->m_IMU->Run();
+        //vTaskDelay(5);
     }
 }
 

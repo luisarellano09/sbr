@@ -54,13 +54,13 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Modes].text = "Modes ->";
     CLIOptions[CLIOptions_e::CLI_Modes].Callback = F_CLI_Modes;
 
-    CLIOptions[CLIOptions_e::CLI_Modes_Program].path = "21";
-    CLIOptions[CLIOptions_e::CLI_Modes_Program].text = "Program";
-    CLIOptions[CLIOptions_e::CLI_Modes_Program].Callback = F_CLI_Modes_Program;
-
-    CLIOptions[CLIOptions_e::CLI_Modes_Restart].path = "22";
+    CLIOptions[CLIOptions_e::CLI_Modes_Restart].path = "21";
     CLIOptions[CLIOptions_e::CLI_Modes_Restart].text = "Restart";
     CLIOptions[CLIOptions_e::CLI_Modes_Restart].Callback = F_CLI_Modes_Restart;
+
+    CLIOptions[CLIOptions_e::CLI_Modes_Program].path = "22";
+    CLIOptions[CLIOptions_e::CLI_Modes_Program].text = "Program";
+    CLIOptions[CLIOptions_e::CLI_Modes_Program].Callback = F_CLI_Modes_Program;
 
     CLIOptions[CLIOptions_e::CLI_Settings].path = "3";
     CLIOptions[CLIOptions_e::CLI_Settings].text = "Settings ->";
@@ -352,18 +352,18 @@ void F_CLI_Modes(){
 
 //=====================================================================================================
 
-void F_CLI_Modes_Program(){
-    Serial.println("Program Mode.....");
-    StartMode(Modes_e::Mode_Program);
-    Log.traceln("[CLI::F_CLI_Modes_Program] Mode Program started");
+void F_CLI_Modes_Restart(){
+    Serial.println("Restarting...");
+    ESP.restart();
 }
 
 
 //=====================================================================================================
 
-void F_CLI_Modes_Restart(){
-    Serial.println("Restarting...");
-    ESP.restart();
+void F_CLI_Modes_Program(){
+    Serial.println("Program Mode.....");
+    StartMode(Modes_e::Mode_Program);
+    Log.traceln("[CLI::F_CLI_Modes_Program] Mode Program started");
 }
 
 

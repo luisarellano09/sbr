@@ -28,6 +28,7 @@
 void InitModes(){
     Modes[Modes_e::Mode_Idle].Callback = SM_ModeIdle;
     Modes[Modes_e::Mode_Program].Callback = SM_ModeProgram;
+    Modes[Modes_e::Mode_Motion].Callback = SM_ModeMotion;
 
     StartMode(Modes_e::Mode_Idle);
     Log.traceln("[Modes::InitModes] Mode Idle started");
@@ -109,6 +110,7 @@ void SM_ModeProgram(Modes_e mode){
 
         case StateModeProgram_e::StateModeProgram_DeactivateTasks:
             vTaskSuspend(TaskNodeESP32Handle);
+            vTaskSuspend(TaskIMUHandle);
             NextStateModeProgram = StateModeProgram_e::StateModeProgram_ActivateWifi;
             break;
 
@@ -125,6 +127,31 @@ void SM_ModeProgram(Modes_e mode){
         case StateModeProgram_e::StateModeProgram_ChangeStatusToInactive:
             StopMode(mode);
             NextStateModeProgram = StateModeProgram_e::StateModeProgram_Idle;
+            break;
+    }
+}
+
+
+//=====================================================================================================
+
+void SM_ModeMotion(Modes_e mode){
+
+    stateModeMotion = NextStateModeMotion;
+
+    switch(stateModeMotion){
+
+        case StateModeMotion_e::StateModeMotion_Idle:
+            NextStateModeMotion = StateModeMotion_e::StateModeMotion_ActivateTaskIMU;
+            break;
+
+        case StateModeMotion_e::StateModeMotion_ActivateTaskIMU:
+            vTaskResume(TaskIMUHandle);
+            NextStateModeMotion = StateModeMotion_e::StateModeMotion_ChangeStatusToInactive;
+            break;
+
+        case StateModeMotion_e::StateModeMotion_ChangeStatusToInactive:
+            StopMode(mode);
+            NextStateModeMotion = StateModeMotion_e::StateModeMotion_Idle;
             break;
     }
 }

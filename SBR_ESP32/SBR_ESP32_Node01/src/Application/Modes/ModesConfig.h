@@ -28,6 +28,7 @@
 enum Modes_e {
     Mode_Idle = 0,
 	Mode_Program,
+    Mode_Motion,
     LENGTH_MODES                                               
 };
 
@@ -62,6 +63,19 @@ enum StateModeProgram_e {
 };
 
 
+//=====================================================================================================
+
+/**
+ * @brief Enumeration of States of Motion Mode
+ * 
+ */
+enum StateModeMotion_e {
+    StateModeMotion_Idle,
+    StateModeMotion_ActivateTaskIMU,
+    StateModeMotion_ChangeStatusToInactive
+};
+
+
 /*******************************************************************************************************************************************
  *  												STRUCTURES
  *******************************************************************************************************************************************/
@@ -87,6 +101,9 @@ StateModeIdle_e NextStateModeIdle = StateModeIdle_e::StateModeIdle_Idle;
 
 StateModeProgram_e stateModeProgram = StateModeProgram_e::StateModeProgram_Idle;
 StateModeProgram_e NextStateModeProgram = StateModeProgram_e::StateModeProgram_Idle;
+
+StateModeMotion_e stateModeMotion = StateModeMotion_e::StateModeMotion_Idle;
+StateModeMotion_e NextStateModeMotion = StateModeMotion_e::StateModeMotion_Idle;
 
 
 /*******************************************************************************************************************************************
@@ -143,6 +160,15 @@ void SM_ModeIdle(Modes_e mode);
  * 
  */
 void SM_ModeProgram(Modes_e mode);
+
+
+//=====================================================================================================
+
+/**
+ * @brief State Machine: Motion Mode
+ * 
+ */
+void SM_ModeMotion(Modes_e mode);
 
 
 #endif // MODESCONFIG_H

@@ -71,6 +71,12 @@ void TaskOTA(void *parameter);
 void TaskNodeESP32(void *parameter);
 
 /**
+ * @brief TaskIMU
+ * 
+ */
+void TaskIMU(void *parameter);
+
+/**
  * @brief Task Modes
  * 
  */
