@@ -75,6 +75,7 @@ void SM_ModeIdle(Modes_e mode){
         case StateModeIdle_e::StateModeIdle_DeactivateTasks:
             vTaskSuspend(TaskOTAHandle);
             vTaskSuspend(TaskGetValueCLIHandle);
+            vTaskSuspend(TaskMotionHandle);
             NextStateModeIdle = StateModeIdle_e::StateModeIdle_ActivateTaskCLI;
             break;
 
@@ -111,6 +112,7 @@ void SM_ModeProgram(Modes_e mode){
         case StateModeProgram_e::StateModeProgram_DeactivateTasks:
             vTaskSuspend(TaskNodeESP32Handle);
             vTaskSuspend(TaskIMUHandle);
+            vTaskSuspend(TaskMotionHandle);
             NextStateModeProgram = StateModeProgram_e::StateModeProgram_ActivateWifi;
             break;
 
@@ -146,6 +148,11 @@ void SM_ModeMotion(Modes_e mode){
 
         case StateModeMotion_e::StateModeMotion_ActivateTaskIMU:
             vTaskResume(TaskIMUHandle);
+            NextStateModeMotion = StateModeMotion_e::StateModeMotion_ActivateTaskMotionControl;
+            break;
+
+        case StateModeMotion_e::StateModeMotion_ActivateTaskMotionControl:
+            vTaskResume(TaskMotionHandle);
             NextStateModeMotion = StateModeMotion_e::StateModeMotion_ChangeStatusToInactive;
             break;
 
