@@ -41,7 +41,8 @@ TaskHandle_t TaskGetValueCLIHandle;     /**@brief Handle of Task Get Value CLI *
 TaskHandle_t TaskOTAHandle;             /**@brief Handle of Task OTA */
 TaskHandle_t TaskNodeESP32Handle;       /**@brief Handle of Task Node ESP32 */
 TaskHandle_t TaskModesHandle;           /**@brief Handle of Task Modes*/
-TaskHandle_t TaskIMUHandle;             /**@brief Handle of Task IMU*/  
+TaskHandle_t TaskIMUHandle;             /**@brief Handle of Task IMU*/
+TaskHandle_t TaskMotionHandle;          /**@brief Handle of Task Motion*/
 TaskHandle_t TaskReg10Handle;
 
 TickType_t TimerTaskCLI = 500 / portTICK_PERIOD_MS;         /**@brief Timer of Task CLI */
@@ -49,6 +50,7 @@ TickType_t TimerTaskOTA = 2000 / portTICK_PERIOD_MS;        /**@brief Timer of T
 TickType_t TimerTaskNodeESP32 = 1;                          /**@brief Timer of Task Node ESP32 */
 TickType_t TimerTaskModes = 500 / portTICK_PERIOD_MS;       /**@brief Timer of Task Modes */
 TickType_t TimerTaskIMU = 5 / portTICK_PERIOD_MS;           /**@brief Timer of Task IMU */
+TickType_t TimerTaskMotion = 20 / portTICK_PERIOD_MS;       /**@brief Timer of Task Motion */
 
 
 #endif /* GLOBALVAR_H */

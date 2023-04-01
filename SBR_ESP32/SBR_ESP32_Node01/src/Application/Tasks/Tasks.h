@@ -48,7 +48,8 @@ void InitTasks(){
     xTaskCreatePinnedToCore(TaskGetValueCLI,    "TaskGetValueCLI",  1000,   NULL,   1,      &TaskGetValueCLIHandle, 1);  
     xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",          5000,   NULL,   1,      &TaskOTAHandle,         0);  
     xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",    10000,  NULL,   2,      &TaskNodeESP32Handle,   0);         
-    xTaskCreatePinnedToCore(TaskIMU,            "TaskIMU",          2000,   NULL,   1,      &TaskIMUHandle,         1);          
+    xTaskCreatePinnedToCore(TaskIMU,            "TaskIMU",          2000,   NULL,   1,      &TaskIMUHandle,         1);   
+    xTaskCreatePinnedToCore(TaskMotion,         "TaskMotion",       2000,   NULL,   1,      &TaskMotionHandle,      1);         
     xTaskCreatePinnedToCore(TaskModes,          "TaskModes",        10000,  NULL,   1,      &TaskModesHandle,       1);
 }
 
@@ -68,6 +69,7 @@ void MonitorTasks(){
     PrintTaskInfo(&TaskOTAHandle);
     PrintTaskInfo(&TaskNodeESP32Handle);
     PrintTaskInfo(&TaskIMUHandle);
+    PrintTaskInfo(&TaskMotionHandle);
     PrintTaskInfo(&TaskModesHandle);
 }
 
@@ -133,6 +135,16 @@ void TaskIMU(void *parameter){
     while(true) {
         manager->m_IMU->Run();
         vTaskDelay(TimerTaskIMU);
+    }
+}
+
+
+//=====================================================================================================
+
+void TaskMotion(void *parameter){
+    while(true) {
+        manager->m_motion->Run();
+        vTaskDelay(TimerTaskMotion);
     }
 }
 

@@ -629,13 +629,18 @@ void F_CLI_Test_Test3(){
 //=====================================================================================================
 
 void F_CLI_Test_Test4(){
-    
+    manager->m_motion->m_PID->SetCycleTime(0.02);
+    manager->m_motion->m_PID->SetParameters(0.001,0.002,0.03);
+    manager->m_motion->m_PID->SetMode(PIDMode::AUTO);
+    manager->m_motion->m_PID->SetMVRange(-100.0, 100.0);
+    manager->m_motion->m_PID->SetSP(50);
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Test_Test5(){
+    manager->m_motion->m_PID->Print();
 
 }
 

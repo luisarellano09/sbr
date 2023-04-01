@@ -37,6 +37,10 @@ Manager::Manager(){
     this->m_IMU = new IMU(IMU_CS_GPIO, IMU_WAK_GPIO, IMU_INT_GPIO, IMU_RST_GPIO, IMU_SPI_PORT_SPEED, IMU_CLK_GPIO, IMU_MISO_GPIO, IMU_MOSI_GPIO, IMU_PS0_GPIO, IMU_PS1_GPIO);
     Log.traceln("[Manager::Manager] IMU instanced");
 
+    // Motion
+    this->m_motion = new Motion();
+    Log.traceln("[Manager::Manager] Motion instanced");
+
     // Start Node 
     this->m_nodeESP32->Start();
     Log.traceln("[Manager::Manager] NodeEsp32 started");
