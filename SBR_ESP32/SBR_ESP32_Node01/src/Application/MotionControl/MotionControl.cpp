@@ -1,7 +1,7 @@
 /**
- * @file Motion.cpp
+ * @file MotionControl.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief Motion Class
+ * @brief Motion Control Class
  * @date 29.03.2023
  * 
  */
@@ -9,7 +9,7 @@
 /*******************************************************************************************************************************************
  *  												INCLUDE
  *******************************************************************************************************************************************/
-#include "Motion.h"
+#include "MotionControl.h"
 #include <ArduinoLog.h>
 
 
@@ -17,14 +17,14 @@
  *  												CONSTRUCTOR
  *******************************************************************************************************************************************/
 
-Motion::Motion(){
+MotionControl::MotionControl(){
     this->m_PID = new PID();
 }
 
 
 //=====================================================================================================
 
-Motion::~Motion(){
+MotionControl::~MotionControl(){
 }
 
 
@@ -32,7 +32,7 @@ Motion::~Motion(){
  *  												PUBLIC METHODS
  *******************************************************************************************************************************************/
 
-RC_e Motion::Run(){
+RC_e MotionControl::Run(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 

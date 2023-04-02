@@ -22,6 +22,7 @@
 #include "../../Definition/Local/LocalConfig.h"
 #include "../Tasks/TasksConfig.h"
 #include "../Modes/ModesConfig.h"
+#include "../Datalog/DatalogConfig.h"
 
 
 /*******************************************************************************************************************************************
@@ -165,6 +166,66 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelVerbose].path = "66";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelVerbose].text = "Set VERBOSE Log level";
     CLIOptions[CLIOptions_e::CLI_Debug_SetLogLevelVerbose].Callback = F_CLI_Debug_SetLogLevelVerbose;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog].path = "7";
+    CLIOptions[CLIOptions_e::CLI_Datalog].text = "Datalog ->";
+    CLIOptions[CLIOptions_e::CLI_Datalog].Callback = F_CLI_Datalog;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_Start].path = "71";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Start].text = "Start";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Start].Callback = F_CLI_Datalog_Start;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_Stop].path = "72";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Stop].text = "Stop";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Stop].Callback = F_CLI_Datalog_Stop;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets].path = "73";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets].text = "Datasets ->";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets].Callback = F_CLI_Datalog_Datasets;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Motor].path = "731";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Motor].text = "Motor ->";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Motor].Callback = F_CLI_Datalog_Datasets_Motor;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Motor_Activate].path = "7311";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Motor_Activate].text = "Activate";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Motor_Activate].Callback = F_CLI_Datalog_Datasets_Motor_Activate;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Motor_Deactivate].path = "7312";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Motor_Deactivate].text = "Deactivate";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Motor_Deactivate].Callback = F_CLI_Datalog_Datasets_Motor_Deactivate;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_IMU].path = "732";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_IMU].text = "IMU ->";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_IMU].Callback = F_CLI_Datalog_Datasets_IMU;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_IMU_Activate].path = "7321";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_IMU_Activate].text = "Activate";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_IMU_Activate].Callback = F_CLI_Datalog_Datasets_IMU_Activate;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_IMU_Deactivate].path = "7322";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_IMU_Deactivate].text = "Deactivate";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_IMU_Deactivate].Callback = F_CLI_Datalog_Datasets_IMU_Deactivate;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl].path = "733";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl].text = "Motion Control ->";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl].Callback = F_CLI_Datalog_Datasets_MotionControl;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl_Activate].path = "7331";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl_Activate].text = "Activate";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl_Activate].Callback = F_CLI_Datalog_Datasets_MotionControl_Activate;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl_Deactivate].path = "7332";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl_Deactivate].text = "Deactivate";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl_Deactivate].Callback = F_CLI_Datalog_Datasets_MotionControl_Deactivate;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_Cycle].path = "74";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Cycle].text = "Cycle ->";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Cycle].Callback = F_CLI_Datalog_Cycle;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_SetCycle].path = "741";
+    CLIOptions[CLIOptions_e::CLI_Datalog_SetCycle].text = "Set Cycle";
+    CLIOptions[CLIOptions_e::CLI_Datalog_SetCycle].Callback = F_CLI_Datalog_SetCycle;
 
     CLIOptions[CLIOptions_e::CLI_Test].path = "t";
     CLIOptions[CLIOptions_e::CLI_Test].text = "Test ->";
@@ -593,6 +654,129 @@ void F_CLI_Debug_SetLogLevelVerbose(){
 
 //=====================================================================================================
 
+void F_CLI_Datalog(){
+    GoIntoNewPath();
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_Start(){
+    vTaskResume(TaskDatalogHandle);
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_Stop(){
+    vTaskSuspend(TaskDatalogHandle);
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_Datasets(){
+    GoIntoNewPath();
+    Serial.println("Dataset Motor: " + String(datalogDatasets[Datasets_e::DATASET_MOTOR].active));
+    Serial.println("Dataset IMU: " + String(datalogDatasets[Datasets_e::DATASET_IMU].active));
+    Serial.println("Dataset Motion Control: " + String(datalogDatasets[Datasets_e::DATASET_MOTION_CONTROL].active));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_Datasets_Motor(){
+    GoIntoNewPath();
+    Serial.println("Dataset Motor: " + String(datalogDatasets[Datasets_e::DATASET_MOTOR].active));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_Datasets_Motor_Activate(){
+    datalogDatasets[Datasets_e::DATASET_MOTOR].active = true;
+    Serial.println("Dataset Motor: " + String(datalogDatasets[Datasets_e::DATASET_MOTOR].active));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_Datasets_Motor_Deactivate(){
+    datalogDatasets[Datasets_e::DATASET_MOTOR].active = false;
+    Serial.println("Dataset Motor: " + String(datalogDatasets[Datasets_e::DATASET_MOTOR].active));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_Datasets_IMU(){
+    GoIntoNewPath();
+    Serial.println("Dataset IMU: " + String(datalogDatasets[Datasets_e::DATASET_IMU].active));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_Datasets_IMU_Activate(){
+    datalogDatasets[Datasets_e::DATASET_IMU].active = true;
+    Serial.println("Dataset IMU: " + String(datalogDatasets[Datasets_e::DATASET_IMU].active));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_Datasets_IMU_Deactivate(){
+    datalogDatasets[Datasets_e::DATASET_IMU].active = false;
+    Serial.println("Dataset IMU: " + String(datalogDatasets[Datasets_e::DATASET_IMU].active));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_Datasets_MotionControl(){
+    GoIntoNewPath();
+    Serial.println("Dataset Motion Control: " + String(datalogDatasets[Datasets_e::DATASET_MOTION_CONTROL].active));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_Datasets_MotionControl_Activate(){
+    datalogDatasets[Datasets_e::DATASET_MOTION_CONTROL].active = true;
+    Serial.println("Dataset Motion Control: " + String(datalogDatasets[Datasets_e::DATASET_MOTION_CONTROL].active));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_Datasets_MotionControl_Deactivate(){
+    datalogDatasets[Datasets_e::DATASET_MOTION_CONTROL].active = false;
+    Serial.println("Dataset Motion Control: " + String(datalogDatasets[Datasets_e::DATASET_MOTION_CONTROL].active));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_Cycle(){
+    GoIntoNewPath();
+    Serial.println("Datalog cycle time: " + String(TimerTaskDatalog));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_SetCycle(){
+    uint cycle = 0;
+    Serial.println("Enter the cycle Time (ms) of the Datalog:");
+    ActivateGetValueModeCLI();
+    cycle = insertedValueCLI.toInt();
+    TimerTaskDatalog = cycle;
+    Serial.println("Datalog cycle time: " + String(TimerTaskDatalog));
+}
+
+
+//=====================================================================================================
+
 void F_CLI_Test(){
     GoIntoNewPath();
 }
@@ -629,18 +813,18 @@ void F_CLI_Test_Test3(){
 //=====================================================================================================
 
 void F_CLI_Test_Test4(){
-    manager->m_motion->m_PID->SetCycleTime(0.02);
-    manager->m_motion->m_PID->SetParameters(0.001,0.002,0.03);
-    manager->m_motion->m_PID->SetMode(PIDMode::AUTO);
-    manager->m_motion->m_PID->SetMVRange(-100.0, 100.0);
-    manager->m_motion->m_PID->SetSP(50);
+    manager->m_motionControl->m_PID->SetCycleTime(0.02);
+    manager->m_motionControl->m_PID->SetParameters(0.001,0.002,0.03);
+    manager->m_motionControl->m_PID->SetMode(PIDMode::AUTO);
+    manager->m_motionControl->m_PID->SetMVRange(-100.0, 100.0);
+    manager->m_motionControl->m_PID->SetSP(50);
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Test_Test5(){
-    manager->m_motion->m_PID->Print();
+    manager->m_motionControl->m_PID->Print();
 
 }
 

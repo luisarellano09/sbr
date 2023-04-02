@@ -18,7 +18,7 @@
 #include "../CommunicationBus/NodeEsp32/NodeEsp32.h"
 #include "../../Middleware/Motor/Motor.h"
 #include "../../Middleware/IMU/IMU.h"
-#include "../Motion/Motion.h"
+#include "../MotionControl/MotionControl.h"
 
 
 /*******************************************************************************************************************************************
@@ -37,7 +37,7 @@ public:
     Motor* m_motorLeft = NULL;                      /**@brief Instance for the left motor. */  
     Motor* m_motorRight = NULL;                     /**@brief Instance for the right motor. */
     IMU* m_IMU = NULL;                              /**@brief Instance for the IMU. */
-    Motion* m_motion = NULL;                        /**@brief Instance for the Motion. */
+    MotionControl* m_motionControl = NULL;          /**@brief Instance for the Motion Control. */
 
     /**
      * @brief Construct a new Manager object

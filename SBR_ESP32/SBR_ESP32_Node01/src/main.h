@@ -19,6 +19,7 @@
 #include "soc/rtc_cntl_reg.h"
 #include "./Application/Tasks/Tasks.h"
 #include "./Application/CLI/CLI.h"
+#include "./Application/Datalog/Datalog.h"
 #include "./Application/CommunicationBus/NodeEsp32/NodeHandler.h"
 #include "./Application/Modes/Modes.h"
 
@@ -70,6 +71,11 @@ void Init(){
     // Init Modes
     InitModes();
 
+    // Init Datalog
+    InitDatalog();
+    ActivateDataset(Datasets_e::DATASET_MOTOR);
+    ActivateDataset(Datasets_e::DATASET_IMU);
+    ActivateDataset(Datasets_e::DATASET_MOTION_CONTROL);
 }
 
 

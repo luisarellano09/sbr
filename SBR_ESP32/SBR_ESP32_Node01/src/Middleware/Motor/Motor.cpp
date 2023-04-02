@@ -53,6 +53,8 @@ RC_e Motor::SetSpeed(double speed){
     uint32_t duty = (abs(tempModSpeed) * pow(2,this->m_resolution)) / 100.0;
 
     ledcWrite(this->m_pwmChannel,duty);
+
+    this->m_speed = speed;
     
     if (m_direction == MotorDirection_e::INVERTED){
         speed *= -1.0;

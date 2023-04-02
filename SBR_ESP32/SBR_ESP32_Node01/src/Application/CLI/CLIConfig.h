@@ -75,6 +75,21 @@ enum CLIOptions_e {
     CLI_Debug_SetLogLevelInfo,
     CLI_Debug_SetLogLevelTrace,
     CLI_Debug_SetLogLevelVerbose,
+    CLI_Datalog,
+    CLI_Datalog_Start,
+    CLI_Datalog_Stop,
+    CLI_Datalog_Datasets,
+    CLI_Datalog_Datasets_Motor,
+    CLI_Datalog_Datasets_Motor_Activate,
+    CLI_Datalog_Datasets_Motor_Deactivate,
+    CLI_Datalog_Datasets_IMU,
+    CLI_Datalog_Datasets_IMU_Activate,
+    CLI_Datalog_Datasets_IMU_Deactivate,
+    CLI_Datalog_Datasets_MotionControl,
+    CLI_Datalog_Datasets_MotionControl_Activate,
+    CLI_Datalog_Datasets_MotionControl_Deactivate,
+    CLI_Datalog_Cycle,
+    CLI_Datalog_SetCycle,
     CLI_Test,
     CLI_Test_Test1,
     CLI_Test_Test2,
@@ -144,6 +159,21 @@ void F_CLI_Debug_SetLogLevelWarning();
 void F_CLI_Debug_SetLogLevelInfo();
 void F_CLI_Debug_SetLogLevelTrace();
 void F_CLI_Debug_SetLogLevelVerbose();
+void F_CLI_Datalog();
+void F_CLI_Datalog_Start();
+void F_CLI_Datalog_Stop();
+void F_CLI_Datalog_Datasets();
+void F_CLI_Datalog_Datasets_Motor();
+void F_CLI_Datalog_Datasets_Motor_Activate();
+void F_CLI_Datalog_Datasets_Motor_Deactivate();
+void F_CLI_Datalog_Datasets_IMU();
+void F_CLI_Datalog_Datasets_IMU_Activate();
+void F_CLI_Datalog_Datasets_IMU_Deactivate();
+void F_CLI_Datalog_Datasets_MotionControl();
+void F_CLI_Datalog_Datasets_MotionControl_Activate();
+void F_CLI_Datalog_Datasets_MotionControl_Deactivate();
+void F_CLI_Datalog_Cycle();
+void F_CLI_Datalog_SetCycle();
 void F_CLI_Test();
 void F_CLI_Test_Test1();
 void F_CLI_Test_Test2();

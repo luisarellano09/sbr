@@ -29,7 +29,7 @@ enum Modes_e {
     Mode_Idle = 0,
 	Mode_Program,
     Mode_Motion,
-    LENGTH_MODES                                               
+    LENGTH_MODES
 };
 
 
