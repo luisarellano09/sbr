@@ -80,13 +80,19 @@ void TaskIMU(void *parameter);
  * @brief TaskMotion
  * 
  */
-void TaskMotion(void *parameter);
+void TaskMotionControl(void *parameter);
 
 /**
  * @brief Task Modes
  * 
  */
 void TaskModes(void *parameter);
+
+/**
+ * @brief Task Datalog
+ * 
+ */
+void TaskDatalog(void *parameter);
 
 /**
  * @brief TaskReg10 

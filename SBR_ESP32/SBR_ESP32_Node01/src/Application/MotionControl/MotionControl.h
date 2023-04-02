@@ -1,13 +1,13 @@
 /**
- * @file Motion.h
+ * @file MotionControl.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief Motion Class
+ * @brief Motion Control Class
  * @date 29.03.2023
  * 
  */
 
-#ifndef MOTION_H
-#define MOTION_H
+#ifndef MOTIONCONTROL_H
+#define MOTIONCONTROL_H
 
 /*******************************************************************************************************************************************
  *  												INCLUDE
@@ -21,18 +21,31 @@
  *******************************************************************************************************************************************/
 
 /**
- * @brief Motion Class
+ * @brief Motion Control Class
  * 
  */
-class Motion {
+class MotionControl {
 public:  
 
     PID* m_PID = NULL;              /**@brief Instance for PID. */
 
-    Motion();
+    /**
+     * @brief Construct a new Motion Control object
+     * 
+     */
+    MotionControl();
 
-    ~Motion();
+    /**
+     * @brief Destroy the Motion Control object
+     * 
+     */
+    ~MotionControl();
 
+    /**
+     * @brief Run
+     * 
+     * @return RC_e Result Code
+     */
     RC_e Run();
 
 private:
@@ -40,4 +53,4 @@ private:
 
 };
 
-#endif // MOTION_H
+#endif // MOTIONCONTROL_H

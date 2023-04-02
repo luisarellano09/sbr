@@ -38,8 +38,8 @@ Manager::Manager(){
     Log.traceln("[Manager::Manager] IMU instanced");
 
     // Motion
-    this->m_motion = new Motion();
-    Log.traceln("[Manager::Manager] Motion instanced");
+    this->m_motionControl = new MotionControl();
+    Log.traceln("[Manager::Manager] Motion Control instanced");
 
     // Start Node 
     this->m_nodeESP32->Start();

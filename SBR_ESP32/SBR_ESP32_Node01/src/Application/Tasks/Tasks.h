@@ -21,6 +21,7 @@
 #include "./Definition/Local/GlobalVar.h"
 #include "../CLI/CLIConfig.h"
 #include "../Modes/ModesConfig.h"
+#include "../Datalog/DatalogConfig.h"
 
 
 /*******************************************************************************************************************************************
@@ -44,13 +45,14 @@ void InitTasks(){
     disableLoopWDT();
     disableCore0WDT();
     disableCore1WDT();
-    xTaskCreatePinnedToCore(TaskCLI,            "TaskCLI",          5000,   NULL,   1,      &TaskCLIHandle,         1);         
-    xTaskCreatePinnedToCore(TaskGetValueCLI,    "TaskGetValueCLI",  1000,   NULL,   1,      &TaskGetValueCLIHandle, 1);  
-    xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",          5000,   NULL,   1,      &TaskOTAHandle,         0);  
-    xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",    10000,  NULL,   2,      &TaskNodeESP32Handle,   0);         
-    xTaskCreatePinnedToCore(TaskIMU,            "TaskIMU",          2000,   NULL,   1,      &TaskIMUHandle,         1);   
-    xTaskCreatePinnedToCore(TaskMotion,         "TaskMotion",       2000,   NULL,   1,      &TaskMotionHandle,      1);         
-    xTaskCreatePinnedToCore(TaskModes,          "TaskModes",        10000,  NULL,   1,      &TaskModesHandle,       1);
+    xTaskCreatePinnedToCore(TaskCLI,            "TaskCLI",              5000,   NULL,   1,      &TaskCLIHandle,             1);         
+    xTaskCreatePinnedToCore(TaskGetValueCLI,    "TaskGetValueCLI",      1000,   NULL,   1,      &TaskGetValueCLIHandle,     1);  
+    xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",              5000,   NULL,   1,      &TaskOTAHandle,             0);  
+    xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",        10000,  NULL,   2,      &TaskNodeESP32Handle,       0);         
+    xTaskCreatePinnedToCore(TaskIMU,            "TaskIMU",              2000,   NULL,   1,      &TaskIMUHandle,             1);   
+    xTaskCreatePinnedToCore(TaskMotionControl,  "TaskMotionControl",    2000,   NULL,   1,      &TaskMotionControlHandle,   1);         
+    xTaskCreatePinnedToCore(TaskModes,          "TaskModes",            10000,  NULL,   1,      &TaskModesHandle,           1);
+    xTaskCreatePinnedToCore(TaskDatalog,        "TaskDatalog",          3000,   NULL,   1,      &TaskDatalogHandle,         1);
 }
 
 
@@ -69,8 +71,9 @@ void MonitorTasks(){
     PrintTaskInfo(&TaskOTAHandle);
     PrintTaskInfo(&TaskNodeESP32Handle);
     PrintTaskInfo(&TaskIMUHandle);
-    PrintTaskInfo(&TaskMotionHandle);
+    PrintTaskInfo(&TaskMotionControlHandle);
     PrintTaskInfo(&TaskModesHandle);
+    PrintTaskInfo(&TaskDatalogHandle);
 }
 
 
@@ -141,10 +144,10 @@ void TaskIMU(void *parameter){
 
 //=====================================================================================================
 
-void TaskMotion(void *parameter){
+void TaskMotionControl(void *parameter){
     while(true) {
-        manager->m_motion->Run();
-        vTaskDelay(TimerTaskMotion);
+        manager->m_motionControl->Run();
+        vTaskDelay(TimerTaskMotionControl);
     }
 }
 
@@ -155,6 +158,16 @@ void TaskModes(void *parameter){
     while(true) {
         RunModes();
         vTaskDelay(TimerTaskModes);
+    }
+}
+
+
+//=====================================================================================================
+
+void TaskDatalog(void *parameter){
+    while(true) {
+        Datalog();
+        vTaskDelay(TimerTaskDatalog);
     }
 }
 
