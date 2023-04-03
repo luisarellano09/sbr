@@ -813,18 +813,18 @@ void F_CLI_Test_Test3(){
 //=====================================================================================================
 
 void F_CLI_Test_Test4(){
-    manager->m_motionControl->m_PID->SetCycleTime(0.02);
-    manager->m_motionControl->m_PID->SetParameters(0.001,0.002,0.03);
-    manager->m_motionControl->m_PID->SetMode(PIDMode::AUTO);
-    manager->m_motionControl->m_PID->SetMVRange(-100.0, 100.0);
-    manager->m_motionControl->m_PID->SetSP(50);
+    manager->m_motionControl->m_PIDPitch->SetCycleTime(0.01);
+    manager->m_motionControl->m_PIDPitch->SetParameters(4.0, 4.0, 0.08);
+    manager->m_motionControl->m_PIDPitch->SetMode(PIDMode::AUTO);
+    manager->m_motionControl->m_PIDPitch->SetMVRange(-100.0, 100.0);
+    manager->m_motionControl->m_PIDPitch->SetSP(0.0);
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Test_Test5(){
-    manager->m_motionControl->m_PID->Print();
+    manager->m_motionControl->m_PIDPitch->Print();
 
 }
 
@@ -832,21 +832,30 @@ void F_CLI_Test_Test5(){
 //=====================================================================================================
 
 void F_CLI_Test_Test6(){
-
+    float res = 0.0;
+    Serial.println("Enter Kp:");
+    ActivateGetValueModeCLI();
+    manager->m_motionControl->m_PIDPitch->m_kp = insertedValueCLI.toFloat();
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Test_Test7(){
-
+    float res = 0.0;
+    Serial.println("Enter Ki:");
+    ActivateGetValueModeCLI();
+    manager->m_motionControl->m_PIDPitch->m_ki = insertedValueCLI.toFloat();
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Test_Test8(){
-
+    float res = 0.0;
+    Serial.println("Enter Kd:");
+    ActivateGetValueModeCLI();
+    manager->m_motionControl->m_PIDPitch->m_kd = insertedValueCLI.toFloat();
 }
 
 
