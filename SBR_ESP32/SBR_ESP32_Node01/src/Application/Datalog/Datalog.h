@@ -73,21 +73,21 @@ void Datalog(){
 //=====================================================================================================
 
 void DatalogDatasetMotor(){
-    Serial.printf("ML:%.2f, MR:%.2f, ", manager->m_motorLeft->m_speed, manager->m_motorRight->m_speed);
+    Serial.printf("ML,%.2f, MR,%.2f, ", manager->m_motorLeft->m_speed, manager->m_motorRight->m_speed);
 }
 
 
 //=====================================================================================================
 
 void DatalogDatasetIMU(){
-    Serial.printf("Pitch:%.2f, Yaw:%.2f, Roll:%.2f, ", manager->m_IMU->m_Pitch, manager->m_IMU->m_Yaw, manager->m_IMU->m_Roll);
+    Serial.printf("Pitch,%.2f, Yaw,%.2f, Roll,%.2f, ", manager->m_IMU->m_Pitch, manager->m_IMU->m_Yaw, manager->m_IMU->m_Roll);
 }
 
 
 //=====================================================================================================
 
 void DatalogDatasetMotionControl(){
-    Serial.printf("SP:%.2f, PV:%.2f, E:%.2f, MV:%.2f, Kp:%.4f, Ki:%.4f, Kd:%.4f, T:%.2f, ", manager->m_motionControl->m_PID->m_SP, manager->m_motionControl->m_PID->m_PV, manager->m_motionControl->m_PID->m_error, manager->m_motionControl->m_PID->m_MV, manager->m_motionControl->m_PID->m_kp, manager->m_motionControl->m_PID->m_ki, manager->m_motionControl->m_PID->m_kd, manager->m_motionControl->m_PID->m_cycleTime);
+    Serial.printf("SP,%.2f, PV,%.2f, E,%.2f, MV,%.2f, Kp,%.4f, Ki,%.4f, Kd,%.4f, T,%.2f, ", manager->m_motionControl->m_PIDPitch->m_SP, manager->m_motionControl->m_PIDPitch->m_PV, manager->m_motionControl->m_PIDPitch->m_error, manager->m_motionControl->m_PIDPitch->m_MV, manager->m_motionControl->m_PIDPitch->m_kp, manager->m_motionControl->m_PIDPitch->m_ki, manager->m_motionControl->m_PIDPitch->m_kd, manager->m_motionControl->m_PIDPitch->m_cycleTime);
 }
 
 

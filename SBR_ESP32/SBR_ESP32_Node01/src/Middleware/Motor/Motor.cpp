@@ -45,7 +45,7 @@ RC_e Motor::SetSpeed(double speed){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
-    if(speed > -100.0 || speed < 100.0){
+    if(speed > 100.0 || speed < -100.0){
         Log.warningln("[Motor::SetSpeed] Motor[%d] speed out of range: %D%", this->m_pwmChannel, speed);
     }
     

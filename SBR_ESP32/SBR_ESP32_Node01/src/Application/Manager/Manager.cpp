@@ -38,7 +38,7 @@ Manager::Manager(){
     Log.traceln("[Manager::Manager] IMU instanced");
 
     // Motion
-    this->m_motionControl = new MotionControl();
+    this->m_motionControl = new MotionControl(this->m_IMU, this->m_motorLeft, this->m_motorRight);
     Log.traceln("[Manager::Manager] Motion Control instanced");
 
     // Start Node 
