@@ -30,7 +30,10 @@ public:
 
     double m_Roll = 0.0;        /**@brief IMU Roll: Front inclination. */
     double m_Pitch = 0.0;       /**@brief IMU Pitch: Lateral inclination. */
-    double m_Yaw = 0.0;         /**@brief IMU Yaw: Rotation*/
+    double m_Yaw = 0.0;         /**@brief IMU Yaw: Rotation. */
+    bool m_invertRoll = false;  /**@brief Invert Roll, 0=normal 1=invert */
+    bool m_invertPitch = false; /**@brief Invert Pitch, 0=normal 1=invert */
+    bool m_invertYaw = false;   /**@brief Invert Yaw, 0=normal 1=invert */
 
     double m_initialYaw = -999999999999.9;
     int m_numberOfTurns = 0;
@@ -63,6 +66,27 @@ public:
      * @return RC_e Result code
      */
     RC_e Run();
+
+    /**
+     * @brief Invert Roll
+     * 
+     * @return RC_e Result code.
+     */
+    RC_e InvertRoll();
+
+    /**
+     * @brief Invert Pitch
+     * 
+     * @return RC_e Result code.
+     */
+    RC_e InvertPitch();
+
+    /**
+     * @brief Invert Yaw
+     * 
+     * @return RC_e Result code.
+     */
+    RC_e InvertYaw();
 
    
 private:

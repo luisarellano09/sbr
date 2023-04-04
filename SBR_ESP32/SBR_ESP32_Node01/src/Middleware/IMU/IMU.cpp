@@ -79,6 +79,39 @@ RC_e IMU::Run(){
 }
 
 
+//=====================================================================================================
+
+RC_e IMU::InvertRoll(){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_invertRoll = true;
+    return retCode;
+}
+
+
+//=====================================================================================================
+
+RC_e IMU::InvertPitch(){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_invertPitch = true;
+    return retCode;
+}
+
+
+//=====================================================================================================
+
+RC_e IMU::InvertYaw(){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_invertYaw = true;
+    return retCode;
+}
+
+
 /*******************************************************************************************************************************************
  *  												PRIVATE METHODS
  *******************************************************************************************************************************************/
@@ -88,17 +121,28 @@ RC_e IMU::Calculate(){
     RC_e retCode = RC_e::SUCCESS;
 
     // Roll
-    this->m_Roll = FACTOR_CONV_RAD_TO_DEG * this->m_BNO080->getRoll();
     double tempRoll = FACTOR_CONV_RAD_TO_DEG * this->m_BNO080->getRoll();
 
     if(tempRoll > 0.0){
-        this->m_Roll = 180- tempRoll;
+        tempRoll = 180- tempRoll;
     } else{
-        this->m_Roll = -180 - tempRoll;
+        tempRoll = -180 - tempRoll;
+    }
+
+    if(this->m_invertRoll == false){
+        this->m_Roll = tempRoll;
+    } else {
+        this->m_Roll = -1.0 * tempRoll;
     }
 
     // Pitch
-    this->m_Pitch = FACTOR_CONV_RAD_TO_DEG * this->m_BNO080->getPitch();
+    double tempPitch = FACTOR_CONV_RAD_TO_DEG * this->m_BNO080->getPitch();
+
+    if(this->m_invertPitch == false){
+        this->m_Pitch = tempPitch;
+    } else {
+        this->m_Pitch = -1.0 * tempPitch;
+    }
 
     // Yaw
     if (this->m_initialYaw == -999999999999.9) {
@@ -128,7 +172,13 @@ RC_e IMU::Calculate(){
         this->m_numberOfTurns--;	
     }
 
-    this->m_Yaw = tempYaw - this->m_initialYaw + (double)m_numberOfTurns * 360.0; 
+    tempYaw = tempYaw - this->m_initialYaw + (double)m_numberOfTurns * 360.0;
+
+    if(this->m_invertYaw == false){
+        this->m_Yaw = tempYaw;
+    } else {
+        this->m_Yaw = -1.0 * tempYaw;
+    }
 
     m_quadrantPrev = m_quadrant;
 

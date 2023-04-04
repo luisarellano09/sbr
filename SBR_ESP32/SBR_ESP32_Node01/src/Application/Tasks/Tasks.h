@@ -135,9 +135,10 @@ void TaskNodeESP32(void *parameter){
 //=====================================================================================================
 
 void TaskIMU(void *parameter){
+    TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
+        vTaskDelayUntil(&xLastWakeTime, TimerTaskIMU);
         manager->m_IMU->Run();
-        vTaskDelay(TimerTaskIMU);
     }
 }
 
@@ -145,9 +146,11 @@ void TaskIMU(void *parameter){
 //=====================================================================================================
 
 void TaskMotionControl(void *parameter){
+    vTaskDelay(1000);
+    TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
+        vTaskDelayUntil(&xLastWakeTime, TimerTaskMotionControl);
         manager->m_motionControl->Run();
-        vTaskDelay(TimerTaskMotionControl);
     }
 }
 
@@ -165,9 +168,11 @@ void TaskModes(void *parameter){
 //=====================================================================================================
 
 void TaskDatalog(void *parameter){
+    vTaskDelay(1000);
+    TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
+        vTaskDelayUntil(&xLastWakeTime, TimerTaskDatalog);
         Datalog();
-        vTaskDelay(TimerTaskDatalog);
     }
 }
 
