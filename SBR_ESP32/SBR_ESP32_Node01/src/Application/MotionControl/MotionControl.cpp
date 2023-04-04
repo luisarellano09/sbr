@@ -39,20 +39,24 @@ RC_e MotionControl::Run(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
+    double temp = 0.0;
+
     if (this->m_IMU->m_Pitch > 35.0 || this->m_IMU->m_Pitch < -35.0) {
         m_motorLeft->Stop();
         m_motorRight->Stop();
         //m_PIDPitch->SetMode(PIDMode::STOP);
     } else {
-        if (this->m_IMU->m_Pitch < 1.0 && this->m_IMU->m_Pitch > -1.0) {
+        if (this->m_IMU->m_Pitch < this->m_PIDPitch->m_SP + 0.5 && this->m_IMU->m_Pitch > this->m_PIDPitch->m_SP -0.5) {
             //m_motorLeft->Stop();
             //m_motorRight->Stop();
+            temp = this->m_PIDPitch->m_SP;
         } else {
-            this->m_PIDPitch->SetPV(m_IMU->m_Pitch);
-            this->m_PIDPitch->Run();
-            this->m_motorLeft->SetSpeed(this->m_PIDPitch->m_MV);
-            this->m_motorRight->SetSpeed(this->m_PIDPitch->m_MV);
+            temp = m_IMU->m_Pitch;
         }
+        this->m_PIDPitch->SetPV(this->m_IMU->m_Pitch);
+        this->m_PIDPitch->Run();
+        this->m_motorLeft->SetSpeed(this->m_PIDPitch->m_MV);
+        this->m_motorRight->SetSpeed(this->m_PIDPitch->m_MV);
     }
 
     return retCode;

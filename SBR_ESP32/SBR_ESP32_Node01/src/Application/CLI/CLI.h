@@ -814,10 +814,10 @@ void F_CLI_Test_Test3(){
 
 void F_CLI_Test_Test4(){
     manager->m_motionControl->m_PIDPitch->SetCycleTime(0.01);
-    manager->m_motionControl->m_PIDPitch->SetParameters(4.0, 4.0, 0.08);
+    manager->m_motionControl->m_PIDPitch->SetParameters(5.0, 15.0, 0.02);
     manager->m_motionControl->m_PIDPitch->SetMode(PIDMode::AUTO);
     manager->m_motionControl->m_PIDPitch->SetMVRange(-100.0, 100.0);
-    manager->m_motionControl->m_PIDPitch->SetSP(0.0);
+    manager->m_motionControl->m_PIDPitch->SetSP(4.7);
 }
 
 
@@ -862,7 +862,10 @@ void F_CLI_Test_Test8(){
 //=====================================================================================================
 
 void F_CLI_Test_Test9(){
-    
+    float res = 0.0;
+    Serial.println("Enter SP:");
+    ActivateGetValueModeCLI();
+    manager->m_motionControl->m_PIDPitch->m_SP = insertedValueCLI.toFloat();
 }
 
 
