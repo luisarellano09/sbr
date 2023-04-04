@@ -46,13 +46,6 @@ RC_e MotionControl::Run(){
         m_motorRight->Stop();
         //m_PIDPitch->SetMode(PIDMode::STOP);
     } else {
-        if (this->m_IMU->m_Pitch < this->m_PIDPitch->m_SP + 0.5 && this->m_IMU->m_Pitch > this->m_PIDPitch->m_SP -0.5) {
-            //m_motorLeft->Stop();
-            //m_motorRight->Stop();
-            temp = this->m_PIDPitch->m_SP;
-        } else {
-            temp = m_IMU->m_Pitch;
-        }
         this->m_PIDPitch->SetPV(this->m_IMU->m_Pitch);
         this->m_PIDPitch->Run();
         this->m_motorLeft->SetSpeed(this->m_PIDPitch->m_MV);
