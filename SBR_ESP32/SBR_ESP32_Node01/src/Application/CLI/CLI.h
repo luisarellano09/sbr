@@ -135,6 +135,30 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Modules_IMU_RotationVector].text = "Show Rotation vector";
     CLIOptions[CLIOptions_e::CLI_Modules_IMU_RotationVector].Callback = F_CLI_Modules_IMU_RotationVector;
 
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders].path = "54";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders].text = "Encoders ->";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders].Callback = F_CLI_Modules_Encoders;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_ReadCountEncoderLeft].path = "541";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_ReadCountEncoderLeft].text = "Read Count Encoder Left";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_ReadCountEncoderLeft].Callback = F_CLI_Modules_Encoders_ReadCountEncoderLeft;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_ReadCountEncoderRight].path = "542";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_ReadCountEncoderRight].text = "Read Count Encoder Right";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_ReadCountEncoderRight].Callback = F_CLI_Modules_Encoders_ReadCountEncoderRight;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetCountEncoderLeft].path = "543";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetCountEncoderLeft].text = "Set Count Encoder Left";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetCountEncoderLeft].Callback = F_CLI_Modules_Encoders_SetCountEncoderLeft;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetCountEncoderRight].path = "544";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetCountEncoderRight].text = "Set Count Encoder Right";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetCountEncoderRight].Callback = F_CLI_Modules_Encoders_SetCountEncoderRight;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_PrintInfo].path = "545";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_PrintInfo].text = "Print Info";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_PrintInfo].Callback = F_CLI_Modules_Encoders_PrintInfo;
+
     CLIOptions[CLIOptions_e::CLI_Debug].path = "6";
     CLIOptions[CLIOptions_e::CLI_Debug].text = "Debug ->";
     CLIOptions[CLIOptions_e::CLI_Debug].Callback = F_CLI_Debug;
@@ -587,6 +611,57 @@ void F_CLI_Modules_IMU(){
 
 void F_CLI_Modules_IMU_RotationVector(){
     Serial.printf("m_Pitch= %f, m_Roll= %f, m_Yaw= %f\r\n", manager->m_IMU->m_Pitch, manager->m_IMU->m_Roll, manager->m_IMU->m_Yaw);
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Encoders(){
+    GoIntoNewPath();
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Encoders_ReadCountEncoderLeft(){
+    Serial.println("Encoder Left Count: " + String(manager->m_encoderLeft->GetCount()));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Encoders_ReadCountEncoderRight(){
+    Serial.println("Encoder Right Count: " + String(manager->m_encoderRight->GetCount()));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Encoders_SetCountEncoderLeft(){
+    int64_t res = 0;
+    Serial.println("Enter Count of the left Encoder:");
+    ActivateGetValueModeCLI();
+    res = insertedValueCLI.toInt();
+    manager->m_encoderLeft->SetCount(res);
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Encoders_SetCountEncoderRight(){
+    int64_t res = 0;
+    Serial.println("Enter Count of the right Encoder:");
+    ActivateGetValueModeCLI();
+    res = insertedValueCLI.toInt();
+    manager->m_encoderRight->SetCount(res);
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Encoders_PrintInfo(){
+    manager->m_encoderLeft->Print();
+    manager->m_encoderRight->Print();
 }
 
 

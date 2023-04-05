@@ -67,6 +67,12 @@ enum CLIOptions_e {
     CLI_Modules_Motors_PrintInfo,
     CLI_Modules_IMU,
     CLI_Modules_IMU_RotationVector,
+    CLI_Modules_Encoders,
+    CLI_Modules_Encoders_ReadCountEncoderLeft,
+    CLI_Modules_Encoders_ReadCountEncoderRight,
+    CLI_Modules_Encoders_SetCountEncoderLeft,
+    CLI_Modules_Encoders_SetCountEncoderRight,
+    CLI_Modules_Encoders_PrintInfo,
     CLI_Debug,
     CLI_Debug_GetLogLevel,
     CLI_Debug_SetLogLevelFatal,
@@ -151,6 +157,12 @@ void F_CLI_Modules_Motors_SetSpeedMotorRight();
 void F_CLI_Modules_Motors_PrintInfo();
 void F_CLI_Modules_IMU();
 void F_CLI_Modules_IMU_RotationVector();
+void F_CLI_Modules_Encoders();
+void F_CLI_Modules_Encoders_ReadCountEncoderLeft();
+void F_CLI_Modules_Encoders_ReadCountEncoderRight();
+void F_CLI_Modules_Encoders_SetCountEncoderLeft();
+void F_CLI_Modules_Encoders_SetCountEncoderRight();
+void F_CLI_Modules_Encoders_PrintInfo();
 void F_CLI_Debug();
 void F_CLI_Debug_GetLogLevel();
 void F_CLI_Debug_SetLogLevelFatal();

@@ -45,26 +45,30 @@ RC_e Motor::SetSpeed(double speed){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
-    if(speed > 100.0 || speed < -100.0){
-        Log.warningln("[Motor::SetSpeed] Motor[%d] speed out of range: %D%", this->m_pwmChannel, speed);
-    }
-    
-    double tempModSpeed = this->m_offset + abs(speed) * (100.0 - this->m_offset) / 100.0;
-    uint32_t duty = (abs(tempModSpeed) * pow(2,this->m_resolution)) / 100.0;
+    if(speed == 0.0){
+        this->Stop();
+    } else{
+        if(speed > 100.0 || speed < -100.0){
+            Log.warningln("[Motor::SetSpeed] Motor[%d] speed out of range: %D%", this->m_pwmChannel, speed);
+        }
+        
+        double tempModSpeed = this->m_offset + abs(speed) * (100.0 - this->m_offset) / 100.0;
+        uint32_t duty = (abs(tempModSpeed) * pow(2,this->m_resolution)) / 100.0;
 
-    ledcWrite(this->m_pwmChannel,duty);
+        ledcWrite(this->m_pwmChannel,duty);
 
-    this->m_speed = speed;
-    
-    if (m_direction == MotorDirection_e::INVERTED){
-        speed *= -1.0;
-    }
+        this->m_speed = speed;
+        
+        if (m_direction == MotorDirection_e::INVERTED){
+            speed *= -1.0;
+        }
 
-    if(speed > 0.0){
-        digitalWrite(this->m_dirPin, HIGH); 
-    }
-    else{
-        digitalWrite(this->m_dirPin, LOW); 
+        if(speed > 0.0){
+            digitalWrite(this->m_dirPin, HIGH); 
+        }
+        else{
+            digitalWrite(this->m_dirPin, LOW); 
+        }
     }
 
     Log.traceln("[Motor::SetSpeed] Motor[%d] speed setted to %D%", this->m_pwmChannel, speed);
@@ -117,11 +121,12 @@ RC_e Motor::Init(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
+    ledcSetup(this->m_pwmChannel,this->m_frequency,this->m_resolution);
+
     pinMode(this->m_dirPin, OUTPUT);     
     digitalWrite(this->m_dirPin, LOW);
     
     ledcAttachPin(this->m_pwmPin,this->m_pwmChannel);
-    ledcSetup(this->m_pwmChannel,this->m_frequency,this->m_resolution);
     
     this->Stop();
     
