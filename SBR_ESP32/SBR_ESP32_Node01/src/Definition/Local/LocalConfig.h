@@ -94,6 +94,32 @@
 #define MOTOR_PWM_RESOLUTION 10
 
 
+// ========================== ENCODERS =====================
+/**
+ * @brief GPIO of the Channel A of left Encoder
+ * 
+ */
+#define ENCODER_LEFT_CHANNEL_A_GPIO 34
+
+/**
+ * @brief GPIO of the Channel B of left Encoder
+ * 
+ */
+#define ENCODER_LEFT_CHANNEL_B_GPIO 35
+
+/**
+ * @brief GPIO of the Channel A of right Encoder
+ * 
+ */
+#define ENCODER_RIGHT_CHANNEL_A_GPIO 22
+
+/**
+ * @brief GPIO of the Channel B of right Encoder
+ * 
+ */
+#define ENCODER_RIGHT_CHANNEL_B_GPIO 23
+
+
 // ========================== IMU =====================
 /**
  * @brief IMU CS

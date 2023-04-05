@@ -19,6 +19,7 @@
 #include "../../Middleware/Motor/Motor.h"
 #include "../../Middleware/IMU/IMU.h"
 #include "../MotionControl/MotionControl.h"
+#include "../../Middleware/Encoder/Encoder.h"
 
 
 /*******************************************************************************************************************************************
@@ -37,6 +38,8 @@ public:
     Motor* m_motorLeft = NULL;                      /**@brief Instance for the left motor. */  
     Motor* m_motorRight = NULL;                     /**@brief Instance for the right motor. */
     IMU* m_IMU = NULL;                              /**@brief Instance for the IMU. */
+    Encoder* m_encoderLeft = NULL;                  /**@brief Instance for the left encoder. */
+    Encoder* m_encoderRight = NULL;                 /**@brief Instance for the right encoder. */
     MotionControl* m_motionControl = NULL;          /**@brief Instance for the Motion Control. */
 
     /**

@@ -87,7 +87,7 @@ void PrintTaskInfo(TaskHandle_t* task){
 //=====================================================================================================
 
 void TaskCLI(void *parameter){
-
+    vTaskDelay(1000);
     F_CLI_Hello();
     F_CLI_Info();
     
@@ -102,7 +102,7 @@ void TaskCLI(void *parameter){
 //=====================================================================================================
 
 void TaskGetValueCLI(void *parameter){
-    
+    vTaskDelay(1000);
     TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
         vTaskDelayUntil(&xLastWakeTime, TimerTaskCLI);
@@ -114,6 +114,7 @@ void TaskGetValueCLI(void *parameter){
 //=====================================================================================================
 
 void TaskOTA(void *parameter){
+    vTaskDelay(1000);
     TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
         vTaskDelayUntil(&xLastWakeTime, TimerTaskOTA);
@@ -125,6 +126,7 @@ void TaskOTA(void *parameter){
 //=====================================================================================================
 
 void TaskNodeESP32(void *parameter){
+    vTaskDelay(1000);
     while(true) {
         manager->m_nodeESP32->Run();
         vTaskDelay(TimerTaskNodeESP32);

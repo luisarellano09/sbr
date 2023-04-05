@@ -16,6 +16,7 @@
 #include <Arduino.h>
 #include "../../Definition/Global/RC.h"
 
+
 /*******************************************************************************************************************************************
  *  												CLASS
  *******************************************************************************************************************************************/
@@ -34,7 +35,7 @@ public:
     double m_offset;                /**@brief Correction offset */
     uint8_t m_dirPin;               /**@brief Pin to control the direction */
     MotorDirection_e m_direction;   /**@brief Invert the motor direction 0=Normal, 1=Invert */
-    double m_speed = 0.0;                 /**@brief Motor Speed */
+    double m_speed = 0.0;           /**@brief Motor Speed */
 
     /**
      * @brief Construct a new Motor object
