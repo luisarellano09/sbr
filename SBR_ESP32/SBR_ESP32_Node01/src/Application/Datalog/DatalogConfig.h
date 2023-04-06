@@ -44,6 +44,7 @@ enum Datasets_e {
     DATASET_NONE = 0,
     DATASET_MOTOR,
 	DATASET_IMU,
+    DATASET_ODOMETRY,
     DATASET_MOTION_CONTROL,
     LENGTH_DATASETS
 };
@@ -66,6 +67,7 @@ void DeactivateDataset(Datasets_e select);
 void Datalog();
 void DatalogDatasetMotor();
 void DatalogDatasetIMU();
+void DatalogDatasetOdometry();
 void DatalogDatasetMotionControl();
 
 

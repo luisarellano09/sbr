@@ -139,25 +139,50 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Modules_Encoders].text = "Encoders ->";
     CLIOptions[CLIOptions_e::CLI_Modules_Encoders].Callback = F_CLI_Modules_Encoders;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_ReadCountEncoderLeft].path = "541";
-    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_ReadCountEncoderLeft].text = "Read Count Encoder Left";
-    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_ReadCountEncoderLeft].Callback = F_CLI_Modules_Encoders_ReadCountEncoderLeft;
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_Status].path = "541";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_Status].text = "Status";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_Status].Callback = F_CLI_Modules_Encoders_Status;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_ReadCountEncoderRight].path = "542";
-    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_ReadCountEncoderRight].text = "Read Count Encoder Right";
-    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_ReadCountEncoderRight].Callback = F_CLI_Modules_Encoders_ReadCountEncoderRight;
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetValues].path = "542";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetValues].text = "Set Values ->";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetValues].Callback = F_CLI_Modules_Encoders_SetValues;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetCountEncoderLeft].path = "543";
-    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetCountEncoderLeft].text = "Set Count Encoder Left";
-    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetCountEncoderLeft].Callback = F_CLI_Modules_Encoders_SetCountEncoderLeft;
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetValues_SetCountEncoderLeft].path = "5421";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetValues_SetCountEncoderLeft].text = "Set Count Encoder Left";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetValues_SetCountEncoderLeft].Callback = F_CLI_Modules_Encoders_SetValues_SetCountEncoderLeft;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetCountEncoderRight].path = "544";
-    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetCountEncoderRight].text = "Set Count Encoder Right";
-    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetCountEncoderRight].Callback = F_CLI_Modules_Encoders_SetCountEncoderRight;
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetValues_SetCountEncoderRight].path = "5422";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetValues_SetCountEncoderRight].text = "Set Count Encoder Right";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_SetValues_SetCountEncoderRight].Callback = F_CLI_Modules_Encoders_SetValues_SetCountEncoderRight;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_PrintInfo].path = "545";
+    CLIOptions[CLIOptions_e::CLI_Modules_Encoders_PrintInfo].path = "543";
     CLIOptions[CLIOptions_e::CLI_Modules_Encoders_PrintInfo].text = "Print Info";
     CLIOptions[CLIOptions_e::CLI_Modules_Encoders_PrintInfo].Callback = F_CLI_Modules_Encoders_PrintInfo;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry].path = "55";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry].text = "Odometry ->";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry].Callback = F_CLI_Modules_Odometry;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_Status].path = "551";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_Status].text = "Status";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_Status].Callback = F_CLI_Modules_Odometry_Status;
+
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues].path = "552";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues].text = "Set Values ->";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues].Callback = F_CLI_Modules_Odometry_SetValues;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetX].path = "5521";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetX].text = "Set X";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetX].Callback = F_CLI_Modules_Odometry_SetValues_SetX;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetY].path = "5522";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetY].text = "Set Y";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetY].Callback = F_CLI_Modules_Odometry_SetValues_SetY;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetAngle].path = "5523";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetAngle].text = "Set Angle";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetAngle].Callback = F_CLI_Modules_Odometry_SetValues_SetAngle;
 
     CLIOptions[CLIOptions_e::CLI_Debug].path = "6";
     CLIOptions[CLIOptions_e::CLI_Debug].text = "Debug ->";
@@ -231,15 +256,28 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_IMU_Deactivate].text = "Deactivate";
     CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_IMU_Deactivate].Callback = F_CLI_Datalog_Datasets_IMU_Deactivate;
 
-    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl].path = "733";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Odometry].path = "733";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Odometry].text = "Oddometry ->";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Odometry].Callback = F_CLI_Datalog_Datasets_Odometry;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Odometry_Activate].path = "7331";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Odometry_Activate].text = "Activate";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Odometry_Activate].Callback = F_CLI_Datalog_Datasets_Odometry_Activate;
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Odometry_Deactivate].path = "7332";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Odometry_Deactivate].text = "Deactivate";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_Odometry_Deactivate].Callback = F_CLI_Datalog_Datasets_Odometry_Deactivate;
+
+
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl].path = "734";
     CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl].text = "Motion Control ->";
     CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl].Callback = F_CLI_Datalog_Datasets_MotionControl;
 
-    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl_Activate].path = "7331";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl_Activate].path = "7341";
     CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl_Activate].text = "Activate";
     CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl_Activate].Callback = F_CLI_Datalog_Datasets_MotionControl_Activate;
 
-    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl_Deactivate].path = "7332";
+    CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl_Deactivate].path = "7342";
     CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl_Deactivate].text = "Deactivate";
     CLIOptions[CLIOptions_e::CLI_Datalog_Datasets_MotionControl_Deactivate].Callback = F_CLI_Datalog_Datasets_MotionControl_Deactivate;
 
@@ -623,21 +661,22 @@ void F_CLI_Modules_Encoders(){
 
 //=====================================================================================================
 
-void F_CLI_Modules_Encoders_ReadCountEncoderLeft(){
+void F_CLI_Modules_Encoders_Status(){
     Serial.println("Encoder Left Count: " + String(manager->m_encoderLeft->GetCount()));
-}
-
-
-//=====================================================================================================
-
-void F_CLI_Modules_Encoders_ReadCountEncoderRight(){
     Serial.println("Encoder Right Count: " + String(manager->m_encoderRight->GetCount()));
 }
 
 
 //=====================================================================================================
 
-void F_CLI_Modules_Encoders_SetCountEncoderLeft(){
+void F_CLI_Modules_Encoders_SetValues(){
+    GoIntoNewPath();
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Encoders_SetValues_SetCountEncoderLeft(){
     int64_t res = 0;
     Serial.println("Enter Count of the left Encoder:");
     ActivateGetValueModeCLI();
@@ -648,7 +687,7 @@ void F_CLI_Modules_Encoders_SetCountEncoderLeft(){
 
 //=====================================================================================================
 
-void F_CLI_Modules_Encoders_SetCountEncoderRight(){
+void F_CLI_Modules_Encoders_SetValues_SetCountEncoderRight(){
     int64_t res = 0;
     Serial.println("Enter Count of the right Encoder:");
     ActivateGetValueModeCLI();
@@ -662,6 +701,60 @@ void F_CLI_Modules_Encoders_SetCountEncoderRight(){
 void F_CLI_Modules_Encoders_PrintInfo(){
     manager->m_encoderLeft->Print();
     manager->m_encoderRight->Print();
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Odometry(){
+    GoIntoNewPath();
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Odometry_Status(){
+    Serial.printf("X: %.5f, Y: %.5f, Angle: %.5f \r\n", manager->m_odometry->GetX(), manager->m_odometry->GetY(), manager->m_odometry->GetAngle());
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Odometry_SetValues(){
+    GoIntoNewPath();
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Odometry_SetValues_SetX(){
+    float res = 0.0;
+    Serial.println("Enter X value:");
+    ActivateGetValueModeCLI();
+    res = insertedValueCLI.toFloat();
+    manager->m_odometry->SetX(res);
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Odometry_SetValues_SetY(){
+    float res = 0.0;
+    Serial.println("Enter Y value:");
+    ActivateGetValueModeCLI();
+    res = insertedValueCLI.toFloat();
+    manager->m_odometry->SetY(res);
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Odometry_SetValues_SetAngle(){
+    float res = 0.0;
+    Serial.println("Enter Angle value:");
+    ActivateGetValueModeCLI();
+    res = insertedValueCLI.toFloat();
+    manager->m_odometry->SetAngle(res);
 }
 
 
@@ -754,6 +847,7 @@ void F_CLI_Datalog_Datasets(){
     GoIntoNewPath();
     Serial.println("Dataset Motor: " + String(datalogDatasets[Datasets_e::DATASET_MOTOR].active));
     Serial.println("Dataset IMU: " + String(datalogDatasets[Datasets_e::DATASET_IMU].active));
+    Serial.println("Dataset Odometry: " + String(datalogDatasets[Datasets_e::DATASET_ODOMETRY].active));
     Serial.println("Dataset Motion Control: " + String(datalogDatasets[Datasets_e::DATASET_MOTION_CONTROL].active));
 }
 
@@ -803,6 +897,30 @@ void F_CLI_Datalog_Datasets_IMU_Activate(){
 void F_CLI_Datalog_Datasets_IMU_Deactivate(){
     datalogDatasets[Datasets_e::DATASET_IMU].active = false;
     Serial.println("Dataset IMU: " + String(datalogDatasets[Datasets_e::DATASET_IMU].active));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_Datasets_Odometry(){
+    GoIntoNewPath();
+    Serial.println("Dataset Odometry: " + String(datalogDatasets[Datasets_e::DATASET_ODOMETRY].active));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_Datasets_Odometry_Activate(){
+    datalogDatasets[Datasets_e::DATASET_ODOMETRY].active = true;
+    Serial.println("Dataset Odometry: " + String(datalogDatasets[Datasets_e::DATASET_ODOMETRY].active));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Datalog_Datasets_Odometry_Deactivate(){
+    datalogDatasets[Datasets_e::DATASET_ODOMETRY].active = false;
+    Serial.println("Dataset Odometry: " + String(datalogDatasets[Datasets_e::DATASET_ODOMETRY].active));
 }
 
 

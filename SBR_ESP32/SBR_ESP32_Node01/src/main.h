@@ -73,9 +73,10 @@ void Init(){
 
     // Init Datalog
     InitDatalog();
-    ActivateDataset(Datasets_e::DATASET_MOTOR);
+    //ActivateDataset(Datasets_e::DATASET_MOTOR);
     ActivateDataset(Datasets_e::DATASET_IMU);
-    ActivateDataset(Datasets_e::DATASET_MOTION_CONTROL);
+    ActivateDataset(Datasets_e::DATASET_ODOMETRY);
+    //ActivateDataset(Datasets_e::DATASET_MOTION_CONTROL);
 }
 
 

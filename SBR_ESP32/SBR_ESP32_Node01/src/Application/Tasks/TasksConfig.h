@@ -77,6 +77,12 @@ void TaskNodeESP32(void *parameter);
 void TaskIMU(void *parameter);
 
 /**
+ * @brief TaskOdometry
+ * 
+ */
+void TaskOdometry(void *parameter);
+
+/**
  * @brief TaskMotion
  * 
  */

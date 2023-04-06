@@ -68,11 +68,17 @@ enum CLIOptions_e {
     CLI_Modules_IMU,
     CLI_Modules_IMU_RotationVector,
     CLI_Modules_Encoders,
-    CLI_Modules_Encoders_ReadCountEncoderLeft,
-    CLI_Modules_Encoders_ReadCountEncoderRight,
-    CLI_Modules_Encoders_SetCountEncoderLeft,
-    CLI_Modules_Encoders_SetCountEncoderRight,
+    CLI_Modules_Encoders_Status,
+    CLI_Modules_Encoders_SetValues,
+    CLI_Modules_Encoders_SetValues_SetCountEncoderLeft,
+    CLI_Modules_Encoders_SetValues_SetCountEncoderRight,
     CLI_Modules_Encoders_PrintInfo,
+    CLI_Modules_Odometry,
+    CLI_Modules_Odometry_Status,
+    CLI_Modules_Odometry_SetValues,
+    CLI_Modules_Odometry_SetValues_SetX,
+    CLI_Modules_Odometry_SetValues_SetY,
+    CLI_Modules_Odometry_SetValues_SetAngle,
     CLI_Debug,
     CLI_Debug_GetLogLevel,
     CLI_Debug_SetLogLevelFatal,
@@ -91,6 +97,9 @@ enum CLIOptions_e {
     CLI_Datalog_Datasets_IMU,
     CLI_Datalog_Datasets_IMU_Activate,
     CLI_Datalog_Datasets_IMU_Deactivate,
+    CLI_Datalog_Datasets_Odometry,
+    CLI_Datalog_Datasets_Odometry_Activate,
+    CLI_Datalog_Datasets_Odometry_Deactivate,
     CLI_Datalog_Datasets_MotionControl,
     CLI_Datalog_Datasets_MotionControl_Activate,
     CLI_Datalog_Datasets_MotionControl_Deactivate,
@@ -158,11 +167,17 @@ void F_CLI_Modules_Motors_PrintInfo();
 void F_CLI_Modules_IMU();
 void F_CLI_Modules_IMU_RotationVector();
 void F_CLI_Modules_Encoders();
-void F_CLI_Modules_Encoders_ReadCountEncoderLeft();
-void F_CLI_Modules_Encoders_ReadCountEncoderRight();
-void F_CLI_Modules_Encoders_SetCountEncoderLeft();
-void F_CLI_Modules_Encoders_SetCountEncoderRight();
+void F_CLI_Modules_Encoders_Status();
+void F_CLI_Modules_Encoders_SetValues();
+void F_CLI_Modules_Encoders_SetValues_SetCountEncoderLeft();
+void F_CLI_Modules_Encoders_SetValues_SetCountEncoderRight();
 void F_CLI_Modules_Encoders_PrintInfo();
+void F_CLI_Modules_Odometry();
+void F_CLI_Modules_Odometry_Status();
+void F_CLI_Modules_Odometry_SetValues();
+void F_CLI_Modules_Odometry_SetValues_SetX();
+void F_CLI_Modules_Odometry_SetValues_SetY();
+void F_CLI_Modules_Odometry_SetValues_SetAngle();
 void F_CLI_Debug();
 void F_CLI_Debug_GetLogLevel();
 void F_CLI_Debug_SetLogLevelFatal();
@@ -181,6 +196,9 @@ void F_CLI_Datalog_Datasets_Motor_Deactivate();
 void F_CLI_Datalog_Datasets_IMU();
 void F_CLI_Datalog_Datasets_IMU_Activate();
 void F_CLI_Datalog_Datasets_IMU_Deactivate();
+void F_CLI_Datalog_Datasets_Odometry();
+void F_CLI_Datalog_Datasets_Odometry_Activate();
+void F_CLI_Datalog_Datasets_Odometry_Deactivate();
 void F_CLI_Datalog_Datasets_MotionControl();
 void F_CLI_Datalog_Datasets_MotionControl_Activate();
 void F_CLI_Datalog_Datasets_MotionControl_Deactivate();
