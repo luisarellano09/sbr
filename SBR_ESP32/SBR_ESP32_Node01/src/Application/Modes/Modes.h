@@ -113,8 +113,11 @@ void SM_ModeProgram(Modes_e mode){
         case StateModeProgram_e::StateModeProgram_DeactivateTasks:
             vTaskSuspend(TaskNodeESP32Handle);
             vTaskSuspend(TaskIMUHandle);
+            vTaskSuspend(TaskOdometryHandle);
             vTaskSuspend(TaskMotionControlHandle);
             vTaskSuspend(TaskDatalogHandle);
+            manager->m_motorLeft->Stop();
+            manager->m_motorRight->Stop();
             NextStateModeProgram = StateModeProgram_e::StateModeProgram_ActivateWifi;
             break;
 
@@ -150,6 +153,11 @@ void SM_ModeMotion(Modes_e mode){
 
         case StateModeMotion_e::StateModeMotion_ActivateTaskIMU:
             vTaskResume(TaskIMUHandle);
+            NextStateModeMotion = StateModeMotion_e::StateModeMotion_ActivateTaskOdometry;
+            break;
+
+        case StateModeMotion_e::StateModeMotion_ActivateTaskOdometry:
+            vTaskResume(TaskOdometryHandle);
             NextStateModeMotion = StateModeMotion_e::StateModeMotion_ActivateTaskMotionControl;
             break;
 

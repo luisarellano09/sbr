@@ -42,6 +42,7 @@ TaskHandle_t TaskOTAHandle;             /**@brief Handle of Task OTA */
 TaskHandle_t TaskNodeESP32Handle;       /**@brief Handle of Task Node ESP32 */
 TaskHandle_t TaskModesHandle;           /**@brief Handle of Task Modes*/
 TaskHandle_t TaskIMUHandle;             /**@brief Handle of Task IMU*/
+TaskHandle_t TaskOdometryHandle;        /**@brief Handle of Task Odometry*/
 TaskHandle_t TaskMotionControlHandle;   /**@brief Handle of Task Motion*/
 TaskHandle_t TaskDatalogHandle;         /**@brief Handle of Task Datalog*/
 TaskHandle_t TaskReg10Handle;
@@ -51,6 +52,7 @@ TickType_t TimerTaskOTA = 2000 / portTICK_PERIOD_MS;            /**@brief Timer 
 TickType_t TimerTaskNodeESP32 = 1;                              /**@brief Timer of Task Node ESP32 */
 TickType_t TimerTaskModes = 500 / portTICK_PERIOD_MS;           /**@brief Timer of Task Modes */
 TickType_t TimerTaskIMU = 5 / portTICK_PERIOD_MS;               /**@brief Timer of Task IMU */
+TickType_t TimerTaskOdometry = 10 / portTICK_PERIOD_MS;         /**@brief Timer of Task Odometry */
 TickType_t TimerTaskMotionControl = 10 / portTICK_PERIOD_MS;    /**@brief Timer of Task Motion */
 TickType_t TimerTaskDatalog = 100 / portTICK_PERIOD_MS;         /**@brief Timer of Task Datalog */
 

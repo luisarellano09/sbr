@@ -42,6 +42,10 @@ Manager::Manager(){
     this->m_encoderRight = new Encoder(2, ENCODER_RIGHT_CHANNEL_A_GPIO, ENCODER_RIGHT_CHANNEL_B_GPIO);
     Log.traceln("[Manager::Manager] Encoders instanced");
 
+    //Odometry
+    this->m_odometry = new Odometry(this->m_encoderLeft, this->m_encoderRight, 0.035, 0.231, 960);
+    Log.traceln("[Manager::Manager] Odometry instanced");
+
     // Motion
     this->m_motionControl = new MotionControl(this->m_IMU, this->m_motorLeft, this->m_motorRight);
     Log.traceln("[Manager::Manager] Motion Control instanced");

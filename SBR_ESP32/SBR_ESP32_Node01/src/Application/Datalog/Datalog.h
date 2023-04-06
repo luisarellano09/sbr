@@ -31,6 +31,9 @@ void InitDatalog(){
     datalogDatasets[Datasets_e::DATASET_IMU].Name = "Dataset IMU";
     datalogDatasets[Datasets_e::DATASET_IMU].Callback = DatalogDatasetIMU;
 
+    datalogDatasets[Datasets_e::DATASET_ODOMETRY].Name = "Dataset Odometry";
+    datalogDatasets[Datasets_e::DATASET_ODOMETRY].Callback = DatalogDatasetOdometry;
+
     datalogDatasets[Datasets_e::DATASET_MOTION_CONTROL].Name = "Dataset Motion Control";
     datalogDatasets[Datasets_e::DATASET_MOTION_CONTROL].Callback = DatalogDatasetMotionControl;
 }
@@ -81,6 +84,13 @@ void DatalogDatasetMotor(){
 
 void DatalogDatasetIMU(){
     Serial.printf("Pitch,%.2f, Yaw,%.2f, Roll,%.2f, ", manager->m_IMU->m_Pitch, manager->m_IMU->m_Yaw, manager->m_IMU->m_Roll);
+}
+
+
+//=====================================================================================================
+
+void DatalogDatasetOdometry(){
+    Serial.printf("X,%.5f, Y,%.5f, Angle,%.2f, ", manager->m_odometry->GetX(), manager->m_odometry->GetY(), manager->m_odometry->GetAngle());
 }
 
 

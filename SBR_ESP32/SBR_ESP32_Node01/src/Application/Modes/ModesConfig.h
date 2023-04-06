@@ -72,6 +72,7 @@ enum StateModeProgram_e {
 enum StateModeMotion_e {
     StateModeMotion_Idle,
     StateModeMotion_ActivateTaskIMU,
+    StateModeMotion_ActivateTaskOdometry,
     StateModeMotion_ActivateTaskMotionControl,
     StateModeMotion_ChangeStatusToInactive
 };

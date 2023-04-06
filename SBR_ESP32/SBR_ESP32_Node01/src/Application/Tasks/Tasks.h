@@ -50,6 +50,7 @@ void InitTasks(){
     xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",              5000,   NULL,   1,      &TaskOTAHandle,             0);  
     xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",        10000,  NULL,   2,      &TaskNodeESP32Handle,       0);         
     xTaskCreatePinnedToCore(TaskIMU,            "TaskIMU",              2000,   NULL,   1,      &TaskIMUHandle,             1);   
+    xTaskCreatePinnedToCore(TaskOdometry,       "TaskOdometry",         2000,   NULL,   1,      &TaskOdometryHandle,        1); 
     xTaskCreatePinnedToCore(TaskMotionControl,  "TaskMotionControl",    2000,   NULL,   1,      &TaskMotionControlHandle,   1);         
     xTaskCreatePinnedToCore(TaskModes,          "TaskModes",            10000,  NULL,   1,      &TaskModesHandle,           1);
     xTaskCreatePinnedToCore(TaskDatalog,        "TaskDatalog",          3000,   NULL,   1,      &TaskDatalogHandle,         1);
@@ -71,6 +72,7 @@ void MonitorTasks(){
     PrintTaskInfo(&TaskOTAHandle);
     PrintTaskInfo(&TaskNodeESP32Handle);
     PrintTaskInfo(&TaskIMUHandle);
+    PrintTaskInfo(&TaskOdometryHandle);
     PrintTaskInfo(&TaskMotionControlHandle);
     PrintTaskInfo(&TaskModesHandle);
     PrintTaskInfo(&TaskDatalogHandle);
@@ -141,6 +143,17 @@ void TaskIMU(void *parameter){
     while(true) {
         vTaskDelayUntil(&xLastWakeTime, TimerTaskIMU);
         manager->m_IMU->Run();
+    }
+}
+
+
+//=====================================================================================================
+
+void TaskOdometry(void *parameter){
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+    while(true) {
+        vTaskDelayUntil(&xLastWakeTime, TimerTaskOdometry);
+        manager->m_odometry->Run();
     }
 }
 

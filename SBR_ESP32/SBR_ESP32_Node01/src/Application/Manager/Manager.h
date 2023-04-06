@@ -20,6 +20,7 @@
 #include "../../Middleware/IMU/IMU.h"
 #include "../MotionControl/MotionControl.h"
 #include "../../Middleware/Encoder/Encoder.h"
+#include "../../Middleware/Odometry/Odometry.h"
 
 
 /*******************************************************************************************************************************************
@@ -40,6 +41,7 @@ public:
     IMU* m_IMU = NULL;                              /**@brief Instance for the IMU. */
     Encoder* m_encoderLeft = NULL;                  /**@brief Instance for the left encoder. */
     Encoder* m_encoderRight = NULL;                 /**@brief Instance for the right encoder. */
+    Odometry* m_odometry = NULL;                    /**@brief Instance for the odometry. */
     MotionControl* m_motionControl = NULL;          /**@brief Instance for the Motion Control. */
 
     /**
