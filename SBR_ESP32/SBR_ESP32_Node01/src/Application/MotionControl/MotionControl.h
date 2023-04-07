@@ -15,6 +15,7 @@
 #include <Arduino.h>
 #include "../../Middleware/PID/PID.h"
 #include "../../Middleware/IMU/IMU.h"
+#include "../../Middleware/Odometry/Odometry.h"
 #include "../../Middleware/Motor/Motor.h"
 #include "../../Definition/Global/RC.h"
 
@@ -29,16 +30,23 @@
 class MotionControl {
 public:  
 
-    PID* m_PIDPitch = NULL;              /**@brief Instance for PID. */
+    PID* m_PIDPitch = NULL;         /**@brief Instance for PID Pitch. */
+    PID* m_PIDPosition = NULL;      /**@brief Instance for PID Position. */
+    PID* m_PIDAngle = NULL;         /**@brief Instance for PID Angle. */
     IMU* m_IMU = NULL;
+    Odometry* m_odometry = NULL;
     Motor* m_motorLeft = NULL;
     Motor* m_motorRight = NULL;
+    double m_SPAngle = 0.0;
+    double m_SPPos = 0.0;
+    long count = 0;
+
 
     /**
      * @brief Construct a new Motion Control object
      * 
      */
-    MotionControl(IMU* imu, Motor* motorLeft, Motor* motorRight);
+    MotionControl(IMU* imu, Odometry* odometry, Motor* motorLeft, Motor* motorRight);
 
     /**
      * @brief Destroy the Motion Control object
@@ -55,7 +63,7 @@ public:
 
 private:
 
-
+    double GetDistancePoints(double x1, double y1, double x2, double y2);
 };
 
 #endif // MOTIONCONTROL_H

@@ -47,7 +47,7 @@ Manager::Manager(){
     Log.traceln("[Manager::Manager] Odometry instanced");
 
     // Motion
-    this->m_motionControl = new MotionControl(this->m_IMU, this->m_motorLeft, this->m_motorRight);
+    this->m_motionControl = new MotionControl(this->m_IMU, this->m_odometry, this->m_motorLeft, this->m_motorRight);
     Log.traceln("[Manager::Manager] Motion Control instanced");
 
     // Start Node 
