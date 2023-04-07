@@ -33,14 +33,6 @@ public:
     PID* m_PIDPitch = NULL;         /**@brief Instance for PID Pitch. */
     PID* m_PIDPosition = NULL;      /**@brief Instance for PID Position. */
     PID* m_PIDAngle = NULL;         /**@brief Instance for PID Angle. */
-    IMU* m_IMU = NULL;
-    Odometry* m_odometry = NULL;
-    Motor* m_motorLeft = NULL;
-    Motor* m_motorRight = NULL;
-    double m_SPAngle = 0.0;
-    double m_SPPos = 0.0;
-    long count = 0;
-
 
     /**
      * @brief Construct a new Motion Control object
@@ -61,9 +53,45 @@ public:
      */
     RC_e Run();
 
+    /**
+     * @brief Set SP Position
+     * 
+     * @param spPosition Position SP
+     * @return RC_e Result Code
+     */
+    RC_e SetSPPos(double spPosition);
+
+    /**
+     * @brief Set SP Angle
+     * 
+     * @param spAngle Angle SP
+     * @return RC_e Result Code
+     */
+    RC_e SetSPAngle(double spAngle);
+
+    /**
+     * @brief Start the Motion control
+     * 
+     * @return RC_e Result Code.
+     */
+    RC_e Start();
+
+    /**
+     * @brief Stop the Motion control
+     * 
+     * @return RC_e 
+     */
+    RC_e Stop();
+
 private:
 
-    double GetDistancePoints(double x1, double y1, double x2, double y2);
+    IMU* m_IMU = NULL;              /**@brief Reference of an IMU object. */
+    Odometry* m_odometry = NULL;    /**@brief Reference of an Odometry object. */
+    Motor* m_motorLeft = NULL;      /**@brief Reference of a Motor (Left) object. */
+    Motor* m_motorRight = NULL;     /**@brief Reference of a Motor (Right) object. */
+    double m_SPAngle = 0.0;         /**@brief Angle SP. */
+    double m_SPPos = 0.0;           /**@brief Position SP. */
+    long count = 0; // ToDo: be checked if needed
 };
 
 #endif // MOTIONCONTROL_H

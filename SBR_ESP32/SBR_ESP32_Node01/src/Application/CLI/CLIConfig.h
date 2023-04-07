@@ -81,7 +81,7 @@ enum CLIOptions_e {
     CLI_Modules_Odometry_SetValues_SetAngle,
     CLI_Modules_Motion,
     CLI_Modules_Motion_Status,
-    CLI_Modules_Motion_Auto,
+    CLI_Modules_Motion_Start,
     CLI_Modules_Motion_Stop,
     CLI_Modules_Motion_PIDPitchParam,
     CLI_Modules_Motion_PIDPitchParam_Kp,
@@ -101,6 +101,8 @@ enum CLIOptions_e {
     CLI_Modules_Motion_PIDAngleParam_Kd,
     CLI_Modules_Motion_PIDAngleParam_MVmin,
     CLI_Modules_Motion_PIDAngleParam_MVmax,
+    CLI_Modules_Motion_SetSPAngle,
+    CLI_Modules_Motion_SetSPPosition,
     CLI_Debug,
     CLI_Debug_GetLogLevel,
     CLI_Debug_SetLogLevelFatal,
@@ -202,7 +204,7 @@ void F_CLI_Modules_Odometry_SetValues_SetY();
 void F_CLI_Modules_Odometry_SetValues_SetAngle();
 void F_CLI_Modules_Motion();
 void F_CLI_Modules_Motion_Status();
-void F_CLI_Modules_Motion_Auto();
+void F_CLI_Modules_Motion_Start();
 void F_CLI_Modules_Motion_Stop();
 void F_CLI_Modules_Motion_PIDPitchParam();
 void F_CLI_Modules_Motion_PIDPitchParam_Kp();
@@ -222,6 +224,8 @@ void F_CLI_Modules_Motion_PIDAngleParam_Ki();
 void F_CLI_Modules_Motion_PIDAngleParam_Kd();
 void F_CLI_Modules_Motion_PIDAngleParam_MVmin();
 void F_CLI_Modules_Motion_PIDAngleParam_MVmax();
+void F_CLI_Modules_Motion_SetSPAngle();
+void F_CLI_Modules_Motion_SetSPPosition();
 void F_CLI_Debug();
 void F_CLI_Debug_GetLogLevel();
 void F_CLI_Debug_SetLogLevelFatal();

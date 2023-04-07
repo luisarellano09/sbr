@@ -45,7 +45,7 @@ public:
      * 
      * @param direction PID direction
      */
-    PID(PIDDirection_e direction = PIDDirection_e::DIRECT);
+    PID(PIDDirection_e direction = PIDDirection_e::PID_DIRECTION_DIRECT);
 
     /**
      * @brief Destroy the PID object
@@ -91,12 +91,18 @@ public:
     RC_e SetMVRange(double mvRangeMin, double mvRangeMax);
 
     /**
-     * @brief Set the PID Mode
+     * @brief Start PID
      * 
-     * @param mode PID mode
      * @return RC_e Result code
      */
-    RC_e SetMode(PIDMode mode);
+    RC_e Start();
+
+    /**
+     * @brief Stop PID
+     * 
+     * @return RC_e Result code
+     */
+    RC_e Stop();
 
     /**
      * @brief Set the PID SP

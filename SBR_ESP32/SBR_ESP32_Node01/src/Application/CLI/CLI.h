@@ -191,12 +191,12 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_Status].text = "Status";
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_Status].Callback = F_CLI_Modules_Motion_Status;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_Auto].path = "562";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_Auto].text = "Set to Auto";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_Auto].Callback = F_CLI_Modules_Motion_Auto;
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_Start].path = "562";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_Start].text = "Start";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_Start].Callback = F_CLI_Modules_Motion_Start;
 
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_Stop].path = "563";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_Stop].text = "Set to Stop";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_Stop].text = "Stop";
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_Stop].Callback = F_CLI_Modules_Motion_Stop;
 
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam].path = "564";
@@ -270,6 +270,14 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_MVmax].path = "5665";
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_MVmax].text = "Set MV max";
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_MVmax].Callback = F_CLI_Modules_Motion_PIDAngleParam_MVmax;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPAngle].path = "567";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPAngle].text = "Set to SP Angle";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPAngle].Callback = F_CLI_Modules_Motion_SetSPAngle;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPPosition].path = "568";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPPosition].text = "Set to SP Position";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPPosition].Callback = F_CLI_Modules_Motion_SetSPPosition;
 
     CLIOptions[CLIOptions_e::CLI_Debug].path = "6";
     CLIOptions[CLIOptions_e::CLI_Debug].text = "Debug ->";
@@ -702,6 +710,7 @@ void F_CLI_Modules_Motors_SetSpeedMotorLeft(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motorLeft->SetSpeed(res);
+    Serial.println("Left Motor Speed: " + String(manager->m_motorLeft->m_speed));
 }
 
 
@@ -713,6 +722,7 @@ void F_CLI_Modules_Motors_SetSpeedMotorRight(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motorRight->SetSpeed(res);
+    Serial.println("Right Motor Speed: " + String(manager->m_motorRight->m_speed));
 }
 
 
@@ -768,6 +778,7 @@ void F_CLI_Modules_Encoders_SetValues_SetCountEncoderLeft(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toInt();
     manager->m_encoderLeft->SetCount(res);
+    Serial.println("Left encoder count: " + String(manager->m_encoderLeft->GetCount()));
 }
 
 
@@ -779,6 +790,7 @@ void F_CLI_Modules_Encoders_SetValues_SetCountEncoderRight(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toInt();
     manager->m_encoderRight->SetCount(res);
+    Serial.println("Right encoder count: " + String(manager->m_encoderRight->GetCount()));
 }
 
 
@@ -800,7 +812,7 @@ void F_CLI_Modules_Odometry(){
 //=====================================================================================================
 
 void F_CLI_Modules_Odometry_Status(){
-    Serial.printf("X: %.5f, Y: %.5f, Angle: %.5f \r\n", manager->m_odometry->GetX(), manager->m_odometry->GetY(), manager->m_odometry->GetAngle());
+    Serial.printf("Distance: %.5f, X: %.5f, Y: %.5f, Angle: %.5f \r\n", manager->m_odometry->GetDistance(), manager->m_odometry->GetX(), manager->m_odometry->GetY(), manager->m_odometry->GetAngle());
 }
 
 
@@ -819,6 +831,7 @@ void F_CLI_Modules_Odometry_SetValues_SetX(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_odometry->SetX(res);
+    Serial.println("Odometry X value: " + String(manager->m_odometry->GetX()));
 }
 
 
@@ -830,6 +843,7 @@ void F_CLI_Modules_Odometry_SetValues_SetY(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_odometry->SetY(res);
+    Serial.println("Odometry Y value: " + String(manager->m_odometry->GetY()));
 }
 
 
@@ -841,7 +855,9 @@ void F_CLI_Modules_Odometry_SetValues_SetAngle(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_odometry->SetAngle(res);
+    Serial.println("Odometry Angle value: " + String(manager->m_odometry->GetAngle()));
 }
+
 
 //=====================================================================================================
 
@@ -853,21 +869,25 @@ void F_CLI_Modules_Motion(){
 //=====================================================================================================
 
 void F_CLI_Modules_Motion_Status(){
-
+    manager->m_motionControl->m_PIDPitch->Print();
+    manager->m_motionControl->m_PIDPosition->Print();
+    manager->m_motionControl->m_PIDAngle->Print();
 }
 
 
 //=====================================================================================================
 
-void F_CLI_Modules_Motion_Auto(){
-    
+void F_CLI_Modules_Motion_Start(){
+    manager->m_motionControl->Start();
+    Serial.println("Motion control started");
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Modules_Motion_Stop(){
-
+    manager->m_motionControl->Stop();
+    Serial.println("Motion control stopped");
 }
 
 
@@ -886,6 +906,7 @@ void F_CLI_Modules_Motion_PIDPitchParam_Kp(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motionControl->m_PIDPitch->m_kp = res;
+    Serial.println("PID Pitch Kp value: " + String(manager->m_motionControl->m_PIDPitch->m_kp));
 }
 
 
@@ -897,6 +918,7 @@ void F_CLI_Modules_Motion_PIDPitchParam_Ki(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motionControl->m_PIDPitch->m_ki = res;
+    Serial.println("PID Pitch Ki value: " + String(manager->m_motionControl->m_PIDPitch->m_ki));
 }
 
 
@@ -908,6 +930,7 @@ void F_CLI_Modules_Motion_PIDPitchParam_Kd(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motionControl->m_PIDPitch->m_kd = res;
+    Serial.println("PID Pitch Kd value: " + String(manager->m_motionControl->m_PIDPitch->m_kd));
 }
 
 
@@ -919,6 +942,7 @@ void F_CLI_Modules_Motion_PIDPitchParam_MVmin(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motionControl->m_PIDPitch->m_mvRangeMin = res;
+    Serial.println("PID Pitch MV min value: " + String(manager->m_motionControl->m_PIDPitch->m_mvRangeMin));
 }
 
 
@@ -930,6 +954,7 @@ void F_CLI_Modules_Motion_PIDPitchParam_MVmax(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motionControl->m_PIDPitch->m_mvRangeMax = res;
+    Serial.println("PID Pitch MV max value: " + String(manager->m_motionControl->m_PIDPitch->m_mvRangeMax));
 }
 
 
@@ -948,6 +973,7 @@ void F_CLI_Modules_Motion_PIDPosParam_Kp(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motionControl->m_PIDPosition->m_kp = res;
+    Serial.println("PID Position Kp value: " + String(manager->m_motionControl->m_PIDPosition->m_kp));
 }
 
 
@@ -959,6 +985,7 @@ void F_CLI_Modules_Motion_PIDPosParam_Ki(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motionControl->m_PIDPosition->m_ki = res;
+    Serial.println("PID Position Ki value: " + String(manager->m_motionControl->m_PIDPosition->m_ki));
 }
 
 
@@ -970,6 +997,7 @@ void F_CLI_Modules_Motion_PIDPosParam_Kd(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motionControl->m_PIDPosition->m_kd = res;
+    Serial.println("PID Position Kd value: " + String(manager->m_motionControl->m_PIDPosition->m_kd));
 }
 
 
@@ -981,6 +1009,7 @@ void F_CLI_Modules_Motion_PIDPosParam_MVmin(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motionControl->m_PIDPosition->m_mvRangeMin = res;
+    Serial.println("PID Position MV min value: " + String(manager->m_motionControl->m_PIDPosition->m_mvRangeMin));
 }
 
 
@@ -992,6 +1021,7 @@ void F_CLI_Modules_Motion_PIDPosParam_MVmax(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motionControl->m_PIDPosition->m_mvRangeMax = res;
+    Serial.println("PID Position MV max value: " + String(manager->m_motionControl->m_PIDPosition->m_mvRangeMax));
 }
 
 
@@ -1010,6 +1040,7 @@ void F_CLI_Modules_Motion_PIDAngleParam_Kp(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motionControl->m_PIDAngle->m_kp = res;
+    Serial.println("PID Angle Kp value: " + String(manager->m_motionControl->m_PIDAngle->m_kp));
 }
 
 
@@ -1021,6 +1052,7 @@ void F_CLI_Modules_Motion_PIDAngleParam_Ki(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motionControl->m_PIDAngle->m_ki = res;
+    Serial.println("PID Angle Ki value: " + String(manager->m_motionControl->m_PIDAngle->m_ki));
 }
 
 
@@ -1032,6 +1064,7 @@ void F_CLI_Modules_Motion_PIDAngleParam_Kd(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motionControl->m_PIDAngle->m_kd = res;
+    Serial.println("PID Angle Kd value: " + String(manager->m_motionControl->m_PIDAngle->m_kd));
 }
 
 
@@ -1043,6 +1076,7 @@ void F_CLI_Modules_Motion_PIDAngleParam_MVmin(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motionControl->m_PIDAngle->m_mvRangeMin = res;
+    Serial.println("PID Angle MV min value: " + String(manager->m_motionControl->m_PIDAngle->m_mvRangeMin));
 }
 
 
@@ -1054,6 +1088,31 @@ void F_CLI_Modules_Motion_PIDAngleParam_MVmax(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motionControl->m_PIDAngle->m_mvRangeMax = res;
+    Serial.println("PID Angle MV max value: " + String(manager->m_motionControl->m_PIDAngle->m_mvRangeMax));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Motion_SetSPAngle(){
+    float res = 0.0;
+    Serial.println("Enter SP Angle value:");
+    ActivateGetValueModeCLI();
+    res = insertedValueCLI.toFloat();
+    manager->m_motionControl->m_PIDAngle->SetSP(res);
+    Serial.println("Motion SP Angle: " + String(manager->m_motionControl->m_PIDAngle->m_SP));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Motion_SetSPPosition(){
+    float res = 0.0;
+    Serial.println("Enter SP Position value:");
+    ActivateGetValueModeCLI();
+    res = insertedValueCLI.toFloat() + manager->m_motionControl->m_PIDPosition->m_SP;
+    manager->m_motionControl->m_PIDPosition->SetSP(res);
+    Serial.println("Motion SP Position: " + String(manager->m_motionControl->m_PIDPosition->m_SP));
 }
 
 
@@ -1300,18 +1359,15 @@ void F_CLI_Test_Test3(){
 void F_CLI_Test_Test4(){
     manager->m_motionControl->m_PIDPitch->SetCycleTime(0.01);
     manager->m_motionControl->m_PIDPitch->SetParameters(15.0, 40.0, 0.4);
-    manager->m_motionControl->m_PIDPitch->SetMode(PIDMode::AUTO);
     manager->m_motionControl->m_PIDPitch->SetMVRange(-100.0, 100.0);
 
     manager->m_motionControl->m_PIDPosition->SetCycleTime(0.01);
     manager->m_motionControl->m_PIDPosition->SetParameters(5.0, 5.0, 0.8);
-    manager->m_motionControl->m_PIDPosition->SetMode(PIDMode::AUTO);
     manager->m_motionControl->m_PIDPosition->SetMVRange(-10.0, 10.0);
     manager->m_IMU->SetPitchOffset(-4.0);
 
     manager->m_motionControl->m_PIDAngle->SetCycleTime(0.01);
     manager->m_motionControl->m_PIDAngle->SetParameters(1.0, 2.0, 0.02);
-    manager->m_motionControl->m_PIDAngle->SetMode(PIDMode::AUTO);
     manager->m_motionControl->m_PIDAngle->SetMVRange(-100.0, 100.0);
 
     manager->m_motionControl->m_PIDPitch->Print();

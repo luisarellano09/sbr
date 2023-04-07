@@ -19,7 +19,7 @@
 
 PID::PID(PIDDirection_e direction){
     this->m_direction = direction;
-    this->m_mode = PIDMode::STOP;
+    this->m_mode = PIDMode::PID_STOP;
     this->m_prevError = 0.0;
     this->m_prevMVIntegral = 0.0;
 }
@@ -44,7 +44,7 @@ RC_e PID::Run(){
     double mvD = 0.0;
     double mvU = 0.0;
 
-    if (this->m_mode == PIDMode::AUTO){
+    if (this->m_mode == PIDMode::PID_START){
         // Error
         this->m_error = this->m_SP - this->m_PV;
         
@@ -73,7 +73,7 @@ RC_e PID::Run(){
         }
 
         // Assign Output
-        if (this->m_direction == PIDDirection_e::DIRECT){
+        if (this->m_direction == PIDDirection_e::PID_DIRECTION_DIRECT){
             this->m_MV = mvU;
         } else {
             this->m_MV = mvU * -1.0;
@@ -154,13 +154,25 @@ RC_e PID::SetMVRange(double mvRangeMin, double mvRangeMax){
 
 //=====================================================================================================
 
-RC_e PID::SetMode(PIDMode mode){
+RC_e PID::Start(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
-    this->m_mode = mode;
+    this->m_mode = PIDMode::PID_START;
+    Log.traceln("[PID::Start] PID Started");
 
-    Log.traceln("[PID::SetMode] Mode setted: %d", this->m_mode);
+    return retCode;
+}
+
+
+//=====================================================================================================
+
+RC_e PID::Stop(){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_mode = PIDMode::PID_STOP;
+    Log.traceln("[PID::Stop] PID stopped");
 
     return retCode;
 }
