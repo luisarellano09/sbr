@@ -33,6 +33,7 @@ Odometry::Odometry(Encoder* encoderLeft, Encoder* encoderRight, double radio, do
     this->SetX(0.0);
     this->SetY(0.0);
     this->SetAngle(0.0);
+    this->SetDistance(0.0);
 }
 
 
@@ -52,6 +53,8 @@ RC_e Odometry::Run(){
 
     double encoderLeftCount = (double)this->m_encoderLeft->GetCount();
     double encoderRightCount = (double)this->m_encoderRight->GetCount();
+
+    this->m_distance = PI * this->m_radio * (encoderLeftCount + encoderRightCount) / this->m_TR;
 
     this->m_angle += 360.0 * this->m_radio * ((encoderLeftCount - this->m_prevEncoderLeftCount) - (encoderRightCount - this->m_prevEncoderRightCount)) / (this->m_TR * this->m_D);
     this->m_x += PI * this->m_radio * ((encoderLeftCount - this->m_prevEncoderLeftCount) + (encoderRightCount - this->m_prevEncoderRightCount)) * cos(FACTOR_CONV_DEG_TO_RAD * this->m_angle) / this->m_TR;
@@ -97,7 +100,20 @@ RC_e Odometry::SetAngle(double angle){
     RC_e retCode = RC_e::SUCCESS;
 
     this->m_angle = angle;
-    Log.traceln("[Odometry::SetAngle] Anglesetted: ", this->m_angle);
+    Log.traceln("[Odometry::SetAngle] Angle setted: ", this->m_angle);
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
+RC_e Odometry::SetDistance(double distance){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_distance = distance;
+    Log.traceln("[Odometry::SetDistance] Distance setted: ", this->m_distance);
 
     return retCode;
 }
@@ -123,6 +139,12 @@ double Odometry::GetAngle(){
     return this->m_angle;
 }
 
+
+//=====================================================================================================
+
+double Odometry::GetDistance(){
+    return this->m_distance;
+}
 
 /*******************************************************************************************************************************************
  *  												PRIVATE METHODS

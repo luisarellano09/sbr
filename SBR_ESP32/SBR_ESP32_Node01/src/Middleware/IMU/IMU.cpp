@@ -112,6 +112,17 @@ RC_e IMU::InvertYaw(){
 }
 
 
+//=====================================================================================================
+
+RC_e IMU::SetPitchOffset(double pitchOffset){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_pitchOffset = pitchOffset;
+    return retCode;
+}
+
+
 /*******************************************************************************************************************************************
  *  												PRIVATE METHODS
  *******************************************************************************************************************************************/
@@ -136,7 +147,7 @@ RC_e IMU::Calculate(){
     }
 
     // Pitch
-    double tempPitch = FACTOR_CONV_RAD_TO_DEG * this->m_BNO080->getPitch();
+    double tempPitch = FACTOR_CONV_RAD_TO_DEG * this->m_BNO080->getPitch() + this->m_pitchOffset;
 
     if(this->m_invertPitch == false){
         this->m_Pitch = tempPitch;

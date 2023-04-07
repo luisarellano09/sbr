@@ -18,8 +18,8 @@
  * 
  */
 enum PIDDirection_e {
-    DIRECT = 0,
-	INVERT
+    PID_DIRECTION_DIRECT = 0,
+	PID_DIRECTION_INVERT
 };
 
 
@@ -29,8 +29,8 @@ enum PIDDirection_e {
  * 
  */
 enum PIDMode {
-    STOP = 0,
-    AUTO
+    PID_STOP = 0,
+    PID_START
 };
 
 #endif /* PIDCONFIG_H */

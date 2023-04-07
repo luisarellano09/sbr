@@ -77,6 +77,14 @@ public:
     RC_e SetAngle(double angle);
 
     /**
+     * @brief Set the Distance
+     * 
+     * @param distance Distance
+     * @return RC_e Result Code
+     */
+    RC_e SetDistance(double distance);
+
+    /**
      * @brief Get X coordinate
      * 
      * @return double X coordinate
@@ -97,6 +105,12 @@ public:
      */
     double GetAngle();
 
+    /**
+     * @brief Get the Distance
+     * 
+     * @return double Distance
+     */
+    double GetDistance();
 
 private:
 
@@ -104,6 +118,7 @@ private:
     Encoder* m_encoderRight = NULL;         /**@brief Encoder right */
     double m_x;                             /**@brief X coordinate */
     double m_y;                             /**@brief Y coordinate */
+    double m_distance;                      /**@brief Distance */
     double m_angle;                         /**@brief Angle */
     double m_radio;                         /**@brief Radio of the wheel*/            
     double m_D;                             /**@brief Distance between the wheels */

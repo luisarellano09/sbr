@@ -90,14 +90,16 @@ void DatalogDatasetIMU(){
 //=====================================================================================================
 
 void DatalogDatasetOdometry(){
-    Serial.printf("X,%.5f, Y,%.5f, Angle,%.2f, ", manager->m_odometry->GetX(), manager->m_odometry->GetY(), manager->m_odometry->GetAngle());
+    Serial.printf("Distance,%.5f , X,%.5f, Y,%.5f, Angle,%.2f, ", manager->m_odometry->GetDistance(), manager->m_odometry->GetX(), manager->m_odometry->GetY(), manager->m_odometry->GetAngle());
 }
 
 
 //=====================================================================================================
 
 void DatalogDatasetMotionControl(){
-    Serial.printf("SP,%.2f, PV,%.2f, E,%.2f, MV,%.2f, Kp,%.4f, Ki,%.4f, Kd,%.4f, T,%.2f, ", manager->m_motionControl->m_PIDPitch->m_SP, manager->m_motionControl->m_PIDPitch->m_PV, manager->m_motionControl->m_PIDPitch->m_error, manager->m_motionControl->m_PIDPitch->m_MV, manager->m_motionControl->m_PIDPitch->m_kp, manager->m_motionControl->m_PIDPitch->m_ki, manager->m_motionControl->m_PIDPitch->m_kd, manager->m_motionControl->m_PIDPitch->m_cycleTime);
+    Serial.printf("PoSP,%.5f, PoPV,%.5f, PoMV,%.1f, ", manager->m_motionControl->m_PIDPosition->m_SP, manager->m_motionControl->m_PIDPosition->m_PV, manager->m_motionControl->m_PIDPosition->m_MV);
+    Serial.printf("PiSP,%.1f, PiPV,%.1f, PiMV,%.1f, ", manager->m_motionControl->m_PIDPitch->m_SP, manager->m_motionControl->m_PIDPitch->m_PV, manager->m_motionControl->m_PIDPitch->m_MV);
+    Serial.printf("AnSP,%.1f, AnPV,%.1f, AnMV,%.1f, ", manager->m_motionControl->m_PIDAngle->m_SP, manager->m_motionControl->m_PIDAngle->m_PV, manager->m_motionControl->m_PIDAngle->m_MV);
 }
 
 

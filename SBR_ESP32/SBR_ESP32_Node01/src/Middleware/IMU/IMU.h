@@ -34,6 +34,7 @@ public:
     bool m_invertRoll = false;  /**@brief Invert Roll, 0=normal 1=invert */
     bool m_invertPitch = false; /**@brief Invert Pitch, 0=normal 1=invert */
     bool m_invertYaw = false;   /**@brief Invert Yaw, 0=normal 1=invert */
+    double m_pitchOffset = 0.0; /**@brief Pitch Offset */
 
     double m_initialYaw = -999999999999.9;
     int m_numberOfTurns = 0;
@@ -87,6 +88,14 @@ public:
      * @return RC_e Result code.
      */
     RC_e InvertYaw();
+
+    /**
+     * @brief Set the Pitch Offset
+     * 
+     * @param pitchOffset Pitch Offset
+     * @return RC_e RC_e Result code.
+     */
+    RC_e SetPitchOffset(double pitchOffset);
 
    
 private:
