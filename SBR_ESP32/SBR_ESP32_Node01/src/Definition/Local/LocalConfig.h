@@ -182,4 +182,23 @@
 #define IMU_PS1_GPIO 12
 
 
+// ========================== ODOMETRY =====================
+/**
+ * @brief ODOMETRY_RADIO
+ * 
+ */
+#define ODOMETRY_RADIO (double)0.035 
+
+/**
+ * @brief ODOMETRY_DISTANCE_WHEELS
+ * 
+ */
+#define ODOMETRY_DISTANCE_WHEELS (double)0.231
+
+/**
+ * @brief ODOMETRY_TICKS_REVOLUTION
+ * 
+ */
+#define ODOMETRY_TICKS_REVOLUTION 960 
+
 #endif /* LOCALCONFIG_H */
