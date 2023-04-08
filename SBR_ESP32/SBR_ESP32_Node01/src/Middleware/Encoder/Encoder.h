@@ -66,9 +66,10 @@ public:
      */
     RC_e Print();  
 
+
 private:
 
-    ESP32Encoder m_ESP32Encoder = NULL;     /**@brief ESP32 Encoder object */
+    ESP32Encoder* m_ESP32Encoder = NULL;    /**@brief ESP32 Encoder object */
     uint8_t m_channel;                      /**@brief Encoder Channel */
     uint8_t m_channelAPin;                  /**@brief Pin of channel A */
     uint8_t m_channelBPin;                  /**@brief Pin of channel B */
