@@ -2,7 +2,6 @@
  * @file MotionControl.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Motion Control Class
- * @date 29.03.2023
  * 
  */
 
@@ -18,6 +17,7 @@
 #include "../../Middleware/Odometry/Odometry.h"
 #include "../../Middleware/Motor/Motor.h"
 #include "../../Definition/Global/RC.h"
+
 
 /*******************************************************************************************************************************************
  *  												CLASS
@@ -82,6 +82,7 @@ public:
      * @return RC_e 
      */
     RC_e Stop();
+
 
 private:
 

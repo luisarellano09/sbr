@@ -2,9 +2,6 @@
  * @file Manager.cpp
  * @author Luis Arellano - luis.arellano09@gmail.com
  * @brief Class to Manage the ESP32
- * @version 2.0
- * @date 09.01.2021
- * 
  * 
  */
 

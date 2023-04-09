@@ -2,8 +2,6 @@
  * @file Register.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to describe a register
- * @version 1.0
- * @date 14.09.2022
  * 
  */
 

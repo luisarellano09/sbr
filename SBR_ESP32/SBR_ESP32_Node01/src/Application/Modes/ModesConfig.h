@@ -1,10 +1,7 @@
 /**
  * @file ModesConfig.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief ModesConfig
- * @version 1.0
- * @date 19.02.2023
- * 
+ * @brief Modes Config
  * 
  */
 

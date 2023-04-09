@@ -2,8 +2,6 @@
  * @file NodeEsp32.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to Manage the NodeEsp32
- * @version 1.0
- * @date 16.10.2022
  * 
  */
 
@@ -16,25 +14,30 @@
 #include <Arduino.h>
 #include "../../../Middleware/CommunicationBus/Node/Node.h"
 
+
 /*******************************************************************************************************************************************
  *  												CLASS
  *******************************************************************************************************************************************/
 
 /**
- * @brief Class to Manage the Node
+ * @brief Class to Manage the NodeESP32
  * 
  */
 class NodeEsp32: public Node {
 public:  
 
     /**
-     * @brief Construct a new mastermanager object
+     * @brief Construct a new Node Esp 3 2 object
      * 
+     * @param serial Serial port
+     * @param baud Baudrate
+     * @param RX RX Pin
+     * @param TX TX Pin
      */
     NodeEsp32(HardwareSerial* serial, uint32_t baud, uint8_t RX, uint8_t TX);
 
     /**
-     * @brief Destroy the mastermanager object
+     * @brief Destroy the NodeESP32 object
      * 
      */
     ~NodeEsp32();

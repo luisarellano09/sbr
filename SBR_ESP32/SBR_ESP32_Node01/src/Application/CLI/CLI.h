@@ -2,15 +2,11 @@
  * @file CLI.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief CLI
- * @version 1.0
- * @date 15.02.2023
- * 
  * 
  */
 
 #ifndef CLI_H
 #define CLI_H
-
 
 /*******************************************************************************************************************************************
  *  												INCLUDES

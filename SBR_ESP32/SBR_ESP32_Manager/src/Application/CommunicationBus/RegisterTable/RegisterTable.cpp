@@ -2,8 +2,6 @@
  * @file RegisterTable.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to describe the Data Table
- * @version 1.0
- * @date 16.10.2022
  * 
  */
 
@@ -12,6 +10,7 @@
  *******************************************************************************************************************************************/
 #include "RegisterTable.h"
 #include <ArduinoLog.h>
+
 
 /*******************************************************************************************************************************************
  *  												CONSTRUCTOR
@@ -127,13 +126,13 @@ RC_e RegisterTable::HandleRequest(Request* request){
     Log.traceln("[RegisterTable::HandleRequest] Request received: nodeId=%d, reqType=%d, regId=%d, data=%d, CRC=%d", request->nodeId, request->reqType, request->regId, request->data, request->CRC);
 
     // Evaluate type of Request from node
-    if (request->reqType == COM_REQUEST_TYPE_e::WRITE){
+    if (request->reqType == COM_REQUEST_TYPE_e::REQUEST_WRITE){
         // Update Register
         if ((retCode = this->UpdateRegister((COM_REQUEST_REG_ID_e)request->regId, request->data)) != RC_e::SUCCESS){
             Log.errorln("[RegisterTable::HandleRequest] Error in UpdateRegister()");
             return retCode;
         }
-    } else if (request->reqType == COM_REQUEST_TYPE_e::READ){
+    } else if (request->reqType == COM_REQUEST_TYPE_e::REQUEST_READ){
         //ToDo implement read request
     }
 
@@ -165,7 +164,7 @@ RC_e RegisterTable::AddRequestToSubscribers(COM_REQUEST_REG_ID_e regId, int32_t 
 
             Log.traceln("[RegisterTable::AddRequestToSubscribers] Adding request to Linux Node: [%u]=%d", regId, data);
 
-            if ((retCode = this->m_NodeLinux->AddRequest((DEVICE_e)subscriber, COM_REQUEST_TYPE_e::WRITE, (COM_REQUEST_REG_ID_e)regId, data)) != RC_e::SUCCESS){
+            if ((retCode = this->m_NodeLinux->AddRequest((DEVICE_e)subscriber, COM_REQUEST_TYPE_e::REQUEST_WRITE, (COM_REQUEST_REG_ID_e)regId, data)) != RC_e::SUCCESS){
                 Log.errorln("[RegisterTable::AddRequestToSubscribers] Error in AddRequest()");
                 return retCode;
             }
@@ -176,7 +175,7 @@ RC_e RegisterTable::AddRequestToSubscribers(COM_REQUEST_REG_ID_e regId, int32_t 
 
             Log.traceln("[RegisterTable::AddRequestToSubscribers] Adding request to ESP32 Node[%u]: [%u]=%d", subscriber, regId, data);
             
-            if ((retCode = this->m_NodeESP32->AddRequest((DEVICE_e)subscriber, COM_REQUEST_TYPE_e::WRITE, (COM_REQUEST_REG_ID_e)regId, data)) != RC_e::SUCCESS){
+            if ((retCode = this->m_NodeESP32->AddRequest((DEVICE_e)subscriber, COM_REQUEST_TYPE_e::REQUEST_WRITE, (COM_REQUEST_REG_ID_e)regId, data)) != RC_e::SUCCESS){
                 Log.errorln("[RegisterTable::AddRequestToSubscribers] Error in AddRequest()");
                 return retCode;
             }

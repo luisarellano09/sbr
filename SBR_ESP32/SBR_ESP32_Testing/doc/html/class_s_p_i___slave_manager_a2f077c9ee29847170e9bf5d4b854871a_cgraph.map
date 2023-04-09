@@ -1,8 +1,0 @@
-<map id="SPI_SlaveManager::HandleReadRequest" name="SPI_SlaveManager::HandleReadRequest">
-<area shape="rect" id="node1" title="Handle a Read&#45;type request." alt="" coords="5,99,201,141"/>
-<area shape="rect" id="node2" href="$class_simple_array.html#aa9e9e941eb7a273c613bd039d8ac9fc2" title=" " alt="" coords="284,5,441,32"/>
-<area shape="rect" id="node3" href="$_utility_8h.html#a92fd1cc3fb432cde66fb1af15078cc16" title="Calculate CRC of a request." alt="" coords="267,56,458,83"/>
-<area shape="rect" id="node4" href="$_utility_8h.html#a16e3637a67aa53dc443e5c33a34b9c3d" title="Convert Request to Buffer format." alt="" coords="524,81,653,108"/>
-<area shape="rect" id="node5" href="$class_s_p_i___slave_manager.html#adfdb91b0b368278a1a9f12c73f67eac8" title="Clean Buffer of requests." alt="" coords="249,157,476,184"/>
-<area shape="rect" id="node6" href="$class_slave_s_p_i.html#a7409c14fdb1fc101041851a7a9a07a33" title=" " alt="" coords="269,208,456,235"/>
-</map>

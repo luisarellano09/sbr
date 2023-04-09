@@ -2,8 +2,6 @@
  * @file Devices.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Devices
- * @version 1.0
- * @date 08.02.2023
  * 
  */
 

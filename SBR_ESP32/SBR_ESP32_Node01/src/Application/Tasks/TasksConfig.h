@@ -2,9 +2,6 @@
  * @file TasksConfig.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Declarations of the Tasks class
- * @version 1.0
- * @date 03.02.2023
- * 
  * 
  */
 
@@ -68,66 +65,77 @@ void MonitorTasks();
 /**
  * @brief Print Task information
  * 
+ * @param task Task Handle
  */
 void PrintTaskInfo(TaskHandle_t* task);
 
 /**
- * @brief TaskCLI 
+ * @brief TaskCLI
  * 
+ * @param parameter Parameter
  */
 void TaskCLI(void *parameter);
 
 /**
  * @brief TaskGetValueCLI 
  * 
+ * @param parameter Parameter
  */
 void TaskGetValueCLI(void *parameter);
 
 /**
  * @brief TaskOTA 
  * 
+ * @param parameter Parameter
  */
 void TaskOTA(void *parameter);
 
 /**
  * @brief TaskNodeESP32 
  * 
+ * @param parameter Parameter
  */
 void TaskNodeESP32(void *parameter);
 
 /**
  * @brief TaskIMU
  * 
+ * @param parameter Parameter
  */
 void TaskIMU(void *parameter);
 
 /**
  * @brief TaskOdometry
  * 
+ * @param parameter Parameter
  */
 void TaskOdometry(void *parameter);
 
 /**
  * @brief TaskMotion
  * 
+ * @param parameter Parameter
  */
 void TaskMotionControl(void *parameter);
 
 /**
  * @brief Task Modes
  * 
+ * @param parameter Parameter
  */
 void TaskModes(void *parameter);
 
 /**
  * @brief Task Datalog
  * 
+ * @param parameter Parameter
  */
 void TaskDatalog(void *parameter);
 
 /**
  * @brief TaskReg10 
  * 
+ * @param parameter Parameter
  */
 void TaskReg10(void *parameter);
 

@@ -1,10 +1,7 @@
 /**
  * @file CLIConfig.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief CLIConfig
- * @version 1.0
- * @date 15.02.2023
- * 
+ * @brief CLI Config
  * 
  */
 
@@ -268,6 +265,5 @@ void F_CLI_Test_Test6();
 void F_CLI_Test_Test7();
 void F_CLI_Test_Test8();
 void F_CLI_Test_Test9();
-
 
 #endif // CLICONFIG_H

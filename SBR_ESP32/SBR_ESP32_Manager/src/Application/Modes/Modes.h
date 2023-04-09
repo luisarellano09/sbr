@@ -1,16 +1,12 @@
 /**
  * @file Modes.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief Modes
- * @version 1.0
- * @date 19.02.2023
- * 
+ * @brief Modes of the robot
  * 
  */
 
 #ifndef MODES_H
 #define MODES_H
-
 
 /*******************************************************************************************************************************************
  *  												INCLUDES

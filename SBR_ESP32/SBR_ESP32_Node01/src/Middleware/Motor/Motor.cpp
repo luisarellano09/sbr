@@ -2,7 +2,6 @@
  * @file Motor.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to control a motor
- * @date 26.02.2023
  * 
  */
 
@@ -59,7 +58,7 @@ RC_e Motor::SetSpeed(double speed){
 
         this->m_speed = speed;
         
-        if (m_direction == MotorDirection_e::INVERTED){
+        if (m_direction == MotorDirection_e::MOTOR_DIRECTION_INVERTED){
             speed *= -1.0;
         }
 

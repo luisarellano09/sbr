@@ -2,14 +2,11 @@
  * @file RegisterTableDef.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Register Table
- * @version 1.0
- * @date 08.02.2023
  * 
  */
 
 #ifndef REGISTERTABLEDEF_H
 #define REGISTERTABLEDEF_H
-
 
 /**
  * @brief Enumeration for SBR registers IDs. The number defines the register offset

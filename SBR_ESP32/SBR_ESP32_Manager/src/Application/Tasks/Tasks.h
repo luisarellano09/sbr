@@ -2,9 +2,6 @@
  * @file Tasks.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Tasks
- * @version 1.0
- * @date 03.02.2023
- * 
  * 
  */
 
@@ -125,6 +122,5 @@ void TaskModes(void *parameter){
         vTaskDelay(TimerTaskModes);
     }
 }
-
 
 #endif // TASKS_H

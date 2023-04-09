@@ -2,7 +2,6 @@
  * @file PID.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief PID Class
- * @date 28.03.2023
  * 
  */
 
@@ -15,6 +14,7 @@
 #include "PIDConfig.h"
 #include <Arduino.h>
 #include "../../Definition/Global/RC.h"
+
 
 /*******************************************************************************************************************************************
  *  												CLASS

@@ -2,7 +2,6 @@
  * @file MotorConfig.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Config for the Motor Class
- * @date 26.02.2023
  * 
  */
 
@@ -42,8 +41,8 @@ enum PWMChannel_e {
  * 
  */
 enum MotorDirection_e {
-    NORMAL = 0,
-    INVERTED
+    MOTOR_DIRECCTION_NORMAL = 0,
+    MOTOR_DIRECTION_INVERTED
 };
 
 #endif /* MOTORCONFIG_H */

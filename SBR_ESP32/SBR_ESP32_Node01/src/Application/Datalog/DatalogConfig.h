@@ -2,9 +2,6 @@
  * @file DatalogConfig.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Declarations of the Datalog
- * @version 1.0
- * @date 02.04.2023
- * 
  * 
  */
 
