@@ -28,15 +28,6 @@
 class Motor {
 public:  
 
-    PWMChannel_e m_pwmChannel;      /**@brief PWM Channel */
-    uint8_t m_pwmPin;               /**@brief PWM Pin */
-    double m_frequency;             /**@brief PWM Frecuency */
-    uint8_t m_resolution;           /**@brief PWM resolution 1-20 bits */
-    double m_offset;                /**@brief Correction offset */
-    uint8_t m_dirPin;               /**@brief Pin to control the direction */
-    MotorDirection_e m_direction;   /**@brief Invert the motor direction 0=Normal, 1=Invert */
-    double m_speed = 0.0;           /**@brief Motor Speed */
-
     /**
      * @brief Construct a new Motor object
      * 
@@ -65,6 +56,13 @@ public:
     RC_e SetSpeed(double speed);
 
     /**
+     * @brief Get the Speed
+     * 
+     * @return double Speed
+     */
+    double GetSpeed();
+
+    /**
      * @brief Stop the motor
      * 
      * @return RC_e Result code
@@ -76,9 +74,18 @@ public:
      * 
      * @return RC_e Result code
      */
-    RC_e Print();  
+    RC_e Print();
 
 private:
+
+    PWMChannel_e m_pwmChannel;      /**@brief PWM Channel */
+    uint8_t m_pwmPin;               /**@brief PWM Pin */
+    double m_frequency;             /**@brief PWM Frecuency */
+    uint8_t m_resolution;           /**@brief PWM resolution 1-20 bits */
+    double m_offset;                /**@brief Correction offset */
+    uint8_t m_dirPin;               /**@brief Pin to control the direction */
+    MotorDirection_e m_direction;   /**@brief Invert the motor direction 0=Normal, 1=Invert */
+    double m_speed = 0.0;           /**@brief Motor Speed */
 
     /**
      * @brief Initializate the Motor

@@ -79,14 +79,19 @@ RC_e Motor::SetSpeed(double speed){
 
 //=====================================================================================================
 
+double Motor::GetSpeed(){
+    return this->m_speed;
+}
+
+
+//=====================================================================================================
+
 RC_e Motor::Stop(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
     digitalWrite(this->m_dirPin, LOW); 
     ledcWrite(this->m_pwmChannel,0);
-
-    Log.traceln("[Motor::SetSpeed] Motor[%d] stopped", this->m_pwmChannel);
 
     return retCode;
 }

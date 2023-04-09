@@ -710,7 +710,7 @@ void F_CLI_Modules_Motors_SetSpeedMotorLeft(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motorLeft->SetSpeed(res);
-    Serial.println("Left Motor Speed: " + String(manager->m_motorLeft->m_speed));
+    Serial.println("Left Motor Speed: " + String(manager->m_motorLeft->GetSpeed()));
 }
 
 
@@ -722,7 +722,7 @@ void F_CLI_Modules_Motors_SetSpeedMotorRight(){
     ActivateGetValueModeCLI();
     res = insertedValueCLI.toFloat();
     manager->m_motorRight->SetSpeed(res);
-    Serial.println("Right Motor Speed: " + String(manager->m_motorRight->m_speed));
+    Serial.println("Right Motor Speed: " + String(manager->m_motorRight->GetSpeed()));
 }
 
 

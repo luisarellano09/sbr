@@ -76,7 +76,7 @@ void Datalog(){
 //=====================================================================================================
 
 void DatalogDatasetMotor(){
-    Serial.printf("ML,%.2f, MR,%.2f, ", manager->m_motorLeft->m_speed, manager->m_motorRight->m_speed);
+    Serial.printf("ML,%.2f, MR,%.2f, ", manager->m_motorLeft->GetSpeed(), manager->m_motorRight->GetSpeed());
 }
 
 
