@@ -744,7 +744,7 @@ void F_CLI_Modules_IMU(){
 //=====================================================================================================
 
 void F_CLI_Modules_IMU_RotationVector(){
-    Serial.printf("m_Pitch= %f, m_Roll= %f, m_Yaw= %f\r\n", manager->m_IMU->m_Pitch, manager->m_IMU->m_Roll, manager->m_IMU->m_Yaw);
+    Serial.printf("m_Pitch= %f, m_Roll= %f, m_Yaw= %f\r\n", manager->m_IMU->GetPitch(), manager->m_IMU->GetRoll(), manager->m_IMU->GetYaw());
 }
 
 

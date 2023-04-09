@@ -83,7 +83,7 @@ void DatalogDatasetMotor(){
 //=====================================================================================================
 
 void DatalogDatasetIMU(){
-    Serial.printf("Pitch,%.2f, Yaw,%.2f, Roll,%.2f, ", manager->m_IMU->m_Pitch, manager->m_IMU->m_Yaw, manager->m_IMU->m_Roll);
+    Serial.printf("Pitch,%.2f, Yaw,%.2f, Roll,%.2f, ", manager->m_IMU->GetPitch(), manager->m_IMU->GetYaw(), manager->m_IMU->GetRoll());
 }
 
 

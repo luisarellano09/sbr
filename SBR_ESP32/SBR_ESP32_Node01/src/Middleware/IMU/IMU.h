@@ -28,19 +28,6 @@
 class IMU {
 public:  
 
-    double m_Roll = 0.0;        /**@brief IMU Roll: Front inclination. */
-    double m_Pitch = 0.0;       /**@brief IMU Pitch: Lateral inclination. */
-    double m_Yaw = 0.0;         /**@brief IMU Yaw: Rotation. */
-    bool m_invertRoll = false;  /**@brief Invert Roll, 0=normal 1=invert */
-    bool m_invertPitch = false; /**@brief Invert Pitch, 0=normal 1=invert */
-    bool m_invertYaw = false;   /**@brief Invert Yaw, 0=normal 1=invert */
-    double m_pitchOffset = 0.0; /**@brief Pitch Offset */
-
-    double m_initialYaw = -999999999999.9;
-    int m_numberOfTurns = 0;
-    uint8_t m_quadrant;
-    uint8_t m_quadrantPrev;	
-
     /**
      * @brief Construct a new object
      * 
@@ -97,10 +84,43 @@ public:
      */
     RC_e SetPitchOffset(double pitchOffset);
 
+    /**
+     * @brief Get the Roll
+     * 
+     * @return double Roll
+     */
+    double GetRoll();
+
+    /**
+     * @brief Get the Pitch
+     * 
+     * @return double Pitch
+     */
+    double GetPitch();
+
+    /**
+     * @brief Get the Yaw
+     * 
+     * @return double Yaw
+     */
+    double GetYaw();
+
    
 private:
 
-    BNO080* m_BNO080 = NULL;        /**@brief Instance of the BNO080 IMU sensor. */
+    BNO080* m_BNO080 = NULL;            /**@brief Instance of the BNO080 IMU sensor. */
+    double m_Roll = 0.0;                /**@brief IMU Roll: Front inclination. */
+    double m_Pitch = 0.0;               /**@brief IMU Pitch: Lateral inclination. */
+    double m_Yaw = 0.0;                 /**@brief IMU Yaw: Rotation. */
+    bool m_invertRoll = false;          /**@brief Invert Roll, 0=normal 1=invert */
+    bool m_invertPitch = false;         /**@brief Invert Pitch, 0=normal 1=invert */
+    bool m_invertYaw = false;           /**@brief Invert Yaw, 0=normal 1=invert */
+    double m_pitchOffset = 0.0;         /**@brief Pitch Offset */
+
+    double m_initialYaw = -99999999.9;  /**@brief Initial Yaw */
+    int m_numberOfTurns = 0;            /**@brief Number of turns */
+    uint8_t m_quadrant = 0;             /**@brief Quadrant */
+    uint8_t m_quadrantPrev = 0;         /**@brief Previous quadrant */	
 
     /**
      * @brief Calculate the IMU values

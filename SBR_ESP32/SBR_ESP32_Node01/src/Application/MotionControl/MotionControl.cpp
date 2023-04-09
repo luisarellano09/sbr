@@ -45,7 +45,7 @@ RC_e MotionControl::Run(){
     this->count++;
 
     // Check if the Robot is down
-    if (this->m_IMU->m_Pitch > 55.0 || this->m_IMU->m_Pitch < -55.0) {
+    if (this->m_IMU->GetPitch() > 55.0 || this->m_IMU->GetPitch() < -55.0) {
         m_motorLeft->Stop();
         m_motorRight->Stop();
     } else {
@@ -65,7 +65,7 @@ RC_e MotionControl::Run(){
 
         // PID Pitch
         this->m_PIDPitch->SetSP(this->m_PIDPosition->GetMV());
-        this->m_PIDPitch->SetPV(this->m_IMU->m_Pitch);
+        this->m_PIDPitch->SetPV(this->m_IMU->GetPitch());
         this->m_PIDPitch->Run();
         
         // Assign speed to Motors
