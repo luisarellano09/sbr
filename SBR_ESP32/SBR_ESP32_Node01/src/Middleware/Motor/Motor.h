@@ -2,7 +2,6 @@
  * @file Motor.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to control a motor
- * @date 26.02.2023
  * 
  */
 
@@ -39,7 +38,7 @@ public:
      * @param dirPin GPIO PIN to control the motor direction
      * @param direction Direction of the Motor
      */
-    Motor(PWMChannel_e pwmChannel, uint8_t pwmPin, double frequency, uint8_t resolution, double offset, uint8_t dirPin, MotorDirection_e direction = MotorDirection_e::NORMAL);
+    Motor(PWMChannel_e pwmChannel, uint8_t pwmPin, double frequency, uint8_t resolution, double offset, uint8_t dirPin, MotorDirection_e direction = MotorDirection_e::MOTOR_DIRECCTION_NORMAL);
 
     /**
      * @brief Destructor

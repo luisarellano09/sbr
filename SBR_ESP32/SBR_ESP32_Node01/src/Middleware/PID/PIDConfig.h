@@ -2,7 +2,6 @@
  * @file PIDConfig.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Config for the PID Class
- * @date 28.03.2023
  * 
  */
 

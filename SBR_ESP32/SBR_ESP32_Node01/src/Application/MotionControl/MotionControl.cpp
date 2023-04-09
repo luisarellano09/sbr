@@ -2,7 +2,6 @@
  * @file MotionControl.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Motion Control Class
- * @date 29.03.2023
  * 
  */
 

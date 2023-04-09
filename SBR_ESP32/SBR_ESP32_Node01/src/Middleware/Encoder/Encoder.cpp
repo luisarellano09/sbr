@@ -2,7 +2,6 @@
  * @file Encoder.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Encoder class
- * @date 05.04.2023
  * 
  */
 

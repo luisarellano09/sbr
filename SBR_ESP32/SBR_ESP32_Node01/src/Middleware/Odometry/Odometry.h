@@ -2,7 +2,6 @@
  * @file Odometry.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Odometry Class
- * @date 05.04.2023
  * 
  */
 

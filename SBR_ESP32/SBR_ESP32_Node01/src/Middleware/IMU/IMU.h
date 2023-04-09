@@ -2,8 +2,6 @@
  * @file IMU.h
  * @author Luis Arellano - luis.arellano09@gmail.com
  * @brief IMU Class
- * @version 1.0
- * @date 15.03.2023
  * 
  */
 
@@ -29,8 +27,18 @@ class IMU {
 public:  
 
     /**
-     * @brief Construct a new object
+     * @brief Construct a new IMU object
      * 
+     * @param user_CSPin CS Pin
+     * @param user_WAKPin WAK Pin
+     * @param user_INTPin INT Pin
+     * @param user_RSTPin RST Pin
+     * @param spiPortSpeed SPI Port Speed
+     * @param CLK_IMU CLK Pin
+     * @param MISO_IMU MISO Pin
+     * @param MOSI_IMU MOSI Pin
+     * @param PS0_IMU PSO Pin
+     * @param PS1_IMU PS1 Pin
      */
     IMU(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_INTPin, uint8_t user_RSTPin, uint32_t spiPortSpeed, uint8_t CLK_IMU, uint8_t MISO_IMU, uint8_t MOSI_IMU, uint8_t PS0_IMU, uint8_t PS1_IMU);
 
@@ -80,7 +88,7 @@ public:
      * @brief Set the Pitch Offset
      * 
      * @param pitchOffset Pitch Offset
-     * @return RC_e RC_e Result code.
+     * @return RC_e Result code.
      */
     RC_e SetPitchOffset(double pitchOffset);
 

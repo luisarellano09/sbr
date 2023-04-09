@@ -2,8 +2,6 @@
  * @file NodeHandler.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Handler of the Node
- * @version 1.0
- * @date 13.02.2023
  * 
  */
 
@@ -17,6 +15,10 @@
 #include "../../Tasks/Tasks.h"
 #include <ArduinoLog.h>
 
+
+/*******************************************************************************************************************************************
+ *  												DEFINITION FUNCTIONS
+ *******************************************************************************************************************************************/
 
 RC_e ExtHandler(Request* request){
     
@@ -37,9 +39,7 @@ RC_e ExtHandler(Request* request){
             xQueueSend(queue_Register10, &data_Register10, 0);
             break;
         }
-     
     }
-
 
     return retCode;
 }

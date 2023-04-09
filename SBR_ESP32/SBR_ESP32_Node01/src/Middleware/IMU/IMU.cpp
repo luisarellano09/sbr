@@ -2,8 +2,6 @@
  * @file IMU.cpp
  * @author Luis Arellano - luis.arellano09@gmail.com
  * @brief IMU Class
- * @version 1.0
- * @date 15.03.2023
  * 
  */
 

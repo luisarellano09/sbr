@@ -2,9 +2,6 @@
  * @file Datalog.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Datalog
- * @version 1.0
- * @date 02.04.2023
- * 
  * 
  */
 
@@ -101,7 +98,5 @@ void DatalogDatasetMotionControl(){
     Serial.printf("PiSP,%.1f, PiPV,%.1f, PiMV,%.1f, ", manager->m_motionControl->m_PIDPitch->GetSP(), manager->m_motionControl->m_PIDPitch->GetPV(), manager->m_motionControl->m_PIDPitch->GetMV());
     Serial.printf("AnSP,%.1f, AnPV,%.1f, AnMV,%.1f, ", manager->m_motionControl->m_PIDAngle->GetSP(), manager->m_motionControl->m_PIDAngle->GetPV(), manager->m_motionControl->m_PIDAngle->GetMV());
 }
-
-
 
 #endif // DATALOG_H

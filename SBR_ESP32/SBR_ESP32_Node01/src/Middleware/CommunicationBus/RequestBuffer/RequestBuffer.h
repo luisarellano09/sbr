@@ -2,9 +2,6 @@
  * @file RequestBuffer.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to describe the Buffer of requests
- * @version 1.0
- * @date 16.10.2022
- * 
  * 
  */
 
@@ -20,6 +17,7 @@
 #include "../../../Definition/Global/GlobalConfig.h"
 #include "../Request/RequestConfig.h"
 #include "../Request/Request.h"
+
 
 /*******************************************************************************************************************************************
  *  												CLASS

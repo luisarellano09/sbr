@@ -2,8 +2,6 @@
  * @file GlobalConfig.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Global Config
- * @version 1.0
- * @date 08.02.2023
  * 
  */
 

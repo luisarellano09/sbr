@@ -2,7 +2,6 @@
  * @file PID.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief PID Class
- * @date 28.03.2023
  * 
  */
 
@@ -383,6 +382,3 @@ RC_e PID::Print(){
 
     return retCode;
 }
-
-
-

@@ -2,8 +2,6 @@
  * @file Manager.h
  * @author Luis Arellano - luis.arellano09@gmail.com
  * @brief Class to Manage the ESP32
- * @version 1.0
- * @date 16.10.2022
  * 
  */
 
