@@ -2,8 +2,6 @@
  * @file Request.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to describe a request
- * @version 1.0
- * @date 14.09.2022
  * 
  */
 
@@ -37,7 +35,7 @@ Request::~Request(){}
 
 RC_e Request::Clean(){
     this->nodeId = DEVICE_e::NONE_DEVICE;
-    this->reqType = COM_REQUEST_TYPE_e::NONE;
+    this->reqType = COM_REQUEST_TYPE_e::REQUEST_NONE;
     this->regId = COM_REQUEST_REG_ID_e::NONE_REG_ID;
     this->data = 0;
     this->CRC = 0;

@@ -2,9 +2,6 @@
  * @file ModesConfig.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief ModesConfig
- * @version 1.0
- * @date 19.02.2023
- * 
  * 
  */
 
@@ -103,8 +100,9 @@ void InitModes();
 //=====================================================================================================
 
 /**
- * @brief Start Mode
+ * @brief Start a Mode
  * 
+ * @param mode Mode
  */
 void StartMode(Modes_e mode);
 
@@ -112,8 +110,9 @@ void StartMode(Modes_e mode);
 //=====================================================================================================
 
 /**
- * @brief Stop Mode
+ * @brief Stop a Mode
  * 
+ * @param mode Mode
  */
 void StopMode(Modes_e mode);
 
@@ -132,6 +131,7 @@ void RunModes();
 /**
  * @brief State Machine: Idle Mode
  * 
+ * @param mode Mode
  */
 void SM_ModeIdle(Modes_e mode);
 
@@ -141,6 +141,7 @@ void SM_ModeIdle(Modes_e mode);
 /**
  * @brief State Machine: Program Mode
  * 
+ * @param mode Mode
  */
 void SM_ModeProgram(Modes_e mode);
 

@@ -2,8 +2,6 @@
  * @file RegisterTable.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to manage a Table of registers
- * @version 1.0
- * @date 16.10.2022
  * 
  */
 
@@ -16,6 +14,7 @@
 #include "../../../Definition/Global/RC.h"
 #include "../../../Middleware/CommunicationBus/Register/Register.h"
 #include "../../../Middleware/CommunicationBus/Node/Node.h"
+
 
 /*******************************************************************************************************************************************
  *  												CLASS
@@ -31,8 +30,10 @@ public:
     Register m_registers[COM_REQUEST_REG_ID_e::LENGTH_REG_ID];      /**@brief Array of registers*/
 
     /**
-     * @brief Constructor
+     * @brief Construct a new Register Table object
      * 
+     * @param NodeESP32 NodeESP32 reference
+     * @param NodeLinux NodeLinux reference
      */
     RegisterTable(Node* NodeESP32, Node* NodeLinux);
 
@@ -87,8 +88,8 @@ public:
 
 private:
 
-    Node* m_NodeESP32 = NULL;                                       /**@brief Esp32 node*/
-    Node* m_NodeLinux = NULL;                                       /**@brief Linux node*/
+    Node* m_NodeESP32 = NULL;       /**@brief Esp32 node*/
+    Node* m_NodeLinux = NULL;       /**@brief Linux node*/
 
     /**
      * @brief Function to clean registers

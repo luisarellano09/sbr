@@ -2,9 +2,6 @@
  * @file main.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief main
- * @version 1.0
- * @date 03.02.2023
- * 
  * 
  */
 
@@ -69,7 +66,5 @@ void InitMain(){
     InitModes();
 
 }
-
-
 
 #endif // MAIN_H

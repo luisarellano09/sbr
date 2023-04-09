@@ -2,9 +2,6 @@
  * @file Utility.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Library with various functions
- * @version 1.0
- * @date 16.10.2022
- * 
  * 
  */
 
@@ -17,6 +14,7 @@
 #include "../../../Definition/Global/RC.h"
 #include "../../../Definition/Global/GlobalConfig.h"
 #include "../Request/Request.h"
+
 
 /*******************************************************************************************************************************************
  *  												REQUEST COMMUNICATION
@@ -49,7 +47,9 @@ static RC_e RequestToBuffer(Request* request, uint8_t* buffer){
     return RC_e::SUCCESS;
 }
 
+
 //=====================================================================================================
+
 /**
  * @brief Function to convert buffer to request format
  * 
@@ -85,6 +85,7 @@ static RC_e BufferToRequest(uint8_t* buffer, Request* request){
 
     return RC_e::SUCCESS;
 }
+
 
 /*******************************************************************************************************************************************
  *  												CRC
@@ -129,7 +130,9 @@ static const uint16_t Calc16CrcTab[256] = {
    0x6e17,0x7e36,0x4e55,0x5e74,0x2e93,0x3eb2,0x0ed1,0x1ef0
 };
 
+
 //=====================================================================================================
+
 /**
  * @brief Function to calculate CRC of a request
  * 
@@ -158,7 +161,9 @@ static uint16_t CalculateCrcFromRequest(Request* request){
             Calc16CrcTab[tempBuffer[5]];
 }
 
+
 //=====================================================================================================
+
 /**
  * @brief Function to check if CRC is Ok
  * 

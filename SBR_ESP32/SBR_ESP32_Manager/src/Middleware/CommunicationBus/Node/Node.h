@@ -2,11 +2,8 @@
  * @file Node.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to manage the communication node
- * @version 1.0
- * @date 10.09.2022
  * 
  */
-
 
 #ifndef NODE_H
 #define NODE_H
@@ -17,6 +14,7 @@
 #include <Arduino.h>
 #include "../../../Definition/Global/RC.h"
 #include "../RequestBuffer/RequestBuffer.h"
+
 
 /*******************************************************************************************************************************************
  *  												CLASS

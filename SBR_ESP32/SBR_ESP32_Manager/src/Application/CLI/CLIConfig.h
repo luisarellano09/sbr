@@ -1,10 +1,7 @@
 /**
  * @file CLIConfig.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief CLIConfig
- * @version 1.0
- * @date 15.02.2023
- * 
+ * @brief CLI Config
  * 
  */
 

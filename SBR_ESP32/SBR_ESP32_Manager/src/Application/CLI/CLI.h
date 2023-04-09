@@ -2,9 +2,6 @@
  * @file CLI.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief CLI
- * @version 1.0
- * @date 15.02.2023
- * 
  * 
  */
 
@@ -545,7 +542,7 @@ void F_CLI_Test_Test1(){
 //=====================================================================================================
 
 void F_CLI_Test_Test2(){
-    manager->m_nodeESP32->AddRequest(DEVICE_e::ESP32_NODE01, COM_REQUEST_TYPE_e::WRITE, COM_REQUEST_REG_ID_e::REGISTER_10, 69);
+    manager->m_nodeESP32->AddRequest(DEVICE_e::ESP32_NODE01, COM_REQUEST_TYPE_e::REQUEST_WRITE, COM_REQUEST_REG_ID_e::REGISTER_10, 69);
     manager->m_nodeESP32->PrintBuffer();
 }
 
@@ -562,14 +559,7 @@ void F_CLI_Test_Test3(){
 //=====================================================================================================
 
 void F_CLI_Test_Test4(){
-    float res = 0.0;
-    Serial.println("Enter first Value:");
-    ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    Serial.println("Enter second Value:");
-    ActivateGetValueModeCLI();
-    res += insertedValueCLI.toFloat();
-    Serial.println("Result: " + String(res));
+
 }
 
 
