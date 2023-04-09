@@ -76,14 +76,14 @@ void Datalog(){
 //=====================================================================================================
 
 void DatalogDatasetMotor(){
-    Serial.printf("ML,%.2f, MR,%.2f, ", manager->m_motorLeft->m_speed, manager->m_motorRight->m_speed);
+    Serial.printf("ML,%.2f, MR,%.2f, ", manager->m_motorLeft->GetSpeed(), manager->m_motorRight->GetSpeed());
 }
 
 
 //=====================================================================================================
 
 void DatalogDatasetIMU(){
-    Serial.printf("Pitch,%.2f, Yaw,%.2f, Roll,%.2f, ", manager->m_IMU->m_Pitch, manager->m_IMU->m_Yaw, manager->m_IMU->m_Roll);
+    Serial.printf("Pitch,%.2f, Yaw,%.2f, Roll,%.2f, ", manager->m_IMU->GetPitch(), manager->m_IMU->GetYaw(), manager->m_IMU->GetRoll());
 }
 
 
@@ -97,9 +97,9 @@ void DatalogDatasetOdometry(){
 //=====================================================================================================
 
 void DatalogDatasetMotionControl(){
-    Serial.printf("PoSP,%.5f, PoPV,%.5f, PoMV,%.1f, ", manager->m_motionControl->m_PIDPosition->m_SP, manager->m_motionControl->m_PIDPosition->m_PV, manager->m_motionControl->m_PIDPosition->m_MV);
-    Serial.printf("PiSP,%.1f, PiPV,%.1f, PiMV,%.1f, ", manager->m_motionControl->m_PIDPitch->m_SP, manager->m_motionControl->m_PIDPitch->m_PV, manager->m_motionControl->m_PIDPitch->m_MV);
-    Serial.printf("AnSP,%.1f, AnPV,%.1f, AnMV,%.1f, ", manager->m_motionControl->m_PIDAngle->m_SP, manager->m_motionControl->m_PIDAngle->m_PV, manager->m_motionControl->m_PIDAngle->m_MV);
+    Serial.printf("PoSP,%.5f, PoPV,%.5f, PoMV,%.1f, ", manager->m_motionControl->m_PIDPosition->GetSP(), manager->m_motionControl->m_PIDPosition->GetPV(), manager->m_motionControl->m_PIDPosition->GetMV());
+    Serial.printf("PiSP,%.1f, PiPV,%.1f, PiMV,%.1f, ", manager->m_motionControl->m_PIDPitch->GetSP(), manager->m_motionControl->m_PIDPitch->GetPV(), manager->m_motionControl->m_PIDPitch->GetMV());
+    Serial.printf("AnSP,%.1f, AnPV,%.1f, AnMV,%.1f, ", manager->m_motionControl->m_PIDAngle->GetSP(), manager->m_motionControl->m_PIDAngle->GetPV(), manager->m_motionControl->m_PIDAngle->GetMV());
 }
 
 

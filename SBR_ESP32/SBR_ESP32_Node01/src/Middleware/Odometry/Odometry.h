@@ -112,6 +112,7 @@ public:
      */
     double GetDistance();
 
+
 private:
 
     Encoder* m_encoderLeft = NULL;          /**@brief Encoder left */

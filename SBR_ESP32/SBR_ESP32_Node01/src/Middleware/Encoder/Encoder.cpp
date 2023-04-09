@@ -18,11 +18,12 @@
  *******************************************************************************************************************************************/
 
 Encoder::Encoder(uint8_t channel, uint8_t channelAPin, uint8_t channelBPin, bool direction){
+    this->m_ESP32Encoder = new ESP32Encoder();
     this->m_channel = channel;
     this->m_channelAPin = channelAPin;
     this->m_channelBPin = channelBPin;
     this->m_direction = direction;
-    this->m_ESP32Encoder.attachHalfQuad(channelAPin, channelBPin);
+    this->m_ESP32Encoder->attachHalfQuad(channelAPin, channelBPin);
     this->SetCount(0);
 }
 
@@ -39,9 +40,9 @@ Encoder::~Encoder(){
 
 int64_t Encoder::GetCount(){
     if (this->m_direction == 0){
-        return this->m_ESP32Encoder.getCount();
+        return this->m_ESP32Encoder->getCount();
     } else {
-        return (-1 * this->m_ESP32Encoder.getCount());
+        return (-1 * this->m_ESP32Encoder->getCount());
     }
 }
 
@@ -53,9 +54,9 @@ RC_e Encoder::SetCount(int64_t count){
     RC_e retCode = RC_e::SUCCESS;
 
     if (this->m_direction == 0){
-        this->m_ESP32Encoder.setCount(count);
+        this->m_ESP32Encoder->setCount(count);
     } else {
-        this->m_ESP32Encoder.setCount((-1 * count));
+        this->m_ESP32Encoder->setCount((-1 * count));
     }
 
     Log.traceln("[Encoder::SetCount] Encoder[%d] count setted to %d%", this->m_channel, count);
