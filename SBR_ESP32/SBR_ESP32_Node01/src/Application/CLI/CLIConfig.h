@@ -129,6 +129,9 @@ enum CLIOptions_e {
     CLI_Datalog_Datasets_MotionControl_Deactivate,
     CLI_Datalog_Cycle,
     CLI_Datalog_SetCycle,
+    CLI_Profiles,
+    CLI_Profile_Profile1,
+    CLI_Profile_Profile2,
     CLI_Test,
     CLI_Test_Test1,
     CLI_Test_Test2,
@@ -252,6 +255,9 @@ void F_CLI_Datalog_Datasets_MotionControl_Activate();
 void F_CLI_Datalog_Datasets_MotionControl_Deactivate();
 void F_CLI_Datalog_Cycle();
 void F_CLI_Datalog_SetCycle();
+void F_CLI_Profiles();
+void F_CLI_Profile_Profile1();
+void F_CLI_Profile_Profile2();
 void F_CLI_Test();
 void F_CLI_Test_Test1();
 void F_CLI_Test_Test2();

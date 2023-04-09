@@ -383,6 +383,18 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Datalog_SetCycle].text = "Set Cycle";
     CLIOptions[CLIOptions_e::CLI_Datalog_SetCycle].Callback = F_CLI_Datalog_SetCycle;
 
+    CLIOptions[CLIOptions_e::CLI_Profiles].path = "8";
+    CLIOptions[CLIOptions_e::CLI_Profiles].text = "Profiles ->";
+    CLIOptions[CLIOptions_e::CLI_Profiles].Callback = F_CLI_Profiles;
+
+    CLIOptions[CLIOptions_e::CLI_Profile_Profile1].path = "81";
+    CLIOptions[CLIOptions_e::CLI_Profile_Profile1].text = "Profile1";
+    CLIOptions[CLIOptions_e::CLI_Profile_Profile1].Callback = F_CLI_Profile_Profile1;
+
+    CLIOptions[CLIOptions_e::CLI_Profile_Profile2].path = "82";
+    CLIOptions[CLIOptions_e::CLI_Profile_Profile2].text = "Profile2";
+    CLIOptions[CLIOptions_e::CLI_Profile_Profile2].Callback = F_CLI_Profile_Profile2;
+
     CLIOptions[CLIOptions_e::CLI_Test].path = "t";
     CLIOptions[CLIOptions_e::CLI_Test].text = "Test ->";
     CLIOptions[CLIOptions_e::CLI_Test].Callback = F_CLI_Test;
@@ -1323,6 +1335,28 @@ void F_CLI_Datalog_SetCycle(){
     cycle = insertedValueCLI.toInt();
     TimerTaskDatalog = cycle;
     Serial.println("Datalog cycle time: " + String(TimerTaskDatalog));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Profiles(){
+    GoIntoNewPath();
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Profile_Profile1(){
+
+    Serial.println("Profle1 loaded");
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Profile_Profile2(){
+    Serial.println("Profle2 loaded");
 }
 
 
