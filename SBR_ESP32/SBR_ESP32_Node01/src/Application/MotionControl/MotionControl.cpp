@@ -69,8 +69,8 @@ RC_e MotionControl::Run(){
         this->m_PIDPitch->Run();
         
         // Assign speed to Motors
-        this->m_motorLeft->SetSpeed((this->m_PIDPitch->m_MV + this->m_PIDAngle->m_MV) / 2.0);
-        this->m_motorRight->SetSpeed((this->m_PIDPitch->m_MV - this->m_PIDAngle->m_MV) / 2.0);
+        this->m_motorLeft->SetSpeed((this->m_PIDPitch->GetMV() + this->m_PIDAngle->GetMV()) / 2.0);
+        this->m_motorRight->SetSpeed((this->m_PIDPitch->GetMV() - this->m_PIDAngle->GetMV()) / 2.0);
     }
 
     return retCode;
