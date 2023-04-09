@@ -1,4 +1,0 @@
-<map id="CalculateCrcFromRequest" name="CalculateCrcFromRequest">
-<area shape="rect" id="node1" title="Calculate CRC of a request." alt="" coords="5,5,196,32"/>
-<area shape="rect" id="node2" href="$_utility_8h.html#a16e3637a67aa53dc443e5c33a34b9c3d" title="Convert Request to Buffer format." alt="" coords="244,5,373,32"/>
-</map>

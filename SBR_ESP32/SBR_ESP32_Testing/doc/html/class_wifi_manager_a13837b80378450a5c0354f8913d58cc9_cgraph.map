@@ -1,4 +1,0 @@
-<map id="WifiManager::ConfigureWifi" name="WifiManager::ConfigureWifi">
-<area shape="rect" id="node1" title="Configure the Wifi." alt="" coords="5,5,208,32"/>
-<area shape="rect" id="node2" href="$class_wifi_manager.html#a64bef73d837b09ff1198b45ee6cb876f" title="Wifi Event handler." alt="" coords="256,5,433,32"/>
-</map>

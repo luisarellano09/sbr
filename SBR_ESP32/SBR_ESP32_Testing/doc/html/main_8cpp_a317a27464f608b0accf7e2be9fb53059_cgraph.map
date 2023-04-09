@@ -1,7 +1,0 @@
-<map id="test_Add_Requests" name="test_Add_Requests">
-<area shape="rect" id="node1" title=" " alt="" coords="5,13,152,39"/>
-<area shape="rect" id="node2" href="$class_s_p_i___slave_manager.html#ac51a022188274a549c4e31a0bb201104" title="Add a write&#45;type request to the buffer." alt="" coords="200,5,411,47"/>
-<area shape="rect" id="node3" href="$class_s_p_i___slave_manager.html#a1e921446d5a4d5cf154d3c2994b6b7da" title="Add request to the buffer." alt="" coords="459,13,687,39"/>
-<area shape="rect" id="node4" href="$_utility_8h.html#a92fd1cc3fb432cde66fb1af15078cc16" title="Calculate CRC of a request." alt="" coords="735,13,925,39"/>
-<area shape="rect" id="node5" href="$_utility_8h.html#a16e3637a67aa53dc443e5c33a34b9c3d" title="Convert Request to Buffer format." alt="" coords="973,13,1103,39"/>
-</map>

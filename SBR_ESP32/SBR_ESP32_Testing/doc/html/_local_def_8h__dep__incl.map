@@ -1,8 +1,0 @@
-<map id="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_Sensors/src/Definition/LocalDef.h" name="/home/ubuntu/Workspace/SBR/SBR_ESP32/SBR_ESP32_Sensors/src/Definition/LocalDef.h">
-<area shape="rect" id="node1" title="Definitions of ESP32 Project." alt="" coords="207,5,413,76"/>
-<area shape="rect" id="node2" href="$_manager_8h.html" title="Class to Manage the ESP32." alt="" coords="117,250,354,306"/>
-<area shape="rect" id="node5" href="$_s_p_i___slave_manager_8h.html" title="Class to Manage the SPI Slave communication." alt="" coords="273,124,499,195"/>
-<area shape="rect" id="node3" href="$main_8cpp.html" title="main class" alt="" coords="5,361,212,417"/>
-<area shape="rect" id="node4" href="$_manager_8cpp.html" title="Class to Manage the ESP32." alt="" coords="236,361,488,417"/>
-<area shape="rect" id="node6" href="$_s_p_i___slave_manager_8cpp.html" title="Class to Manage the SPI Slave communication." alt="" coords="378,243,605,313"/>
-</map>

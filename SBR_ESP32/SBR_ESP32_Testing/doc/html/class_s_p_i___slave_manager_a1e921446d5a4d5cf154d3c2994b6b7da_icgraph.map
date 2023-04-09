@@ -1,7 +1,0 @@
-<map id="SPI_SlaveManager::AddRequest" name="SPI_SlaveManager::AddRequest">
-<area shape="rect" id="node1" title="Add request to the buffer." alt="" coords="704,13,932,39"/>
-<area shape="rect" id="node2" href="$class_s_p_i___slave_manager.html#ac51a022188274a549c4e31a0bb201104" title="Add a write&#45;type request to the buffer." alt="" coords="445,5,656,47"/>
-<area shape="rect" id="node3" href="$main_8cpp.html#a317a27464f608b0accf7e2be9fb53059" title=" " alt="" coords="251,13,397,39"/>
-<area shape="rect" id="node4" href="$main_8cpp.html#a8847c9cdb135af13130b1a84b1373a7c" title=" " alt="" coords="112,13,203,39"/>
-<area shape="rect" id="node5" href="$main_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d" title=" " alt="" coords="5,13,64,39"/>
-</map>
