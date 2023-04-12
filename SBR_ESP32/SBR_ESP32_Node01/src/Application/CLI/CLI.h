@@ -268,11 +268,11 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_MVmax].Callback = F_CLI_Modules_Motion_PIDAngleParam_MVmax;
 
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPAngle].path = "567";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPAngle].text = "Set to SP Angle";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPAngle].text = "Set SP Angle";
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPAngle].Callback = F_CLI_Modules_Motion_SetSPAngle;
 
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPPosition].path = "568";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPPosition].text = "Set to SP Position";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPPosition].text = "Set SP Position";
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPPosition].Callback = F_CLI_Modules_Motion_SetSPPosition;
 
     CLIOptions[CLIOptions_e::CLI_Debug].path = "6";
@@ -470,15 +470,17 @@ void MenuModeCLI(){
 //=====================================================================================================
 
 void GetValueCLI(){
-
     if(Serial.available()) {
-
         incomingCharCLI = Serial.read();
         Serial.flush();
         Serial.print(incomingCharCLI);
 
         if (incomingCharCLI == '\n' || incomingCharCLI == '\r'){
             Serial.println("Value: " + insertedValueCLI);
+            DeactivateGetValueModeCLI();
+        } else if (incomingCharCLI == '\t'){
+            insertedValueCLI = "";
+            Serial.println("\rInsert aborted");
             DeactivateGetValueModeCLI();
         } else {         
             insertedValueCLI = insertedValueCLI + String(incomingCharCLI);
@@ -646,8 +648,10 @@ void F_CLI_Settings_Write(){
 void F_CLI_Settings_Write_WifiName(){
     Serial.println("Enter WifiName: ");
     ActivateGetValueModeCLI();
-    preferences.putString("WifiName", insertedValueCLI);
-    Serial.println("WifiName: " + preferences.getString("WifiName"));
+    if (!insertedValueCLI.equals("")){
+        preferences.putString("WifiName", insertedValueCLI);
+        Serial.println("WifiName: " + preferences.getString("WifiName"));
+    }
 }
 
 
@@ -656,8 +660,10 @@ void F_CLI_Settings_Write_WifiName(){
 void F_CLI_Settings_Write_WifiPassword(){
     Serial.println("Enter WifiPass: ");
     ActivateGetValueModeCLI();
-    preferences.putString("WifiPass", insertedValueCLI);
-    Serial.println("WifiPass: " + preferences.getString("WifiPass"));
+    if (!insertedValueCLI.equals("")){
+        preferences.putString("WifiPass", insertedValueCLI);
+        Serial.println("WifiPass: " + preferences.getString("WifiPass"));
+    }
 }
 
 
@@ -716,9 +722,11 @@ void F_CLI_Modules_Motors_SetSpeedMotorLeft(){
     float res = 0.0;
     Serial.println("Enter Speed of the left Motor:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motorLeft->SetSpeed(res);
-    Serial.println("Left Motor Speed: " + String(manager->m_motorLeft->GetSpeed()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motorLeft->SetSpeed(res);
+        Serial.println("Left Motor Speed: " + String(manager->m_motorLeft->GetSpeed()));
+    }
 }
 
 
@@ -728,9 +736,11 @@ void F_CLI_Modules_Motors_SetSpeedMotorRight(){
     float res = 0.0;
     Serial.println("Enter Speed of the right Motor:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motorRight->SetSpeed(res);
-    Serial.println("Right Motor Speed: " + String(manager->m_motorRight->GetSpeed()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motorRight->SetSpeed(res);
+        Serial.println("Right Motor Speed: " + String(manager->m_motorRight->GetSpeed()));
+    }
 }
 
 
@@ -784,9 +794,11 @@ void F_CLI_Modules_Encoders_SetValues_SetCountEncoderLeft(){
     int64_t res = 0;
     Serial.println("Enter Count of the left Encoder:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toInt();
-    manager->m_encoderLeft->SetCount(res);
-    Serial.println("Left encoder count: " + String(manager->m_encoderLeft->GetCount()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toInt();
+        manager->m_encoderLeft->SetCount(res);
+        Serial.println("Left encoder count: " + String(manager->m_encoderLeft->GetCount()));
+    }
 }
 
 
@@ -796,9 +808,11 @@ void F_CLI_Modules_Encoders_SetValues_SetCountEncoderRight(){
     int64_t res = 0;
     Serial.println("Enter Count of the right Encoder:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toInt();
-    manager->m_encoderRight->SetCount(res);
-    Serial.println("Right encoder count: " + String(manager->m_encoderRight->GetCount()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toInt();
+        manager->m_encoderRight->SetCount(res);
+        Serial.println("Right encoder count: " + String(manager->m_encoderRight->GetCount()));
+    }
 }
 
 
@@ -837,9 +851,11 @@ void F_CLI_Modules_Odometry_SetValues_SetX(){
     float res = 0.0;
     Serial.println("Enter X value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_odometry->SetX(res);
-    Serial.println("Odometry X value: " + String(manager->m_odometry->GetX()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_odometry->SetX(res);
+        Serial.println("Odometry X value: " + String(manager->m_odometry->GetX()));
+    }
 }
 
 
@@ -849,9 +865,11 @@ void F_CLI_Modules_Odometry_SetValues_SetY(){
     float res = 0.0;
     Serial.println("Enter Y value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_odometry->SetY(res);
-    Serial.println("Odometry Y value: " + String(manager->m_odometry->GetY()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_odometry->SetY(res);
+        Serial.println("Odometry Y value: " + String(manager->m_odometry->GetY()));
+    }
 }
 
 
@@ -861,9 +879,11 @@ void F_CLI_Modules_Odometry_SetValues_SetAngle(){
     float res = 0.0;
     Serial.println("Enter Angle value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_odometry->SetAngle(res);
-    Serial.println("Odometry Angle value: " + String(manager->m_odometry->GetAngle()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_odometry->SetAngle(res);
+        Serial.println("Odometry Angle value: " + String(manager->m_odometry->GetAngle()));
+    }
 }
 
 
@@ -912,9 +932,11 @@ void F_CLI_Modules_Motion_PIDPitchParam_Kp(){
     float res = 0.0;
     Serial.println("Enter Kp value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motionControl->m_PIDPitch->SetKp(res);
-    Serial.println("PID Pitch Kp value: " + String(manager->m_motionControl->m_PIDPitch->GetKp()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->m_PIDPitch->SetKp(res);
+        Serial.println("PID Pitch Kp value: " + String(manager->m_motionControl->m_PIDPitch->GetKp()));
+    }
 }
 
 
@@ -924,9 +946,11 @@ void F_CLI_Modules_Motion_PIDPitchParam_Ki(){
     float res = 0.0;
     Serial.println("Enter Ki value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motionControl->m_PIDPitch->SetKi(res);
-    Serial.println("PID Pitch Ki value: " + String(manager->m_motionControl->m_PIDPitch->GetKi()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->m_PIDPitch->SetKi(res);
+        Serial.println("PID Pitch Ki value: " + String(manager->m_motionControl->m_PIDPitch->GetKi()));
+    }
 }
 
 
@@ -936,9 +960,11 @@ void F_CLI_Modules_Motion_PIDPitchParam_Kd(){
     float res = 0.0;
     Serial.println("Enter Kd value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motionControl->m_PIDPitch->SetKd(res);
-    Serial.println("PID Pitch Kd value: " + String(manager->m_motionControl->m_PIDPitch->GetKd()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->m_PIDPitch->SetKd(res);
+        Serial.println("PID Pitch Kd value: " + String(manager->m_motionControl->m_PIDPitch->GetKd()));
+    }
 }
 
 
@@ -948,9 +974,11 @@ void F_CLI_Modules_Motion_PIDPitchParam_MVmin(){
     float res = 0.0;
     Serial.println("Enter MV min value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motionControl->m_PIDPitch->SetMVRangeMin(res);
-    Serial.println("PID Pitch MV min value: " + String(manager->m_motionControl->m_PIDPitch->GetMVRangeMin()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->m_PIDPitch->SetMVRangeMin(res);
+        Serial.println("PID Pitch MV min value: " + String(manager->m_motionControl->m_PIDPitch->GetMVRangeMin()));
+    }
 }
 
 
@@ -960,9 +988,11 @@ void F_CLI_Modules_Motion_PIDPitchParam_MVmax(){
     float res = 0.0;
     Serial.println("Enter MV max value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motionControl->m_PIDPitch->SetMVRangeMax(res);
-    Serial.println("PID Pitch MV max value: " + String(manager->m_motionControl->m_PIDPitch->GetMVRangeMax()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->m_PIDPitch->SetMVRangeMax(res);
+        Serial.println("PID Pitch MV max value: " + String(manager->m_motionControl->m_PIDPitch->GetMVRangeMax()));
+    }
 }
 
 
@@ -979,9 +1009,11 @@ void F_CLI_Modules_Motion_PIDPosParam_Kp(){
     float res = 0.0;
     Serial.println("Enter Kp value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motionControl->m_PIDPosition->SetKp(res);
-    Serial.println("PID Position Kp value: " + String(manager->m_motionControl->m_PIDPosition->GetKp()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->m_PIDPosition->SetKp(res);
+        Serial.println("PID Position Kp value: " + String(manager->m_motionControl->m_PIDPosition->GetKp()));
+    }
 }
 
 
@@ -991,9 +1023,11 @@ void F_CLI_Modules_Motion_PIDPosParam_Ki(){
     float res = 0.0;
     Serial.println("Enter Ki value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motionControl->m_PIDPosition->SetKi(res);
-    Serial.println("PID Position Ki value: " + String(manager->m_motionControl->m_PIDPosition->GetKi()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->m_PIDPosition->SetKi(res);
+        Serial.println("PID Position Ki value: " + String(manager->m_motionControl->m_PIDPosition->GetKi()));
+    }
 }
 
 
@@ -1003,9 +1037,11 @@ void F_CLI_Modules_Motion_PIDPosParam_Kd(){
     float res = 0.0;
     Serial.println("Enter Kd value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motionControl->m_PIDPosition->SetKd(res);
-    Serial.println("PID Position Kd value: " + String(manager->m_motionControl->m_PIDPosition->GetKd()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->m_PIDPosition->SetKd(res);
+        Serial.println("PID Position Kd value: " + String(manager->m_motionControl->m_PIDPosition->GetKd()));
+    }
 }
 
 
@@ -1015,9 +1051,11 @@ void F_CLI_Modules_Motion_PIDPosParam_MVmin(){
     float res = 0.0;
     Serial.println("Enter MV min value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motionControl->m_PIDPosition->SetMVRangeMin(res);
-    Serial.println("PID Position MV min value: " + String(manager->m_motionControl->m_PIDPosition->GetMVRangeMin()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->m_PIDPosition->SetMVRangeMin(res);
+        Serial.println("PID Position MV min value: " + String(manager->m_motionControl->m_PIDPosition->GetMVRangeMin()));
+    }
 }
 
 
@@ -1027,9 +1065,11 @@ void F_CLI_Modules_Motion_PIDPosParam_MVmax(){
     float res = 0.0;
     Serial.println("Enter MV max value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motionControl->m_PIDPosition->SetMVRangeMax(res);
-    Serial.println("PID Position MV max value: " + String(manager->m_motionControl->m_PIDPosition->GetMVRangeMax()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->m_PIDPosition->SetMVRangeMax(res);
+        Serial.println("PID Position MV max value: " + String(manager->m_motionControl->m_PIDPosition->GetMVRangeMax()));
+    }
 }
 
 
@@ -1046,9 +1086,11 @@ void F_CLI_Modules_Motion_PIDAngleParam_Kp(){
     float res = 0.0;
     Serial.println("Enter Kp value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motionControl->m_PIDAngle->SetKp(res);
-    Serial.println("PID Angle Kp value: " + String(manager->m_motionControl->m_PIDAngle->GetKp()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->m_PIDAngle->SetKp(res);
+        Serial.println("PID Angle Kp value: " + String(manager->m_motionControl->m_PIDAngle->GetKp()));
+    }
 }
 
 
@@ -1058,9 +1100,11 @@ void F_CLI_Modules_Motion_PIDAngleParam_Ki(){
     float res = 0.0;
     Serial.println("Enter Ki value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motionControl->m_PIDAngle->SetKi(res);
-    Serial.println("PID Angle Ki value: " + String(manager->m_motionControl->m_PIDAngle->GetKi()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->m_PIDAngle->SetKi(res);
+        Serial.println("PID Angle Ki value: " + String(manager->m_motionControl->m_PIDAngle->GetKi()));
+    }
 }
 
 
@@ -1070,9 +1114,11 @@ void F_CLI_Modules_Motion_PIDAngleParam_Kd(){
     float res = 0.0;
     Serial.println("Enter Kd value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motionControl->m_PIDAngle->SetKd(res);
-    Serial.println("PID Angle Kd value: " + String(manager->m_motionControl->m_PIDAngle->GetKd()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->m_PIDAngle->SetKd(res);
+        Serial.println("PID Angle Kd value: " + String(manager->m_motionControl->m_PIDAngle->GetKd()));
+    }
 }
 
 
@@ -1082,9 +1128,11 @@ void F_CLI_Modules_Motion_PIDAngleParam_MVmin(){
     float res = 0.0;
     Serial.println("Enter MV min value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motionControl->m_PIDAngle->SetMVRangeMin(res);
-    Serial.println("PID Angle MV min value: " + String(manager->m_motionControl->m_PIDAngle->GetMVRangeMin()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->m_PIDAngle->SetMVRangeMin(res);
+        Serial.println("PID Angle MV min value: " + String(manager->m_motionControl->m_PIDAngle->GetMVRangeMin()));
+    }
 }
 
 
@@ -1094,9 +1142,11 @@ void F_CLI_Modules_Motion_PIDAngleParam_MVmax(){
     float res = 0.0;
     Serial.println("Enter MV max value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motionControl->m_PIDAngle->SetMVRangeMax(res);
-    Serial.println("PID Angle MV max value: " + String(manager->m_motionControl->m_PIDAngle->GetMVRangeMax()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->m_PIDAngle->SetMVRangeMax(res);
+        Serial.println("PID Angle MV max value: " + String(manager->m_motionControl->m_PIDAngle->GetMVRangeMax()));
+    }
 }
 
 
@@ -1106,9 +1156,11 @@ void F_CLI_Modules_Motion_SetSPAngle(){
     float res = 0.0;
     Serial.println("Enter SP Angle value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat();
-    manager->m_motionControl->m_PIDAngle->SetSP(res);
-    Serial.println("Motion SP Angle: " + String(manager->m_motionControl->m_PIDAngle->GetSP()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->SetSPAngle(res);
+        Serial.println("Motion SP Angle: " + String(manager->m_motionControl->GetSPAngle()));
+    }
 }
 
 
@@ -1118,9 +1170,11 @@ void F_CLI_Modules_Motion_SetSPPosition(){
     float res = 0.0;
     Serial.println("Enter SP Position value:");
     ActivateGetValueModeCLI();
-    res = insertedValueCLI.toFloat() + manager->m_motionControl->m_PIDPosition->GetSP();
-    manager->m_motionControl->m_PIDPosition->SetSP(res);
-    Serial.println("Motion SP Position: " + String(manager->m_motionControl->m_PIDPosition->GetSP()));
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat() + manager->m_motionControl->GetSPPos();
+        manager->m_motionControl->SetSPPos(res);
+        Serial.println("Motion SP Position: " + String(manager->m_motionControl->GetSPPos()));
+    }
 }
 
 
@@ -1328,9 +1382,11 @@ void F_CLI_Datalog_SetCycle(){
     uint cycle = 0;
     Serial.println("Enter the cycle Time (ms) of the Datalog:");
     ActivateGetValueModeCLI();
-    cycle = insertedValueCLI.toInt();
-    TimerTaskDatalog = cycle;
-    Serial.println("Datalog cycle time: " + String(TimerTaskDatalog));
+    if (!insertedValueCLI.equals("")){
+        cycle = insertedValueCLI.toInt();
+        TimerTaskDatalog = cycle;
+        Serial.println("Datalog cycle time: " + String(TimerTaskDatalog));
+    }
 }
 
 
