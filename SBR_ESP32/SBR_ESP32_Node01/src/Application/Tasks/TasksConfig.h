@@ -37,7 +37,7 @@ TickType_t TimerTaskModes = 500 / portTICK_PERIOD_MS;           /**@brief Timer 
 TickType_t TimerTaskIMU = 5 / portTICK_PERIOD_MS;               /**@brief Timer of Task IMU */
 TickType_t TimerTaskOdometry = 10 / portTICK_PERIOD_MS;         /**@brief Timer of Task Odometry */
 TickType_t TimerTaskMotionControl = 10 / portTICK_PERIOD_MS;    /**@brief Timer of Task Motion */
-TickType_t TimerTaskDatalog = 100 / portTICK_PERIOD_MS;         /**@brief Timer of Task Datalog */
+TickType_t TimerTaskDatalog = 10 / portTICK_PERIOD_MS;         /**@brief Timer of Task Datalog */
 
 
 /*******************************************************************************************************************************************
