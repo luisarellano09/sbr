@@ -90,6 +90,13 @@ RC_e MotionControl::SetSPPos(double spPosition){
 
 //=====================================================================================================
 
+double MotionControl::GetSPPos(){
+    return this->m_SPPos;
+}
+
+
+//=====================================================================================================
+
 RC_e MotionControl::SetSPAngle(double spAngle){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
@@ -97,6 +104,13 @@ RC_e MotionControl::SetSPAngle(double spAngle){
     this->m_SPAngle = spAngle;
 
     return retCode;
+}
+
+
+//=====================================================================================================
+
+double MotionControl::GetSPAngle(){
+    return this->m_SPAngle;
 }
 
 
@@ -126,6 +140,7 @@ RC_e MotionControl::Stop(){
 
     return retCode;
 }
+
 
 /*******************************************************************************************************************************************
  *  												PRIVATE METHODS
