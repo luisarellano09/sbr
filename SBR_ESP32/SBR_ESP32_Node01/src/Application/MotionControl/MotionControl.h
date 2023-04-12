@@ -62,12 +62,26 @@ public:
     RC_e SetSPPos(double spPosition);
 
     /**
+     * @brief Get SP Position
+     * 
+     * @return double SP Position
+     */
+    double GetSPPos();
+
+    /**
      * @brief Set SP Angle
      * 
      * @param spAngle Angle SP
      * @return RC_e Result Code
      */
     RC_e SetSPAngle(double spAngle);
+
+    /**
+     * @brief Get SP Angle
+     * 
+     * @return double SP Angle
+     */
+    double GetSPAngle();
 
     /**
      * @brief Start the Motion control

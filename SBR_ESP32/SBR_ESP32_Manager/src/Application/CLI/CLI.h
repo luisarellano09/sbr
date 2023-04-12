@@ -222,15 +222,17 @@ void MenuModeCLI(){
 //=====================================================================================================
 
 void GetValueCLI(){
-
     if(Serial.available()) {
-
         incomingCharCLI = Serial.read();
         Serial.flush();
         Serial.print(incomingCharCLI);
 
         if (incomingCharCLI == '\n' || incomingCharCLI == '\r'){
             Serial.println("Value: " + insertedValueCLI);
+            DeactivateGetValueModeCLI();
+        } else if (incomingCharCLI == '\t'){
+            insertedValueCLI = "";
+            Serial.println("\rInsert aborted");
             DeactivateGetValueModeCLI();
         } else {         
             insertedValueCLI = insertedValueCLI + String(incomingCharCLI);
@@ -391,8 +393,10 @@ void F_CLI_Settings_Write(){
 void F_CLI_Settings_Write_WifiName(){
     Serial.println("Enter WifiName: ");
     ActivateGetValueModeCLI();
-    preferences.putString("WifiName", insertedValueCLI);
-    Serial.println("WifiName: " + preferences.getString("WifiName"));
+    if (!insertedValueCLI.equals("")){
+        preferences.putString("WifiName", insertedValueCLI);
+        Serial.println("WifiName: " + preferences.getString("WifiName"));
+    }
 }
 
 
@@ -401,8 +405,10 @@ void F_CLI_Settings_Write_WifiName(){
 void F_CLI_Settings_Write_WifiPassword(){
     Serial.println("Enter WifiPass: ");
     ActivateGetValueModeCLI();
-    preferences.putString("WifiPass", insertedValueCLI);
-    Serial.println("WifiPass: " + preferences.getString("WifiPass"));
+    if (!insertedValueCLI.equals("")){
+        preferences.putString("WifiPass", insertedValueCLI);
+        Serial.println("WifiPass: " + preferences.getString("WifiPass"));
+    }
 }
 
 
