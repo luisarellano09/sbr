@@ -175,7 +175,7 @@ RC_e IMU::Calculate(){
     }
 
     // Yaw
-    if (this->m_initialYaw == -999999999999.9) {
+    if (this->m_initialYaw == -99999999.9) {
         this->m_initialYaw = FACTOR_CONV_RAD_TO_DEG * this->m_BNO080->getYaw();
     }
     double tempYaw = FACTOR_CONV_RAD_TO_DEG * this->m_BNO080->getYaw();
