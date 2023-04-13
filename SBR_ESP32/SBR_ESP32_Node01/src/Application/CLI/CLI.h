@@ -1443,6 +1443,11 @@ void F_CLI_Test_Test3(){
 //=====================================================================================================
 
 void F_CLI_Test_Test4(){
+
+    StartMode(Modes_e::Mode_Motion);
+
+    manager->m_motionControl->Start();
+
     manager->m_motionControl->m_PIDPitch->SetCycleTime(0.01);
     manager->m_motionControl->m_PIDPitch->SetParameters(15.0, 40.0, 0.4);
     manager->m_motionControl->m_PIDPitch->SetMVRange(-100.0, 100.0);
