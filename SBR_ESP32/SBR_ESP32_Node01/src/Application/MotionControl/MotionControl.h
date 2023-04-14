@@ -106,7 +106,7 @@ private:
     Motor* m_motorRight = NULL;     /**@brief Reference of a Motor (Right) object. */
     double m_SPAngle = 0.0;         /**@brief Angle SP. */
     double m_SPPos = 0.0;           /**@brief Position SP. */
-    long count = 0; // ToDo: be checked if needed
+    long m_CycleCounter = 0;        /**@brief Cycle counter. */
 };
 
 #endif // MOTIONCONTROL_H

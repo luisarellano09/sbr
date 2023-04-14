@@ -238,6 +238,13 @@ public:
      */
     RC_e Print();
 
+    /**
+     * @brief Reset PID
+     * 
+     * @return RC_e Result code
+     */
+    RC_e Reset();
+
 
 private:
 
