@@ -41,16 +41,23 @@ RC_e MotionControl::Run(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
-    this->count++;
+    this->m_CycleCounter++;
 
     // Check if the Robot is down
-    if (this->m_IMU->GetPitch() > 55.0 || this->m_IMU->GetPitch() < -55.0) {
-        m_motorLeft->Stop();
-        m_motorRight->Stop();
+    if (this->m_IMU->GetPitch() > 45.0 || this->m_IMU->GetPitch() < -45.0) {
+        this->m_motorLeft->Stop();
+        this->m_motorRight->Stop();
+        this->m_odometry->Reset();
+        this->SetSPPos(0.0);
+        this->SetSPAngle(0.0);
+        this->m_PIDAngle->Reset();
+        this->m_PIDPitch->Reset();
+        this->m_PIDPosition->Reset();
+        vTaskDelay(1000);
     } else {
 
         // Reduce the call cycle 
-        if (count %10 == 0){
+        if (m_CycleCounter %10 == 0){
             // PID Angle
             this->m_PIDAngle->SetSP(this->m_SPAngle);
             this->m_PIDAngle->SetPV(this->m_odometry->GetAngle());
@@ -68,8 +75,8 @@ RC_e MotionControl::Run(){
         this->m_PIDPitch->Run();
         
         // Assign speed to Motors
-        this->m_motorLeft->SetSpeed((this->m_PIDPitch->GetMV() + this->m_PIDAngle->GetMV()) / 2.0);
-        this->m_motorRight->SetSpeed((this->m_PIDPitch->GetMV() - this->m_PIDAngle->GetMV()) / 2.0);
+        this->m_motorLeft->SetSpeed(this->m_PIDPitch->GetMV()*0.8 + this->m_PIDAngle->GetMV()*0.2) ;
+        this->m_motorRight->SetSpeed(this->m_PIDPitch->GetMV()*0.8 - this->m_PIDAngle->GetMV()*0.2);
     }
 
     return retCode;

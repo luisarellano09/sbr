@@ -47,6 +47,18 @@ Manager::Manager(){
 
     // Motion
     this->m_motionControl = new MotionControl(this->m_IMU, this->m_odometry, this->m_motorLeft, this->m_motorRight);
+    this->m_motionControl->m_PIDPitch->SetCycleTime(0.01);
+    this->m_motionControl->m_PIDPitch->SetParameters(5.0, 25.0, 0.2);
+    this->m_motionControl->m_PIDPitch->SetMVRange(-100.0, 100.0);
+
+    this->m_motionControl->m_PIDPosition->SetCycleTime(0.1);
+    this->m_motionControl->m_PIDPosition->SetParameters(5.0, 0.5, 8);
+    this->m_motionControl->m_PIDPosition->SetMVRange(-8.0, 10.0);
+    this->m_IMU->SetPitchOffset(-4.0);
+
+    this->m_motionControl->m_PIDAngle->SetCycleTime(0.1);
+    this->m_motionControl->m_PIDAngle->SetParameters(1.0, 0.2, 0.2);
+    this->m_motionControl->m_PIDAngle->SetMVRange(-100.0, 100.0);
     Log.traceln("[Manager::Manager] Motion Control instanced");
 
     // Start Node 
