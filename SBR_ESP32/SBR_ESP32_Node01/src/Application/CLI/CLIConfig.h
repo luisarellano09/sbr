@@ -77,29 +77,32 @@ enum CLIOptions_e {
     CLI_Modules_Odometry_SetValues_SetY,
     CLI_Modules_Odometry_SetValues_SetAngle,
     CLI_Modules_Motion,
-    CLI_Modules_Motion_Status,
     CLI_Modules_Motion_Start,
     CLI_Modules_Motion_Stop,
+    CLI_Modules_Motion_ShowSP,
+    CLI_Modules_Motion_SetSPAngle,
+    CLI_Modules_Motion_SetSPPosition,
     CLI_Modules_Motion_PIDPitchParam,
+    CLI_Modules_Motion_PIDPitchParam_Show,
     CLI_Modules_Motion_PIDPitchParam_Kp,
     CLI_Modules_Motion_PIDPitchParam_Ki,
     CLI_Modules_Motion_PIDPitchParam_Kd,
     CLI_Modules_Motion_PIDPitchParam_MVmin,
     CLI_Modules_Motion_PIDPitchParam_MVmax,
     CLI_Modules_Motion_PIDPosParam,
+    CLI_Modules_Motion_PIDPosParam_Show,
     CLI_Modules_Motion_PIDPosParam_Kp,
     CLI_Modules_Motion_PIDPosParam_Ki,
     CLI_Modules_Motion_PIDPosParam_Kd,
     CLI_Modules_Motion_PIDPosParam_MVmin,
     CLI_Modules_Motion_PIDPosParam_MVmax,
     CLI_Modules_Motion_PIDAngleParam,
+    CLI_Modules_Motion_PIDAngleParam_Show,
     CLI_Modules_Motion_PIDAngleParam_Kp,
     CLI_Modules_Motion_PIDAngleParam_Ki,
     CLI_Modules_Motion_PIDAngleParam_Kd,
     CLI_Modules_Motion_PIDAngleParam_MVmin,
     CLI_Modules_Motion_PIDAngleParam_MVmax,
-    CLI_Modules_Motion_SetSPAngle,
-    CLI_Modules_Motion_SetSPPosition,
     CLI_Debug,
     CLI_Debug_GetLogLevel,
     CLI_Debug_SetLogLevelFatal,
@@ -203,29 +206,32 @@ void F_CLI_Modules_Odometry_SetValues_SetX();
 void F_CLI_Modules_Odometry_SetValues_SetY();
 void F_CLI_Modules_Odometry_SetValues_SetAngle();
 void F_CLI_Modules_Motion();
-void F_CLI_Modules_Motion_Status();
 void F_CLI_Modules_Motion_Start();
 void F_CLI_Modules_Motion_Stop();
+void F_CLI_Modules_Motion_ShowSP();
+void F_CLI_Modules_Motion_SetSPAngle();
+void F_CLI_Modules_Motion_SetSPPosition();
 void F_CLI_Modules_Motion_PIDPitchParam();
+void F_CLI_Modules_Motion_PIDPitchParam_Show();
 void F_CLI_Modules_Motion_PIDPitchParam_Kp();
 void F_CLI_Modules_Motion_PIDPitchParam_Ki();
 void F_CLI_Modules_Motion_PIDPitchParam_Kd();
 void F_CLI_Modules_Motion_PIDPitchParam_MVmin();
 void F_CLI_Modules_Motion_PIDPitchParam_MVmax();
 void F_CLI_Modules_Motion_PIDPosParam();
+void F_CLI_Modules_Motion_PIDPosParam_Show();
 void F_CLI_Modules_Motion_PIDPosParam_Kp();
 void F_CLI_Modules_Motion_PIDPosParam_Ki();
 void F_CLI_Modules_Motion_PIDPosParam_Kd();
 void F_CLI_Modules_Motion_PIDPosParam_MVmin();
 void F_CLI_Modules_Motion_PIDPosParam_MVmax();
 void F_CLI_Modules_Motion_PIDAngleParam();
+void F_CLI_Modules_Motion_PIDAngleParam_Show();
 void F_CLI_Modules_Motion_PIDAngleParam_Kp();
 void F_CLI_Modules_Motion_PIDAngleParam_Ki();
 void F_CLI_Modules_Motion_PIDAngleParam_Kd();
 void F_CLI_Modules_Motion_PIDAngleParam_MVmin();
 void F_CLI_Modules_Motion_PIDAngleParam_MVmax();
-void F_CLI_Modules_Motion_SetSPAngle();
-void F_CLI_Modules_Motion_SetSPPosition();
 void F_CLI_Debug();
 void F_CLI_Debug_GetLogLevel();
 void F_CLI_Debug_SetLogLevelFatal();

@@ -111,6 +111,13 @@ public:
      */
     double GetDistance();
 
+    /**
+     * @brief Reset the Odometry variables
+     * 
+     * @return RC_e 
+     */
+    RC_e Reset();
+
 
 private:
 

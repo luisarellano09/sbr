@@ -52,12 +52,13 @@ RC_e Odometry::Run(){
 
     double encoderLeftCount = (double)this->m_encoderLeft->GetCount();
     double encoderRightCount = (double)this->m_encoderRight->GetCount();
+    double deltaEncoderLeftCount = encoderLeftCount - this->m_prevEncoderLeftCount;
+    double deltaEncoderRightCount = encoderRightCount - this->m_prevEncoderRightCount;
 
-    this->m_distance = PI * this->m_radio * (encoderLeftCount + encoderRightCount) / this->m_TR;
-
-    this->m_angle += 360.0 * this->m_radio * ((encoderLeftCount - this->m_prevEncoderLeftCount) - (encoderRightCount - this->m_prevEncoderRightCount)) / (this->m_TR * this->m_D);
-    this->m_x += PI * this->m_radio * ((encoderLeftCount - this->m_prevEncoderLeftCount) + (encoderRightCount - this->m_prevEncoderRightCount)) * cos(FACTOR_CONV_DEG_TO_RAD * this->m_angle) / this->m_TR;
-    this->m_y += PI * this->m_radio * ((encoderLeftCount - this->m_prevEncoderLeftCount) + (encoderRightCount - this->m_prevEncoderRightCount)) * sin(FACTOR_CONV_DEG_TO_RAD * this->m_angle) / this->m_TR;
+    this->m_distance += PI * this->m_radio * (deltaEncoderLeftCount + deltaEncoderRightCount) / this->m_TR;
+    this->m_angle += 360.0 * this->m_radio * (deltaEncoderLeftCount - deltaEncoderRightCount) / (this->m_TR * this->m_D);
+    this->m_x += PI * this->m_radio * (deltaEncoderLeftCount + deltaEncoderRightCount) * cos(FACTOR_CONV_DEG_TO_RAD * this->m_angle) / this->m_TR;
+    this->m_y += PI * this->m_radio * (deltaEncoderLeftCount + deltaEncoderRightCount) * sin(FACTOR_CONV_DEG_TO_RAD * this->m_angle) / this->m_TR;
 
     this->m_prevEncoderLeftCount = encoderLeftCount;
     this->m_prevEncoderRightCount = encoderRightCount;
@@ -144,6 +145,22 @@ double Odometry::GetAngle(){
 double Odometry::GetDistance(){
     return this->m_distance;
 }
+
+
+//=====================================================================================================
+
+RC_e Odometry::Reset(){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_distance = 0.0;
+    this->m_angle = 0.0;
+    this->m_x = 0;
+    this->m_y = 0;
+
+    return retCode;
+}
+
 
 /*******************************************************************************************************************************************
  *  												PRIVATE METHODS

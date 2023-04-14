@@ -183,97 +183,109 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Modules_Motion].text = "Motion Control ->";
     CLIOptions[CLIOptions_e::CLI_Modules_Motion].Callback = F_CLI_Modules_Motion;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_Status].path = "561";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_Status].text = "Status";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_Status].Callback = F_CLI_Modules_Motion_Status;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_Start].path = "562";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_Start].path = "561";
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_Start].text = "Start";
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_Start].Callback = F_CLI_Modules_Motion_Start;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_Stop].path = "563";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_Stop].path = "562";
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_Stop].text = "Stop";
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_Stop].Callback = F_CLI_Modules_Motion_Stop;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam].path = "564";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam].text = "PID Pitch Param ->";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam].Callback = F_CLI_Modules_Motion_PIDPitchParam;
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_ShowSP].path = "563";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_ShowSP].text = "Show SPs";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_ShowSP].Callback = F_CLI_Modules_Motion_ShowSP;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Kp].path = "5641";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Kp].text = "Set Kp";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Kp].Callback = F_CLI_Modules_Motion_PIDPitchParam_Kp;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Ki].path = "5642";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Ki].text = "Set Ki";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Ki].Callback = F_CLI_Modules_Motion_PIDPitchParam_Ki;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Kd].path = "5643";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Kd].text = "Set Kd";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Kd].Callback = F_CLI_Modules_Motion_PIDPitchParam_Kd;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_MVmin].path = "5644";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_MVmin].text = "Set MV min";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_MVmin].Callback = F_CLI_Modules_Motion_PIDPitchParam_MVmin;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_MVmax].path = "5645";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_MVmax].text = "Set MV max";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_MVmax].Callback = F_CLI_Modules_Motion_PIDPitchParam_MVmax;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam].path = "565";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam].text = "PID Pos Param ->";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam].Callback = F_CLI_Modules_Motion_PIDPosParam;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Kp].path = "5651";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Kp].text = "Set Kp";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Kp].Callback = F_CLI_Modules_Motion_PIDPosParam_Kp;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Ki].path = "5652";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Ki].text = "Set Ki";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Ki].Callback = F_CLI_Modules_Motion_PIDPosParam_Ki;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Kd].path = "5653";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Kd].text = "Set Kd";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Kd].Callback = F_CLI_Modules_Motion_PIDPosParam_Kd;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_MVmin].path = "5654";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_MVmin].text = "Set MV min";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_MVmin].Callback = F_CLI_Modules_Motion_PIDPosParam_MVmin;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_MVmax].path = "5655";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_MVmax].text = "Set MV max";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_MVmax].Callback = F_CLI_Modules_Motion_PIDPosParam_MVmax;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam].path = "566";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam].text = "PID Angle Param ->";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam].Callback = F_CLI_Modules_Motion_PIDAngleParam;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Kp].path = "5661";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Kp].text = "Set Kp";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Kp].Callback = F_CLI_Modules_Motion_PIDAngleParam_Kp;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Ki].path = "5662";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Ki].text = "Set Ki";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Ki].Callback = F_CLI_Modules_Motion_PIDAngleParam_Ki;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Kd].path = "5663";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Kd].text = "Set Kd";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Kd].Callback = F_CLI_Modules_Motion_PIDAngleParam_Kd;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_MVmin].path = "5664";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_MVmin].text = "Set MV min";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_MVmin].Callback = F_CLI_Modules_Motion_PIDAngleParam_MVmin;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_MVmax].path = "5665";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_MVmax].text = "Set MV max";
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_MVmax].Callback = F_CLI_Modules_Motion_PIDAngleParam_MVmax;
-
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPAngle].path = "567";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPAngle].path = "564";
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPAngle].text = "Set SP Angle";
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPAngle].Callback = F_CLI_Modules_Motion_SetSPAngle;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPPosition].path = "568";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPPosition].path = "565";
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPPosition].text = "Set SP Position";
     CLIOptions[CLIOptions_e::CLI_Modules_Motion_SetSPPosition].Callback = F_CLI_Modules_Motion_SetSPPosition;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam].path = "566";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam].text = "PID Pitch Param ->";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam].Callback = F_CLI_Modules_Motion_PIDPitchParam;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Show].path = "5661";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Show].text = "Show Param";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Show].Callback = F_CLI_Modules_Motion_PIDPitchParam_Show;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Kp].path = "5662";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Kp].text = "Set Kp";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Kp].Callback = F_CLI_Modules_Motion_PIDPitchParam_Kp;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Ki].path = "5663";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Ki].text = "Set Ki";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Ki].Callback = F_CLI_Modules_Motion_PIDPitchParam_Ki;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Kd].path = "5664";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Kd].text = "Set Kd";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_Kd].Callback = F_CLI_Modules_Motion_PIDPitchParam_Kd;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_MVmin].path = "5665";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_MVmin].text = "Set MV min";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_MVmin].Callback = F_CLI_Modules_Motion_PIDPitchParam_MVmin;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_MVmax].path = "5666";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_MVmax].text = "Set MV max";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPitchParam_MVmax].Callback = F_CLI_Modules_Motion_PIDPitchParam_MVmax;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam].path = "567";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam].text = "PID Pos Param ->";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam].Callback = F_CLI_Modules_Motion_PIDPosParam;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Show].path = "5671";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Show].text = "Show Param";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Show].Callback = F_CLI_Modules_Motion_PIDPosParam_Show;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Kp].path = "5672";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Kp].text = "Set Kp";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Kp].Callback = F_CLI_Modules_Motion_PIDPosParam_Kp;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Ki].path = "5673";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Ki].text = "Set Ki";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Ki].Callback = F_CLI_Modules_Motion_PIDPosParam_Ki;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Kd].path = "5674";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Kd].text = "Set Kd";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_Kd].Callback = F_CLI_Modules_Motion_PIDPosParam_Kd;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_MVmin].path = "5675";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_MVmin].text = "Set MV min";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_MVmin].Callback = F_CLI_Modules_Motion_PIDPosParam_MVmin;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_MVmax].path = "5676";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_MVmax].text = "Set MV max";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDPosParam_MVmax].Callback = F_CLI_Modules_Motion_PIDPosParam_MVmax;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam].path = "568";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam].text = "PID Angle Param ->";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam].Callback = F_CLI_Modules_Motion_PIDAngleParam;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Show].path = "5681";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Show].text = "Show Param";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Show].Callback = F_CLI_Modules_Motion_PIDAngleParam_Show;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Kp].path = "5682";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Kp].text = "Set Kp";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Kp].Callback = F_CLI_Modules_Motion_PIDAngleParam_Kp;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Ki].path = "5683";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Ki].text = "Set Ki";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Ki].Callback = F_CLI_Modules_Motion_PIDAngleParam_Ki;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Kd].path = "5684";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Kd].text = "Set Kd";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_Kd].Callback = F_CLI_Modules_Motion_PIDAngleParam_Kd;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_MVmin].path = "5685";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_MVmin].text = "Set MV min";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_MVmin].Callback = F_CLI_Modules_Motion_PIDAngleParam_MVmin;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_MVmax].path = "5686";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_MVmax].text = "Set MV max";
+    CLIOptions[CLIOptions_e::CLI_Modules_Motion_PIDAngleParam_MVmax].Callback = F_CLI_Modules_Motion_PIDAngleParam_MVmax;
 
     CLIOptions[CLIOptions_e::CLI_Debug].path = "6";
     CLIOptions[CLIOptions_e::CLI_Debug].text = "Debug ->";
@@ -896,15 +908,6 @@ void F_CLI_Modules_Motion(){
 
 //=====================================================================================================
 
-void F_CLI_Modules_Motion_Status(){
-    manager->m_motionControl->m_PIDPitch->Print();
-    manager->m_motionControl->m_PIDPosition->Print();
-    manager->m_motionControl->m_PIDAngle->Print();
-}
-
-
-//=====================================================================================================
-
 void F_CLI_Modules_Motion_Start(){
     manager->m_motionControl->Start();
     Serial.println("Motion control started");
@@ -921,8 +924,51 @@ void F_CLI_Modules_Motion_Stop(){
 
 //=====================================================================================================
 
+void F_CLI_Modules_Motion_ShowSP(){
+    Serial.println("SP Position: " + String(manager->m_motionControl->GetSPPos()));
+    Serial.println("SP Angle: " + String(manager->m_motionControl->GetSPAngle()));
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Motion_SetSPAngle(){
+    float res = 0.0;
+    Serial.println("Enter SP Angle value:");
+    ActivateGetValueModeCLI();
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_motionControl->SetSPAngle(res);
+        Serial.println("Motion SP Angle: " + String(manager->m_motionControl->GetSPAngle()));
+    }
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Motion_SetSPPosition(){
+    float res = 0.0;
+    Serial.println("Enter SP Position value:");
+    ActivateGetValueModeCLI();
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat() + manager->m_motionControl->GetSPPos();
+        manager->m_motionControl->SetSPPos(res);
+        Serial.println("Motion SP Position: " + String(manager->m_motionControl->GetSPPos()));
+    }
+}
+
+
+//=====================================================================================================
+
 void F_CLI_Modules_Motion_PIDPitchParam(){
     GoIntoNewPath();
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Motion_PIDPitchParam_Show(){
+    manager->m_motionControl->m_PIDPitch->Print();
 }
 
 
@@ -1005,6 +1051,13 @@ void F_CLI_Modules_Motion_PIDPosParam(){
 
 //=====================================================================================================
 
+void F_CLI_Modules_Motion_PIDPosParam_Show(){
+    manager->m_motionControl->m_PIDPosition->Print();
+}
+
+
+//=====================================================================================================
+
 void F_CLI_Modules_Motion_PIDPosParam_Kp(){
     float res = 0.0;
     Serial.println("Enter Kp value:");
@@ -1082,6 +1135,13 @@ void F_CLI_Modules_Motion_PIDAngleParam(){
 
 //=====================================================================================================
 
+void F_CLI_Modules_Motion_PIDAngleParam_Show(){
+    manager->m_motionControl->m_PIDAngle->Print();
+}
+
+
+//=====================================================================================================
+
 void F_CLI_Modules_Motion_PIDAngleParam_Kp(){
     float res = 0.0;
     Serial.println("Enter Kp value:");
@@ -1146,34 +1206,6 @@ void F_CLI_Modules_Motion_PIDAngleParam_MVmax(){
         res = insertedValueCLI.toFloat();
         manager->m_motionControl->m_PIDAngle->SetMVRangeMax(res);
         Serial.println("PID Angle MV max value: " + String(manager->m_motionControl->m_PIDAngle->GetMVRangeMax()));
-    }
-}
-
-
-//=====================================================================================================
-
-void F_CLI_Modules_Motion_SetSPAngle(){
-    float res = 0.0;
-    Serial.println("Enter SP Angle value:");
-    ActivateGetValueModeCLI();
-    if (!insertedValueCLI.equals("")){
-        res = insertedValueCLI.toFloat();
-        manager->m_motionControl->SetSPAngle(res);
-        Serial.println("Motion SP Angle: " + String(manager->m_motionControl->GetSPAngle()));
-    }
-}
-
-
-//=====================================================================================================
-
-void F_CLI_Modules_Motion_SetSPPosition(){
-    float res = 0.0;
-    Serial.println("Enter SP Position value:");
-    ActivateGetValueModeCLI();
-    if (!insertedValueCLI.equals("")){
-        res = insertedValueCLI.toFloat() + manager->m_motionControl->GetSPPos();
-        manager->m_motionControl->SetSPPos(res);
-        Serial.println("Motion SP Position: " + String(manager->m_motionControl->GetSPPos()));
     }
 }
 
@@ -1447,19 +1479,6 @@ void F_CLI_Test_Test4(){
     StartMode(Modes_e::Mode_Motion);
 
     manager->m_motionControl->Start();
-
-    manager->m_motionControl->m_PIDPitch->SetCycleTime(0.01);
-    manager->m_motionControl->m_PIDPitch->SetParameters(15.0, 40.0, 0.4);
-    manager->m_motionControl->m_PIDPitch->SetMVRange(-100.0, 100.0);
-
-    manager->m_motionControl->m_PIDPosition->SetCycleTime(0.01);
-    manager->m_motionControl->m_PIDPosition->SetParameters(5.0, 5.0, 0.8);
-    manager->m_motionControl->m_PIDPosition->SetMVRange(-10.0, 10.0);
-    manager->m_IMU->SetPitchOffset(-4.0);
-
-    manager->m_motionControl->m_PIDAngle->SetCycleTime(0.01);
-    manager->m_motionControl->m_PIDAngle->SetParameters(1.0, 2.0, 0.02);
-    manager->m_motionControl->m_PIDAngle->SetMVRange(-100.0, 100.0);
 
     manager->m_motionControl->m_PIDPitch->Print();
     manager->m_motionControl->m_PIDPosition->Print();
