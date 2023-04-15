@@ -14,11 +14,11 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include "soc/rtc_cntl_reg.h"
-#include "./Application/Tasks/Tasks.h"
-#include "./Application/CLI/CLI.h"
-#include "./Application/Datalog/Datalog.h"
+#include "./Application/System/Tasks/Tasks.h"
+#include "./Application/System/CLI/CLI.h"
+#include "./Application/System/Datalog/Datalog.h"
 #include "./Application/CommunicationBus/NodeEsp32/NodeHandler.h"
-#include "./Application/Modes/Modes.h"
+#include "./Application/System/Modes/Modes.h"
 
 
 /*******************************************************************************************************************************************

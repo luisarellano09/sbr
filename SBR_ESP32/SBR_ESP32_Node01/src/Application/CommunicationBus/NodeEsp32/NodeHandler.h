@@ -12,7 +12,7 @@
  *  												INCLUDE
  *******************************************************************************************************************************************/
 #include "../../../Middleware/CommunicationBus/Request/Request.h"
-#include "../../Tasks/Tasks.h"
+#include "../../System/Tasks/Tasks.h"
 #include <ArduinoLog.h>
 
 
