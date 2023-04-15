@@ -118,6 +118,26 @@ double Motor::GetOffset(){
 
 //=====================================================================================================
 
+RC_e Motor::InvertDirection(){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_direction = MotorDirection_e::MOTOR_DIRECTION_INVERTED;
+    Log.traceln("[Motor::InvertDirection] Motor[%d] Direction inverted", this->m_pwmChannel);
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
+bool Motor::GetDirection(){
+    return this->m_direction;
+}
+
+
+//=====================================================================================================
+
 RC_e Motor::Print(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
