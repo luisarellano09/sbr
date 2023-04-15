@@ -103,6 +103,7 @@ RC_e Motor::SetOffset(double offset){
     RC_e retCode = RC_e::SUCCESS;
 
     this->m_offset = offset;
+    Log.traceln("[Motor::SetOffset] Motor[%d] offset setted to %D%", this->m_pwmChannel, offset);
 
     return retCode;
 }
