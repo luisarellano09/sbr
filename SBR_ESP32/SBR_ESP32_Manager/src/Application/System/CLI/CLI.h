@@ -15,8 +15,8 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include "CLIConfig.h"
-#include "../../Definition/Local/GlobalVar.h"
-#include "../../Definition/Local/LocalConfig.h"
+#include "../../../Definition/Local/GlobalVar.h"
+#include "../../../Definition/Local/LocalConfig.h"
 #include "../Tasks/TasksConfig.h"
 #include "../Modes/ModesConfig.h"
 

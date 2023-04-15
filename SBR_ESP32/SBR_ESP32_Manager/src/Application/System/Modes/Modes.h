@@ -14,7 +14,7 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include "ModesConfig.h"
-#include "../../Definition/Local/GlobalVar.h"
+#include "../../../Definition/Local/GlobalVar.h"
 
 
 /*******************************************************************************************************************************************
