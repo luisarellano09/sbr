@@ -84,6 +84,21 @@ public:
     double GetOffset();
 
     /**
+     * @brief Invert Motor direction
+     * 
+     * @return RC_e Result code
+     */
+    RC_e InvertDirection();
+
+    /**
+     * @brief Get the Direction
+     * 
+     * @return true Direction inverted
+     * @return false Direction Normal
+     */
+    bool GetDirection();
+
+    /**
      * @brief Function to print the motor status
      * 
      * @return RC_e Result code
