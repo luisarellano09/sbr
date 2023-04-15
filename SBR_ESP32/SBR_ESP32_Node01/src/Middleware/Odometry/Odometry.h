@@ -33,10 +33,10 @@ public:
      * @param encoderLeft Encoder Left
      * @param encoderRight Encoder Right
      * @param radio Radio of the wheel
-     * @param D Distance between the wheels 
-     * @param TR Number of counts in one revolution
+     * @param distanceWheels Distance between the wheels 
+     * @param ticksRevolution Number of counts in one revolution
      */
-    Odometry(Encoder* encoderLeft, Encoder* encoderRight, double radio, double D, double TR);
+    Odometry(Encoder* encoderLeft, Encoder* encoderRight, double radio, double distanceWheels, double ticksRevolution);
 
     /**
      * @brief Destructor
@@ -60,12 +60,26 @@ public:
     RC_e SetX(double x);
 
     /**
+     * @brief Get X coordinate
+     * 
+     * @return double X coordinate
+     */
+    double GetX();
+
+    /**
      * @brief Set Y coordinate 
      * 
      * @param y Y coordinate 
      * @return RC_e Result Code
      */
     RC_e SetY(double y);
+
+    /**
+     * @brief Get Y coordinate
+     * 
+     * @return double X coordinate 
+     */
+    double GetY();
 
     /**
      * @brief Set the Angle
@@ -76,33 +90,19 @@ public:
     RC_e SetAngle(double angle);
 
     /**
+     * @brief Get the Angle
+     * 
+     * @return double Angle
+     */
+    double GetAngle();
+
+    /**
      * @brief Set the Distance
      * 
      * @param distance Distance
      * @return RC_e Result Code
      */
     RC_e SetDistance(double distance);
-
-    /**
-     * @brief Get X coordinate
-     * 
-     * @return double X coordinate
-     */
-    double GetX();
-
-    /**
-     * @brief Get Y coordinate
-     * 
-     * @return double X coordinate 
-     */
-    double GetY();
-
-    /**
-     * @brief Get the Angle
-     * 
-     * @return double Angle
-     */
-    double GetAngle();
 
     /**
      * @brief Get the Distance
@@ -118,6 +118,36 @@ public:
      */
     RC_e Reset();
 
+    /**
+     * @brief Set the Wheel Radio
+     * 
+     * @param radio Wheel Radio
+     * @return RC_e Result code
+     */
+    RC_e SetRadio(double radio);
+
+    /**
+     * @brief Get the Wheel Radio
+     * 
+     * @return double Wheel Radio
+     */
+    double GetRadio();
+
+    /**
+     * @brief Set the Distance Wheels
+     * 
+     * @param distanceWheels Distance Wheels
+     * @return RC_e Result code
+     */
+    RC_e SetDistanceWheels(double distanceWheels);
+
+    /**
+     * @brief Get the Distance between wheels
+     * 
+     * @return double Distance between wheels
+     */
+    double GetDistanceWheels();
+
 
 private:
 
@@ -128,8 +158,8 @@ private:
     double m_distance;                      /**@brief Distance */
     double m_angle;                         /**@brief Angle */
     double m_radio;                         /**@brief Radio of the wheel*/            
-    double m_D;                             /**@brief Distance between the wheels */
-    double m_TR;                            /**@brief Number of counts in one revolution */
+    double m_distanceWheels;                /**@brief Distance between the wheels */
+    double m_ticksRevolution;               /**@brief Number of counts in one revolution */
     double m_prevEncoderLeftCount = 0.0;    /**@brief Previous encoder left count */
     double m_prevEncoderRightCount = 0.0;   /**@brief Previous encoder right count */
 };

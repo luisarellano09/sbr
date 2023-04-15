@@ -23,12 +23,12 @@
  *  												CONSTRUCTOR
  *******************************************************************************************************************************************/
 
-Odometry::Odometry(Encoder* encoderLeft, Encoder* encoderRight, double radio, double D, double TR){
+Odometry::Odometry(Encoder* encoderLeft, Encoder* encoderRight, double radio, double distanceWheels, double ticksRevolution){
     this->m_encoderLeft = encoderLeft;
     this->m_encoderRight = encoderRight;
     this->m_radio = radio;
-    this->m_D = D;
-    this->m_TR = TR;
+    this->m_distanceWheels = distanceWheels;
+    this->m_ticksRevolution = ticksRevolution;
     this->SetX(0.0);
     this->SetY(0.0);
     this->SetAngle(0.0);
@@ -55,10 +55,10 @@ RC_e Odometry::Run(){
     double deltaEncoderLeftCount = encoderLeftCount - this->m_prevEncoderLeftCount;
     double deltaEncoderRightCount = encoderRightCount - this->m_prevEncoderRightCount;
 
-    this->m_distance += PI * this->m_radio * (deltaEncoderLeftCount + deltaEncoderRightCount) / this->m_TR;
-    this->m_angle += 360.0 * this->m_radio * (deltaEncoderLeftCount - deltaEncoderRightCount) / (this->m_TR * this->m_D);
-    this->m_x += PI * this->m_radio * (deltaEncoderLeftCount + deltaEncoderRightCount) * cos(FACTOR_CONV_DEG_TO_RAD * this->m_angle) / this->m_TR;
-    this->m_y += PI * this->m_radio * (deltaEncoderLeftCount + deltaEncoderRightCount) * sin(FACTOR_CONV_DEG_TO_RAD * this->m_angle) / this->m_TR;
+    this->m_distance += PI * this->m_radio * (deltaEncoderLeftCount + deltaEncoderRightCount) / this->m_ticksRevolution;
+    this->m_angle += 360.0 * this->m_radio * (deltaEncoderLeftCount - deltaEncoderRightCount) / (this->m_ticksRevolution * this->m_distanceWheels);
+    this->m_x += PI * this->m_radio * (deltaEncoderLeftCount + deltaEncoderRightCount) * cos(FACTOR_CONV_DEG_TO_RAD * this->m_angle) / this->m_ticksRevolution;
+    this->m_y += PI * this->m_radio * (deltaEncoderLeftCount + deltaEncoderRightCount) * sin(FACTOR_CONV_DEG_TO_RAD * this->m_angle) / this->m_ticksRevolution;
 
     this->m_prevEncoderLeftCount = encoderLeftCount;
     this->m_prevEncoderRightCount = encoderRightCount;
@@ -74,46 +74,7 @@ RC_e Odometry::SetX(double x){
     RC_e retCode = RC_e::SUCCESS;
 
     this->m_x = x;
-    Log.traceln("[Odometry::SetX] X coordinate setted: ", this->m_x);
-
-    return retCode;
-}
-
-
-//=====================================================================================================
-
-RC_e Odometry::SetY(double y){
-    // Result code
-    RC_e retCode = RC_e::SUCCESS;
-
-    this->m_y = y;
-    Log.traceln("[Odometry::SetY] Y coordinate setted: ", this->m_y);
-
-    return retCode;
-}
-
-
-//=====================================================================================================
-
-RC_e Odometry::SetAngle(double angle){
-    // Result code
-    RC_e retCode = RC_e::SUCCESS;
-
-    this->m_angle = angle;
-    Log.traceln("[Odometry::SetAngle] Angle setted: ", this->m_angle);
-
-    return retCode;
-}
-
-
-//=====================================================================================================
-
-RC_e Odometry::SetDistance(double distance){
-    // Result code
-    RC_e retCode = RC_e::SUCCESS;
-
-    this->m_distance = distance;
-    Log.traceln("[Odometry::SetDistance] Distance setted: ", this->m_distance);
+    Log.traceln("[Odometry::SetX] X coordinate setted: %D", this->m_x);
 
     return retCode;
 }
@@ -128,6 +89,19 @@ double Odometry::GetX(){
 
 //=====================================================================================================
 
+RC_e Odometry::SetY(double y){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_y = y;
+    Log.traceln("[Odometry::SetY] Y coordinate setted: %D", this->m_y);
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
 double Odometry::GetY(){
     return this->m_y;
 }
@@ -135,8 +109,34 @@ double Odometry::GetY(){
 
 //=====================================================================================================
 
+RC_e Odometry::SetAngle(double angle){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_angle = angle;
+    Log.traceln("[Odometry::SetAngle] Angle setted: %D", this->m_angle);
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
 double Odometry::GetAngle(){
     return this->m_angle;
+}
+
+
+//=====================================================================================================
+
+RC_e Odometry::SetDistance(double distance){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_distance = distance;
+    Log.traceln("[Odometry::SetDistance] Distance setted: %D", this->m_distance);
+
+    return retCode;
 }
 
 
@@ -159,6 +159,46 @@ RC_e Odometry::Reset(){
     this->m_y = 0;
 
     return retCode;
+}
+
+
+//=====================================================================================================
+
+RC_e Odometry::SetRadio(double radio){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_radio = radio;
+    Log.traceln("[Odometry::SetRadio] Radio setted: %D", this->m_radio);
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
+double Odometry::GetRadio(){
+    return this->m_radio;
+}
+
+
+//=====================================================================================================
+
+RC_e Odometry::SetDistanceWheels(double distanceWheels){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_distanceWheels = distanceWheels;
+    Log.traceln("[Odometry::SetDistanceWheels] Distance Wheels setted: %D", this->m_distanceWheels);
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
+double Odometry::GetDistanceWheels(){
+    return this->m_distanceWheels;
 }
 
 
