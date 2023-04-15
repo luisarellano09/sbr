@@ -183,10 +183,10 @@
 
 // ========================== ODOMETRY =====================
 /**
- * @brief ODOMETRY_RADIO
+ * @brief ODOMETRY__WHEEL_RADIO
  * 
  */
-#define ODOMETRY_RADIO (double)0.035 
+#define ODOMETRY_WHEEL_RADIO (double)0.035 
 
 /**
  * @brief ODOMETRY_DISTANCE_WHEELS

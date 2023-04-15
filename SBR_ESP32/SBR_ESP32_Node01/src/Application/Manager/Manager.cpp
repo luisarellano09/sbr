@@ -42,7 +42,7 @@ Manager::Manager(){
     Log.traceln("[Manager::Manager] Encoders instanced");
 
     //Odometry
-    this->m_odometry = new Odometry(this->m_encoderLeft, this->m_encoderRight, ODOMETRY_RADIO, ODOMETRY_DISTANCE_WHEELS, ODOMETRY_TICKS_REVOLUTION);
+    this->m_odometry = new Odometry(this->m_encoderLeft, this->m_encoderRight, ODOMETRY_WHEEL_RADIO, ODOMETRY_DISTANCE_WHEELS, ODOMETRY_TICKS_REVOLUTION);
     Log.traceln("[Manager::Manager] Odometry instanced");
 
     // Motion
