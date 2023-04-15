@@ -98,6 +98,25 @@ RC_e Motor::Stop(){
 
 //=====================================================================================================
 
+RC_e Motor::SetOffset(double offset){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_offset = offset;
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
+double Motor::GetOffset(){
+    return this->m_offset;
+}
+
+
+//=====================================================================================================
+
 RC_e Motor::Print(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;

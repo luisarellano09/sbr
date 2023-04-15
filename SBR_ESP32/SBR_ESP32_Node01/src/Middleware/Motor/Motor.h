@@ -69,6 +69,21 @@ public:
     RC_e Stop();
 
     /**
+     * @brief Set the Offset
+     * 
+     * @param offset Motor offset
+     * @return RC_e Result code
+     */
+    RC_e SetOffset(double offset);
+
+    /**
+     * @brief Get the Offset
+     * 
+     * @return double Offset
+     */
+    double GetOffset();
+
+    /**
      * @brief Function to print the motor status
      * 
      * @return RC_e Result code
