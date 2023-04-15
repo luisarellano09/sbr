@@ -59,6 +59,21 @@ public:
     RC_e SetCount(int64_t count);
 
     /**
+     * @brief Invert Direction
+     * 
+     * @return RC_e Result code
+     */
+    RC_e InvertDirection();
+
+    /**
+     * @brief Get the Direction
+     * 
+     * @return true Direction inverted
+     * @return false Direction normal
+     */
+    bool GetDirection();
+
+    /**
      * @brief Function to print the encoder info
      * 
      * @return RC_e Result code

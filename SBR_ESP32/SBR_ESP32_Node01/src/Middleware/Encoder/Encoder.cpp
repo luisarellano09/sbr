@@ -66,6 +66,26 @@ RC_e Encoder::SetCount(int64_t count){
 
 //=====================================================================================================
 
+RC_e Encoder::InvertDirection(){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_direction = true;
+    Log.traceln("[Encoder::SetCount] Encoder[%d] Direction inverted", this->m_channel);
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
+bool Encoder::GetDirection(){
+    return this->m_direction;
+}
+
+
+//=====================================================================================================
+
 RC_e Encoder::Print(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
