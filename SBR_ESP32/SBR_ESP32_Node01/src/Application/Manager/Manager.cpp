@@ -28,8 +28,8 @@ Manager::Manager(){
     Log.traceln("[Manager::Manager] NodeEsp32 instanced");
 
     // Motors
-    this->m_motorLeft = new Motor(PWMChannel_e::PWM1, MOTOR_LEFT_PWM_GPIO, MOTOR_PWM_FREQUENCY, MOTOR_PWM_RESOLUTION, 3.0, MOTOR_LEFT_DIR_GPIO);
-    this->m_motorRight = new Motor(PWMChannel_e::PWM2, MOTOR_RIGHT_PWM_GPIO, MOTOR_PWM_FREQUENCY, MOTOR_PWM_RESOLUTION, 3.0, MOTOR_RIGHT_DIR_GPIO, MotorDirection_e::MOTOR_DIRECTION_INVERTED);
+    this->m_motorLeft = new Motor(PWMChannel_e::PWM1, MOTOR_LEFT_PWM_GPIO, MOTOR_PWM_FREQUENCY, MOTOR_PWM_RESOLUTION, MOTOR_LEFT_OFFSET, MOTOR_LEFT_DIR_GPIO);
+    this->m_motorRight = new Motor(PWMChannel_e::PWM2, MOTOR_RIGHT_PWM_GPIO, MOTOR_PWM_FREQUENCY, MOTOR_PWM_RESOLUTION, MOTOR_RIGHT_OFFSET, MOTOR_RIGHT_DIR_GPIO, MotorDirection_e::MOTOR_DIRECTION_INVERTED);
     Log.traceln("[Manager::Manager] Motors instanced");
 
     // IMU

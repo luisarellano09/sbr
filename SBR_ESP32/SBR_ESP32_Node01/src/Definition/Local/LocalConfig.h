@@ -92,6 +92,18 @@
  */
 #define MOTOR_PWM_RESOLUTION 10
 
+/**
+ * @brief Motor left Offset
+ * 
+ */
+#define MOTOR_LEFT_OFFSET (double) 3.0
+
+/**
+ * @brief Motor right Offset
+ * 
+ */
+#define MOTOR_RIGHT_OFFSET (double) 3.0
+
 
 // ========================== ENCODERS =====================
 /**
