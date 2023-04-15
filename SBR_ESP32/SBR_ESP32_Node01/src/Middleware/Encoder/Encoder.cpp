@@ -71,7 +71,7 @@ RC_e Encoder::InvertDirection(){
     RC_e retCode = RC_e::SUCCESS;
 
     this->m_direction = true;
-    Log.traceln("[Encoder::SetCount] Encoder[%d] Direction inverted", this->m_channel);
+    Log.traceln("[Encoder::InvertDirection] Encoder[%d] Direction inverted", this->m_channel);
 
     return retCode;
 }
