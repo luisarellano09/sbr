@@ -16,12 +16,12 @@
  *  												CONSTRUCTOR
  *******************************************************************************************************************************************/
 
-Encoder::Encoder(uint8_t channel, uint8_t channelAPin, uint8_t channelBPin, bool direction){
+Encoder::Encoder(uint8_t channel, uint8_t channelAPin, uint8_t channelBPin, bool invertDirection){
     this->m_ESP32Encoder = new ESP32Encoder();
     this->m_channel = channel;
     this->m_channelAPin = channelAPin;
     this->m_channelBPin = channelBPin;
-    this->m_direction = direction;
+    this->m_invertDirection = invertDirection;
     this->m_ESP32Encoder->attachHalfQuad(channelAPin, channelBPin);
     this->SetCount(0);
 }
@@ -38,7 +38,7 @@ Encoder::~Encoder(){
  *******************************************************************************************************************************************/
 
 int64_t Encoder::GetCount(){
-    if (this->m_direction == 0){
+    if (this->m_invertDirection == 0){
         return this->m_ESP32Encoder->getCount();
     } else {
         return (-1 * this->m_ESP32Encoder->getCount());
@@ -52,7 +52,7 @@ RC_e Encoder::SetCount(int64_t count){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
-    if (this->m_direction == 0){
+    if (this->m_invertDirection == 0){
         this->m_ESP32Encoder->setCount(count);
     } else {
         this->m_ESP32Encoder->setCount((-1 * count));
@@ -70,7 +70,7 @@ RC_e Encoder::InvertDirection(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
-    this->m_direction = true;
+    this->m_invertDirection = true;
     Log.traceln("[Encoder::InvertDirection] Encoder[%d] Direction inverted", this->m_channel);
 
     return retCode;
@@ -80,7 +80,7 @@ RC_e Encoder::InvertDirection(){
 //=====================================================================================================
 
 bool Encoder::GetDirection(){
-    return this->m_direction;
+    return this->m_invertDirection;
 }
 
 
@@ -95,7 +95,7 @@ RC_e Encoder::Print(){
     Serial.printf(" - Encoder Channel: %d\r\n", this->m_channel);
     Serial.printf(" - Channel A Pin: %d\r\n", this->m_channelAPin);
     Serial.printf(" - Channel B Pin: %d\r\n", this->m_channelBPin);
-    Serial.printf(" - Direction (Inverted) : %d\r\n", this->m_direction);
+    Serial.printf(" - Direction (Inverted) : %d\r\n", this->m_invertDirection);
     Serial.println("*****************");
     
     return retCode;
