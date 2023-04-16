@@ -38,7 +38,7 @@ public:
      * @param dirPin GPIO PIN to control the motor direction
      * @param direction Direction of the Motor
      */
-    Motor(PWMChannel_e pwmChannel, uint8_t pwmPin, double frequency, uint8_t resolution, double offset, uint8_t dirPin, MotorDirection_e direction = MotorDirection_e::MOTOR_DIRECCTION_NORMAL);
+    Motor(PWMChannel_e pwmChannel, uint8_t pwmPin, double frequency, uint8_t resolution, double offset, uint8_t dirPin, bool invertDirection = false);
 
     /**
      * @brief Destructor
@@ -113,7 +113,7 @@ private:
     uint8_t m_resolution;           /**@brief PWM resolution 1-20 bits */
     double m_offset;                /**@brief Correction offset */
     uint8_t m_dirPin;               /**@brief Pin to control the direction */
-    MotorDirection_e m_direction;   /**@brief Invert the motor direction 0=Normal, 1=Invert */
+    bool m_invertDirection;         /**@brief Invert Motor direction 0=Normal, 1=Invert */
     double m_speed = 0.0;           /**@brief Motor Speed */
 
     /**
