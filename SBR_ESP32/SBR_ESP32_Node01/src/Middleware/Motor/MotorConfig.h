@@ -35,14 +35,4 @@ enum PWMChannel_e {
 };
 
 
-//=====================================================================================================
-/**
- * @brief Enumeration for the Motor direction.
- * 
- */
-enum MotorDirection_e {
-    MOTOR_DIRECCTION_NORMAL = 0,
-    MOTOR_DIRECTION_INVERTED
-};
-
 #endif /* MOTORCONFIG_H */
