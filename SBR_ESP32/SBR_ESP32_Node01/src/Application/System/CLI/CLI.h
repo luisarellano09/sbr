@@ -175,7 +175,11 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetY].text = "Set Y";
     CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetY].Callback = F_CLI_Modules_Odometry_SetValues_SetY;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetAngle].path = "5523";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetDistance].path = "5523";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetDistance].text = "Set Distance";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetDistance].Callback = F_CLI_Modules_Odometry_SetValues_SetDistance;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetAngle].path = "5524";
     CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetAngle].text = "Set Angle";
     CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetAngle].Callback = F_CLI_Modules_Odometry_SetValues_SetAngle;
 
@@ -881,6 +885,20 @@ void F_CLI_Modules_Odometry_SetValues_SetY(){
         res = insertedValueCLI.toFloat();
         manager->m_odometry->SetY(res);
         Serial.println("Odometry Y value: " + String(manager->m_odometry->GetY()));
+    }
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Odometry_SetValues_SetDistance(){
+    float res = 0.0;
+    Serial.println("Enter Distance value:");
+    ActivateGetValueModeCLI();
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_odometry->SetY(res);
+        Serial.println("Odometry Distance value: " + String(manager->m_odometry->GetDistance()));
     }
 }
 
