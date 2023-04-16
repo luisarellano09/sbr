@@ -71,6 +71,13 @@ public:
     RC_e InvertRoll();
 
     /**
+     * @brief Get the Direction Roll
+     * 
+     * @return RC_e Result code
+     */
+    bool GetDirectionRoll();
+
+    /**
      * @brief Invert Pitch
      * 
      * @return RC_e Result code.
@@ -78,11 +85,25 @@ public:
     RC_e InvertPitch();
 
     /**
+     * @brief Get the Direction Pitch
+     * 
+     * @return RC_e Result code
+     */
+    bool GetDirectionPitch();
+
+    /**
      * @brief Invert Yaw
      * 
      * @return RC_e Result code.
      */
     RC_e InvertYaw();
+
+    /**
+     * @brief Get the Direction Yaw
+     * 
+     * @return RC_e Result code
+     */
+    bool GetDirectionYaw();
 
     /**
      * @brief Set the Pitch Offset

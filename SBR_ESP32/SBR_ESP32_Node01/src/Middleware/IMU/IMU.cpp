@@ -90,6 +90,13 @@ RC_e IMU::InvertRoll(){
 
 //=====================================================================================================
 
+bool IMU::GetDirectionRoll(){
+    return this->m_invertRoll;
+}
+
+
+//=====================================================================================================
+
 RC_e IMU::InvertPitch(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
@@ -101,12 +108,26 @@ RC_e IMU::InvertPitch(){
 
 //=====================================================================================================
 
+bool IMU::GetDirectionPitch(){
+    return this->m_invertPitch;
+}
+
+
+//=====================================================================================================
+
 RC_e IMU::InvertYaw(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
     this->m_invertYaw = true;
     return retCode;
+}
+
+
+//=====================================================================================================
+
+bool IMU::GetDirectionYaw(){
+    return this->m_invertYaw;
 }
 
 
