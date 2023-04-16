@@ -114,6 +114,13 @@ public:
     RC_e SetPitchOffset(double pitchOffset);
 
     /**
+     * @brief Get the Pitch Offset
+     * 
+     * @return double Pitch Offset
+     */
+    double GetPitchOffset();
+
+    /**
      * @brief Get the Roll
      * 
      * @return double Roll

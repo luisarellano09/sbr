@@ -144,6 +144,13 @@ RC_e IMU::SetPitchOffset(double pitchOffset){
 
 //=====================================================================================================
 
+double IMU::GetPitchOffset(){
+    return this->m_pitchOffset;
+}
+
+
+//=====================================================================================================
+
 double IMU::GetRoll(){
     return this->m_Roll;
 }
