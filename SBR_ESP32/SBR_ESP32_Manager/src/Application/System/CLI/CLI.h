@@ -548,17 +548,17 @@ void F_CLI_Test_Test1(){
 //=====================================================================================================
 
 void F_CLI_Test_Test2(){
-    manager->m_nodeESP32->AddRequest(DEVICE_e::ESP32_NODE01, COM_REQUEST_TYPE_e::REQUEST_WRITE, COM_REQUEST_REG_ID_e::REGISTER_10, 69);
-    manager->m_nodeESP32->PrintBuffer();
+    //manager->m_nodeESP32->AddRequest(DEVICE_e::ESP32_NODE01, COM_REQUEST_TYPE_e::REQUEST_WRITE, COM_REQUEST_REG_ID_e::REGISTER_10, 69);
+    //manager->m_nodeESP32->PrintBuffer();
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Test_Test3(){
-    manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_50, 150);
-    manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_51, 151);
-    manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_52, 152);
+    // manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_50, 150);
+    // manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_51, 151);
+    // manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_52, 152);
 }
 
 

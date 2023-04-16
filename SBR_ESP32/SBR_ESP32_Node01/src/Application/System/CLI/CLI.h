@@ -1490,7 +1490,7 @@ void F_CLI_Test(){
 //=====================================================================================================
 
 void F_CLI_Test_Test1(){
-    manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_51, 251);
+    //manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_51, 251);
 }
 
 
