@@ -64,7 +64,7 @@ Manager::~Manager(){}
  *******************************************************************************************************************************************/
 
 RC_e Manager::AddSubscribers(){
-    this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::REGISTER_50, DEVICE_e::ESP32_NODE01);
-    this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::REGISTER_51, DEVICE_e::ESP32_NODE02);
+    // this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::REGISTER_50, DEVICE_e::ESP32_NODE01);
+    // this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::REGISTER_51, DEVICE_e::ESP32_NODE02);
     return RC_e::SUCCESS;
 }

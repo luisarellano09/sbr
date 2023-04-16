@@ -34,7 +34,7 @@ RC_e ExtHandler(Request* request){
     Log.traceln("[NodeHandler::ExtHandler] Request received: nodeId=%d, reqType=%d, regId=%d, data=%d, CRC=%d", request->nodeId, request->reqType, request->regId, request->data, request->CRC);
 
     switch(request->regId){
-        case COM_REQUEST_REG_ID_e::REGISTER_10:{
+        case COM_REQUEST_REG_ID_e::NONE_REG_ID:{
             double data_Register10 = (double)request->data;
             xQueueSend(queue_Register10, &data_Register10, 0);
             break;
