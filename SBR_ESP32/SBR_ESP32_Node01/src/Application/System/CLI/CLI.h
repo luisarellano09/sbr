@@ -955,7 +955,7 @@ void F_CLI_Modules_Motion_SetSPAngle(){
     Serial.println("Enter SP Angle value:");
     ActivateGetValueModeCLI();
     if (!insertedValueCLI.equals("")){
-        res = insertedValueCLI.toFloat();
+        res = insertedValueCLI.toFloat() + manager->m_motionControl->GetSPAngle();
         manager->m_motionControl->SetSPAngle(res);
         Serial.println("Motion SP Angle: " + String(manager->m_motionControl->GetSPAngle()));
     }
