@@ -42,16 +42,16 @@ enum COM_REQUEST_REG_ID_e {
     SETUP_IMU_INVERT_ROLL_R,                    /**@brief Bit */
     SETUP_IMU_INVERT_YAW_W,	                    /**@brief Bit */
     SETUP_IMU_INVERT_YAW_R,	                    /**@brief Bit */
-    SETUP_IMU_OFFSET_PITCH_W,	                /**@brief Bit */
-    SETUP_IMU_OFFSET_PITCH_R,	                /**@brief Bit */
-    SETUP_ENCODER_DIRECTION_W,	                /**@brief Bit */
-    SETUP_ENCODER_DIRECTION_R,	                /**@brief Bit */
+    SETUP_IMU_OFFSET_PITCH_W,	                /**@brief Factor: 100 */
+    SETUP_IMU_OFFSET_PITCH_R,	                /**@brief Factor: 100 */
+    SETUP_ENCODER_LEFT_DIRECTION_W,             /**@brief Bit */
+    SETUP_ENCODER_LEFT_DIRECTION_R,             /**@brief Bit */
+    SETUP_ENCODER_RIGHT_DIRECTION_W,            /**@brief Bit */
+    SETUP_ENCODER_RIGHT_DIRECTION_R,            /**@brief Bit */
     SETUP_ODOMETRY_WHEEL_RADIO_W,	            /**@brief Factor: 1000 */
     SETUP_ODOMETRY_WHEEL_RADIO_R,	            /**@brief Factor: 1000  */
     SETUP_ODOMETRY_DISTANCE_WHEELS_W,           /**@brief Factor: 1000  */
     SETUP_ODOMETRY_DISTANCE_WHEELS_R,           /**@brief Factor: 1000  */
-    SETUP_ODOMETRY_TICKS_ENCODER_REV_W,	        /**@brief Factor: 1000  */
-    SETUP_ODOMETRY_TICKS_ENCODER_REV_R,	        /**@brief Factor: 1000  */
     SETUP_MOTION_PID_PITCH_KP_W,	            /**@brief Factor: 1000  */
     SETUP_MOTION_PID_PITCH_KP_R,	            /**@brief Factor: 1000 */
     SETUP_MOTION_PID_PITCH_KI_W,	            /**@brief Factor: 1000 */
