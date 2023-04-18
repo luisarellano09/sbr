@@ -14,7 +14,7 @@
 #include "DatalogConfig.h"
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "../../Definition/Local/GlobalVar.h"
+#include "../../../Definition/Local/GlobalVar.h"
 
 
 /*******************************************************************************************************************************************

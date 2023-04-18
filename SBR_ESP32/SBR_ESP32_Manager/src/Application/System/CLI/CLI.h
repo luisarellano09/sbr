@@ -15,8 +15,8 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include "CLIConfig.h"
-#include "../../Definition/Local/GlobalVar.h"
-#include "../../Definition/Local/LocalConfig.h"
+#include "../../../Definition/Local/GlobalVar.h"
+#include "../../../Definition/Local/LocalConfig.h"
 #include "../Tasks/TasksConfig.h"
 #include "../Modes/ModesConfig.h"
 
@@ -107,9 +107,13 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Modules_Communication_PrintBufferEsp32].text = "Print Buffer ESP32";
     CLIOptions[CLIOptions_e::CLI_Modules_Communication_PrintBufferEsp32].Callback = F_CLI_Modules_Communication_PrintBufferEsp32;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Communication_Registers].path = "513";
-    CLIOptions[CLIOptions_e::CLI_Modules_Communication_Registers].text = "Registers ->";
-    CLIOptions[CLIOptions_e::CLI_Modules_Communication_Registers].Callback = F_CLI_Modules_Communication_Registers;
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_SetRegister].path = "513";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_SetRegister].text = "Set Registers";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_SetRegister].Callback = F_CLI_Modules_Communication_SetRegister;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_ReadRegister].path = "514";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_ReadRegister].text = "Read Register";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_ReadRegister].Callback = F_CLI_Modules_Communication_ReadRegister;
 
     CLIOptions[CLIOptions_e::CLI_Debug].path = "6";
     CLIOptions[CLIOptions_e::CLI_Debug].text = "Debug ->";
@@ -463,8 +467,38 @@ void F_CLI_Modules_Communication_PrintBufferEsp32(){
 
 //=====================================================================================================
 
-void F_CLI_Modules_Communication_Registers(){
-    Serial.println("F_CLI_Modules_Communication_Registers");
+void F_CLI_Modules_Communication_SetRegister(){
+    // Register
+    uint16_t reg = 0;
+    Serial.println("Enter Register:");
+    ActivateGetValueModeCLI();
+    if (!insertedValueCLI.equals("")){
+        reg = insertedValueCLI.toInt();
+
+        // Data
+        int32_t data = 0;
+        Serial.println("Enter Data:");
+        ActivateGetValueModeCLI();
+        if (!insertedValueCLI.equals("")){
+            data = insertedValueCLI.toInt();
+            manager->m_tableRegister->UpdateRegister((COM_REQUEST_REG_ID_e)reg, data);
+            Serial.println("Setted Register[" + String(reg) + "] = " + String(data));
+        }
+    }
+}
+
+
+//=====================================================================================================
+
+void F_CLI_Modules_Communication_ReadRegister(){
+    // Register
+    uint16_t reg = 0;
+    Serial.println("Enter Register:");
+    ActivateGetValueModeCLI();
+    if (!insertedValueCLI.equals("")){
+        reg = insertedValueCLI.toInt();
+        manager->m_tableRegister->PrintRegister((COM_REQUEST_REG_ID_e)reg);
+    }
 }
 
 
@@ -540,25 +574,21 @@ void F_CLI_Test(){
 //=====================================================================================================
 
 void F_CLI_Test_Test1(){
-    manager->m_nodeESP32->Start();
-    Serial.println("Stating ESP32 Node...");
+
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Test_Test2(){
-    manager->m_nodeESP32->AddRequest(DEVICE_e::ESP32_NODE01, COM_REQUEST_TYPE_e::REQUEST_WRITE, COM_REQUEST_REG_ID_e::REGISTER_10, 69);
-    manager->m_nodeESP32->PrintBuffer();
+    
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Test_Test3(){
-    manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_50, 150);
-    manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_51, 151);
-    manager->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_52, 152);
+
 }
 
 

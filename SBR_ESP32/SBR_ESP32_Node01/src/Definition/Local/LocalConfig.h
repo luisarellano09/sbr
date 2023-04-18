@@ -92,6 +92,18 @@
  */
 #define MOTOR_PWM_RESOLUTION 10
 
+/**
+ * @brief Motor left Offset
+ * 
+ */
+#define MOTOR_LEFT_OFFSET (double) 3.0
+
+/**
+ * @brief Motor right Offset
+ * 
+ */
+#define MOTOR_RIGHT_OFFSET (double) 3.0
+
 
 // ========================== ENCODERS =====================
 /**
@@ -183,10 +195,10 @@
 
 // ========================== ODOMETRY =====================
 /**
- * @brief ODOMETRY_RADIO
+ * @brief ODOMETRY__WHEEL_RADIO
  * 
  */
-#define ODOMETRY_RADIO (double)0.035 
+#define ODOMETRY_WHEEL_RADIO (double)0.035 
 
 /**
  * @brief ODOMETRY_DISTANCE_WHEELS

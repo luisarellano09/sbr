@@ -15,7 +15,7 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include "soc/soc.h"
-#include "./Definition/Local/GlobalVar.h"
+#include "../../../Definition/Local/GlobalVar.h"
 #include "../CLI/CLIConfig.h"
 #include "../Modes/ModesConfig.h"
 #include "../Datalog/DatalogConfig.h"

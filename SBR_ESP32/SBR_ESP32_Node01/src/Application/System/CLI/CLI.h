@@ -14,8 +14,8 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include "CLIConfig.h"
-#include "../../Definition/Local/GlobalVar.h"
-#include "../../Definition/Local/LocalConfig.h"
+#include "../../../Definition/Local/GlobalVar.h"
+#include "../../../Definition/Local/LocalConfig.h"
 #include "../Tasks/TasksConfig.h"
 #include "../Modes/ModesConfig.h"
 #include "../Datalog/DatalogConfig.h"
@@ -175,7 +175,11 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetY].text = "Set Y";
     CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetY].Callback = F_CLI_Modules_Odometry_SetValues_SetY;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetAngle].path = "5523";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetDistance].path = "5523";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetDistance].text = "Set Distance";
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetDistance].Callback = F_CLI_Modules_Odometry_SetValues_SetDistance;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetAngle].path = "5524";
     CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetAngle].text = "Set Angle";
     CLIOptions[CLIOptions_e::CLI_Modules_Odometry_SetValues_SetAngle].Callback = F_CLI_Modules_Odometry_SetValues_SetAngle;
 
@@ -887,6 +891,20 @@ void F_CLI_Modules_Odometry_SetValues_SetY(){
 
 //=====================================================================================================
 
+void F_CLI_Modules_Odometry_SetValues_SetDistance(){
+    float res = 0.0;
+    Serial.println("Enter Distance value:");
+    ActivateGetValueModeCLI();
+    if (!insertedValueCLI.equals("")){
+        res = insertedValueCLI.toFloat();
+        manager->m_odometry->SetY(res);
+        Serial.println("Odometry Distance value: " + String(manager->m_odometry->GetDistance()));
+    }
+}
+
+
+//=====================================================================================================
+
 void F_CLI_Modules_Odometry_SetValues_SetAngle(){
     float res = 0.0;
     Serial.println("Enter Angle value:");
@@ -937,7 +955,7 @@ void F_CLI_Modules_Motion_SetSPAngle(){
     Serial.println("Enter SP Angle value:");
     ActivateGetValueModeCLI();
     if (!insertedValueCLI.equals("")){
-        res = insertedValueCLI.toFloat();
+        res = insertedValueCLI.toFloat() + manager->m_motionControl->GetSPAngle();
         manager->m_motionControl->SetSPAngle(res);
         Serial.println("Motion SP Angle: " + String(manager->m_motionControl->GetSPAngle()));
     }
@@ -1454,7 +1472,7 @@ void F_CLI_Test(){
 //=====================================================================================================
 
 void F_CLI_Test_Test1(){
-    manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_51, 251);
+    //manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::REGISTER_51, 251);
 }
 
 

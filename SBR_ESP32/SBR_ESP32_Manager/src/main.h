@@ -15,9 +15,9 @@
 #include <ArduinoLog.h>
 #include "soc/rtc_cntl_reg.h"
 #include "./Definition/Local/GlobalVar.h"
-#include "./Application/Tasks/Tasks.h"
-#include "./Application/CLI/CLI.h"
-#include "./Application/Modes/Modes.h"
+#include "./Application/System/Tasks/Tasks.h"
+#include "./Application/System/CLI/CLI.h"
+#include "./Application/System/Modes/Modes.h"
 
 
 /*******************************************************************************************************************************************
@@ -48,7 +48,7 @@ void InitMain(){
     preferences.begin("SBR", false);
 
     // Logging
-    Log.begin(LOG_LEVEL_VERBOSE, &Serial);
+    Log.begin(LOG_LEVEL_INFO, &Serial);
 
     // Manager Instance
     manager = new Manager();

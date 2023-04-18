@@ -28,8 +28,8 @@ Manager::Manager(){
     Log.traceln("[Manager::Manager] NodeEsp32 instanced");
 
     // Motors
-    this->m_motorLeft = new Motor(PWMChannel_e::PWM1, MOTOR_LEFT_PWM_GPIO, MOTOR_PWM_FREQUENCY, MOTOR_PWM_RESOLUTION, 3.0, MOTOR_LEFT_DIR_GPIO);
-    this->m_motorRight = new Motor(PWMChannel_e::PWM2, MOTOR_RIGHT_PWM_GPIO, MOTOR_PWM_FREQUENCY, MOTOR_PWM_RESOLUTION, 3.0, MOTOR_RIGHT_DIR_GPIO, MotorDirection_e::MOTOR_DIRECTION_INVERTED);
+    this->m_motorLeft = new Motor(PWMChannel_e::PWM1, MOTOR_LEFT_PWM_GPIO, MOTOR_PWM_FREQUENCY, MOTOR_PWM_RESOLUTION, MOTOR_LEFT_OFFSET, MOTOR_LEFT_DIR_GPIO);
+    this->m_motorRight = new Motor(PWMChannel_e::PWM2, MOTOR_RIGHT_PWM_GPIO, MOTOR_PWM_FREQUENCY, MOTOR_PWM_RESOLUTION, MOTOR_RIGHT_OFFSET, MOTOR_RIGHT_DIR_GPIO, true);
     Log.traceln("[Manager::Manager] Motors instanced");
 
     // IMU
@@ -42,7 +42,7 @@ Manager::Manager(){
     Log.traceln("[Manager::Manager] Encoders instanced");
 
     //Odometry
-    this->m_odometry = new Odometry(this->m_encoderLeft, this->m_encoderRight, ODOMETRY_RADIO, ODOMETRY_DISTANCE_WHEELS, ODOMETRY_TICKS_REVOLUTION);
+    this->m_odometry = new Odometry(this->m_encoderLeft, this->m_encoderRight, ODOMETRY_WHEEL_RADIO, ODOMETRY_DISTANCE_WHEELS, ODOMETRY_TICKS_REVOLUTION);
     Log.traceln("[Manager::Manager] Odometry instanced");
 
     // Motion

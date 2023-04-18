@@ -75,6 +75,7 @@ enum CLIOptions_e {
     CLI_Modules_Odometry_SetValues,
     CLI_Modules_Odometry_SetValues_SetX,
     CLI_Modules_Odometry_SetValues_SetY,
+    CLI_Modules_Odometry_SetValues_SetDistance,
     CLI_Modules_Odometry_SetValues_SetAngle,
     CLI_Modules_Motion,
     CLI_Modules_Motion_Start,
@@ -204,6 +205,7 @@ void F_CLI_Modules_Odometry_Status();
 void F_CLI_Modules_Odometry_SetValues();
 void F_CLI_Modules_Odometry_SetValues_SetX();
 void F_CLI_Modules_Odometry_SetValues_SetY();
+void F_CLI_Modules_Odometry_SetValues_SetDistance();
 void F_CLI_Modules_Odometry_SetValues_SetAngle();
 void F_CLI_Modules_Motion();
 void F_CLI_Modules_Motion_Start();

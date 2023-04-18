@@ -9,112 +9,111 @@
 #define REGISTERTABLEDEF_H
 
 /**
- * @brief Enumeration for SBR registers IDs. The number defines the register offset
+ * @brief Enumeration for SBR registers.
  * 
  */
 enum COM_REQUEST_REG_ID_e {
     NONE_REG_ID = 0,
-	NODE_ESP32_HEART_BIT01,             /**@brief REGISTER 01 */
-    NODE_ESP32_HEART_BIT02,	            /**@brief REGISTER 02 */
-    NODE_ESP32_HEART_BIT_STATUS,	    /**@brief REGISTER 03 */
-    NODE_ESP32_HEART_BIT_ERRORS,	    /**@brief REGISTER 04 */
-    REGISTER_05,	                    /**@brief REGISTER 05 */
-    REGISTER_06,	                    /**@brief REGISTER 06 */
-    REGISTER_07,	                    /**@brief REGISTER 07 */
-    REGISTER_08,	                    /**@brief REGISTER 08 */
-    REGISTER_09,	                    /**@brief REGISTER 09 */
-    REGISTER_10,	                    /**@brief REGISTER 10 */
-    REGISTER_11,                        /**@brief REGISTER 11 */
-    REGISTER_12,	                    /**@brief REGISTER 12 */
-    REGISTER_13,	                    /**@brief REGISTER 13 */
-    REGISTER_14,	                    /**@brief REGISTER 14 */
-    REGISTER_15,	                    /**@brief REGISTER 15 */
-    REGISTER_16,	                    /**@brief REGISTER 16 */
-    REGISTER_17,	                    /**@brief REGISTER 17 */
-    REGISTER_18,	                    /**@brief REGISTER 18 */
-    REGISTER_19,	                    /**@brief REGISTER 19 */
-    REGISTER_20,	                    /**@brief REGISTER 20 */
-    REGISTER_21,                        /**@brief REGISTER 21 */
-    REGISTER_22,	                    /**@brief REGISTER 22 */
-    REGISTER_23,	                    /**@brief REGISTER 23 */
-    REGISTER_24,	                    /**@brief REGISTER 24 */
-    REGISTER_25,	                    /**@brief REGISTER 25 */
-    REGISTER_26,	                    /**@brief REGISTER 26 */
-    REGISTER_27,	                    /**@brief REGISTER 27 */
-    REGISTER_28,	                    /**@brief REGISTER 28 */
-    REGISTER_29,	                    /**@brief REGISTER 29 */
-    REGISTER_30,                        /**@brief REGISTER 30 */
-    REGISTER_31,                        /**@brief REGISTER 31 */
-    REGISTER_32,	                    /**@brief REGISTER 32 */
-    REGISTER_33,	                    /**@brief REGISTER 33 */
-    REGISTER_34,	                    /**@brief REGISTER 34 */
-    REGISTER_35,	                    /**@brief REGISTER 35 */
-    REGISTER_36,	                    /**@brief REGISTER 36 */
-    REGISTER_37,	                    /**@brief REGISTER 37 */
-    REGISTER_38,	                    /**@brief REGISTER 38 */
-    REGISTER_39,	                    /**@brief REGISTER 39 */
-    REGISTER_40,	                    /**@brief REGISTER 40 */
-    REGISTER_41,                        /**@brief REGISTER 41 */
-    REGISTER_42,	                    /**@brief REGISTER 42 */
-    REGISTER_43,	                    /**@brief REGISTER 43 */
-    REGISTER_44,	                    /**@brief REGISTER 44 */
-    REGISTER_45,	                    /**@brief REGISTER 45 */
-    REGISTER_46,	                    /**@brief REGISTER 46 */
-    REGISTER_47,	                    /**@brief REGISTER 47 */
-    REGISTER_48,	                    /**@brief REGISTER 48 */
-    REGISTER_49,	                    /**@brief REGISTER 49 */
-    REGISTER_50,	                    /**@brief REGISTER 50 */
-    REGISTER_51,                        /**@brief REGISTER 51 */
-    REGISTER_52,	                    /**@brief REGISTER 52 */
-    REGISTER_53,	                    /**@brief REGISTER 53 */
-    REGISTER_54,	                    /**@brief REGISTER 54 */
-    REGISTER_55,	                    /**@brief REGISTER 55 */
-    REGISTER_56,	                    /**@brief REGISTER 56 */
-    REGISTER_57,	                    /**@brief REGISTER 57 */
-    REGISTER_58,	                    /**@brief REGISTER 58 */
-    REGISTER_59,	                    /**@brief REGISTER 59 */
-    REGISTER_60,	                    /**@brief REGISTER 60 */
-    REGISTER_61,                        /**@brief REGISTER 61 */
-    REGISTER_62,	                    /**@brief REGISTER 62 */
-    REGISTER_63,	                    /**@brief REGISTER 63 */
-    REGISTER_64,	                    /**@brief REGISTER 64 */
-    REGISTER_65,	                    /**@brief REGISTER 65 */
-    REGISTER_66,	                    /**@brief REGISTER 66 */
-    REGISTER_67,	                    /**@brief REGISTER 67 */
-    REGISTER_68,	                    /**@brief REGISTER 68 */
-    REGISTER_69,	                    /**@brief REGISTER 69 */
-    REGISTER_70,	                    /**@brief REGISTER 70 */
-    REGISTER_71,                        /**@brief REGISTER 71 */
-    REGISTER_72,	                    /**@brief REGISTER 72 */
-    REGISTER_73,	                    /**@brief REGISTER 73 */
-    REGISTER_74,	                    /**@brief REGISTER 74 */
-    REGISTER_75,	                    /**@brief REGISTER 75 */
-    REGISTER_76,	                    /**@brief REGISTER 76 */
-    REGISTER_77,	                    /**@brief REGISTER 77 */
-    REGISTER_78,	                    /**@brief REGISTER 78 */
-    REGISTER_79,	                    /**@brief REGISTER 79 */
-    REGISTER_80,	                    /**@brief REGISTER 80 */
-    REGISTER_81,                        /**@brief REGISTER 81 */
-    REGISTER_82,	                    /**@brief REGISTER 82 */
-    REGISTER_83,	                    /**@brief REGISTER 83 */
-    REGISTER_84,	                    /**@brief REGISTER 84 */
-    REGISTER_85,	                    /**@brief REGISTER 85 */
-    REGISTER_86,	                    /**@brief REGISTER 86 */
-    REGISTER_87,	                    /**@brief REGISTER 87 */
-    REGISTER_88,	                    /**@brief REGISTER 88 */
-    REGISTER_89,	                    /**@brief REGISTER 89 */
-    REGISTER_90,                        /**@brief REGISTER 90 */
-    REGISTER_91,                        /**@brief REGISTER 91 */
-    REGISTER_92,	                    /**@brief REGISTER 92 */
-    REGISTER_93,	                    /**@brief REGISTER 93 */
-    REGISTER_94,	                    /**@brief REGISTER 94 */
-    REGISTER_95,	                    /**@brief REGISTER 95 */
-    REGISTER_96,	                    /**@brief REGISTER 96 */
-    REGISTER_97,	                    /**@brief REGISTER 97 */
-    REGISTER_98,	                    /**@brief REGISTER 98 */
-    REGISTER_99,	                    /**@brief REGISTER 99 */
-    REGISTER_100,	                    /**@brief REGISTER 100 */
-	LENGTH_REG_ID                       /**@brief Number of registers */					            
+    STATUS_HEARTBEAT_ESP32_COUNTER_R,           /**@brief Counter */
+    STATUS_HEARTBEAT_LINUX_COUNTER_R,	        /**@brief Counter */
+    STATUS_NODE_LINUX_R,	                    /**@brief Bit */
+    STATUS_NODE_ESP32_R,	                    /**@brief Bit */
+    MODE_MANAGER_RESTART_W,	                    /**@brief Bit */
+    MODE_MANAGER_PROGRAM_W,	                    /**@brief Bit */
+    MODE_MANAGER_GET_DATA_RW,	                /**@brief 0=NoRequest; 1=Request; 2=inProcess; 3=Completed; 4=Loaded */
+    MODE_LINUX_GET_DATA_RW,	                    /**@brief 0=NoRequest; 1=Request; 2=inProcess; 3=Completed; 4=Loaded */
+    MODE_NODE1_RESTART_W,	                    /**@brief Bit */
+    MODE_NODE1_PROGRAM_W,	                    /**@brief Bit */
+    MODE_NODE1_GET_DATA_RW,	                    /**@brief 0=NoRequest; 1=Request; 2=inProcess; 3=Completed; 4=Loaded */
+    MODE_NODE1_START_W,                         /**@brief Bit */
+    MODE_NODE1_STOP_W,	                        /**@brief Bit */
+    MODE_NODE1_MODE_R,	                        /**@brief 0=NA; 1=IDLE; 2=Motion */
+    SETUP_MOTOR_LEFT_OFFSET_W,	                /**@brief Factor: 100 */
+    SETUP_MOTOR_LEFT_OFFSET_R,	                /**@brief Factor: 100  */
+    SETUP_MOTOR_LEFT_DIRECTION_W,	            /**@brief Bit */
+    SETUP_MOTOR_LEFT_DIRECTION_R,	            /**@brief Bit */
+    SETUP_MOTOR_RIGHT_OFFSET_W,	                /**@brief Factor: 100  */
+    SETUP_MOTOR_RIGHT_OFFSET_R,	                /**@brief Factor: 100  */
+    SETUP_MOTOR_RIGHT_DIRECTION_W,	            /**@brief Bit */
+    SETUP_MOTOR_RIGHT_DIRECTION_R,	            /**@brief Bit  */
+    SETUP_IMU_INVERT_PITCH_W,	                /**@brief Bit */
+    SETUP_IMU_INVERT_PITCH_R,	                /**@brief Bit */
+    SETUP_IMU_INVERT_ROLL_W,	                /**@brief Bit */
+    SETUP_IMU_INVERT_ROLL_R,                    /**@brief Bit */
+    SETUP_IMU_INVERT_YAW_W,	                    /**@brief Bit */
+    SETUP_IMU_INVERT_YAW_R,	                    /**@brief Bit */
+    SETUP_IMU_OFFSET_PITCH_W,	                /**@brief Factor: 100 */
+    SETUP_IMU_OFFSET_PITCH_R,	                /**@brief Factor: 100 */
+    SETUP_ENCODER_LEFT_DIRECTION_W,             /**@brief Bit */
+    SETUP_ENCODER_LEFT_DIRECTION_R,             /**@brief Bit */
+    SETUP_ENCODER_RIGHT_DIRECTION_W,            /**@brief Bit */
+    SETUP_ENCODER_RIGHT_DIRECTION_R,            /**@brief Bit */
+    SETUP_ODOMETRY_WHEEL_RADIO_W,	            /**@brief Factor: 1000 */
+    SETUP_ODOMETRY_WHEEL_RADIO_R,	            /**@brief Factor: 1000  */
+    SETUP_ODOMETRY_DISTANCE_WHEELS_W,           /**@brief Factor: 1000  */
+    SETUP_ODOMETRY_DISTANCE_WHEELS_R,           /**@brief Factor: 1000  */
+    SETUP_MOTION_PID_PITCH_KP_W,	            /**@brief Factor: 1000  */
+    SETUP_MOTION_PID_PITCH_KP_R,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_PITCH_KI_W,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_PITCH_KI_R,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_PITCH_KD_W,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_PITCH_KD_R,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_PITCH_CYCLE_R,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_PITCH_DIRECTION_W,         /**@brief Bit */
+    SETUP_MOTION_PID_PITCH_DIRECTION_R,	        /**@brief Bit */
+    SETUP_MOTION_PID_PITCH_MV_MIN_W,	        /**@brief Factor: 100 */
+    SETUP_MOTION_PID_PITCH_MV_MIN_R,	        /**@brief Factor: 100 */
+    SETUP_MOTION_PID_PITCH_MV_MAX_W,	        /**@brief Factor: 100 */
+    SETUP_MOTION_PID_PITCH_MV_MAX_R,	        /**@brief Factor: 100 */
+    SETUP_MOTION_PID_POSITION_KP_W,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_POSITION_KP_R,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_POSITION_KI_W,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_POSITION_KI_R,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_POSITION_KD_W,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_POSITION_KD_R,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_POSITION_CYCLE_R,	        /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_POSITION_DIRECTION_W,      /**@brief Bit */
+    SETUP_MOTION_PID_POSITION_DIRECTION_R,	    /**@brief Bit */
+    SETUP_MOTION_PID_POSITION_MV_MIN_W,	        /**@brief Factor: 100 */
+    SETUP_MOTION_PID_POSITION_MV_MIN_R,	        /**@brief Factor: 100 */
+    SETUP_MOTION_PID_POSITION_MV_MAX_W,	        /**@brief Factor: 100 */
+    SETUP_MOTION_PID_POSITION_MV_MAX_R,	        /**@brief Factor: 100 */
+    SETUP_MOTION_PID_ANGLE_KP_W,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_ANGLE_KP_R,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_ANGLE_KI_W,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_ANGLE_KI_R,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_ANGLE_KD_W,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_ANGLE_KD_R,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_ANGLE_CYCLE_R,	            /**@brief Factor: 1000 */
+    SETUP_MOTION_PID_ANGLE_DIRECTION_W,         /**@brief Bit */
+    SETUP_MOTION_PID_ANGLE_DIRECTION_R,	        /**@brief Bit */
+    SETUP_MOTION_PID_ANGLE_MV_MIN_W,	        /**@brief Factor: 100 */
+    SETUP_MOTION_PID_ANGLE_MV_MIN_R,	        /**@brief Factor: 100 */
+    SETUP_MOTION_PID_ANGLE_MV_MAX_W,            /**@brief Factor: 100 */
+    SETUP_MOTION_PID_ANGLE_MV_MAX_R,            /**@brief Factor: 100 */
+    LIVE_MOTOR_LEFT_SPEED_W,                    /**@brief Factor: 100 */
+    LIVE_MOTOR_LEFT_SPEED_R,                    /**@brief Factor: 100 */
+    LIVE_MOTOR_RIGHT_SPEED_W,                   /**@brief Factor: 100 */
+    LIVE_MOTOR_RIGHT_SPEED_R,	                /**@brief Factor: 100 */
+    LIVE_IMU_PITCH_R,                           /**@brief Factor: 100 */
+    LIVE_IMU_ROLL_R,	                        /**@brief Factor: 100 */
+    LIVE_IMU_YAW_R,	                            /**@brief Factor: 100 */
+    LIVE_ENCODER_LEFT_COUNT_R,	                /**@brief Factor: 1 */
+    LIVE_ENCODER_RIGHT_COUNT_R,	                /**@brief Factor: 1 */
+    LIVE_ODOMETRY_X_W,	                        /**@brief Factor: 1000 */
+    LIVE_ODOMETRY_X_R,	                        /**@brief Factor: 1000 */
+    LIVE_ODOMETRY_Y_W,	                        /**@brief Factor: 1000 */
+    LIVE_ODOMETRY_Y_R,	                        /**@brief Factor: 1000 */
+    LIVE_ODOMETRY_ANGLE_W,	                    /**@brief Factor: 100 */
+    LIVE_ODOMETRY_ANGLE_R,                      /**@brief Factor: 100 */
+    LIVE_ODOMETRY_DISTANCE_W,	                /**@brief Factor: 1000 */
+    LIVE_ODOMETRY_DISTANCE_R,	                /**@brief Factor: 1000 */
+    LIVE_ODOMETRY_RESET_W,	                    /**@brief Bit */
+    LIVE_MOTION_SP_POSITION_W,	                /**@brief Factor: 1000 */
+    LIVE_MOTION_SP_POSITION_R,	                /**@brief Factor: 1000 */
+    LIVE_MOTION_SP_ANGLE_W,	                    /**@brief Factor: 100 */
+    LIVE_MOTION_SP_ANGLE_R,	                    /**@brief Factor: 100 */
+	LENGTH_REG_ID                               /**@brief Number of registers */					            
 };
 
 #endif /* REGISTERTABLEDEF_H */

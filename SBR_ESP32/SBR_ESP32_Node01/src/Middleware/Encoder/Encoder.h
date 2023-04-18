@@ -35,7 +35,7 @@ public:
      * @param channelBPin Pin of encoder channel B
      * @param direction Encoder direction 0=Normal, 1=Invert 
      */
-    Encoder(uint8_t channel, uint8_t channelAPin, uint8_t channelBPin, bool direction = 0);
+    Encoder(uint8_t channel, uint8_t channelAPin, uint8_t channelBPin, bool invertDirection = 0);
 
     /**
      * @brief Destructor
@@ -59,6 +59,21 @@ public:
     RC_e SetCount(int64_t count);
 
     /**
+     * @brief Invert Direction
+     * 
+     * @return RC_e Result code
+     */
+    RC_e InvertDirection();
+
+    /**
+     * @brief Get the Direction
+     * 
+     * @return true Direction inverted
+     * @return false Direction normal
+     */
+    bool GetDirection();
+
+    /**
      * @brief Function to print the encoder info
      * 
      * @return RC_e Result code
@@ -72,7 +87,7 @@ private:
     uint8_t m_channel;                      /**@brief Encoder Channel */
     uint8_t m_channelAPin;                  /**@brief Pin of channel A */
     uint8_t m_channelBPin;                  /**@brief Pin of channel B */
-    bool m_direction;                       /**@brief Encoder direction 0=Normal, 1=Invert  */
+    bool m_invertDirection;                 /**@brief Invert encoder direction 0=Normal, 1=Invert  */
 
 };
 
