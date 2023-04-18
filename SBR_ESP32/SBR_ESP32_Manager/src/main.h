@@ -48,7 +48,7 @@ void InitMain(){
     preferences.begin("SBR", false);
 
     // Logging
-    Log.begin(LOG_LEVEL_VERBOSE, &Serial);
+    Log.begin(LOG_LEVEL_INFO, &Serial);
 
     // Manager Instance
     manager = new Manager();
