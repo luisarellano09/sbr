@@ -89,6 +89,7 @@ RC_e Motor::Stop(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
+    this->m_speed = 0.0;
     digitalWrite(this->m_dirPin, LOW); 
     ledcWrite(this->m_pwmChannel,0);
 
