@@ -99,6 +99,10 @@ public:
      */
     RC_e Stop();
 
+    RC_e TokenCounter(long counter, COM_REQUEST_REG_ID_e reg);
+
+    RC_e WatchDog(COM_REQUEST_REG_ID_e reg);
+
     /**
      * @brief Print Buffer of requests
      * 
@@ -112,6 +116,9 @@ private:
     HardwareSerial* m_serial;                       /**@brief Reference pointer of Serial Port */
     RequestBuffer* m_requestBuffer = NULL;          /**@brief Request Buffer object */
     bool m_start = false;                           /**@brief Start command*/
+    long m_counterHeartbeat = 0;
+    long m_prevCounterHeartbeat = 0;
+    bool m_error = false;
 
     /**
      * @brief Function to configure serial port

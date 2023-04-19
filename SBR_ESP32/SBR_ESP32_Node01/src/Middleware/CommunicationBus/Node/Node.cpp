@@ -161,7 +161,7 @@ RC_e Node::Run(){
         // Check if request was read
         if (tempRequest.nodeId != DEVICE_e::NONE_DEVICE) {
             // Check if the NodeId of the request belogns to the device
-            if (tempRequest.nodeId == NODE_ID){
+            if (tempRequest.nodeId == NODE_ID || tempRequest.nodeId == DEVICE_e::NEXT_ONE){
                 // Call Request Handler
                 if ((retCode = this->HandleRequest(&tempRequest)) != RC_e::SUCCESS){
                     Log.errorln("[Node::Run] Error in HandleRequest()");
@@ -203,6 +203,43 @@ RC_e Node::Start(){
 RC_e Node::Stop(){
     this->m_start = false;
     return RC_e::SUCCESS;
+}
+
+
+//=====================================================================================================
+
+RC_e Node::TokenCounter(long counter, COM_REQUEST_REG_ID_e reg){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+//..................
+    this->m_counterHeartbeat = counter;
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
+RC_e Node::WatchDog(COM_REQUEST_REG_ID_e reg){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    if (this->m_counterHeartbeat == this->m_prevCounterHeartbeat) {
+        this->m_error = true;
+    } else if (this->m_counterHeartbeat != this->m_prevCounterHeartbeat && this->m_counterHeartbeat > 100) {
+        this->m_error = false;
+    }
+
+    if (this->m_error == true){
+        this->m_requestBuffer->CleanBuffer();
+        if (NODE_ID == DEVICE_e::NODE_MANAGER){
+            this->m_requestBuffer->AddRequest(DEVICE_e::NEXT_ONE, COM_REQUEST_TYPE_e::REQUEST_WRITE, reg, 1);
+        }
+    }
+
+    this->m_prevCounterHeartbeat = this->m_counterHeartbeat;
+
+    return retCode;
 }
 
 
