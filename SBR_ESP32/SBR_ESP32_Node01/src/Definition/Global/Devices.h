@@ -18,7 +18,8 @@ enum DEVICE_e {
 	ESP32_NODE02,       /**@brief ESP32 Node02 */
     LINUX,              /**@brief Linux */
     NODE_MANAGER,       /**@brief Node Manager */
-    LENGTH_DEVICE       /**@brief Length */
+    LENGTH_DEVICE,      /**@brief Length */
+    NEXT_ONE
 };
 
 
