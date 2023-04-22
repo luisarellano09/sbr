@@ -18,6 +18,7 @@
 #include "./Application/System/Tasks/Tasks.h"
 #include "./Application/System/CLI/CLI.h"
 #include "./Application/System/Modes/Modes.h"
+#include "./Application/CommunicationBus/NodeEsp32/NodeHandler.h"
 
 
 /*******************************************************************************************************************************************
@@ -55,6 +56,9 @@ void InitMain(){
 
     // Wifi Config
     manager->m_wifiManager->SetWifiCredencials(preferences.getString("WifiName"), preferences.getString("WifiPass"), String(ESP32_HOSTNAME));
+
+    // External Handler
+    manager->m_nodeESP32->ExtHandler = ExtHandler;
 
     // Init CLI
     InitCLI();
