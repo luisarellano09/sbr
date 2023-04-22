@@ -81,9 +81,10 @@ public:
     /**
      * @brief Function to Run the Node
      * 
+     * @param regHeartbeatCounter Register of the Heartbeat counter
      * @return RC_e Result code
      */
-    RC_e Run();
+    RC_e Run(COM_REQUEST_REG_ID_e regHeartbeatCounter);
 
     /**
      * @brief Function to start Run
@@ -99,26 +100,56 @@ public:
      */
     RC_e Stop();
 
-    RC_e TokenCounter(long counter, COM_REQUEST_REG_ID_e reg);
+    /**
+     * @brief Token the Heartbeat Counter
+     * 
+     * @param HeartbeatCounter Heartbeat Counter
+     * @param regHeartbeatCounter Register of the Heartbeat counter
+     * @return RC_e Result code
+     */
+    RC_e TokenCounter(uint16_t HeartbeatCounter, COM_REQUEST_REG_ID_e regHeartbeatCounter);
 
-    RC_e WatchDog(COM_REQUEST_REG_ID_e reg);
+    /**
+     * @brief WatchDog
+     * 
+     * @param regHeartbeatCounter Register of the Heartbeat counter
+     * @return RC_e Result code
+     */
+    RC_e WatchDog(COM_REQUEST_REG_ID_e regHeartbeatCounter);
+
+    /**
+     * @brief Feed the WatchDog counter
+     * 
+     * @param regHeartbeatCounter Register of the Heartbeat counter
+     * @return RC_e Result code
+     */
+    RC_e FeedWatchDog(COM_REQUEST_REG_ID_e regHeartbeatCounter);
+
+    /**
+     * @brief Get the Error status
+     * 
+     * @return true Node is in Error
+     * @return false Node is ok
+     */
+    bool GetError();
 
     /**
      * @brief Print Buffer of requests
      * 
-     * @return RC_e 
+     * @return RC_e Result code
      */
     RC_e PrintBuffer();  
 
 
-private:
+protected:
 
     HardwareSerial* m_serial;                       /**@brief Reference pointer of Serial Port */
     RequestBuffer* m_requestBuffer = NULL;          /**@brief Request Buffer object */
-    bool m_start = false;                           /**@brief Start command*/
-    long m_counterHeartbeat = 0;
-    long m_prevCounterHeartbeat = 0;
-    bool m_error = false;
+    bool m_start = false;                           /**@brief Start command */
+    uint16_t m_counterHeartbeat = 0;                /**@brief Counter heartbeat */
+    uint16_t m_prevCounterHeartbeat = 0;            /**@brief Previous counter heartbeat */
+    bool m_error = false;                           /**@brief Error  */
+    long m_internalCounter = 0;                     /**@brief Internal Counter  */
 
     /**
      * @brief Function to configure serial port
