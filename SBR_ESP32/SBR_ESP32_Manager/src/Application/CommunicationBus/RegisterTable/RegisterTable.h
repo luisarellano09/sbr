@@ -88,8 +88,8 @@ public:
 
 private:
 
-    Node* m_NodeESP32 = NULL;       /**@brief Esp32 node*/
-    Node* m_NodeLinux = NULL;       /**@brief Linux node*/
+    Node* m_NodeESP32 = NULL;           /**@brief Esp32 node*/
+    Node* m_NodeLinux = NULL;           /**@brief Linux node*/
 
     /**
      * @brief Function to clean registers
