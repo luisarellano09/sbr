@@ -51,6 +51,22 @@ public:
      */
     RC_e ConnectRegisterTable(RegisterTable* tableRegister);
 
+    /**
+     * @brief Run
+     * 
+     * @return RC_e Result code
+     */
+    RC_e Run();
+
+    /**
+     * @brief Pointer of a function to handle a request externally
+     * 
+     * @param request Reference of a request object
+     * 
+     * @return RC_e Result code
+     */
+    RC_e (*ExtHandler)(Request* request);
+
 
 private:
 

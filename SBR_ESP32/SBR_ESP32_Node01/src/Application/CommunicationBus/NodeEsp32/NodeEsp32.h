@@ -53,6 +53,13 @@ public:
     RC_e UpdateRegister(COM_REQUEST_REG_ID_e regId, int32_t data);
 
     /**
+     * @brief Run
+     * 
+     * @return RC_e Result code
+     */
+    RC_e Run();
+
+    /**
      * @brief Pointer of a function to handle a request externally
      * 
      * @param request Reference of a request object
