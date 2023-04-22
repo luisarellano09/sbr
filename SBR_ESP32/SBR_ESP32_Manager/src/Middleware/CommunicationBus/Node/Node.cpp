@@ -5,7 +5,6 @@
  * 
  */
 
-
 /*******************************************************************************************************************************************
  *  												INCLUDE
  *******************************************************************************************************************************************/
@@ -144,11 +143,24 @@ RC_e Node::ReadNextRequest(Request* request){
 
 //=====================================================================================================
 
-RC_e Node::Run(){
+RC_e Node::Run(COM_REQUEST_REG_ID_e regHeartbeatCounter){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
     if (this->m_start == true){
+
+        // Call watchdog
+        this->m_internalCounter++;
+
+        // WatchDog
+        if (this->m_internalCounter % NODE_WATCHDOG_TIMEOUT == 0){
+            this->WatchDog(regHeartbeatCounter);
+        }
+
+        // Feed the Watchdog
+        if (this->m_internalCounter % NODE_WATCHDOG_FEED == 0){
+            this->FeedWatchDog(regHeartbeatCounter);
+        }
         
         // Temp request
         Request tempRequest;
@@ -161,20 +173,22 @@ RC_e Node::Run(){
 
         // Check if request was read
         if (tempRequest.nodeId != DEVICE_e::NONE_DEVICE) {
-            // Check if the NodeId of the request belogns to the device
-            if (tempRequest.nodeId == NODE_ID){
-                // Call Request Handler
-                if ((retCode = this->HandleRequest(&tempRequest)) != RC_e::SUCCESS){
-                    Log.errorln("[Node::Run] Error in HandleRequest()");
-                    return retCode;
-                }
-            } else {
-                // Check if the node is not the Manager
-                if (NODE_ID != DEVICE_e::NODE_MANAGER){
-                    // Add the request to the buffer
-                    if ((retCode = this->AddRequest(&tempRequest)) != RC_e::SUCCESS){
-                        Log.errorln("[Node::Run] Error in AddRequest()");
+            if (this->m_error == false || (this->m_error == true && (tempRequest.regId == COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_ESP32_COUNTER_R || tempRequest.regId == COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_LINUX_COUNTER_R))){
+                // Check if the NodeId of the request belogns to the device
+                if (tempRequest.nodeId == NODE_ID || tempRequest.nodeId == DEVICE_e::NEXT_ONE){
+                    // Call Request Handler
+                    if ((retCode = this->HandleRequest(&tempRequest)) != RC_e::SUCCESS){
+                        Log.errorln("[Node::Run] Error in HandleRequest()");
                         return retCode;
+                    }
+                } else {
+                    // Check if the node is not the Manager
+                    if (NODE_ID != DEVICE_e::NODE_MANAGER){
+                        // Add the request to the buffer
+                        if ((retCode = this->AddRequest(&tempRequest)) != RC_e::SUCCESS){
+                            Log.errorln("[Node::Run] Error in AddRequest()");
+                            return retCode;
+                        }
                     }
                 }
             }
@@ -209,6 +223,66 @@ RC_e Node::Stop(){
 
 //=====================================================================================================
 
+RC_e Node::TokenCounter(uint16_t HeartbeatCounter, COM_REQUEST_REG_ID_e regHeartbeatCounter){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_counterHeartbeat = HeartbeatCounter;
+
+    // The manager does not pass the token
+    if (NODE_ID != DEVICE_e::NODE_MANAGER){
+        this->m_requestBuffer->AddRequest(DEVICE_e::NEXT_ONE, COM_REQUEST_TYPE_e::REQUEST_WRITE, regHeartbeatCounter, HeartbeatCounter + 1);
+    }
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
+RC_e Node::WatchDog(COM_REQUEST_REG_ID_e regHeartbeatCounter){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    if (this->m_error == false && this->m_counterHeartbeat == this->m_prevCounterHeartbeat) {
+        this->m_error = true;
+        this->m_requestBuffer->CleanBuffer();
+        this->m_counterHeartbeat = 0;
+        this->m_prevCounterHeartbeat = 0;
+        Log.errorln("[Node::WatchDog] Error in WatchDog");
+    } else if (this->m_error == true && this->m_counterHeartbeat != this->m_prevCounterHeartbeat && this->m_counterHeartbeat > 1) {
+        this->m_error = false;
+        Log.infoln("[Node::WatchDog] WatchDog Ok");
+    }
+
+    if (this->m_error == true){
+        if (NODE_ID == DEVICE_e::NODE_MANAGER){
+            this->m_requestBuffer->AddRequest(DEVICE_e::NEXT_ONE, COM_REQUEST_TYPE_e::REQUEST_WRITE, regHeartbeatCounter, 1);
+        }
+    }
+
+    this->m_prevCounterHeartbeat = this->m_counterHeartbeat;
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
+RC_e Node::FeedWatchDog(COM_REQUEST_REG_ID_e regHeartbeatCounter){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    if (this->m_error == false && NODE_ID == DEVICE_e::NODE_MANAGER){
+        this->m_requestBuffer->AddRequest(DEVICE_e::NEXT_ONE, COM_REQUEST_TYPE_e::REQUEST_WRITE, regHeartbeatCounter, this->m_counterHeartbeat + 1);
+    }
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
 RC_e Node::PrintBuffer(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
@@ -228,6 +302,12 @@ RC_e Node::PrintBuffer(){
     return retCode;
 }  
 
+
+//=====================================================================================================
+
+bool Node::GetError(){
+    return this->m_error;
+}  
 
 /*******************************************************************************************************************************************
  *  												PRIVATE METHODS
