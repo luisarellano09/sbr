@@ -37,6 +37,29 @@ RC_e NodeEsp32::ConnectRegisterTable(RegisterTable* tableRegister){
 }
 
 
+//=====================================================================================================
+
+RC_e NodeEsp32::Run(){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    // Run the node
+    Node::Run(COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_ESP32_COUNTER_R);
+
+    // Check WatchDog
+    if ( Node::m_internalCounter % NODE_WATCHDOG_TIMEOUT == 0 ) {
+        if (Node::m_error == true ) {
+            this->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::STATUS_NODE_ESP32_R, 0);
+            Log.errorln("[NodeEsp32::Run] Error in WatchDog");
+        } else {
+            this->m_tableRegister->UpdateRegister(COM_REQUEST_REG_ID_e::STATUS_NODE_ESP32_R, 1);
+        }
+    } 
+
+    return retCode;
+}
+
+
 /*******************************************************************************************************************************************
  *  												PRIVATE METHODS
  *******************************************************************************************************************************************/
@@ -62,6 +85,17 @@ RC_e NodeEsp32::HandleRequest(Request* request){
     // Handle request in table Register
     if ((retCode = this->m_tableRegister->HandleRequest(request)) != RC_e::SUCCESS){
         Log.fatalln("[NodeEsp32::HandleRequest] Error in HandleRequest()");
+        return retCode;
+    }
+
+    // Check if the function is null
+    if (this->ExtHandler == NULL){
+        Log.fatalln("[NodeEsp32::HandleRequest] ExtHandler ERROR_NULL_POINTER");
+        return RC_e::ERROR_NULL_POINTER;
+    }
+
+    if ((retCode = this->ExtHandler(request)) != RC_e::SUCCESS){
+        Log.errorln("[NodeEsp32::HandleRequest] Error in ExtHandler()");
         return retCode;
     }
 
