@@ -19,7 +19,7 @@ enum DEVICE_e {
     LINUX,              /**@brief Linux */
     NODE_MANAGER,       /**@brief Node Manager */
     LENGTH_DEVICE,      /**@brief Length */
-    NEXT_ONE
+    NEXT_ONE            /**@brief The next device */
 };
 
 
