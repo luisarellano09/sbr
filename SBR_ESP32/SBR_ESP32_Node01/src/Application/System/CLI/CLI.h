@@ -1458,6 +1458,25 @@ void F_CLI_Profile_Profile1(){
 //=====================================================================================================
 
 void F_CLI_Profile_Profile2(){
+
+    manager->m_IMU->SetPitchOffset(0.0);
+
+    manager->m_motionControl->m_PIDPitch->SetCycleTime(0.01);
+    manager->m_motionControl->m_PIDPitch->SetParameters(11.0, 3.0, 0.04);
+    manager->m_motionControl->m_PIDPitch->SetMVRange(-100.0, 100.0);
+
+    manager->m_motionControl->m_PIDPosition->SetCycleTime(0.01);
+    manager->m_motionControl->m_PIDPosition->SetParameters(1.0, 1.0, 0.8);
+    manager->m_motionControl->m_PIDPosition->SetMVRange(-10.0, 10.0);
+    
+    manager->m_motionControl->m_PIDAngle->SetCycleTime(0.01);
+    manager->m_motionControl->m_PIDAngle->SetParameters(11.0, 2.0, 0.02);
+    manager->m_motionControl->m_PIDAngle->SetMVRange(-100.0, 100.0);
+
+    manager->m_motionControl->m_PIDPitch->Print();
+    manager->m_motionControl->m_PIDPosition->Print();
+    manager->m_motionControl->m_PIDAngle->Print();
+
     Serial.println("Profle2 loaded");
 }
 
