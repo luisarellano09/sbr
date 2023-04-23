@@ -311,11 +311,8 @@ RC_e ExtHandler(Request* request){
         }
 
         case COM_REQUEST_REG_ID_e::LIVE_ODOMETRY_RESET_W: {
-            if ((bool)request->data == true){
-                manager->m_odometry->Reset();
-                // ToDo: send response. Implemente commands states
-                Log.infoln("[NodeHandler::LIVE_ODOMETRY_RESET_W] Odometry resetted");
-            }
+            manager->m_odometry->Reset();
+            Log.infoln("[NodeHandler::LIVE_ODOMETRY_RESET_W] Odometry resetted");
             break;
         }
 
