@@ -8,6 +8,21 @@
 #ifndef REGISTERTABLEDEF_H
 #define REGISTERTABLEDEF_H
 
+
+/**
+ * @brief Enumeration register commands
+ * 
+ */
+enum RegisterCommand_e {
+	CMD_NONE = 0,           /**@brief No command*/
+	CMD_REQUESTED,          /**@brief Command requested */
+	CMD_IN_PROGRESS,        /**@brief Command in progress */
+	CMD_READY_TO_COMPLETE,  /**@brief Command is ready to be completed */
+	CMD_COMPLETED		    /**@brief Command completed */
+};
+
+
+//=====================================================================================================
 /**
  * @brief Enumeration for SBR registers.
  * 
@@ -20,13 +35,13 @@ enum COM_REQUEST_REG_ID_e {
     STATUS_NODE_ESP32_R,	                    /**@brief Bit */
     MODE_MANAGER_RESTART_W,	                    /**@brief Bit */
     MODE_MANAGER_PROGRAM_W,	                    /**@brief Bit */
-    MODE_MANAGER_GET_DATA_RW,	                /**@brief 0=NoRequest; 1=Request; 2=inProcess; 3=Completed; 4=Loaded */
-    MODE_LINUX_GET_DATA_RW,	                    /**@brief 0=NoRequest; 1=Request; 2=inProcess; 3=Completed; 4=Loaded */
+    MODE_MANAGER_SYNC_DATA_RW,                  /**@brief Command */
+    MODE_LINUX_SYNC_DATA_RW,	                /**@brief Command */
     MODE_NODE1_RESTART_W,	                    /**@brief Bit */
     MODE_NODE1_PROGRAM_W,	                    /**@brief Bit */
-    MODE_NODE1_GET_DATA_RW,	                    /**@brief 0=NoRequest; 1=Request; 2=inProcess; 3=Completed; 4=Loaded */
-    MODE_NODE1_START_W,                         /**@brief Bit */
-    MODE_NODE1_STOP_W,	                        /**@brief Bit */
+    MODE_NODE1_SYNC_DATA_RW,	                /**@brief Command */
+    MODE_NODE1_START_W,                         /**@brief Command */
+    MODE_NODE1_STOP_W,	                        /**@brief Command */
     MODE_NODE1_MODE_R,	                        /**@brief 0=NA; 1=IDLE; 2=Motion */
     SETUP_MOTOR_LEFT_OFFSET_W,	                /**@brief Factor: 100 */
     SETUP_MOTOR_LEFT_OFFSET_R,	                /**@brief Factor: 100  */

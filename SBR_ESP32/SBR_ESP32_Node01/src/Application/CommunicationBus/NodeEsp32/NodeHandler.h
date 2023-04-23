@@ -55,7 +55,7 @@ RC_e ExtHandler(Request* request){
             break;
         }
         
-        case COM_REQUEST_REG_ID_e::MODE_NODE1_GET_DATA_RW: {
+        case COM_REQUEST_REG_ID_e::MODE_NODE1_SYNC_DATA_RW: {
             //ToDo
             break;
         }

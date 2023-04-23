@@ -67,7 +67,7 @@ RC_e Manager::AddSubscribers(){
 
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::MODE_NODE1_RESTART_W, DEVICE_e::ESP32_NODE01);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::MODE_NODE1_PROGRAM_W, DEVICE_e::ESP32_NODE01);
-    this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::MODE_NODE1_GET_DATA_RW, DEVICE_e::ESP32_NODE01);
+    this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::MODE_NODE1_SYNC_DATA_RW, DEVICE_e::ESP32_NODE01);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::MODE_NODE1_START_W, DEVICE_e::ESP32_NODE01);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::MODE_NODE1_STOP_W, DEVICE_e::ESP32_NODE01);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_OFFSET_W, DEVICE_e::ESP32_NODE01);
