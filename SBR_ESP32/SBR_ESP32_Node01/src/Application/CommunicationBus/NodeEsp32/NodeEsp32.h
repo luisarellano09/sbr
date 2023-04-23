@@ -47,7 +47,6 @@ public:
      * 
      * @param regId Register ID
      * @param data Data Value
-     * 
      * @return RC_e Result code
      */
     RC_e UpdateRegister(COM_REQUEST_REG_ID_e regId, int32_t data);
@@ -63,7 +62,6 @@ public:
      * @brief Pointer of a function to handle a request externally
      * 
      * @param request Reference of a request object
-     * 
      * @return RC_e Result code
      */
     RC_e (*ExtHandler)(Request* request);
@@ -74,7 +72,6 @@ private:
      * @brief Function to handle a request
      * 
      * @param request Reference of a request object
-     * 
      * @return RC_e Result code
      */
     RC_e HandleRequest(Request* request);
