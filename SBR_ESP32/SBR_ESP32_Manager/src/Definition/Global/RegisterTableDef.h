@@ -33,15 +33,15 @@ enum COM_REQUEST_REG_ID_e {
     STATUS_HEARTBEAT_LINUX_COUNTER_R,	        /**@brief Counter */
     STATUS_NODE_LINUX_R,	                    /**@brief Bit */
     STATUS_NODE_ESP32_R,	                    /**@brief Bit */
-    MODE_MANAGER_RESTART_W,	                    /**@brief Bit */
-    MODE_MANAGER_PROGRAM_W,	                    /**@brief Bit */
+    MODE_MANAGER_RESTART_W,	                    /**@brief Always 0 */
+    MODE_MANAGER_PROGRAM_W,	                    /**@brief Always 0 */
     MODE_MANAGER_SYNC_DATA_RW,                  /**@brief Command */
     MODE_LINUX_SYNC_DATA_RW,	                /**@brief Command */
-    MODE_NODE1_RESTART_W,	                    /**@brief Bit */
-    MODE_NODE1_PROGRAM_W,	                    /**@brief Bit */
+    MODE_NODE1_RESTART_W,	                    /**@brief Always 0 */
+    MODE_NODE1_PROGRAM_W,	                    /**@brief Always 0 */
     MODE_NODE1_SYNC_DATA_RW,	                /**@brief Command */
-    MODE_NODE1_START_W,                         /**@brief Command */
-    MODE_NODE1_STOP_W,	                        /**@brief Command */
+    MODE_NODE1_START_W,                         /**@brief Always 0 */
+    MODE_NODE1_STOP_W,	                        /**@brief Always 0 */
     MODE_NODE1_MODE_R,	                        /**@brief 0=NA; 1=IDLE; 2=Motion */
     SETUP_MOTOR_LEFT_OFFSET_W,	                /**@brief Factor: 100 */
     SETUP_MOTOR_LEFT_OFFSET_R,	                /**@brief Factor: 100  */
@@ -123,7 +123,7 @@ enum COM_REQUEST_REG_ID_e {
     LIVE_ODOMETRY_ANGLE_R,                      /**@brief Factor: 100 */
     LIVE_ODOMETRY_DISTANCE_W,	                /**@brief Factor: 1000 */
     LIVE_ODOMETRY_DISTANCE_R,	                /**@brief Factor: 1000 */
-    LIVE_ODOMETRY_RESET_W,	                    /**@brief Bit */
+    LIVE_ODOMETRY_RESET_W,	                    /**@brief Always 0 */
     LIVE_MOTION_SP_POSITION_W,	                /**@brief Factor: 1000 */
     LIVE_MOTION_SP_POSITION_R,	                /**@brief Factor: 1000 */
     LIVE_MOTION_SP_ANGLE_W,	                    /**@brief Factor: 100 */
