@@ -19,6 +19,7 @@
 #include "../CLI/CLIConfig.h"
 #include "../Modes/ModesConfig.h"
 #include "../Datalog/DatalogConfig.h"
+#include "../../CommunicationBus/NodeEsp32/NodeHandler.h"
 
 
 /*******************************************************************************************************************************************
@@ -42,15 +43,17 @@ void InitTasks(){
     disableLoopWDT();
     disableCore0WDT();
     disableCore1WDT();
-    xTaskCreatePinnedToCore(TaskCLI,            "TaskCLI",              5000,   NULL,   1,      &TaskCLIHandle,             1);         
-    xTaskCreatePinnedToCore(TaskGetValueCLI,    "TaskGetValueCLI",      1000,   NULL,   1,      &TaskGetValueCLIHandle,     1);  
-    xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",              5000,   NULL,   1,      &TaskOTAHandle,             0);  
-    xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",        10000,  NULL,   2,      &TaskNodeESP32Handle,       0);         
-    xTaskCreatePinnedToCore(TaskIMU,            "TaskIMU",              2000,   NULL,   1,      &TaskIMUHandle,             1);   
-    xTaskCreatePinnedToCore(TaskOdometry,       "TaskOdometry",         2000,   NULL,   1,      &TaskOdometryHandle,        1); 
-    xTaskCreatePinnedToCore(TaskMotionControl,  "TaskMotionControl",    2000,   NULL,   1,      &TaskMotionControlHandle,   1);         
-    xTaskCreatePinnedToCore(TaskModes,          "TaskModes",            10000,  NULL,   1,      &TaskModesHandle,           1);
-    xTaskCreatePinnedToCore(TaskDatalog,        "TaskDatalog",          3000,   NULL,   1,      &TaskDatalogHandle,         1);
+    xTaskCreatePinnedToCore(TaskCLI,                    "TaskCLI",                  5000,   NULL,   1,      &TaskCLIHandle,                     1);         
+    xTaskCreatePinnedToCore(TaskGetValueCLI,            "TaskGetValueCLI",          1000,   NULL,   1,      &TaskGetValueCLIHandle,             1);  
+    xTaskCreatePinnedToCore(TaskOTA,                    "TaskOTA",                  5000,   NULL,   1,      &TaskOTAHandle,                     0);  
+    xTaskCreatePinnedToCore(TaskNodeESP32,              "TaskNodeESP32",            10000,  NULL,   2,      &TaskNodeESP32Handle,               0);         
+    xTaskCreatePinnedToCore(TaskIMU,                    "TaskIMU",                  2000,   NULL,   1,      &TaskIMUHandle,                     1);   
+    xTaskCreatePinnedToCore(TaskOdometry,               "TaskOdometry",             2000,   NULL,   1,      &TaskOdometryHandle,                1); 
+    xTaskCreatePinnedToCore(TaskMotionControl,          "TaskMotionControl",        2000,   NULL,   1,      &TaskMotionControlHandle,           1);         
+    xTaskCreatePinnedToCore(TaskModes,                  "TaskModes",                10000,  NULL,   1,      &TaskModesHandle,                   1);
+    xTaskCreatePinnedToCore(TaskDatalog,                "TaskDatalog",              3000,   NULL,   1,      &TaskDatalogHandle,                 1);
+    xTaskCreatePinnedToCore(TaskRegistersUpdateFast,    "TaskRegistersUpdateFast",  3000,   NULL,   1,      &TaskRegistersUpdateFastHandle,     1);
+    xTaskCreatePinnedToCore(TaskRegistersUpdateSlow,    "TaskRegistersUpdateSlow",  3000,   NULL,   1,      &TaskRegistersUpdateSlowHandle,     1);
 }
 
 
@@ -73,6 +76,8 @@ void MonitorTasks(){
     PrintTaskInfo(&TaskMotionControlHandle);
     PrintTaskInfo(&TaskModesHandle);
     PrintTaskInfo(&TaskDatalogHandle);
+    PrintTaskInfo(&TaskRegistersUpdateFastHandle);
+    PrintTaskInfo(&TaskRegistersUpdateSlowHandle);
 }
 
 
@@ -191,18 +196,24 @@ void TaskDatalog(void *parameter){
 
 //=====================================================================================================
 
-void TaskReg10(void *parameter){
+void TaskRegistersUpdateFast(void *parameter){
+    vTaskDelay(1000);
+    TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
-        // double data_Register10 = 0.0;
-        // if (xQueueReceive(queue_Register10, &data_Register10, 0) == pdTRUE){
-        //     Log.infoln("New reg10: %D", data_Register10);
-        //     //manager->counter = data_Register10;
-        // }
+        vTaskDelayUntil(&xLastWakeTime, TimerTaskRegistersUpdateFast);
+        UpdateRegistersFast();
+    }
+}
 
-        //manager->counter = manager->counter + 0.1;
-        //Log.infoln("Reg10: %D", manager->counter);
-        //manager->m_IMU->Run();
-        //vTaskDelay(5);
+
+//=====================================================================================================
+
+void TaskRegistersUpdateSlow(void *parameter){
+    vTaskDelay(1000);
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+    while(true) {
+        vTaskDelayUntil(&xLastWakeTime, TimerTaskRegistersUpdateSlow);
+        UpdateRegistersSlow();
     }
 }
 

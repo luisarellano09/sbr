@@ -94,6 +94,7 @@ struct Mode_t{
  *******************************************************************************************************************************************/
 
 Mode_t Modes[Modes_e::LENGTH_MODES];        /**@brief Array of Modes */
+Modes_e currentMode = Modes_e::Mode_Idle;   /**@brief Current Mode */
 
 StateModeIdle_e stateModeIdle = StateModeIdle_e::StateModeIdle_Idle;
 StateModeIdle_e NextStateModeIdle = StateModeIdle_e::StateModeIdle_Idle;
