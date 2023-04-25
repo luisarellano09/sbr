@@ -42,7 +42,7 @@ enum COM_REQUEST_REG_ID_e {
     MODE_NODE1_SYNC_DATA_RW,	                /**@brief Command */
     MODE_NODE1_START_W,                         /**@brief Always 0 */
     MODE_NODE1_STOP_W,	                        /**@brief Always 0 */
-    MODE_NODE1_MODE_R,	                        /**@brief 0=NA; 1=IDLE; 2=Motion */
+    MODE_NODE1_MODE_R,	                        /**@brief Modes_e */
     SETUP_MOTOR_LEFT_OFFSET_W,	                /**@brief Factor: 100 */
     SETUP_MOTOR_LEFT_OFFSET_R,	                /**@brief Factor: 100  */
     SETUP_MOTOR_LEFT_DIRECTION_W,	            /**@brief Bit */
