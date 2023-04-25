@@ -86,6 +86,7 @@ void SM_ModeIdle(Modes_e mode){
             vTaskResume(TaskNodeESP32Handle);
             vTaskResume(TaskRegistersUpdateFastHandle);
             vTaskResume(TaskRegistersUpdateSlowHandle);
+            currentMode = Modes_e::Mode_Idle;
             NextStateModeIdle = StateModeIdle_e::StateModeIdle_ChangeStatusToInactive;
             break;
 
@@ -129,6 +130,7 @@ void SM_ModeProgram(Modes_e mode){
 
         case StateModeProgram_e::StateModeProgram_ActivateTaskOTA:
             vTaskResume(TaskOTAHandle);
+            currentMode = Modes_e::Mode_Program;
             NextStateModeProgram = StateModeProgram_e::StateModeProgram_ChangeStatusToInactive;
             break;
 
@@ -164,6 +166,7 @@ void SM_ModeMotion(Modes_e mode){
 
         case StateModeMotion_e::StateModeMotion_ActivateTaskMotionControl:
             vTaskResume(TaskMotionControlHandle);
+            currentMode = Modes_e::Mode_Motion;
             NextStateModeMotion = StateModeMotion_e::StateModeMotion_ChangeStatusToInactive;
             break;
 

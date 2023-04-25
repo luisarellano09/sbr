@@ -368,7 +368,7 @@ RC_e UpdateRegistersFast(){
     RC_e retCode = RC_e::SUCCESS;
 
     if (manager->m_nodeESP32->GetError() == false) {
-        //manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::MODE_NODE1_MODE_R, manager->);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::MODE_NODE1_MODE_R, currentMode);
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::LIVE_MOTOR_LEFT_SPEED_R, manager->m_motorLeft->GetSpeed() * 100);
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::LIVE_MOTOR_RIGHT_SPEED_R, manager->m_motorRight->GetSpeed() * 100);
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::LIVE_IMU_PITCH_R, manager->m_IMU->GetPitch() * 100);
