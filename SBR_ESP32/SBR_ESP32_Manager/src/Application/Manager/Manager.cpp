@@ -25,7 +25,7 @@ Manager::Manager(){
     // Nodes Manager
     this->m_nodeESP32 = new NodeEsp32(&Serial1, NODE_ESP32s_BAUDRATE, NODE_ESP32s_RX, NODE_ESP32s_TX);
     Log.traceln("[Manager::Manager] NodeEsp32 instanced");
-    this->m_nodeLinux = new NodeLinux(&Serial2, NODE_ESP32s_BAUDRATE, 5, 18);
+    this->m_nodeLinux = new NodeLinux(&Serial2, NODE_ESP32s_BAUDRATE, NODE_LINUX_RX, NODE_LINUX_TX);
     Log.traceln("[Manager::Manager] NodeLinux instanced");
 
     // Table RT
@@ -39,10 +39,14 @@ Manager::Manager(){
     // Connect table to Nodes
     this->m_nodeESP32->ConnectRegisterTable(this->m_tableRegister);
     Log.traceln("[Manager::Manager] Table connected to node ESP32");
+    this->m_nodeLinux->ConnectRegisterTable(this->m_tableRegister);
+    Log.traceln("[Manager::Manager] Table connected to node Linux");
 
     // Start Node 
     this->m_nodeESP32->Start();
     Log.traceln("[Manager::Manager] NodeEsp32 started");
+    this->m_nodeLinux->Start();
+    Log.traceln("[Manager::Manager] NodeLinux started");
 
     Log.traceln("[Manager::Manager] Manager initialization finished");
 }

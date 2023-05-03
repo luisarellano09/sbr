@@ -44,6 +44,7 @@ void InitTasks(){
     xTaskCreatePinnedToCore(TaskGetValueCLI,    "TaskGetValueCLI",  1000,   NULL,   1,      &TaskGetValueCLIHandle, 1);  
     xTaskCreatePinnedToCore(TaskOTA,            "TaskOTA",          5000,   NULL,   1,      &TaskOTAHandle,         0);
     xTaskCreatePinnedToCore(TaskNodeESP32,      "TaskNodeESP32",    10000,  NULL,   1,      &TaskNodeESP32Handle,   0);
+    xTaskCreatePinnedToCore(TaskNodeLinux,      "TaskNodeLinux",    10000,  NULL,   1,      &TaskNodeLinuxHandle,   1);
     xTaskCreatePinnedToCore(TaskModes,          "TaskModes",        10000,  NULL,   1,      &TaskModesHandle,       1);
 }
 
@@ -55,6 +56,7 @@ void MonitorTasks(){
     PrintTaskInfo(&TaskGetValueCLIHandle);
     PrintTaskInfo(&TaskOTAHandle);
     PrintTaskInfo(&TaskNodeESP32Handle);
+    PrintTaskInfo(&TaskNodeLinuxHandle);
     PrintTaskInfo(&TaskModesHandle);
 }
 
@@ -110,6 +112,16 @@ void TaskNodeESP32(void *parameter){
     while(true) {
         manager->m_nodeESP32->Run();
         vTaskDelay(TimerTaskNodeESP32);
+    }
+}
+
+
+//=====================================================================================================
+
+void TaskNodeLinux(void *parameter){
+    while(true) {
+        manager->m_nodeLinux->Run();
+        vTaskDelay(TimerTaskNodeLinux);
     }
 }
 

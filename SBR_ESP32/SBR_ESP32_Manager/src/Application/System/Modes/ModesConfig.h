@@ -40,6 +40,7 @@ enum StateModeIdle_e {
 	StateModeIdle_DeactivateTasks,
     StateModeIdle_ActivateTaskCLI,
     StateModeIdle_ActivateTaskNodeESP32,
+    StateModeIdle_ActivateTaskNodeLinux,
     StateModeIdle_ChangeStatusToInactive
 };
 

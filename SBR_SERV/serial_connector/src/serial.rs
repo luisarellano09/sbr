@@ -5,8 +5,9 @@
 
 use std::str;
 use std::error::Error;
-use serialport::{available_ports, SerialPort};
+use serialport::{available_ports, SerialPort, SerialPortType, StopBits, Parity, DataBits, ClearBuffer};
 use std::time::Duration;
+
 
 /*******************************************************************************************************************************************
  *  												CONST
@@ -31,7 +32,8 @@ pub struct Serial {
     m_portname: String,
     m_baudrate: u32,
     m_timeout: u64,
-    m_port: Box<dyn SerialPort>,
+    pub m_port: Box<dyn SerialPort>,
+    m_buffer: Vec<u8>,
 }
 
 
@@ -40,12 +42,6 @@ impl Serial {
 //=====================================================================================================
     pub fn new(portname: String, baudrate: u32, timeout: u64) -> Result<Self,Box<dyn Error>> {
 
-        if let Err(er) = Self::list_ports() {
-            let e = format!("Error: {:?} <- new()", er);
-            eprintln!("{}",e);
-            return Err(e.into());
-        }
-    
         match Self::check_port(&portname){
             Ok(p) => {
                 match p {
@@ -66,6 +62,9 @@ impl Serial {
 
         let mut temp_port = match serialport::new(&portname, baudrate)
             .timeout(Duration::from_millis(timeout))
+            .stop_bits(StopBits::One)
+            .parity(Parity::None)
+            .data_bits(DataBits::Eight)
             .open(){
                 Ok(port) => port,
                 Err(er) => {
@@ -76,12 +75,14 @@ impl Serial {
         };
 
         temp_port.write_request_to_send(false).unwrap();
+        temp_port.clear(ClearBuffer::All).unwrap();
                   
         Ok(Serial{
             m_portname : portname.clone(),
             m_baudrate: baudrate,
             m_timeout: timeout,
             m_port: temp_port,
+            m_buffer: vec![],
         })
     }
 
@@ -101,16 +102,16 @@ impl Serial {
     }
 
 //=====================================================================================================
-pub fn write_u8s(&mut self, payload: &[u8]) -> Result<(), Box<dyn Error>> {
+    pub fn write_u8s(&mut self, payload: &[u8]) -> Result<(), Box<dyn Error>> {
 
-    if let Err(er) = self.m_port.write(payload){
-        let e = format!("Error: {:?} <- write() <- write_u8s()", er);
-        eprintln!("{}",e);
-        return Err(e.into());
+        if let Err(er) = self.m_port.write(payload){
+            let e = format!("Error: {:?} <- write() <- write_u8s()", er);
+            eprintln!("{}",e);
+            return Err(e.into());
+        }
+
+        Ok(())
     }
-
-    Ok(())
-}
 
 //=====================================================================================================
     pub fn read_buffer(&mut self, len: usize) -> Result<Vec<u8>, Box<dyn Error>> {
@@ -119,7 +120,12 @@ pub fn write_u8s(&mut self, payload: &[u8]) -> Result<(), Box<dyn Error>> {
 
         match self.m_port.read(buffer.as_mut_slice()) {
             Ok(n) => {
-                Ok(buffer[0..n].to_vec())
+                if self.m_buffer.len() >= len {
+                    self.m_buffer.clear();
+                }
+                self.m_buffer.append(&mut buffer[0..n].to_vec());
+                
+                Ok(self.m_buffer.clone())
             },
             Err(ref er) if er.kind() == std::io::ErrorKind::TimedOut => {
                 let e = format!("Error: Timeout <- read() <- read_buffer()");
@@ -156,10 +162,6 @@ pub fn write_u8s(&mut self, payload: &[u8]) -> Result<(), Box<dyn Error>> {
             }
         };
     }
-}
-
-
-impl Serial {
 
 //=====================================================================================================
     pub fn list_ports() -> Result<(), Box<dyn Error>> {
@@ -173,6 +175,25 @@ impl Serial {
 
                 for p in ports {
                     println!("{}", p.port_name);
+
+                    match p.port_type {
+                        SerialPortType::UsbPort(info) => {
+                            println!("    Type: USB");
+                            println!("    VID:{:04x} PID:{:04x}", info.vid, info.pid);
+                            println!("    Serial Number: {}", info.serial_number.as_ref().map_or("", String::as_str));
+                            println!("    Manufacturer: {}", info.manufacturer.as_ref().map_or("", String::as_str));
+                            println!("    Product: {}", info.product.as_ref().map_or("", String::as_str));
+                        }
+                        SerialPortType::BluetoothPort => {
+                            println!("    Type: Bluetooth");
+                        }
+                        SerialPortType::PciPort => {
+                            println!("    Type: PCI");
+                        }
+                        SerialPortType::Unknown => {
+                            println!("    Type: Unknown");
+                        }
+                    }
                 }
 
                 println!("=============");
@@ -245,8 +266,12 @@ impl Serial {
             m_baudrate: source_port.m_baudrate,
             m_timeout: source_port.m_timeout,
             m_port: temp_port,
+            m_buffer: vec![],
         })
     }
+
+
+
 }
 
 

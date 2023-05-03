@@ -107,11 +107,15 @@ void InitCLI(){
     CLIOptions[CLIOptions_e::CLI_Modules_Communication_PrintBufferEsp32].text = "Print Buffer ESP32";
     CLIOptions[CLIOptions_e::CLI_Modules_Communication_PrintBufferEsp32].Callback = F_CLI_Modules_Communication_PrintBufferEsp32;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Communication_SetRegister].path = "513";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_PrintBufferLinux].path = "513";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_PrintBufferLinux].text = "Print Buffer Linux";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_PrintBufferLinux].Callback = F_CLI_Modules_Communication_PrintBufferLinux;
+
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_SetRegister].path = "514";
     CLIOptions[CLIOptions_e::CLI_Modules_Communication_SetRegister].text = "Set Registers";
     CLIOptions[CLIOptions_e::CLI_Modules_Communication_SetRegister].Callback = F_CLI_Modules_Communication_SetRegister;
 
-    CLIOptions[CLIOptions_e::CLI_Modules_Communication_ReadRegister].path = "514";
+    CLIOptions[CLIOptions_e::CLI_Modules_Communication_ReadRegister].path = "515";
     CLIOptions[CLIOptions_e::CLI_Modules_Communication_ReadRegister].text = "Read Register";
     CLIOptions[CLIOptions_e::CLI_Modules_Communication_ReadRegister].Callback = F_CLI_Modules_Communication_ReadRegister;
 
@@ -467,6 +471,13 @@ void F_CLI_Modules_Communication_PrintBufferEsp32(){
 
 //=====================================================================================================
 
+void F_CLI_Modules_Communication_PrintBufferLinux(){
+    manager->m_nodeLinux->PrintBuffer();
+}
+
+
+//=====================================================================================================
+
 void F_CLI_Modules_Communication_SetRegister(){
     // Register
     uint16_t reg = 0;
@@ -574,7 +585,7 @@ void F_CLI_Test(){
 //=====================================================================================================
 
 void F_CLI_Test_Test1(){
-
+    Serial2.println("Serial2 Test");
 }
 
 

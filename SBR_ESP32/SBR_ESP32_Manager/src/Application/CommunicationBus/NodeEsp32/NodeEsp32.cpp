@@ -103,4 +103,3 @@ RC_e NodeEsp32::HandleRequest(Request* request){
     
     return retCode;
 }
-

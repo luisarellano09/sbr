@@ -55,4 +55,23 @@
 #define NODE_ESP32s_RX   21
 
 
+// ========================== NODE LINUX =====================
+/**
+ * @brief NODE_LINUX_BAUDRATE
+ * 
+ */
+#define NODE_LINUX_BAUDRATE 460800
+
+/**
+ * @brief NODE_LINUX_TX
+ * 
+ */
+#define NODE_LINUX_TX   17
+
+/**
+ * @brief NODE_ESP32s_RX
+ * 
+ */
+#define NODE_LINUX_RX   16
+
 #endif /* LOCALCONFIG_H */
