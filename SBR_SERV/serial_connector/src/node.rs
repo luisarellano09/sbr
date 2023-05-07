@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use std::error::Error;
-
+use std::time::{Duration, Instant};
 use std::collections::VecDeque;
 
 #[path = "./serial.rs"] mod serial;
@@ -18,23 +18,34 @@ pub struct Node {
     m_portname: String,
     m_baudrate: u32,
     m_serial: Serial,
+    m_watchdow_timeout_ms: u32,
+    m_watchdow_instant: Instant, 
+    m_watchdog_current_token: u32,
+    m_watchdog_prev_token: u32,
     pub m_buffer_requests: VecDeque<Request>,
+    m_error: bool,
 }
 
 
 impl Node{
 
-    pub fn new(portname: String, baudrate: u32) -> Self {
+    pub fn new(portname: String, baudrate: u32, watchdow_timeout_ms: u32) -> Self {
         Node{
             m_portname : portname.clone(),
             m_baudrate: baudrate,
             m_serial: Serial::new(portname, baudrate, 3000000).unwrap(),
-            m_buffer_requests: VecDeque::new()
+            m_watchdow_timeout_ms: watchdow_timeout_ms,
+            m_watchdow_instant: Instant::now(),
+            m_watchdog_current_token: 0,
+            m_watchdog_prev_token: 0,
+            m_buffer_requests: VecDeque::new(),
+            m_error: false,
         }
     }
 
 
     pub fn run(&mut self) {
+        self.watchdog();
         self.read_request();
         self.write_request();
     }
@@ -63,20 +74,27 @@ impl Node{
     }
 
 
+    fn watchdog(&mut self){
+        if self.m_watchdow_instant.elapsed().as_millis() >= (self.m_watchdow_timeout_ms as u128) {
+            self.m_watchdow_instant = Instant::now();
+            dbg!("Timeout");
+            if self.m_watchdog_current_token == self.m_watchdog_prev_token {
+                self.m_error = true;
+            } else   {
+                self.m_error = false;
+            }
+
+            self.m_watchdog_prev_token = self.m_watchdog_current_token;
+
+            dbg!(&self.m_error);
+        }
+    }
+
+
     pub fn add_request(&mut self, reg_id: COM_REQUEST_REG_ID_e, data: i32) {
         let mut request = Request { node_id: 4, req_type: 2, reg_id: (reg_id as u16), data: data, crc: 0 };
         request.crc = calculate_crc_from_request(request).unwrap();
         self.m_buffer_requests.push_back(request);
-    }
-
-
-    fn request_handler(&mut self, request: Request) -> Result<(), Box<dyn Error>> {
-    
-        if request.reg_id == (COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_LINUX_COUNTER_R as u16){
-            dbg!(request);
-            self.add_request(COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_LINUX_COUNTER_R, request.data + 1);
-        }
-        Ok(())
     }
 
 
@@ -102,6 +120,18 @@ impl Node{
     
         Ok(())
     }
+
+
+    fn request_handler(&mut self, request: Request) -> Result<(), Box<dyn Error>> {
+    
+        if request.reg_id == (COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_LINUX_COUNTER_R as u16){
+            //dbg!(request);
+            self.m_watchdog_current_token = request.data as u32 + 1;
+            self.add_request(COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_LINUX_COUNTER_R, self.m_watchdog_current_token.clone() as i32);
+        }
+        Ok(())
+    }
+
 
 }
 
