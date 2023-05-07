@@ -30,7 +30,7 @@ services:
         image: sbr/sbr_serv_serial_connector:1.0
         container_name: sbr_serv_serial_connector
         devices: 
-          - /dev/ttyUSB1:/dev/ttyUSB1
+          - /dev/ttyUSB1:/dev/ttyS0
         build: 
             context: ../../SBR_SERV/serial_connector/
             target: prod
