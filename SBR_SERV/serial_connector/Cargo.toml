@@ -6,4 +6,5 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-serialport = "4.2.0"  # need to install: sudo apt install libudev-dev
+serialport = "4.2.0"    # need to install: sudo apt install libudev-dev
+amiquip = "0.4"         # sudo apt install libssl-dev       Info: https://crates.io/crates/amiquip

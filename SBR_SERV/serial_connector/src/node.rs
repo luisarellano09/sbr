@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use std::error::Error;
-use std::time::{Duration, Instant};
+use std::time::{Instant};
 use std::collections::VecDeque;
 
 #[path = "./serial.rs"] mod serial;
@@ -77,16 +77,16 @@ impl Node{
     fn watchdog(&mut self){
         if self.m_watchdow_instant.elapsed().as_millis() >= (self.m_watchdow_timeout_ms as u128) {
             self.m_watchdow_instant = Instant::now();
-            dbg!("Timeout");
             if self.m_watchdog_current_token == self.m_watchdog_prev_token {
                 self.m_error = true;
-            } else   {
+                dbg!(&self.m_error);
+            } else if self.m_watchdog_current_token != self.m_watchdog_prev_token && self.m_error == true  {
                 self.m_error = false;
+                dbg!(&self.m_error);
             }
 
             self.m_watchdog_prev_token = self.m_watchdog_current_token;
 
-            dbg!(&self.m_error);
         }
     }
 
@@ -125,7 +125,7 @@ impl Node{
     fn request_handler(&mut self, request: Request) -> Result<(), Box<dyn Error>> {
     
         if request.reg_id == (COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_LINUX_COUNTER_R as u16){
-            //dbg!(request);
+            dbg!(request);
             self.m_watchdog_current_token = request.data as u32 + 1;
             self.add_request(COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_LINUX_COUNTER_R, self.m_watchdog_current_token.clone() as i32);
         }
