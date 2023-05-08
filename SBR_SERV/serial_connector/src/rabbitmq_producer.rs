@@ -1,13 +1,10 @@
 #![allow(dead_code)]
 
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, Publish};
-
-use std::thread;
-use std::time::Duration;
+use serde_json::json;
 use std::sync::mpsc::Receiver;
 
 use crate::message_esp32::MessageEsp32;
-use serde_json::{Result, Value, json};
 
 pub struct RabbitmqProducer {
     m_receiver_node_producer: Receiver<MessageEsp32>,
@@ -49,10 +46,10 @@ impl RabbitmqProducer {
             match self.m_receiver_node_producer.try_recv() {
                 Ok(msg) =>{
                     let message = json!({
-                        "register": msg.register_num,
+                        "name": msg.name,
                         "data": msg.data
                     });
-                    let routing_key = "ESP32.RAW".to_string();
+                    let routing_key = msg.name;
                     exchange.publish(Publish::new(message.to_string().as_bytes(), routing_key.clone())).unwrap();
                 }, 
                 Err(_)=>{}

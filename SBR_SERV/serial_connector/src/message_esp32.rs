@@ -1,9 +1,6 @@
 
-use crate::register_table::COM_REQUEST_REG_ID_e;
-
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub struct MessageEsp32 {
-    pub register_enum: COM_REQUEST_REG_ID_e,
-    pub register_num: u16,
+    pub name: String,
     pub data: i32,
 }

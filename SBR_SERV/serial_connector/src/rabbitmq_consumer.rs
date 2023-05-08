@@ -2,8 +2,6 @@
 
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, Publish};
 
-use std::thread;
-use std::time::Duration;
 use std::sync::mpsc::Sender;
 
 use crate::message_esp32::MessageEsp32;

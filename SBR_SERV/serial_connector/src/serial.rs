@@ -3,7 +3,7 @@
  *******************************************************************************************************************************************/
  #![allow(dead_code)]
 
-use std::str;
+use std::{str, collections::VecDeque};
 use std::error::Error;
 use serialport::{available_ports, SerialPort, SerialPortType, StopBits, Parity, DataBits, ClearBuffer};
 use std::time::Duration;
@@ -33,7 +33,7 @@ pub struct Serial {
     m_baudrate: u32,
     m_timeout: u64,
     pub m_port: Box<dyn SerialPort>,
-    m_buffer: Vec<u8>,
+    m_buffer: VecDeque<u8>,
 }
 
 
@@ -82,7 +82,7 @@ impl Serial {
             m_baudrate: baudrate,
             m_timeout: timeout,
             m_port: temp_port,
-            m_buffer: vec![],
+            m_buffer: VecDeque::new(),
         })
     }
 
@@ -114,18 +114,43 @@ impl Serial {
     }
 
 //=====================================================================================================
+    pub fn read_buffer_crc(&mut self, len: usize, crc_error: bool) -> Result<VecDeque<u8>, Box<dyn Error>> {
+
+        let mut buffer: [u8; 1] = [0];
+
+        match self.m_port.read(&mut buffer) {
+            Ok(n) => {
+                if crc_error == true {
+                    self.m_buffer.pop_front();
+                } else if self.m_buffer.len() >= len {
+                    self.m_buffer.clear();
+                }
+                if n ==1 {
+                    self.m_buffer.push_back(buffer[0]);
+                }
+                Ok(self.m_buffer.clone())
+            },
+            Err(ref er) if er.kind() == std::io::ErrorKind::TimedOut => {
+                let e = format!("Error: Timeout <- read() <- read_buffer()");
+                eprintln!("{}",e);
+                return Err(e.into());
+            },
+            Err(er) => {
+                let e = format!("Error: {} <- read() <- read_buffer()", er);
+                eprintln!("{}",e);
+                return Err(e.into());
+            }
+        }
+    }
+
+//=====================================================================================================
     pub fn read_buffer(&mut self, len: usize) -> Result<Vec<u8>, Box<dyn Error>> {
 
         let mut buffer: Vec<u8> = vec![0; len];
 
         match self.m_port.read(buffer.as_mut_slice()) {
             Ok(n) => {
-                if self.m_buffer.len() >= len {
-                    self.m_buffer.clear();
-                }
-                self.m_buffer.append(&mut buffer[0..n].to_vec());
-                
-                Ok(self.m_buffer.clone())
+                Ok(buffer[0..n].to_vec())
             },
             Err(ref er) if er.kind() == std::io::ErrorKind::TimedOut => {
                 let e = format!("Error: Timeout <- read() <- read_buffer()");
@@ -248,28 +273,6 @@ impl Serial {
 
         Ok(PortVisibility::NotFound)
     }
-
-//=====================================================================================================
-    pub fn clone(source_port: &Serial) -> Result<Self, Box<dyn Error>> {
-        let temp_port = match source_port.m_port.try_clone(){
-            Ok(port) => port,
-            Err(er) => {
-                let e = format!("Error: {:?}, try_clone() <- close()", er);
-                eprintln!("{}",e);
-                return Err(e.into());
-            }
-        };
-
-        Ok(
-        Serial{
-            m_portname : source_port.m_portname.clone(),
-            m_baudrate: source_port.m_baudrate,
-            m_timeout: source_port.m_timeout,
-            m_port: temp_port,
-            m_buffer: vec![],
-        })
-    }
-
 
 
 }
