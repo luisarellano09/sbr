@@ -3,15 +3,12 @@
 use std::error::Error;
 use std::time::{Instant};
 use std::collections::VecDeque;
+use std::sync::mpsc::{Sender, Receiver};
 
-#[path = "./serial.rs"] mod serial;
-use serial::Serial;
-
-#[path = "./request.rs"] mod request;
-use request::{buffer_to_request, check_crc, calculate_crc_from_request, request_to_buffer, Request};
-
-#[path = "./register_table.rs"] mod register_table;
-pub use register_table::{COM_REQUEST_REG_ID_e};
+use crate::request::{buffer_to_request, check_crc, calculate_crc_from_request, request_to_buffer, Request};
+use crate::register_table::{COM_REQUEST_REG_ID_e};
+use crate::message_esp32::MessageEsp32;
+use crate::serial::Serial;
 
 
 pub struct Node {
@@ -23,13 +20,15 @@ pub struct Node {
     m_watchdog_current_token: u32,
     m_watchdog_prev_token: u32,
     pub m_buffer_requests: VecDeque<Request>,
+    m_sender_node_producer: Sender<MessageEsp32>,
+    m_receiver_consumer_node: Receiver<MessageEsp32>,
     m_error: bool,
 }
 
 
 impl Node{
 
-    pub fn new(portname: String, baudrate: u32, watchdow_timeout_ms: u32) -> Self {
+    pub fn new(portname: String, baudrate: u32, watchdow_timeout_ms: u32, sender_node_producer:Sender<MessageEsp32> , receiver_consumer_node: Receiver<MessageEsp32>,) -> Self {
         Node{
             m_portname : portname.clone(),
             m_baudrate: baudrate,
@@ -39,15 +38,19 @@ impl Node{
             m_watchdog_current_token: 0,
             m_watchdog_prev_token: 0,
             m_buffer_requests: VecDeque::new(),
+            m_sender_node_producer: sender_node_producer,
+            m_receiver_consumer_node: receiver_consumer_node,
             m_error: false,
         }
     }
 
 
     pub fn run(&mut self) {
-        self.watchdog();
-        self.read_request();
-        self.write_request();
+        loop {
+            self.watchdog();
+            self.read_request();
+            self.write_request();
+        }
     }
 
 
@@ -64,6 +67,14 @@ impl Node{
 
 
     fn write_request(&mut self) {
+
+        match self.m_receiver_consumer_node.try_recv() {
+            Ok(msg) =>{
+                self.m_buffer_requests.push_back(create_request(msg.register_enum, msg.data));
+            }, 
+            Err(_)=>{}
+        }
+
         match self.m_buffer_requests.pop_front(){
             Some(request) =>{
                 self.m_serial.write_u8s(&request_to_buffer(request).unwrap()).unwrap();
@@ -92,9 +103,7 @@ impl Node{
 
 
     pub fn add_request(&mut self, reg_id: COM_REQUEST_REG_ID_e, data: i32) {
-        let mut request = Request { node_id: 4, req_type: 2, reg_id: (reg_id as u16), data: data, crc: 0 };
-        request.crc = calculate_crc_from_request(request).unwrap();
-        self.m_buffer_requests.push_back(request);
+        self.m_buffer_requests.push_back(create_request(reg_id, data));
     }
 
 
@@ -107,7 +116,12 @@ impl Node{
                     
                     // Check CRC
                     if check_crc(request).unwrap() == true {
-                        self.request_handler(request).unwrap();
+                        // Handler
+                        self.request_handler(&request).unwrap();
+
+                        // Send to rabbitmq
+                        self.m_sender_node_producer.send(MessageEsp32 { register_num: request.reg_id, data: request.data, register_enum: COM_REQUEST_REG_ID_e::NONE_REG_ID }).unwrap();
+                    
                     } else {
                         eprintln!("Wrong CRC");
                     }
@@ -122,10 +136,9 @@ impl Node{
     }
 
 
-    fn request_handler(&mut self, request: Request) -> Result<(), Box<dyn Error>> {
+    fn request_handler(&mut self, request: &Request) -> Result<(), Box<dyn Error>> {
     
         if request.reg_id == (COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_LINUX_COUNTER_R as u16){
-            dbg!(request);
             self.m_watchdog_current_token = request.data as u32 + 1;
             self.add_request(COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_LINUX_COUNTER_R, self.m_watchdog_current_token.clone() as i32);
         }
@@ -136,7 +149,11 @@ impl Node{
 }
 
 
-
+fn create_request(reg_id: COM_REQUEST_REG_ID_e, data: i32) -> Request{
+    let mut request = Request { node_id: 4, req_type: 2, reg_id: (reg_id as u16), data: data, crc: 0 };
+    request.crc = calculate_crc_from_request(request).unwrap();
+    request
+}
 
 
 

@@ -5,7 +5,7 @@
 use std::error::Error;
 
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 pub struct Request {
     pub node_id: u8,
     pub req_type: u8,

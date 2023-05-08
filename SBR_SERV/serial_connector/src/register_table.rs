@@ -1,6 +1,7 @@
 #[allow(non_camel_case_types)]
 #[allow(dead_code)]
 
+#[derive(Debug, Clone, Copy)]
 pub enum COM_REQUEST_REG_ID_e {
     NONE_REG_ID = 0,
     STATUS_HEARTBEAT_ESP32_COUNTER_R,           /**@brief Counter */
