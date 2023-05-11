@@ -31,7 +31,7 @@ impl RabbitmqProducer {
         // Declare the exchange we will bind to.
         let exchange = channel.exchange_declare(
             ExchangeType::Topic,
-            "SBR_EX_ESP32",
+            "SBR_EXCH_READ_ESP32",
             ExchangeDeclareOptions{
                 durable: false,
                 auto_delete: false,

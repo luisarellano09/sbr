@@ -296,16 +296,152 @@ impl Node{
     }
 
     fn serial_write_handler(&mut self, msg: MessageEsp32) -> Result<(), Box<dyn Error>> {
-    /*
-        if request.reg_id == (COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_LINUX_COUNTER_R as u16){
-            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_LINUX_COUNTER_R as u16, msg.data));
-
-        } else if request.reg_id == (COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_LINUX_COUNTER_R as u16){
-            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_LINUX_COUNTER_R as u16, msg.data));
-
-      
-*/
-
+    
+        if msg.name == "ESP32.WRITE.MODE.MANAGER.RESTART_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::MODE_MANAGER_RESTART_W as u16, msg.data));
+        
+        } else if msg.name == "ESP32.WRITE.MODE.MANAGER.PROGRAM_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::MODE_MANAGER_PROGRAM_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.MODE.MANAGER.SYNC_DATA_RW" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::MODE_MANAGER_SYNC_DATA_RW as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.MODE.LINUX.SYNC_DATA_RW" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::MODE_LINUX_SYNC_DATA_RW as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.MODE.NODE1.RESTART_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::MODE_NODE1_RESTART_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.MODE.NODE1.PROGRAM_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::MODE_NODE1_PROGRAM_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.MODE.NODE1.SYNC_DATA_RW" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::MODE_NODE1_SYNC_DATA_RW as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.MODE.NODE1.START_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::MODE_NODE1_START_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.MODE_NODE1.STOP_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::MODE_NODE1_STOP_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTOR.LEFT_OFFSET_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_OFFSET_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTOR.LEFT_DIRECTION_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_DIRECTION_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTOR.RIGHT_OFFSET_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_OFFSET_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTOR.RIGHT_DIRECTION_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.IMU.INVERT_PITCH_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_PITCH_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.IMU.INVERT_ROLL_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_ROLL_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.IMU.INVERT_YAW_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_YAW_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.IMU.OFFSET_PITCH_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_IMU_OFFSET_PITCH_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.ENCODER.LEFT_DIRECTION_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_ENCODER_LEFT_DIRECTION_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.ENCODER.RIGHT_DIRECTION_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_ENCODER_RIGHT_DIRECTION_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.ODOMETRY.WHEEL_RADIO_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_ODOMETRY_WHEEL_RADIO_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.ODOMETRY.DISTANCE_WHEELS_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_ODOMETRY_DISTANCE_WHEELS_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_PITCH.KP_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_KP_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_PITCH.KI_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_KI_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_PITCH.KD_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_KD_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_PITCH.DIRECTION_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_DIRECTION_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_PITCH.MV_MIN_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_MV_MIN_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_PITCH.MV_MAX_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_MV_MAX_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_POSITION.KP_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_KP_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_POSITION.KI_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_KI_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_POSITION.KD_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_KD_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_POSITION.DIRECTION_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_DIRECTION_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_POSITION.MV_MIN_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_MV_MIN_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_POSITION.MV_MAX_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_MV_MAX_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_ANGLE.KP_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_KP_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_ANGLE.KI_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_KI_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_ANGLE.KD_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_KD_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_ANGLE.DIRECTION_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_DIRECTION_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_ANGLE.MV_MIN_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_MV_MIN_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_ANGLE.MV_MAX_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_MV_MAX_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.LIVE.MOTOR_LEFT.SPEED_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::LIVE_MOTOR_LEFT_SPEED_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.LIVE.MOTOR_RIGHT.SPEED_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::LIVE_MOTOR_RIGHT_SPEED_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.LIVE.ODOMETRY.X_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::LIVE_ODOMETRY_X_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.LIVE.ODOMETRY.Y_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::LIVE_ODOMETRY_Y_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.LIVE.ODOMETRY.ANGLE_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::LIVE_ODOMETRY_ANGLE_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.LIVE.ODOMETRY.DISTANCE_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::LIVE_ODOMETRY_DISTANCE_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.LIVE.ODOMETRY.RESET_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::LIVE_ODOMETRY_RESET_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.LIVE.MOTION.SP_POSITION_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::LIVE_MOTION_SP_POSITION_W as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.LIVE.MOTION.SP_ANGLE_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::LIVE_MOTION_SP_ANGLE_W as u16, msg.data));
+        }
+            
 
         Ok(())
     }

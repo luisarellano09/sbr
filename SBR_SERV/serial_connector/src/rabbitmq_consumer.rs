@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 
-use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, Publish};
+use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOptions, FieldTable, ConsumerOptions, ConsumerMessage};
+use serde_json::Value;
 
 use std::sync::mpsc::Sender;
 
@@ -31,7 +32,7 @@ impl RabbitmqConsumer {
         // Declare the exchange we will bind to.
         let exchange = channel.exchange_declare(
             ExchangeType::Topic,
-            "SBR_EX_ESP32",
+            "SBR_EXCH_WRITE_ESP32",
             ExchangeDeclareOptions{
                 durable: false,
                 auto_delete: false,
@@ -40,8 +41,39 @@ impl RabbitmqConsumer {
             },
         ).unwrap();
 
-      
+        // Declare the exclusive, server-named queue we will use to consume.
+        let queue = channel.queue_declare(
+            "Q_SBR_WRITE_ESP32",
+            QueueDeclareOptions {
+                exclusive: true,
+                ..QueueDeclareOptions::default()
+            },
+        ).unwrap();
+
+        //Bindiing
+        queue.bind(&exchange, "ESP32.WRITE.#", FieldTable::new()).unwrap();
+
+        let consumer = queue.consume(ConsumerOptions {
+            no_ack: false,
+            ..ConsumerOptions::default()
+        }).unwrap();
+
         loop{
+
+            for (_, message) in consumer.receiver().iter().enumerate() {
+                match message {
+                    ConsumerMessage::Delivery(delivery) => {
+                        let body = String::from_utf8_lossy(&delivery.body).to_string();
+                        let json: Value = serde_json::from_str(&body).unwrap();
+                        self.m_sender_consumer_node.send(MessageEsp32 { name: json["name"].as_str().unwrap().to_string(), data: json["data"].as_i64().unwrap() as i32}).unwrap();
+                        consumer.ack(delivery).unwrap();
+                    }
+                    other => {
+                        println!("Consumer ended: {:?}", other);
+                        break;
+                    }
+                }
+            }
             
         }
     }
