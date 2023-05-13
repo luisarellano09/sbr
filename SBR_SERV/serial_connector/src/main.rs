@@ -37,27 +37,27 @@ fn main() {
     });
 
     let thread_rabbitmq_consumer = thread::spawn(move || {
-        loop {
+        //loop {
             match rabbitmq_consumer.run() {
                 Ok(_) => {},
                 Err(_) =>{
                     eprintln!("Error in thread rabbitmq consumer");
                 }
             }
-            thread::sleep(Duration::from_millis(1000));
-        }
+            //thread::sleep(Duration::from_millis(1000));
+        //}
     });
 
     let thread_rabbitmq_producer = thread::spawn(move || {
-        loop {
+        //loop {
             match rabbitmq_producer.run() {
                 Ok(_) => {},
                 Err(_) =>{
                     eprintln!("Error in thread rabbitmq producer");
                 }
             }
-            thread::sleep(Duration::from_millis(1000));
-        }
+            //thread::sleep(Duration::from_millis(1000));
+        //}
     });
 
     thread_node_linux.join().expect("Error in thread node linux");
