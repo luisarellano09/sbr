@@ -13,6 +13,7 @@
  *******************************************************************************************************************************************/
 #include <Arduino.h>
 #include "../../../Middleware/CommunicationBus/Node/Node.h"
+#include "../RegisterTable/RegisterTable.h"
 
 
 /*******************************************************************************************************************************************
@@ -42,12 +43,38 @@ public:
      */
     ~NodeLinux();
 
-private:
+    /**
+     * @brief Function to connect with a Table Register.
+     * 
+     * @param tableRegister Reference of a Table Register
+     * @return RC_e Result code
+     */
+    RC_e ConnectRegisterTable(RegisterTable* tableRegister);
 
     /**
-     * @brief Handle a request
+     * @brief Run
      * 
-     * @param request Request
+     * @return RC_e Result code
+     */
+    RC_e Run();
+
+    /**
+     * @brief Pointer of a function to handle a request externally
+     * 
+     * @param request Reference of a request object
+     * @return RC_e Result code
+     */
+    RC_e (*ExtHandler)(Request* request);
+
+
+private:
+
+    RegisterTable* m_tableRegister = NULL;          /**@brief Reference of Table Register object */
+
+    /**
+     * @brief Function to handle a request
+     * 
+     * @param request Reference of a request object
      * @return RC_e Result code
      */
     RC_e HandleRequest(Request* request);

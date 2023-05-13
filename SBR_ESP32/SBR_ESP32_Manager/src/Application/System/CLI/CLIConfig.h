@@ -58,6 +58,7 @@ enum CLIOptions_e {
     CLI_Modules_Communication,
     CLI_Modules_Communication_PrintTable,
     CLI_Modules_Communication_PrintBufferEsp32,
+    CLI_Modules_Communication_PrintBufferLinux,
     CLI_Modules_Communication_SetRegister,
     CLI_Modules_Communication_ReadRegister,
     CLI_Debug,
@@ -123,6 +124,7 @@ void F_CLI_Modules();
 void F_CLI_Modules_Communication();
 void F_CLI_Modules_Communication_PrintTable();
 void F_CLI_Modules_Communication_PrintBufferEsp32();
+void F_CLI_Modules_Communication_PrintBufferLinux();
 void F_CLI_Modules_Communication_SetRegister();
 void F_CLI_Modules_Communication_ReadRegister();
 void F_CLI_Debug();

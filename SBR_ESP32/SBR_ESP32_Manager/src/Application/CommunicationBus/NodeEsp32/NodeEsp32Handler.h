@@ -1,12 +1,12 @@
 /**
- * @file NodeHandler.h
+ * @file NodeEsp32Handler.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Handler of the Node
  * 
  */
 
-#ifndef NODEHANDLER_H
-#define NODEHANDLER_H
+#ifndef NODEESP32HANDLER_H
+#define NODEESP32HANDLER_H
 
 /*******************************************************************************************************************************************
  *  												INCLUDE
@@ -20,29 +20,24 @@
  *  												DEFINITION FUNCTIONS
  *******************************************************************************************************************************************/
 
-RC_e ExtHandler(Request* request){
+RC_e ExtNodeEsp32Handler(Request* request){
     
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
     // Check if the pointer is null
     if (request == NULL){
-        Log.fatalln("[NodeHandler::ExtHandler] request ERROR_NULL_POINTER");
+        Log.fatalln("[NodeEsp32Handler::ExtNodeEsp32Handler] request ERROR_NULL_POINTER");
         return RC_e::ERROR_NULL_POINTER;
     }
 
-    Log.traceln("[NodeHandler::ExtHandler] Request received: nodeId=%d, reqType=%d, regId=%d, data=%d, CRC=%d", request->nodeId, request->reqType, request->regId, request->data, request->CRC);
+    Log.traceln("[NodeEsp32Handler::ExtNodeEsp32Handler] Request received: nodeId=%d, reqType=%d, regId=%d, data=%d, CRC=%d", request->nodeId, request->reqType, request->regId, request->data, request->CRC);
 
     // Handle requests
     switch(request->regId){
 
         case COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_ESP32_COUNTER_R: {
             manager->m_nodeESP32->TokenCounter(request->data, COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_ESP32_COUNTER_R);
-            break;
-        }
-        
-        case COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_LINUX_COUNTER_R: {
-            manager->m_nodeLinux->TokenCounter(request->data, COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_LINUX_COUNTER_R);
             break;
         }
 
@@ -55,7 +50,7 @@ RC_e ExtHandler(Request* request){
         case COM_REQUEST_REG_ID_e::MODE_MANAGER_PROGRAM_W: {
             Serial.println("Program Mode.....");
             StartMode(Modes_e::Mode_Program);
-            Log.infoln("[NodeHandler::MODE_MANAGER_PROGRAM_W] Mode Program started");
+            Log.infoln("[NodeEsp32Handler::ExtNodeEsp32Handler] Mode Program started");
             break;
         }
 
@@ -75,4 +70,4 @@ RC_e ExtHandler(Request* request){
 }
 
 
-#endif // NODEHANDLER_H
+#endif // NODEESP32HANDLER_H
