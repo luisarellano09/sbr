@@ -6,6 +6,7 @@ services:
         restart: unless-stopped
         image: portainer/portainer-ce
         container_name: sbr_portainer
+        privileged: true
         volumes:
             - /etc/localtime:/etc/localtime:ro
             - /var/run/docker.sock:/var/run/docker.sock:ro
