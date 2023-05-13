@@ -1,7 +1,6 @@
 
 use std::thread;
 use std::sync::mpsc::channel;
-use std::time::Duration;
 
 mod serial;
 mod node;
