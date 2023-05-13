@@ -25,15 +25,12 @@ fn main() {
     let mut rabbitmq_producer: RabbitmqProducer = RabbitmqProducer::new(receiver_node_producer);
 
     let thread_node_linux = thread::spawn(move || {
-        loop {
-            match node_linux.run() {
-                Ok(_) => {},
-                Err(_) =>{
-                    eprintln!("Error in thread node linux");
-                }
-            }
-            thread::sleep(Duration::from_millis(1000));
-        }
+        //loop {
+            node_linux.run().expect("Error in thread node linux");
+            //     }
+            // }
+            // thread::sleep(Duration::from_millis(1000));
+        //}
     });
 
     let thread_rabbitmq_consumer = thread::spawn(move || {
