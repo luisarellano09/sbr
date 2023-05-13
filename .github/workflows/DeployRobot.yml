@@ -1,28 +1,14 @@
 name: Deploy Robot
 
 on:
-  push:
-  
   workflow_dispatch:
   
 jobs: 
-    hello:
-      runs-on: ubuntu-latest
-      steps:
-        - name: checkout
-          uses: actions/checkout@v3
-        - name: Hello world
-          run: echo "Hola mundo"
-          shell: bash
-        - name: How are you
-          run: echo "que tal"
-          shell: bash
-        - name: See files
-          run: ls
-          
-    goodbye:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Good Bye
-          run: echo "Chau"
-          shell: bash
+  remote:
+    runs-on: [self-hosted, sbr-pi]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Docker Compose
+        working-directory: ./SBR
+        run: mkdir Test
