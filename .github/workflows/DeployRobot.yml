@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   
 jobs: 
-  remote:
+  deploy:
     runs-on: [self-hosted, sbr-pi]
     steps:
       - name: Checkout
