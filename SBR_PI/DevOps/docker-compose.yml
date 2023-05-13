@@ -7,9 +7,10 @@ services:
         image: portainer/portainer-ce
         container_name: sbr_portainer
         volumes:
+            - data:/data
             - /var/run/docker.sock:/var/run/docker.sock
         ports:
-            - 9000:9000
+            - 9443:9443
 
     sbr_rabbitmq:
         restart: unless-stopped
