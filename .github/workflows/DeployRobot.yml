@@ -10,5 +10,5 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Docker Compose
-        working-directory: ./SBR
+        working-directory: ../../
         run: mkdir Test
