@@ -7,8 +7,9 @@ services:
         image: portainer/portainer-ce
         container_name: sbr_portainer
         volumes:
-            - data:/data
-            - /var/run/docker.sock:/var/run/docker.sock
+            - /etc/localtime:/etc/localtime:ro
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ./portainer-data:/data
         ports:
             - 9443:9443
 
