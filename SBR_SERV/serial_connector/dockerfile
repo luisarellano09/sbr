@@ -1,4 +1,4 @@
-FROM rust:buster as build
+FROM rust as build
 RUN apt-get update
 RUN apt-get install -y libudev-dev
 RUN apt-get install -y libssl-dev 
@@ -16,6 +16,6 @@ RUN rm ./target/release/deps/serial_connector*
 RUN cargo build --release
 
 
-FROM rust:buster as prod
+FROM rust as prod
 COPY --from=build /serial_connector/target/release/serial_connector .
 CMD ["./serial_connector"]

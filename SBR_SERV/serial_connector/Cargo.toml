@@ -7,5 +7,6 @@ edition = "2021"
 
 [dependencies]
 serialport = "4.2.0"    # need to install: sudo apt install libudev-dev
-amiquip = "0.4"         # sudo apt install libssl-dev       Info: https://crates.io/crates/amiquip
+amiquip = "0.4 "        # sudo apt install libssl-dev       Info: https://crates.io/crates/amiquip
 serde_json = "1.0"
+serde = "1.0"

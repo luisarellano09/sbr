@@ -55,7 +55,8 @@ pub struct Request {
  ];
 
 
- pub fn request_to_buffer(request: Request) -> Result<[u8; 8], Box<dyn Error>> {
+//=====================================================================================================
+ pub fn request_to_buffer(request: Request) -> [u8; 8] {
 
     let mut buffer: [u8; 8] = [0;8];
 
@@ -69,12 +70,11 @@ pub struct Request {
     buffer[6] = request.crc as u8;
     buffer[7] = (request.crc>>8) as u8;
 
-    Ok(buffer)
+    buffer
 }
 
 
 //=====================================================================================================
-
 pub fn buffer_to_request(buffer: [u8; 8]) -> Result<Request, Box<dyn Error>> {
 
     let mut request: Request = Request { node_id: 0, req_type: 0, reg_id: 0, data: 0, crc: 0 };
@@ -103,40 +103,27 @@ pub fn buffer_to_request(buffer: [u8; 8]) -> Result<Request, Box<dyn Error>> {
 
 
 //=====================================================================================================
-
-pub fn calculate_crc_from_request(request: Request) -> Result<u16, Box<dyn Error>> {
+pub fn calculate_crc_from_request(request: Request) -> u16 {
 
     // Convert request to buffer
-    match request_to_buffer(request){
-        Ok(buffer) => {
-            Ok(CALC16_CRC_TAB[buffer[0] as usize] +
-                CALC16_CRC_TAB[buffer[1] as usize] +
-                CALC16_CRC_TAB[buffer[2] as usize] +
-                CALC16_CRC_TAB[buffer[3] as usize] +
-                CALC16_CRC_TAB[buffer[4] as usize] +
-                CALC16_CRC_TAB[buffer[5] as usize] )
-        }, 
-        Err(er) => {
-            Err(er)
-        }
-    }
+    let buffer = request_to_buffer(request);
+
+    return CALC16_CRC_TAB[buffer[0] as usize] +
+            CALC16_CRC_TAB[buffer[1] as usize] +
+            CALC16_CRC_TAB[buffer[2] as usize] +
+            CALC16_CRC_TAB[buffer[3] as usize] +
+            CALC16_CRC_TAB[buffer[4] as usize] +
+            CALC16_CRC_TAB[buffer[5] as usize];
 }
 
 
 //=====================================================================================================
+pub fn check_crc(request: Request) -> bool {
 
-pub fn check_crc(request: Request) -> Result<bool, Box<dyn Error>> {
-
-    match calculate_crc_from_request(request){
-        Ok(crc) => {
-            if request.crc == crc {
-                Ok(true)
-            } else {
-                Ok(false)
-            }
-        }, 
-        Err(er) => {
-            Err(er)
-        }
+    let crc = calculate_crc_from_request(request);
+    if request.crc == crc {
+        true
+    } else {
+        false
     }
 }

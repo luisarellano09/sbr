@@ -2,7 +2,7 @@
 
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, Publish};
 use serde_json::json;
-use std::sync::mpsc::Receiver;
+use std::{sync::mpsc::Receiver, error::Error};
 
 use crate::message_esp32::MessageEsp32;
 
@@ -21,12 +21,12 @@ impl RabbitmqProducer {
     }
 
 
-    pub fn run(&mut self) {
+    pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
         // Open connection.
-        let mut connection = Connection::insecure_open("amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/").unwrap();
+        let mut connection = Connection::insecure_open("amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/")?;
 
         // Open a channel - None says let the library choose the channel ID.
-        let channel = connection.open_channel(None).unwrap();
+        let channel = connection.open_channel(None)?;
 
         // Declare the exchange we will bind to.
         let exchange = channel.exchange_declare(
@@ -38,19 +38,14 @@ impl RabbitmqProducer {
                 internal: false,
                 ..Default::default()
             },
-        ).unwrap();
+        )?;
 
-      
         loop{
-
             match self.m_receiver_node_producer.try_recv() {
                 Ok(msg) =>{
-                    let message = json!({
-                        "name": msg.name,
-                        "data": msg.data
-                    });
+                    let message = json!(msg);
                     let routing_key = msg.name;
-                    exchange.publish(Publish::new(message.to_string().as_bytes(), routing_key.clone())).unwrap();
+                    exchange.publish(Publish::new(message.to_string().as_bytes(), routing_key.clone()))?;
                 }, 
                 Err(_)=>{}
             }
