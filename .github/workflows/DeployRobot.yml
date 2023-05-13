@@ -10,5 +10,5 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Docker Compose
-        working-directory: ./sbr/sbr/SBR_PI/DevOps
+        working-directory: ./SBR_PI/DevOps
         run: docker compose up --build -d
