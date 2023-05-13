@@ -1,0 +1,14 @@
+name: Deploy Robot
+
+on:
+  workflow_dispatch:
+  
+jobs: 
+  remote:
+    runs-on: [self-hosted, sbr-pi]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Docker Compose
+        working-directory: ./SBR_PI/DevOps
+        run: docker compose up --build -d

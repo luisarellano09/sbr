@@ -5,7 +5,6 @@ RUN apt-get install -y libssl-dev
 RUN USER=root cargo new --bin serial_connector
 WORKDIR /serial_connector
 
-COPY ./Cargo.lock ./Cargo.lock
 COPY ./Cargo.toml ./Cargo.toml
 
 RUN cargo build --release
