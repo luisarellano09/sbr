@@ -1,0 +1,19 @@
+FROM rust as build
+RUN apt-get update
+RUN apt-get install -y libssl-dev 
+RUN USER=root cargo new --bin redis_connector
+WORKDIR /redis_connector
+
+COPY ./Cargo.toml ./Cargo.toml
+
+RUN cargo build --release
+RUN rm src/*.rs
+
+COPY ./src ./src
+RUN rm ./target/release/deps/redis_connector*
+RUN cargo build --release
+
+
+FROM rust as prod
+COPY --from=build /redis_connector/target/release/redis_connector .
+CMD ["./redis_connector"]
