@@ -7,5 +7,5 @@ jobs:
   deploy:
     runs-on: [self-hosted, sbr-pi]
     steps:
-      - name: Prune
+      - name: Restart
         run: docker container restart sbr_portainer
