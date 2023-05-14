@@ -1,0 +1,11 @@
+name: Restart Portainer
+
+on:
+  workflow_dispatch:
+  
+jobs: 
+  deploy:
+    runs-on: [self-hosted, sbr-pi]
+    steps:
+      - name: Shutdown
+        run: sudo shutdown now
