@@ -57,12 +57,16 @@ impl RabbitmqConsumerESP32 {
             ..ConsumerOptions::default()
         })?;
 
+        println!("Rabbitmq config done");
+
         //Redis connection
         let redis_client = redis::Client::open("redis://sbr_redis:6379")?;
         let mut redis_connection = redis_client.get_connection()?;
+        println!("Redis config done");
 
 
         // Loop wait for messages
+        println!("Listening for messages");
         for (_, message) in consumer.receiver().iter().enumerate() {
             match message {
                 ConsumerMessage::Delivery(delivery) => {
