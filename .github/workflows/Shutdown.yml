@@ -1,4 +1,4 @@
-name: Restart Portainer
+name: Shutdown System
 
 on:
   workflow_dispatch:
