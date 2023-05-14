@@ -173,6 +173,7 @@ impl Node{
         if request.reg_id == (COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_LINUX_COUNTER_R as u16){
             self.m_watchdog_current_token = request.data as u32 + 1;
             self.add_request(request.reg_id, self.m_watchdog_current_token.clone() as i32);
+            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.STATUS.HEARTBEAT".to_string(), data: request.data})?;
 
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::STATUS_NODE_LINUX_R as u16){
             self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.STATUS.NODE_LINUX_R".to_string(), data: request.data})?;
