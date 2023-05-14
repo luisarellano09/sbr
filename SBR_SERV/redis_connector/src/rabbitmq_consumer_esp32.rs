@@ -23,7 +23,7 @@ impl RabbitmqConsumerESP32 {
 
     pub fn run(&mut self)  -> Result<(), Box<dyn Error>> {
         // Open connection.
-        let mut connection = Connection::insecure_open("amqp://rabbitmq:La123456.@sbrpi.local:5672/")?;
+        let mut connection = Connection::insecure_open("amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/")?;
 
         // Open a channel - None says let the library choose the channel ID.
         let channel = connection.open_channel(None)?;
@@ -58,7 +58,7 @@ impl RabbitmqConsumerESP32 {
         })?;
 
         //Redis connection
-        let redis_client = redis::Client::open("redis://sbrpi.local:6379")?;
+        let redis_client = redis::Client::open("redis://sbr_redis:6379")?;
         let mut redis_connection = redis_client.get_connection()?;
 
 
