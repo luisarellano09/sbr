@@ -3,5 +3,5 @@ https://github.com/luisarellano09/sbr/settings/actions/runners/new?arch=arm
 
 
 sudo ./svc.sh install
-sudo ./svc.sh status
+sudo ./svc.sh start
 sudo ./svc.sh status
