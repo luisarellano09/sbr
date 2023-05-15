@@ -17,4 +17,4 @@ jobs:
         with:
           database_url: "postgres://sbr:La123456.@localhost:5432/sbr"
           path: "~/SBR/data/postgresql/backup/backup.sql" 
-          options: "-O"   
+          options: "-O"
