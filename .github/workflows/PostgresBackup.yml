@@ -10,8 +10,7 @@ jobs:
     runs-on: [self-hosted, sbr-pi]
     steps:
       - name: Install client
-        run: sudo apt-get install -y postgresql-client
-
+        run: sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' &&  wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo tee /etc/apt/trusted.gpg.d/pgdg.asc &>/dev/null && sudo apt update && sudo apt install postgresql-client -y
       - name: Deploy
         uses: tj-actions/pg-dump@v2.3
         with:
