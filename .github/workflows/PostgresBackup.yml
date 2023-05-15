@@ -1,12 +1,17 @@
-name: Postgres Backup
+name: Backup Postgres
 
 on:
   workflow_dispatch:
   
 jobs: 
   deploy:
+    permissions:
+        contents: write
     runs-on: [self-hosted, sbr-pi]
     steps:
+      - name: Install client
+        run: sudo apt-get install -y postgresql-client
+
       - name: Deploy
         uses: tj-actions/pg-dump@v2.3
         with:
