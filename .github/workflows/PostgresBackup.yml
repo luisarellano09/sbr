@@ -1,0 +1,15 @@
+name: Backup Postgres
+
+on:
+  workflow_dispatch:
+  
+jobs: 
+  deploy:
+    runs-on: [self-hosted, sbr-pi]
+    steps:
+      - name: Deploy
+        uses: tj-actions/pg-dump@v2.3
+        with:
+          database_url: "postgres://sbr:La123456.@localhost:5432/sbr"
+          path: "~/SBR/data/postgresql/backup/backup.sql" 
+          options: "-O"   
