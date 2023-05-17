@@ -284,10 +284,10 @@ impl Node{
             self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.MOTION.PID_ANGLE.MV_MAX_R".to_string(), data: request.data})?;
 
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::LIVE_MOTOR_LEFT_SPEED_R as u16){
-            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.LIVE.MOTOR.LEFT_SPEED_R".to_string(), data: request.data})?;
+            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.LIVE.MOTOR_LEFT.SPEED_R".to_string(), data: request.data})?;
 
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::LIVE_MOTOR_RIGHT_SPEED_R as u16){
-            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.LIVE.MOTOR_RIGHT_SPEED_R".to_string(), data: request.data})?;
+            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.LIVE.MOTOR_RIGHT.SPEED_R".to_string(), data: request.data})?;
 
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::LIVE_IMU_PITCH_R as u16){
             self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.LIVE.IMU.PITCH_R".to_string(), data: request.data})?;
