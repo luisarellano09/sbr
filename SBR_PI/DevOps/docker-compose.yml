@@ -101,7 +101,7 @@ services:
         image: sbr/sbr_serv_graphql:1.0
         container_name: sbr_serv_graphql
         build: 
-            context: ../../SBR_SERV/sbr_serv_graphql/
+            context: ../../SBR_SERV/graphql/
             target: prod
         depends_on:
             sbr_rabbitmq:
