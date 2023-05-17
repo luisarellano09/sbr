@@ -61,7 +61,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/playground").route(web::get().to(playground_route)))
             .service(web::resource("/graphiql").route(web::get().to(graphiql_route)))
     });
-    server.bind("localhost:4000")?.run().await
+    server.bind("0.0.0.0:4000")?.run().await
 }
 // now go to http://127.0.0.1:8080/playground or graphiql and execute
 //{  apiVersion,  user(id: 2){id, name}}
