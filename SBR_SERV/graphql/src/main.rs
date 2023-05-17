@@ -7,7 +7,7 @@ use juniper_actix::{graphiql_handler, graphql_handler, playground_handler};
 
 mod graphql_schema;
 mod graphql_context;
-mod database;
+mod redis_connection;
 mod graphql_types;
 mod graphql_queries;
 mod graphql_mutations;
@@ -36,13 +36,10 @@ async fn graphql_route(
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
 
-    // Create Context
-    let context = ContextGraphQL { db: database::Database::new()};
-
     let server = HttpServer::new(move || {
         App::new()
             .app_data(Data::new(create_schema()))
-            .app_data(context.clone())
+            .app_data(ContextGraphQL::new())
             .wrap(
                 Cors::default()
                     .allow_any_origin()

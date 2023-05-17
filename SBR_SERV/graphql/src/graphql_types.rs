@@ -1,12 +1,8 @@
 
 use juniper::GraphQLObject;
 
-
 #[derive(Debug, Clone, GraphQLObject)]
-///a user
-pub struct User {
-    ///the id
-    pub id: i32,
-    ///the name
-    pub name: String,
+pub struct Esp32LiveMotors {
+    pub motor_left_speed: f64,
+    pub motor_right_speed: f64,
 }
