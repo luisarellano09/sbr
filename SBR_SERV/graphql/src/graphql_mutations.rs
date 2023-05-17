@@ -3,7 +3,6 @@ use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
 use crate::graphql_types::Esp32LiveMotors;
 use crate::rabbitmq_connection::publish_esp32_write;
-use r2d2_redis::redis::Commands;
 
 pub struct Mutations;
 
@@ -31,5 +30,5 @@ impl Mutations {
             motor_right_speed: new_motor_right_speed.unwrap_or_default(),
         })
     }
-    
+
 }
