@@ -8,9 +8,11 @@ use juniper_actix::{graphiql_handler, graphql_handler, playground_handler};
 mod graphql_schema;
 mod graphql_context;
 mod redis_connection;
+mod rabbitmq_connection;
 mod graphql_types;
 mod graphql_queries;
 mod graphql_mutations;
+mod message_esp32;
 
 use graphql_schema::{create_schema, Schema};
 use graphql_context::ContextGraphQL;
