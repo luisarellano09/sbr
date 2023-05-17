@@ -104,7 +104,7 @@ services:
             context: ../../SBR_SERV/graphql/
             target: prod
         ports:
-          - 8080:8080
+          - 4000:4000
         depends_on:
             sbr_rabbitmq:
                 condition: service_healthy
