@@ -188,13 +188,16 @@ impl Node{
             self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.MODE.LINUX.SYNC_DATA_RW".to_string(), data: request.data})?;
             
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_OFFSET_R as u16){
-            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.MOTOR.LEFT_OFFSET_R".to_string(), data: request.data})?;
+            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.MOTOR_LEFT.OFFSET_R".to_string(), data: request.data})?;
             
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_OFFSET_R as u16){
-            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.MOTOR.RIGHT_OFFSET_R".to_string(), data: request.data})?;
+            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.MOTOR_RIGHT.OFFSET_R".to_string(), data: request.data})?;
+
+        } else if request.reg_id == (COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_DIRECTION_R as u16){
+            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.MOTOR_LEFT.DIRECTION_R".to_string(), data: request.data})?;
 
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_R as u16){
-            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.MOTOR.RIGHT_DIRECTION_R".to_string(), data: request.data})?;
+            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.MOTOR_RIGHT.DIRECTION_R".to_string(), data: request.data})?;
 
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_PITCH_R as u16){
             self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.IMU.INVERT_PITCH_R".to_string(), data: request.data})?;
