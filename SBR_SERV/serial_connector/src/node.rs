@@ -118,10 +118,11 @@ impl Node{
             self.m_watchdow_instant = Instant::now();
             if self.m_watchdog_current_token == self.m_watchdog_prev_token {
                 self.m_error = true;
-                dbg!(&self.m_error);    //ToDo: send msg to rabbitmq
+                self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.STATUS.NODE_LINUX_R".to_string(), data: 0})?;
+                dbg!(&self.m_error);
             } else if self.m_watchdog_current_token != self.m_watchdog_prev_token && self.m_error == true  {
                 self.m_error = false;
-                dbg!(&self.m_error);    //ToDo: send msg to rabbitmq
+                dbg!(&self.m_error);
             }
 
             self.m_watchdog_prev_token = self.m_watchdog_current_token;
