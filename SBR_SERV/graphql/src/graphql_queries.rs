@@ -1,7 +1,7 @@
 
 use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
-use crate::graphql_types::{Esp32LiveMotors, Esp32Status, Esp32Mode, Esp32SetupMotor};
+use crate::graphql_types::{Esp32LiveMotors, Esp32Status, Esp32Mode, Esp32SetupMotor, Esp32SetupIMU};
 use r2d2_redis::redis::Commands;
 
 pub struct Queries;
@@ -57,6 +57,23 @@ impl Queries {
         })
     }
 
+
+    fn GetEsp32SetupIMU( context: &ContextGraphQL) -> FieldResult<Esp32SetupIMU> {
+
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
+
+        let invert_pitch_raw: bool = conn.get("ESP32.READ.SETUP.IMU.INVERT_PITCH_R")?;
+        let invert_roll_raw: bool = conn.get("ESP32.READ.SETUP.IMU.INVERT_ROLL_R")?;
+        let invert_yaw_raw: bool = conn.get("ESP32.READ.SETUP.IMU.INVERT_YAW_R")?;
+        let offset_pitch_raw: i32 = conn.get("ESP32.READ.SETUP.IMU.OFFSET_PITCH_R")?;
+
+        Ok(Esp32SetupIMU { 
+            invert_pitch: invert_pitch_raw,
+            invert_roll: invert_roll_raw,
+            invert_yaw: invert_yaw_raw,
+            offset_pitch: (offset_pitch_raw as f64) / 100.0,
+        })
+    }
 
 
 

@@ -27,6 +27,15 @@ pub struct Esp32SetupMotor{
 
 
 #[derive(Debug, Clone, GraphQLObject)]
+pub struct Esp32SetupIMU{
+    pub invert_pitch: bool,
+    pub invert_roll: bool,
+    pub invert_yaw: bool,
+    pub offset_pitch: f64,
+}
+
+
+#[derive(Debug, Clone, GraphQLObject)]
 pub struct Esp32LiveMotors {
     pub motor_left_speed: f64,
     pub motor_right_speed: f64,
