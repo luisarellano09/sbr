@@ -1,8 +1,11 @@
 
 https://github.com/luisarellano09/sbr/settings/actions/runners/new?arch=arm
 
-#add in /etc/rc.local as root:
+#create a sile named startup-sbr with the conatent as root insede the folder /etc/init.d/
 
 sudo chmod +x /home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/Runner/start.sh
 sudo sh /home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/Runner/start.sh
 
+
+# make it executable
+sudo chmod +x startup-sbr.sh 
