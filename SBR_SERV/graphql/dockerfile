@@ -6,12 +6,12 @@ WORKDIR /graphql
 
 COPY ./Cargo.toml ./Cargo.toml
 
-RUN cargo build --release
+RUN cargo check --release
 RUN rm src/*.rs
 
 COPY ./src ./src
 RUN rm ./target/release/deps/graphql*
-RUN cargo build --release
+RUN cargo check --release
 
 
 FROM rust as prod
