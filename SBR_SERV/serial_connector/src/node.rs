@@ -213,10 +213,10 @@ impl Node{
             self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.IMU.OFFSET_PITCH_R".to_string(), data: request.data})?;
 
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::SETUP_ENCODER_LEFT_DIRECTION_R as u16){
-            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.ENCODER.LEFT_DIRECTION_R".to_string(), data: request.data})?;
+            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.ENCODER_LEFT.DIRECTION_R".to_string(), data: request.data})?;
 
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::SETUP_ENCODER_RIGHT_DIRECTION_R as u16){
-            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.ENCODER.RIGHT_DIRECTION_R".to_string(), data: request.data})?;
+            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.ENCODER_RIGHT.DIRECTION_R".to_string(), data: request.data})?;
 
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::SETUP_ODOMETRY_WHEEL_RADIO_R as u16){
             self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.ODOMETRY.WHEEL_RADIO_R".to_string(), data: request.data})?;

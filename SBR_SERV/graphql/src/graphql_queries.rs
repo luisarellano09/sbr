@@ -1,7 +1,7 @@
 
 use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
-use crate::graphql_types::{Esp32LiveMotors, Esp32Status, Esp32Mode, Esp32SetupMotor, Esp32SetupIMU};
+use crate::graphql_types::{Esp32LiveMotors, Esp32Status, Esp32Mode, Esp32SetupMotor, Esp32SetupIMU, Esp32SetupEncoders};
 use r2d2_redis::redis::Commands;
 
 pub struct Queries;
@@ -74,6 +74,47 @@ impl Queries {
             offset_pitch: (offset_pitch_raw as f64) / 100.0,
         })
     }
+
+
+    fn GetEsp32SetupEncoders( context: &ContextGraphQL) -> FieldResult<Esp32SetupEncoders> {
+
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
+
+        let encoder_left_direction_raw: bool = conn.get("ESP32.READ.SETUP.ENCODER_LEFT.DIRECTION_R")?;
+        let encoder_right_direction_raw: bool = conn.get("ESP32.READ.SETUP.ENCODER_RIGHT.DIRECTION_R")?;
+
+        Ok(Esp32SetupEncoders { 
+            encoder_left_direction: encoder_left_direction_raw,
+            encoder_right_direction: encoder_right_direction_raw,
+        })
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

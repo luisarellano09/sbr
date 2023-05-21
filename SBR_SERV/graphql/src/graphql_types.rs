@@ -36,6 +36,45 @@ pub struct Esp32SetupIMU{
 
 
 #[derive(Debug, Clone, GraphQLObject)]
+pub struct Esp32SetupEncoders{
+    pub encoder_left_direction: bool,
+    pub encoder_right_direction: bool,
+}
+
+
+#[derive(Debug, Clone, GraphQLObject)]
+pub struct Esp32SetupOdometry{
+    pub wheel_radio: f64,
+    pub distance_wheels: f64,
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#[derive(Debug, Clone, GraphQLObject)]
 pub struct Esp32LiveMotors {
     pub motor_left_speed: f64,
     pub motor_right_speed: f64,
