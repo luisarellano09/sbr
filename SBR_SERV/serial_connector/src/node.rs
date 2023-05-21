@@ -264,7 +264,7 @@ impl Node{
             self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.MOTION.PID_POSITION.MV_MIN_R".to_string(), data: request.data})?;
 
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_MV_MAX_R as u16){
-            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.MOTION_PID_POSITION.MV_MAX_R".to_string(), data: request.data})?;
+            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.MOTION.PID_POSITION.MV_MAX_R".to_string(), data: request.data})?;
 
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_KP_R as u16){
             self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.MOTION.PID_ANGLE.KP_R".to_string(), data: request.data})?;
