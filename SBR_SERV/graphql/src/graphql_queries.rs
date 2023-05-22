@@ -1,7 +1,7 @@
 
 use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
-use crate::graphql_types::{Esp32LiveMotors, Esp32Status, Esp32Mode, Esp32SetupMotor, Esp32SetupIMU, Esp32SetupEncoders};
+use crate::graphql_types::{Esp32LiveMotors, Esp32Status, Esp32Mode, Esp32SetupMotor, Esp32SetupIMU, Esp32SetupEncoders, Esp32SetupMotionPID, Esp32LiveIMU};
 use r2d2_redis::redis::Commands;
 
 pub struct Queries;
@@ -90,39 +90,76 @@ impl Queries {
     }
 
 
+    fn GetEsp32SetupMotionPidPitch( context: &ContextGraphQL) -> FieldResult<Esp32SetupMotionPID> {
+
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
+
+        let kp_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.KP_R")?;
+        let ki_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.KI_R")?;
+        let kd_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.KD_R")?;
+        let cycle_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.CYCLE_R")?;
+        let direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.DIRECTION_R")?;
+        let mv_min_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.MV_MIN_R")?;
+        let mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.MV_MAX_R")?;
+
+        Ok(Esp32SetupMotionPID { 
+            kp: (kp_raw as f64) / 1000.0,
+            ki: (ki_raw as f64) / 1000.0,
+            kd: (kd_raw as f64) / 1000.0,
+            cycle: (cycle_raw  as f64) / 1000.0,
+            direction: direction_raw,
+            mv_min: (mv_min_raw as f64) / 100.0,
+            mv_max: (mv_max_raw as f64) / 100.0,
+        })
+    }
 
 
+    fn GetEsp32SetupMotionPidPosition( context: &ContextGraphQL) -> FieldResult<Esp32SetupMotionPID> {
+
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
+
+        let kp_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.KP_R")?;
+        let ki_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.KI_R")?;
+        let kd_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.KD_R")?;
+        let cycle_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.CYCLE_R")?;
+        let direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.DIRECTION_R")?;
+        let mv_min_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.MV_MIN_R")?;
+        let mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.MV_MAX_R")?;
+
+        Ok(Esp32SetupMotionPID { 
+            kp: (kp_raw as f64) / 1000.0,
+            ki: (ki_raw as f64) / 1000.0,
+            kd: (kd_raw as f64) / 1000.0,
+            cycle: (cycle_raw  as f64) / 1000.0,
+            direction: direction_raw,
+            mv_min: (mv_min_raw as f64) / 100.0,
+            mv_max: (mv_max_raw as f64) / 100.0,
+        })
+    }
 
 
+    fn GetEsp32SetupMotionPidAngle( context: &ContextGraphQL) -> FieldResult<Esp32SetupMotionPID> {
 
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
+        let kp_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.KP_R")?;
+        let ki_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.KI_R")?;
+        let kd_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.KD_R")?;
+        let cycle_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.CYCLE_R")?;
+        let direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.DIRECTION_R")?;
+        let mv_min_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.MV_MIN_R")?;
+        let mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.MV_MAX_R")?;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        Ok(Esp32SetupMotionPID { 
+            kp: (kp_raw as f64) / 1000.0,
+            ki: (ki_raw as f64) / 1000.0,
+            kd: (kd_raw as f64) / 1000.0,
+            cycle: (cycle_raw  as f64) / 1000.0,
+            direction: direction_raw,
+            mv_min: (mv_min_raw as f64) / 100.0,
+            mv_max: (mv_max_raw as f64) / 100.0,
+        })
+    }
 
 
     fn GetEsp32LiveMotors( context: &ContextGraphQL) -> FieldResult<Esp32LiveMotors> {
@@ -138,5 +175,20 @@ impl Queries {
         })
     }
 
+
+    fn GetEsp32LiveIMU( context: &ContextGraphQL) -> FieldResult<Esp32LiveIMU> {
+
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
+
+        let pitch_raw: i32 = conn.get("ESP32.READ.LIVE.IMU.PITCH_R")?;
+        let roll_raw: i32 = conn.get("ESP32.READ.LIVE.IMU.ROLL_R")?;
+        let yaw_raw: i32 = conn.get("ESP32.READ.LIVE.IMU.YAW_R")?;
+
+        Ok(Esp32LiveIMU { 
+            pitch: (pitch_raw as f64) / 100.0,
+            roll: (roll_raw as f64) / 100.0,
+            yaw: (yaw_raw as f64) / 100.0, 
+        })
+    }
 
 }

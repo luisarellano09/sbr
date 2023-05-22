@@ -46,32 +46,19 @@ pub struct Esp32SetupEncoders{
 pub struct Esp32SetupOdometry{
     pub wheel_radio: f64,
     pub distance_wheels: f64,
-    
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#[derive(Debug, Clone, GraphQLObject)]
+pub struct Esp32SetupMotionPID{
+    pub kp: f64,
+    pub ki: f64,
+    pub kd: f64,
+    pub cycle: f64,
+    pub direction: bool,
+    pub mv_min: f64,
+    pub mv_max: f64
+}
 
 
 #[derive(Debug, Clone, GraphQLObject)]
@@ -79,3 +66,12 @@ pub struct Esp32LiveMotors {
     pub motor_left_speed: f64,
     pub motor_right_speed: f64,
 }
+
+
+#[derive(Debug, Clone, GraphQLObject)]
+pub struct Esp32LiveIMU {
+    pub pitch: f64,
+    pub roll: f64,
+    pub yaw: f64,
+}
+
