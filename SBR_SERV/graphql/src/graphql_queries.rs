@@ -1,7 +1,7 @@
 
 use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
-use crate::graphql_types::{Esp32LiveMotors, Esp32Status, Esp32Mode, Esp32SetupMotor, Esp32SetupIMU, Esp32SetupEncoders, Esp32SetupMotionPID, Esp32LiveIMU};
+use crate::graphql_types::{Esp32LiveMotors, Esp32Status, Esp32Mode, Esp32SetupMotor, Esp32SetupIMU, Esp32SetupEncoders, Esp32SetupMotionPID, Esp32LiveIMU, Esp32LiveEncoders, Esp32LiveOdometry, Esp32LiveMotion};
 use r2d2_redis::redis::Commands;
 
 pub struct Queries;
@@ -188,6 +188,52 @@ impl Queries {
             pitch: (pitch_raw as f64) / 100.0,
             roll: (roll_raw as f64) / 100.0,
             yaw: (yaw_raw as f64) / 100.0, 
+        })
+    }
+    
+
+    fn GetEsp32LiveEncoders( context: &ContextGraphQL) -> FieldResult<Esp32LiveEncoders> {
+
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
+
+        let encoder_left_count_raw: i32 = conn.get("ESP32.READ.LIVE.ENCODER.LEFT_COUNT_R")?;
+        let encoder_right_count_raw: i32 = conn.get("ESP32.READ.LIVE.ENCODER.RIGHT_COUNT_R")?;
+
+        Ok(Esp32LiveEncoders { 
+            encoder_left_count: (encoder_left_count_raw as f64),
+            encoder_right_count: (encoder_right_count_raw as f64),
+        })
+    }
+
+
+    fn GetEsp32LiveOdometry( context: &ContextGraphQL) -> FieldResult<Esp32LiveOdometry> {
+
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
+
+        let x_raw: i32 = conn.get("ESP32.READ.LIVE.ODOMETRY.X_R")?;
+        let y_raw: i32 = conn.get("ESP32.READ.LIVE.ODOMETRY.Y_R")?;
+        let angle_raw: i32 = conn.get("ESP32.READ.LIVE.ODOMETRY.ANGLE_R")?;
+        let distance_raw: i32 = conn.get("ESP32.READ.LIVE.ODOMETRY.DISTANCE_R")?;
+
+        Ok(Esp32LiveOdometry { 
+            x: (x_raw as f64) / 1000.0,
+            y: (y_raw as f64) / 1000.0,
+            angle: (angle_raw as f64) / 100.0,
+            distance: (distance_raw as f64) / 1000.0,
+        })
+    }
+
+
+    fn GetEsp32LiveMotion( context: &ContextGraphQL) -> FieldResult<Esp32LiveMotion> {
+
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
+
+        let setpoint_angle_raw: i32 = conn.get("ESP32.READ.LIVE.MOTION.SP_ANGLE_R")?;
+        let setpoint_position_raw: i32 = conn.get("ESP32.READ.LIVE.MOTION.SP_POSITION_R")?;
+
+        Ok(Esp32LiveMotion { 
+            setpoint_angle: (setpoint_angle_raw as f64) / 100.0,
+            setpoint_position: (setpoint_position_raw as f64) / 1000.0,
         })
     }
 

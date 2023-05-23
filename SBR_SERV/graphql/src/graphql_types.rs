@@ -75,3 +75,27 @@ pub struct Esp32LiveIMU {
     pub yaw: f64,
 }
 
+
+#[derive(Debug, Clone, GraphQLObject)]
+pub struct Esp32LiveEncoders {
+    pub encoder_left_count: f64,
+    pub encoder_right_count: f64,
+}
+
+
+#[derive(Debug, Clone, GraphQLObject)]
+pub struct Esp32LiveOdometry {
+    pub x: f64,
+    pub y: f64,
+    pub angle: f64,
+    pub distance: f64,
+}
+
+
+#[derive(Debug, Clone, GraphQLObject)]
+pub struct Esp32LiveMotion {
+    pub setpoint_position: f64,
+    pub setpoint_angle: f64,
+}
+
+
