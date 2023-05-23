@@ -190,7 +190,7 @@ impl Queries {
             yaw: (yaw_raw as f64) / 100.0, 
         })
     }
-    
+
 
     fn GetEsp32LiveEncoders( context: &ContextGraphQL) -> FieldResult<Esp32LiveEncoders> {
 
