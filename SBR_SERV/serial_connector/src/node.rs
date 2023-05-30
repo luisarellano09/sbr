@@ -386,10 +386,10 @@ impl Node{
         } else if msg.name == "ESP32.WRITE.SETUP.IMU.OFFSET_PITCH_W" {
             self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_IMU_OFFSET_PITCH_W as u16, msg.data));
             
-        } else if msg.name == "ESP32.WRITE.SETUP.ENCODER.LEFT_DIRECTION_W" {
+        } else if msg.name == "ESP32.WRITE.SETUP.ENCODER_LEFT.DIRECTION_W" {
             self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_ENCODER_LEFT_DIRECTION_W as u16, msg.data));
             
-        } else if msg.name == "ESP32.WRITE.SETUP.ENCODER.RIGHT_DIRECTION_W" {
+        } else if msg.name == "ESP32.WRITE.SETUP.ENCODER_RIGHT.DIRECTION_W" {
             self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_ENCODER_RIGHT_DIRECTION_W as u16, msg.data));
             
         } else if msg.name == "ESP32.WRITE.SETUP.ODOMETRY.WHEEL_RADIO_W" {
