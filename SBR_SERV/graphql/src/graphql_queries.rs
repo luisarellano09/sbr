@@ -4,12 +4,16 @@ use crate::graphql_context::ContextGraphQL;
 use crate::graphql_types::{Esp32LiveMotors, Esp32Status, Esp32Mode, Esp32SetupMotor, Esp32SetupIMU, Esp32SetupEncoders, Esp32SetupMotionPID, Esp32LiveIMU, Esp32LiveEncoders, Esp32LiveOdometry, Esp32LiveMotion};
 use r2d2_redis::redis::Commands;
 
+
+//=====================================================================================================
 pub struct Queries;
 
 
+//=====================================================================================================
 #[graphql_object(context = ContextGraphQL)]
 impl Queries {
 
+    //=====================================================================================================
     fn GetEsp32Status( context: &ContextGraphQL) -> FieldResult<Esp32Status> {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
@@ -25,7 +29,8 @@ impl Queries {
         })
     }
 
-
+    
+    //=====================================================================================================
     fn GetEsp32Mode( context: &ContextGraphQL) -> FieldResult<Esp32Mode> {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
@@ -39,7 +44,8 @@ impl Queries {
         })
     }
 
-
+    
+    //=====================================================================================================
     fn GetEsp32SetupMotors( context: &ContextGraphQL) -> FieldResult<Esp32SetupMotor> {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
@@ -57,7 +63,8 @@ impl Queries {
         })
     }
 
-
+    
+    //=====================================================================================================
     fn GetEsp32SetupIMU( context: &ContextGraphQL) -> FieldResult<Esp32SetupIMU> {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
@@ -75,7 +82,8 @@ impl Queries {
         })
     }
 
-
+    
+    //=====================================================================================================
     fn GetEsp32SetupEncoders( context: &ContextGraphQL) -> FieldResult<Esp32SetupEncoders> {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
@@ -89,7 +97,8 @@ impl Queries {
         })
     }
 
-
+    
+    //=====================================================================================================
     fn GetEsp32SetupMotionPidPitch( context: &ContextGraphQL) -> FieldResult<Esp32SetupMotionPID> {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
@@ -113,7 +122,8 @@ impl Queries {
         })
     }
 
-
+    
+    //=====================================================================================================
     fn GetEsp32SetupMotionPidPosition( context: &ContextGraphQL) -> FieldResult<Esp32SetupMotionPID> {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
@@ -137,7 +147,8 @@ impl Queries {
         })
     }
 
-
+    
+    //=====================================================================================================
     fn GetEsp32SetupMotionPidAngle( context: &ContextGraphQL) -> FieldResult<Esp32SetupMotionPID> {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
@@ -161,7 +172,8 @@ impl Queries {
         })
     }
 
-
+    
+    //=====================================================================================================
     fn GetEsp32LiveMotors( context: &ContextGraphQL) -> FieldResult<Esp32LiveMotors> {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
@@ -175,7 +187,8 @@ impl Queries {
         })
     }
 
-
+    
+    //=====================================================================================================
     fn GetEsp32LiveIMU( context: &ContextGraphQL) -> FieldResult<Esp32LiveIMU> {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
@@ -191,7 +204,8 @@ impl Queries {
         })
     }
 
-
+    
+    //=====================================================================================================
     fn GetEsp32LiveEncoders( context: &ContextGraphQL) -> FieldResult<Esp32LiveEncoders> {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
@@ -205,7 +219,8 @@ impl Queries {
         })
     }
 
-
+    
+    //=====================================================================================================
     fn GetEsp32LiveOdometry( context: &ContextGraphQL) -> FieldResult<Esp32LiveOdometry> {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
@@ -223,7 +238,8 @@ impl Queries {
         })
     }
 
-
+    
+    //=====================================================================================================
     fn GetEsp32LiveMotion( context: &ContextGraphQL) -> FieldResult<Esp32LiveMotion> {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");

@@ -4,7 +4,6 @@ use actix_cors::Cors;
 use actix_web::{http::header, middleware, web::{self, Data}, App, Error, HttpResponse, HttpServer};
 use juniper_actix::{graphiql_handler, graphql_handler, playground_handler};
 
-
 mod graphql_schema;
 mod graphql_context;
 mod redis_connection;
@@ -17,14 +16,20 @@ mod message_esp32;
 use graphql_schema::{create_schema, Schema};
 use graphql_context::ContextGraphQL;
 
+
+//=====================================================================================================
 async fn graphiql_route() -> Result<HttpResponse, Error> {
     graphiql_handler("/graphql", None).await
 }
 
+
+//=====================================================================================================
 async fn playground_route() -> Result<HttpResponse, Error> {
     playground_handler("/graphql", None).await
 }
 
+
+//=====================================================================================================
 async fn graphql_route(
     req: actix_web::HttpRequest,
     payload: actix_web::web::Payload,
@@ -35,6 +40,8 @@ async fn graphql_route(
     graphql_handler(&schema, &context, req, payload).await
 }
 
+
+//=====================================================================================================
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
 

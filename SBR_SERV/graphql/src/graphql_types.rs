@@ -2,6 +2,7 @@
 use juniper::GraphQLObject;
 
 
+//=====================================================================================================
 #[derive(Debug, Clone, GraphQLObject)]
 pub struct Esp32Status {
     pub heartbeat: i32,
@@ -10,6 +11,7 @@ pub struct Esp32Status {
 }
 
 
+//=====================================================================================================
 #[derive(Debug, Clone, GraphQLObject)]
 pub struct Esp32Mode{
     pub manager_sync_data: i32,
@@ -17,6 +19,7 @@ pub struct Esp32Mode{
 }
 
 
+//=====================================================================================================
 #[derive(Debug, Clone, GraphQLObject)]
 pub struct Esp32SetupMotor{
     pub motor_left_offset: f64,
@@ -26,6 +29,7 @@ pub struct Esp32SetupMotor{
 }
 
 
+//=====================================================================================================
 #[derive(Debug, Clone, GraphQLObject)]
 pub struct Esp32SetupIMU{
     pub invert_pitch: bool,
@@ -35,6 +39,7 @@ pub struct Esp32SetupIMU{
 }
 
 
+//=====================================================================================================
 #[derive(Debug, Clone, GraphQLObject)]
 pub struct Esp32SetupEncoders{
     pub encoder_left_direction: bool,
@@ -42,6 +47,7 @@ pub struct Esp32SetupEncoders{
 }
 
 
+//=====================================================================================================
 #[derive(Debug, Clone, GraphQLObject)]
 pub struct Esp32SetupOdometry{
     pub wheel_radio: f64,
@@ -49,6 +55,7 @@ pub struct Esp32SetupOdometry{
 }
 
 
+//=====================================================================================================
 #[derive(Debug, Clone, GraphQLObject)]
 pub struct Esp32SetupMotionPID{
     pub kp: f64,
@@ -61,6 +68,7 @@ pub struct Esp32SetupMotionPID{
 }
 
 
+//=====================================================================================================
 #[derive(Debug, Clone, GraphQLObject)]
 pub struct Esp32LiveMotors {
     pub motor_left_speed: f64,
@@ -68,6 +76,7 @@ pub struct Esp32LiveMotors {
 }
 
 
+//=====================================================================================================
 #[derive(Debug, Clone, GraphQLObject)]
 pub struct Esp32LiveIMU {
     pub pitch: f64,
@@ -76,6 +85,7 @@ pub struct Esp32LiveIMU {
 }
 
 
+//=====================================================================================================
 #[derive(Debug, Clone, GraphQLObject)]
 pub struct Esp32LiveEncoders {
     pub encoder_left_count: f64,
@@ -83,6 +93,7 @@ pub struct Esp32LiveEncoders {
 }
 
 
+//=====================================================================================================
 #[derive(Debug, Clone, GraphQLObject)]
 pub struct Esp32LiveOdometry {
     pub x: f64,
@@ -92,6 +103,7 @@ pub struct Esp32LiveOdometry {
 }
 
 
+//=====================================================================================================
 #[derive(Debug, Clone, GraphQLObject)]
 pub struct Esp32LiveMotion {
     pub setpoint_position: f64,
