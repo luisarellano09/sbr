@@ -8,6 +8,7 @@ mod graphql_schema;
 mod graphql_context;
 mod redis_connection;
 mod rabbitmq_connection;
+mod postgres_connection;
 mod graphql_types;
 mod graphql_queries;
 mod graphql_mutations;

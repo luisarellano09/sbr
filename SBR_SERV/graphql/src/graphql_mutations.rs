@@ -1,7 +1,6 @@
 
 use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
-use crate::graphql_types::Esp32LiveMotors;
 use crate::rabbitmq_connection::publish_esp32_write;
 
 
@@ -404,7 +403,7 @@ impl Mutations {
     
     
     //=====================================================================================================
-    fn SetEsp32LiveOdometryX(_context: &ContextGraphQL, new_angle: f64) -> FieldResult<bool> {
+    fn SetEsp32LiveOdometryAngle(_context: &ContextGraphQL, new_angle: f64) -> FieldResult<bool> {
 
         publish_esp32_write("ESP32.WRITE.LIVE.ODOMETRY.ANGLE_W".to_string(), (new_angle * 100.0) as i32)?;
         
@@ -452,7 +451,8 @@ impl Mutations {
     fn LoadEsp32Setup(_context: &ContextGraphQL) -> FieldResult<bool> {
 
         //Read postgresql db: Setup params
-          
+
+        /*   
         publish_esp32_write("ESP32.WRITE.SETUP.MOTOR.LEFT_OFFSET_W".to_string(), (motor_left_offset * 100.0) as i32)?;
         publish_esp32_write("ESP32.WRITE.SETUP.MOTOR.LEFT_DIRECTION_W".to_string(), motor_left_direction as i32)?;
         publish_esp32_write("ESP32.WRITE.SETUP.MOTOR.RIGHT_OFFSET_W".to_string(), (motor_right_offset * 100.0) as i32)?;
@@ -489,7 +489,7 @@ impl Mutations {
         publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.DIRECTION_W".to_string(), motion_pid_angle_direction as i32)?;
         publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.MV_MIN_W".to_string(), (motion_pid_angle_mv_min * 100.0) as i32)?;
         publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.MV_MAX_W".to_string(), (motion_pid_angle_mv_max * 100.0) as i32)?;
-
+        */
 
         Ok(true)
     }
