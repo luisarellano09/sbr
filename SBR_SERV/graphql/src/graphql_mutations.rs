@@ -446,5 +446,52 @@ impl Mutations {
 
         Ok(true)
     }
+    
+    
+    //=====================================================================================================
+    fn LoadEsp32Setup(_context: &ContextGraphQL) -> FieldResult<bool> {
+
+        //Read postgresql db: Setup params
+          
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTOR.LEFT_OFFSET_W".to_string(), (motor_left_offset * 100.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTOR.LEFT_DIRECTION_W".to_string(), motor_left_direction as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTOR.RIGHT_OFFSET_W".to_string(), (motor_right_offset * 100.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTOR.RIGHT_DIRECTION_W".to_string(), motor_right_direction as i32)?;
+        
+        publish_esp32_write("ESP32.WRITE.SETUP.IMU.INVERT_PITCH_W".to_string(), imu_pitch_direction as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.IMU.INVERT_ROLL_W".to_string(), imu_roll_direction as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.IMU.INVERT_YAW_W".to_string(), imu_yaw_direction as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.IMU.OFFSET_PITCH_W".to_string(), (imu_pitch_offset * 100.0) as i32)?;
+        
+        publish_esp32_write("ESP32.WRITE.SETUP.ENCODER_LEFT.DIRECTION_W".to_string(), encoder_left_direction as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.ENCODER_RIGHT.DIRECTION_W".to_string(), encoder_right_direction as i32)?;
+        
+        publish_esp32_write("ESP32.WRITE.SETUP.ODOMETRY.WHEEL_RADIO_W".to_string(), (odometry_wheel_radio * 1000.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.ODOMETRY.DISTANCE_WHEELS_W".to_string(), (odometry_distance_wheels * 1000.0) as i32)?;
+        
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.KP_W".to_string(), (motion_pid_pitch_kp * 1000.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.KI_W".to_string(), (motion_pid_pitch_ki * 1000.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.KD_W".to_string(), (motion_pid_pitch_kd * 1000.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.DIRECTION_W".to_string(), motion_pid_pitch_direction as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.MV_MIN_W".to_string(), (motion_pid_pitch_mv_min * 100.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.MV_MAX_W".to_string(), (motion_pid_pitch_mv_max * 100.0) as i32)?;
+        
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.KP_W".to_string(), (motion_pid_position_kp * 1000.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.KI_W".to_string(), (motion_pid_position_ki * 1000.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.KD_W".to_string(), (motion_pid_position_kd * 1000.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.DIRECTION_W".to_string(), motion_pid_position_direction as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.MV_MIN_W".to_string(), (motion_pid_position_mv_min * 100.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.MV_MAX_W".to_string(), (motion_pid_position_mv_max * 100.0) as i32)?;
+        
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.KP_W".to_string(), (motion_pid_angle_kp * 1000.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.KI_W".to_string(), (motion_pid_angle_ki * 1000.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.KD_W".to_string(), (motion_pid_angle_kd * 1000.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.DIRECTION_W".to_string(), motion_pid_angle_direction as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.MV_MIN_W".to_string(), (motion_pid_angle_mv_min * 100.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.MV_MAX_W".to_string(), (motion_pid_angle_mv_max * 100.0) as i32)?;
+
+
+        Ok(true)
+    }
 
 }
