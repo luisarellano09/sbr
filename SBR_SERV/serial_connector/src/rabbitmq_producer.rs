@@ -3,16 +3,19 @@
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, Publish};
 use serde_json::json;
 use std::{sync::mpsc::Receiver, error::Error};
-
 use crate::message_esp32::MessageEsp32;
 
+
+//=====================================================================================================
 pub struct RabbitmqProducer {
     m_receiver_node_producer: Receiver<MessageEsp32>,
 }
 
 
+//=====================================================================================================
 impl RabbitmqProducer {
-
+    
+    //=====================================================================================================
     pub fn new(receiver_node_producer: Receiver<MessageEsp32>) -> Self {
 
         RabbitmqProducer {
@@ -20,7 +23,8 @@ impl RabbitmqProducer {
         }
     }
 
-
+    
+    //=====================================================================================================
     pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
         // Open connection.
         let mut connection = Connection::insecure_open("amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/")?;

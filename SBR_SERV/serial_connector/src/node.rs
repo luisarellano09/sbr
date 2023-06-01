@@ -4,7 +4,6 @@ use std::error::Error;
 use std::time::{Instant};
 use std::collections::VecDeque;
 use std::sync::mpsc::{Sender, Receiver};
-
 use crate::request::{buffer_to_request, check_crc, calculate_crc_from_request, request_to_buffer, Request};
 use crate::register_table::{COM_REQUEST_REG_ID_e};
 use crate::message_esp32::MessageEsp32;
@@ -486,6 +485,7 @@ impl Node{
 }
 
 
+//=====================================================================================================
 fn create_request(reg_id: u16, data: i32) -> Request{
     let mut request = Request { node_id: 4, req_type: 2, reg_id: reg_id, data: data, crc: 0 };
     request.crc = calculate_crc_from_request(request);
