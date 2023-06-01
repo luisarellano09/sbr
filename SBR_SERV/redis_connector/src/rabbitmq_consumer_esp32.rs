@@ -1,26 +1,27 @@
 #![allow(dead_code)]
 
 use std::error::Error;
-
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOptions, FieldTable, ConsumerOptions, ConsumerMessage};
 use redis::Commands;
-
 use crate::message_esp32::MessageEsp32;
 
-pub struct RabbitmqConsumerESP32 {
-    
-}
+
+//=====================================================================================================
+pub struct RabbitmqConsumerESP32 {}
 
 
+//=====================================================================================================
 impl RabbitmqConsumerESP32 {
 
+    //=====================================================================================================
     pub fn new() -> Self {
         RabbitmqConsumerESP32 {
             
         }
     }
 
-
+    
+    //=====================================================================================================
     pub fn run(&mut self)  -> Result<(), Box<dyn Error>> {
         // Open connection.
         let mut connection = Connection::insecure_open("amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/")?;
