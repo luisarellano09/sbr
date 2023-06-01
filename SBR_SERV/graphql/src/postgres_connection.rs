@@ -17,8 +17,7 @@ impl RedisConnection {
     //=====================================================================================================
     pub fn new() -> RedisConnection {
         
-        let manager = PostgresConnectionManager::new(
-            "postgres://username:password@localhost/database",
+        let manager = PostgresConnectionManager::new("postgres://username:password@localhost/database".to_string(),
             NoTls,
         );
         
