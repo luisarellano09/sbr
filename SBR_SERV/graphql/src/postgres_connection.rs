@@ -1,28 +1,24 @@
 
-use r2d2_postgres::{postgres::NoTls, PostgresConnectionManager};
+use std::{error::Error, time::Instant};
+use async_std::task::spawn;
+use async_postgres::connect;
+use tokio_postgres::Row;
 
 //=====================================================================================================
-pub type PostgresPool = Pool<PostgresConnectionManager>;
-
-
-//=====================================================================================================
-pub struct RedisConnection {
-    pub redis_pool: PostgresPool,
-}
+//const URL: &str = "host=sbr_postgres user=sbr password=La123456.";
+const URL: &str = "host=sbrpi.local user=sbr password=La123456.";
 
 
 //=====================================================================================================
-impl RedisConnection {
+pub async fn query(statement: &str) -> Result<Vec<Row>, Box<dyn Error>> {
+    let start = Instant::now();
 
-    //=====================================================================================================
-    pub fn new() -> RedisConnection {
-        
-        let manager = PostgresConnectionManager::new("postgres://username:password@localhost/database".to_string(),
-            NoTls,
-        );
-        
-        let pool = Pool::new(manager)?;
+    let (client, conn) = connect(URL.parse()?).await?;
+    spawn(conn);
 
-        pool.get()
-    }
+    let duration = start.elapsed();
+
+        dbg!(format!("Time connection is: {:?}", duration));
+
+    Ok(client.query(statement, &[]).await?)
 }

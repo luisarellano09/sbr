@@ -17,7 +17,7 @@ impl ContextGraphQL{
     //=====================================================================================================
     pub fn new() -> ContextGraphQL {
         ContextGraphQL { 
-            redis_connection: RedisConnection::new(), 
+            redis_connection: RedisConnection::new(),
         }
     }
 }

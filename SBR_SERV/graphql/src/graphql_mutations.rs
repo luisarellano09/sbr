@@ -1,7 +1,11 @@
 
+use std::time::Instant;
+
 use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
+use crate::graphql_types::Esp32SetupMotor;
 use crate::rabbitmq_connection::publish_esp32_write;
+use crate::postgres_connection::query;
 
 
 //=====================================================================================================
@@ -448,9 +452,35 @@ impl Mutations {
     
     
     //=====================================================================================================
-    fn LoadEsp32Setup(_context: &ContextGraphQL) -> FieldResult<bool> {
+    async fn LoadEsp32Setup(context: &ContextGraphQL) -> FieldResult<bool> {
 
+        let start = Instant::now();
+        
         //Read postgresql db: Setup params
+
+        dbg!("Motor Left");
+        for row in query("SELECT * FROM SETUP_MOTORS WHERE NAME = 'LEFT'").await? {
+            let name: String = row.try_get("NAME")?;
+            let offset: f32 = row.try_get("OFFSET")?;
+            let direction: bool = row.try_get("DIRECTION")?;
+
+            dbg!(name, offset, direction);
+        }
+
+        dbg!("Motor Right");
+        for row in query("SELECT * FROM SETUP_MOTORS WHERE NAME = 'RIGHT'").await? {
+            let name: String = row.try_get("NAME")?;
+            let offset: f32 = row.try_get("OFFSET")?;
+            let direction: bool = row.try_get("DIRECTION")?;
+
+            dbg!(name, offset, direction);
+        }
+
+
+        let duration = start.elapsed();
+
+        dbg!(format!("Time elapsed is: {:?}", duration));
+
 
         /*   
         publish_esp32_write("ESP32.WRITE.SETUP.MOTOR.LEFT_OFFSET_W".to_string(), (motor_left_offset * 100.0) as i32)?;
