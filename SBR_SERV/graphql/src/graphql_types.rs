@@ -20,8 +20,8 @@ pub struct Esp32Mode{
 
 
 //=====================================================================================================
-#[derive(Debug, Clone, GraphQLObject)]
-pub struct Esp32SetupMotor{
+#[derive(Debug, Clone, Default, GraphQLObject)]
+pub struct Esp32SetupMotors{
     pub motor_left_offset: f64,
     pub motor_right_offset: f64,
     pub motor_left_direction: bool,
@@ -30,7 +30,7 @@ pub struct Esp32SetupMotor{
 
 
 //=====================================================================================================
-#[derive(Debug, Clone, GraphQLObject)]
+#[derive(Debug, Clone, Default, GraphQLObject)]
 pub struct Esp32SetupIMU{
     pub invert_pitch: bool,
     pub invert_roll: bool,
@@ -40,7 +40,7 @@ pub struct Esp32SetupIMU{
 
 
 //=====================================================================================================
-#[derive(Debug, Clone, GraphQLObject)]
+#[derive(Debug, Clone, Default, GraphQLObject)]
 pub struct Esp32SetupEncoders{
     pub encoder_left_direction: bool,
     pub encoder_right_direction: bool,
@@ -48,7 +48,7 @@ pub struct Esp32SetupEncoders{
 
 
 //=====================================================================================================
-#[derive(Debug, Clone, GraphQLObject)]
+#[derive(Debug, Clone, Default, GraphQLObject)]
 pub struct Esp32SetupOdometry{
     pub wheel_radio: f64,
     pub distance_wheels: f64,
@@ -56,7 +56,7 @@ pub struct Esp32SetupOdometry{
 
 
 //=====================================================================================================
-#[derive(Debug, Clone, GraphQLObject)]
+#[derive(Debug, Clone, Default, GraphQLObject)]
 pub struct Esp32SetupMotionPID{
     pub kp: f64,
     pub ki: f64,
@@ -110,4 +110,16 @@ pub struct Esp32LiveMotion {
     pub setpoint_angle: f64,
 }
 
+
+//=====================================================================================================
+#[derive(Debug, Clone, Default, GraphQLObject)]
+pub struct Esp32Setup{
+    pub motors: Esp32SetupMotors,
+    pub encoders: Esp32SetupEncoders,
+    pub imu: Esp32SetupIMU,
+    pub odometry: Esp32SetupOdometry,
+    pub motion_pid_pitch: Esp32SetupMotionPID,
+    pub motion_pid_position: Esp32SetupMotionPID,
+    pub motion_pid_angle: Esp32SetupMotionPID,
+}
 

@@ -1,7 +1,8 @@
 
 use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
-use crate::graphql_types::{Esp32LiveMotors, Esp32Status, Esp32Mode, Esp32SetupMotor, Esp32SetupIMU, Esp32SetupEncoders, Esp32SetupMotionPID, Esp32LiveIMU, Esp32LiveEncoders, Esp32LiveOdometry, Esp32LiveMotion};
+use crate::graphql_types::{Esp32LiveMotors, Esp32Status, Esp32Mode, Esp32SetupMotors, Esp32SetupIMU, Esp32SetupEncoders, Esp32SetupMotionPID, Esp32LiveIMU, Esp32LiveEncoders, Esp32LiveOdometry, Esp32LiveMotion, Esp32Setup};
+use crate::postgres_connection::connect_postgres;
 use r2d2_redis::redis::Commands;
 
 
@@ -46,7 +47,7 @@ impl Queries {
 
     
     //=====================================================================================================
-    fn GetEsp32SetupMotors( context: &ContextGraphQL) -> FieldResult<Esp32SetupMotor> {
+    fn GetEsp32SetupMotors( context: &ContextGraphQL) -> FieldResult<Esp32SetupMotors> {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
@@ -55,7 +56,7 @@ impl Queries {
         let motor_left_direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTOR_LEFT.DIRECTION_R")?;
         let motor_right_direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTOR_RIGHT.DIRECTION_R")?;
 
-        Ok(Esp32SetupMotor { 
+        Ok(Esp32SetupMotors { 
             motor_left_offset: (motor_left_offset_raw as f64) / 100.0,
             motor_right_offset: (motor_right_offset_raw as f64) / 100.0,
             motor_left_direction: motor_left_direction_raw,
@@ -251,6 +252,147 @@ impl Queries {
             setpoint_angle: (setpoint_angle_raw as f64) / 100.0,
             setpoint_position: (setpoint_position_raw as f64) / 1000.0,
         })
+    }
+
+
+    //=====================================================================================================
+    async fn GetDbEsp32Setup(_context: &ContextGraphQL) -> FieldResult<Esp32Setup> {
+
+        let mut setup: Esp32Setup = Esp32Setup{..Default::default()};
+
+        let client = connect_postgres().await?;
+        
+        for row in client.query("SELECT * FROM SETUP_ESP32 ORDER BY name ASC", &[]).await? {
+            let name: String = row.try_get("NAME")?;
+            let value: f64 = row.try_get("VALUE")?;
+
+            match name.as_str() {
+                
+                "motor_left_direction" => {
+                    setup.motors.motor_left_direction = if value == 1.0 {true} else {false};
+                },
+
+                "motor_left_offset" => {
+                    setup.motors.motor_left_offset = value;
+                },
+
+                "motor_right_direction" => {
+                    setup.motors.motor_right_direction = if value == 1.0 {true} else {false};
+                },
+
+                "motor_right_offset" => {
+                    setup.motors.motor_right_offset = value;
+                },
+
+                "encoder_left_direction" => {
+                    setup.encoders.encoder_left_direction = if value == 1.0 {true} else {false};
+                },
+
+                "encoder_right_direction" => {
+                    setup.encoders.encoder_right_direction = if value == 1.0 {true} else {false};
+                },
+
+                "imu_invert_pitch" => {
+                    setup.imu.invert_pitch = if value == 1.0 {true} else {false};
+                },
+
+                "imu_invert_roll" => {
+                    setup.imu.invert_roll = if value == 1.0 {true} else {false};
+                },
+
+                "imu_invert_yaw" => {
+                    setup.imu.invert_yaw = if value == 1.0 {true} else {false};
+                },
+
+                "imu_offset_pitch" => {
+                    setup.imu.offset_pitch = value;
+                },
+
+                "odometry_distance_wheels" => {
+                    setup.odometry.distance_wheels = value;
+                },
+
+                "odometry_wheel_radio" => {
+                    setup.odometry.wheel_radio = value;
+                },
+
+                "motion_pid_pitch_kp" => {
+                    setup.motion_pid_pitch.kp = value;
+                },
+
+                "motion_pid_pitch_ki" => {
+                    setup.motion_pid_pitch.ki = value;
+                },
+
+                "motion_pid_pitch_kd" => {
+                    setup.motion_pid_pitch.kd = value;
+                },
+
+                "motion_pid_pitch_direction" => {
+                    setup.motion_pid_pitch.direction = if value == 1.0 {true} else {false};
+                },
+
+                "motion_pid_pitch_mv_min" => {
+                    setup.motion_pid_pitch.mv_min = value;
+                },
+
+                "motion_pid_pitch_mv_max" => {
+                    setup.motion_pid_pitch.mv_max = value;
+                },
+
+                "motion_pid_position_kp" => {
+                    setup.motion_pid_position.kp = value;
+                },
+
+                "motion_pid_position_ki" => {
+                    setup.motion_pid_position.ki = value;
+                },
+
+                "motion_pid_position_kd" => {
+                    setup.motion_pid_position.kd = value;
+                },
+
+                "motion_pid_position_direction" => {
+                    setup.motion_pid_position.direction = if value == 1.0 {true} else {false};
+                },
+
+                "motion_pid_position_mv_min" => {
+                    setup.motion_pid_position.mv_min = value;
+                },
+
+                "motion_pid_position_mv_max" => {
+                    setup.motion_pid_position.mv_max = value;
+                },
+
+                "motion_pid_angle_kp" => {
+                    setup.motion_pid_angle.kp = value;
+                },
+
+                "motion_pid_angle_ki" => {
+                    setup.motion_pid_angle.ki = value;
+                },
+
+                "motion_pid_angle_kd" => {
+                    setup.motion_pid_angle.kd = value;
+                },
+
+                "motion_pid_angle_direction" => {
+                    setup.motion_pid_angle.direction = if value == 1.0 {true} else {false};
+                },
+
+                "motion_pid_angle_mv_min" => {
+                    setup.motion_pid_angle.mv_min = value;
+                },
+
+                "motion_pid_angle_mv_max" => {
+                    setup.motion_pid_angle.mv_max = value;
+                },
+
+                _ => {}
+            }
+        }
+
+        Ok(setup)
     }
 
 }

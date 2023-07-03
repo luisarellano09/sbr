@@ -1,6 +1,4 @@
 
-use std::time::Instant;
-
 use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
 use crate::rabbitmq_connection::publish_esp32_write;
@@ -453,13 +451,11 @@ impl Mutations {
     //=====================================================================================================
     async fn LoadEsp32Setup(_context: &ContextGraphQL) -> FieldResult<bool> {
 
-        let start = Instant::now();
-
         let client = connect_postgres().await?;
         
         for row in client.query("SELECT * FROM SETUP_ESP32 ORDER BY name ASC", &[]).await? {
             let name: String = row.try_get("NAME")?;
-            let value: f32 = row.try_get("VALUE")?;
+            let value: f64 = row.try_get("VALUE")?;
 
             match name.as_str() {
                 "motor_left_direction" => {
@@ -586,9 +582,355 @@ impl Mutations {
             }
         }
 
-        let duration = start.elapsed();
+        Ok(true)
+    }
 
-        dbg!(format!("Time elapsed is: {:?}", duration));
+
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotorLeftOffset(_context: &ContextGraphQL, offset: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motor_left_offset'", &[&offset]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotorLeftDirection(_context: &ContextGraphQL, direction: bool) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+
+        let data:f64 = if direction == true {1.0} else {0.0};
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motor_left_direction'", &[&data]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotorRightOffset(_context: &ContextGraphQL, offset: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motor_right_offset'", &[&offset]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotorRightDirection(_context: &ContextGraphQL, direction: bool) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+
+        let data:f64 = if direction == true {1.0} else {0.0};
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motor_right_direction'", &[&data]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupIMUInvertPitch(_context: &ContextGraphQL, direction: bool) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+
+        let data:f64 = if direction == true {1.0} else {0.0};
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='imu_invert_pitch'", &[&data]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupIMUInvertRoll(_context: &ContextGraphQL, direction: bool) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+
+        let data:f64 = if direction == true {1.0} else {0.0};
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='imu_invert_roll'", &[&data]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupIMUInvertYaw(_context: &ContextGraphQL, direction: bool) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+
+        let data:f64 = if direction == true {1.0} else {0.0};
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='imu_invert_yaw'", &[&data]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupIMUPitchOffset(_context: &ContextGraphQL, offset: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='imu_offset_pitch'", &[&offset]).await?;
+
+        Ok(true)
+    }
+
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupEncoderLeftDirection(_context: &ContextGraphQL, direction: bool) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+
+        let data:f64 = if direction == true {1.0} else {0.0};
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='encoder_left_direction'", &[&data]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupEncoderRightDirection(_context: &ContextGraphQL, direction: bool) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+
+        let data:f64 = if direction == true {1.0} else {0.0};
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='encoder_right_direction'", &[&data]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupOdometryWheelRadio(_context: &ContextGraphQL, wheel_radio: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='odometry_wheel_radio'", &[&wheel_radio]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupOdometryDistanceWheels(_context: &ContextGraphQL, distance_wheels: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='odometry_distance_wheels'", &[&distance_wheels]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidPitchKp(_context: &ContextGraphQL, kp: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_pitch_kp'", &[&kp]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidPitchKi(_context: &ContextGraphQL, ki: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_pitch_ki'", &[&ki]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidPitchKd(_context: &ContextGraphQL, kd: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_pitch_kd'", &[&kd]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidPitchDirection(_context: &ContextGraphQL, direction: bool) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+
+        let data:f64 = if direction == true {1.0} else {0.0};
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_pitch_direction'", &[&data]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidPitchMVMin(_context: &ContextGraphQL, mv_min: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_pitch_mv_min'", &[&mv_min]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidPitchMVMax(_context: &ContextGraphQL, mv_max: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_pitch_mv_max'", &[&mv_max]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidPositionKp(_context: &ContextGraphQL, kp: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_position_kp'", &[&kp]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidPositionKi(_context: &ContextGraphQL, ki: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_position_ki'", &[&ki]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidPositionKd(_context: &ContextGraphQL, kd: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_position_kd'", &[&kd]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidPositionDirection(_context: &ContextGraphQL, direction: bool) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+
+        let data:f64 = if direction == true {1.0} else {0.0};
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_position_direction'", &[&data]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidPositionMVMin(_context: &ContextGraphQL, mv_min: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_position_mv_min'", &[&mv_min]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidPositionMVMax(_context: &ContextGraphQL, mv_max: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_position_mv_max'", &[&mv_max]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidAngleKp(_context: &ContextGraphQL, kp: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_angle_kp'", &[&kp]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidAngleKi(_context: &ContextGraphQL, ki: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_angle_ki'", &[&ki]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidAngleKd(_context: &ContextGraphQL, kd: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_angle_kd'", &[&kd]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidAngleDirection(_context: &ContextGraphQL, direction: bool) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+
+        let data:f64 = if direction == true {1.0} else {0.0};
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_angle_direction'", &[&data]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidAngleMVMin(_context: &ContextGraphQL, mv_min: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_angle_mv_min'", &[&mv_min]).await?;
+
+        Ok(true)
+    }
+    
+    
+    //=====================================================================================================
+    async fn  SetDbEsp32SetupMotionPidAngleMVMax(_context: &ContextGraphQL, mv_max: f64) -> FieldResult<bool> {
+
+        let client = connect_postgres().await?;
+        
+        client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_pid_angle_mv_max'", &[&mv_max]).await?;
 
         Ok(true)
     }
