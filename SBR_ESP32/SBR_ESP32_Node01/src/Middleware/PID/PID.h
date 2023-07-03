@@ -32,7 +32,7 @@ public:
      * 
      * @param direction PID direction
      */
-    PID(PIDDirection_e direction = PIDDirection_e::PID_DIRECTION_DIRECT);
+    PID(bool direction = 0);
 
     /**
      * @brief Destroy the PID object
@@ -173,17 +173,18 @@ public:
     /**
      * @brief Set the Direction
      * 
-     * @param direction Direction
+     * @param direction Direction 0=Normal, 1=Invert
      * @return RC_e Result code
      */
-    RC_e SetDirection(PIDDirection_e direction);
+    RC_e SetDirection(bool direction);
 
     /**
      * @brief Get the Direction
      * 
-     * @return PIDDirection_e Direction
+     * @return true Direction inverted
+     * @return false Direction normal
      */
-    PIDDirection_e GetDirection();
+    bool GetDirection();
 
     /**
      * @brief Get the Mode
@@ -256,7 +257,7 @@ private:
     double m_Kd = 1.0;              /**@brief Differential constant */
     double m_error = 0.0;           /**@brief Error = SP - PV */
     double m_cycleTime = 0.1;       /**@brief Cycle Time in seconds*/
-    PIDDirection_e m_direction;     /**@brief PID Direction */
+    bool m_direction = 0;           /**@brief PID Direction 0=Normal, 1=Invert */
     PIDMode m_mode;                 /**@brief PID Mode */
     double m_mvRangeMin = -100.0;   /**@brief Manipulated Variable Range Min */
     double m_mvRangeMax = 100.0;    /**@brief Manipulated Variable Range Max */ 

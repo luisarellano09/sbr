@@ -61,9 +61,10 @@ public:
     /**
      * @brief Invert Direction
      * 
+     * @param direction Direction 0=Normal, 1=Invert
      * @return RC_e Result code
      */
-    RC_e InvertDirection();
+    RC_e SetDirection(bool direction);
 
     /**
      * @brief Get the Direction

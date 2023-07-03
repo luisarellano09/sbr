@@ -84,11 +84,12 @@ public:
     double GetOffset();
 
     /**
-     * @brief Invert Motor direction
+     * @brief Set Motor direction
      * 
+     * @param direction Motor direction 0=Normal, 1=Invert
      * @return RC_e Result code
      */
-    RC_e InvertDirection();
+    RC_e SetDirection(bool direction);
 
     /**
      * @brief Get the Direction

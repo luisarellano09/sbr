@@ -17,7 +17,7 @@
  *******************************************************************************************************************************************/
 
 MotionControl::MotionControl(IMU* imu, Odometry* odometry, Motor* motorLeft, Motor* motorRight){
-    this->m_PIDPitch = new PID(PIDDirection_e::PID_DIRECTION_INVERT);
+    this->m_PIDPitch = new PID(true);
     this->m_PIDPosition = new PID();
     this->m_PIDAngle = new PID();
     this->m_IMU = imu;
