@@ -1,6 +1,9 @@
 
 https://github.com/luisarellano09/sbr/settings/actions/runners/new?arch=arm
 
+#runner service
+https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/configuring-the-self-hosted-runner-application-as-a-service
+
 #create a sile named startup-sbr with the conatent as root insede the folder /etc/init.d/
 
 sudo chmod +x /home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/Runner/start.sh
