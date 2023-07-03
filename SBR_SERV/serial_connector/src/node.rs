@@ -361,16 +361,16 @@ impl Node{
         } else if msg.name == "ESP32.WRITE.MODE_NODE1.STOP_W" {
             self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::MODE_NODE1_STOP_W as u16, msg.data));
             
-        } else if msg.name == "ESP32.WRITE.SETUP.MOTOR.LEFT_OFFSET_W" {
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTOR_LEFT.OFFSET_W" {
             self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_OFFSET_W as u16, msg.data));
             
-        } else if msg.name == "ESP32.WRITE.SETUP.MOTOR.LEFT_DIRECTION_W" {
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTOR_LEFT.DIRECTION_W" {
             self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_DIRECTION_W as u16, msg.data));
             
-        } else if msg.name == "ESP32.WRITE.SETUP.MOTOR.RIGHT_OFFSET_W" {
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTOR_RIGHT.OFFSET_W" {
             self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_OFFSET_W as u16, msg.data));
             
-        } else if msg.name == "ESP32.WRITE.SETUP.MOTOR.RIGHT_DIRECTION_W" {
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTOR_RIGHT.DIRECTION_W" {
             self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_W as u16, msg.data));
             
         } else if msg.name == "ESP32.WRITE.SETUP.IMU.INVERT_PITCH_W" {
