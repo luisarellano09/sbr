@@ -451,7 +451,7 @@ impl Mutations {
     
     
     //=====================================================================================================
-    async fn LoadEsp32Setup(context: &ContextGraphQL) -> FieldResult<bool> {
+    async fn LoadEsp32Setup(_context: &ContextGraphQL) -> FieldResult<bool> {
 
         let start = Instant::now();
 

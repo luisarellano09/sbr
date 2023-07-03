@@ -1,5 +1,4 @@
-
-use std::{error::Error, time::Instant};
+use std::error::Error;
 use async_std::task::spawn;
 use async_postgres::connect;
 use tokio_postgres::Client;
