@@ -82,11 +82,9 @@ RC_e ExtHandler(Request* request){
         }
         
         case COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_DIRECTION_W: {
-            if ((bool)request->data == true){
-                manager->m_motorLeft->InvertDirection();
-                manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_DIRECTION_R, manager->m_motorLeft->GetDirection());
-                Log.infoln("[NodeHandler::SETUP_MOTOR_LEFT_DIRECTION_W] Motor left direction inverted: %T", manager->m_motorLeft->GetDirection());
-            }
+            manager->m_motorLeft->SetDirection((bool)request->data);
+            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_DIRECTION_R, manager->m_motorLeft->GetDirection());
+            Log.infoln("[NodeHandler::SETUP_MOTOR_LEFT_DIRECTION_W] Motor left direction: %T", manager->m_motorLeft->GetDirection());
             break;
         }
           
@@ -98,38 +96,30 @@ RC_e ExtHandler(Request* request){
         }
         
         case COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_W: {
-            if ((bool)request->data == true){
-                manager->m_motorRight->InvertDirection();
-                manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_R, manager->m_motorLeft->GetDirection());
-                Log.infoln("[NodeHandler::SETUP_MOTOR_RIGHT_DIRECTION_W] Motor right direction inverted: %T", manager->m_motorRight->GetDirection());
-            }
+            manager->m_motorLeft->SetDirection((bool)request->data);
+            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_R, manager->m_motorLeft->GetDirection());
+            Log.infoln("[NodeHandler::SETUP_MOTOR_RIGHT_DIRECTION_W] Motor right direction: %T", manager->m_motorRight->GetDirection());
             break;
         }
 
         case COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_PITCH_W: {
-            if ((bool)request->data == true){
-                manager->m_IMU->InvertPitch();
-                manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_PITCH_R, manager->m_IMU->GetDirectionPitch());
-                Log.infoln("[NodeHandler::SETUP_IMU_INVERT_PITCH_W] IMU Pitch inverted: %T", manager->m_IMU->GetDirectionPitch());
-            }
+            manager->m_IMU->SetDirectionPitch((bool)request->data);
+            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_PITCH_R, manager->m_IMU->GetDirectionPitch());
+            Log.infoln("[NodeHandler::SETUP_IMU_INVERT_PITCH_W] IMU Pitch direction: %T", manager->m_IMU->GetDirectionPitch());
             break;
         }
         
         case COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_ROLL_W: {
-            if ((bool)request->data == true){
-                manager->m_IMU->InvertRoll();
-                manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_ROLL_R, manager->m_IMU->GetDirectionRoll());
-                Log.infoln("[NodeHandler::SETUP_IMU_INVERT_ROLL_W] IMU Roll inverted: %T", manager->m_IMU->GetDirectionRoll());
-            }
+            manager->m_IMU->SetDirectionRoll((bool)request->data);
+            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_ROLL_R, manager->m_IMU->GetDirectionRoll());
+            Log.infoln("[NodeHandler::SETUP_IMU_INVERT_ROLL_W] IMU Roll direction: %T", manager->m_IMU->GetDirectionRoll());
             break;
         }
         
         case COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_YAW_W: {
-            if ((bool)request->data == true){
-                manager->m_IMU->InvertYaw();
-                manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_YAW_R, manager->m_IMU->GetDirectionYaw());
-                Log.infoln("[NodeHandler::SETUP_IMU_INVERT_YAW_W] IMU Yaw inverted: %T", manager->m_IMU->GetDirectionYaw());
-            }
+            manager->m_IMU->SetDirectiontYaw((bool)request->data);
+            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_YAW_R, manager->m_IMU->GetDirectionYaw());
+            Log.infoln("[NodeHandler::SETUP_IMU_INVERT_YAW_W] IMU Yaw direction: %T", manager->m_IMU->GetDirectionYaw());
             break;
         }
         
@@ -141,20 +131,16 @@ RC_e ExtHandler(Request* request){
         }
         
         case COM_REQUEST_REG_ID_e::SETUP_ENCODER_LEFT_DIRECTION_W: {
-            if ((bool)request->data == true){
-                manager->m_encoderLeft->InvertDirection();
-                manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_ENCODER_LEFT_DIRECTION_R, manager->m_encoderLeft->GetDirection());
-                Log.infoln("[NodeHandler::SETUP_ENCODER_LEFT_DIRECTION_W] Encoder left direction inverted: %T", manager->m_encoderLeft->GetDirection());
-            }
+            manager->m_encoderLeft->SetDirection((bool)request->data);
+            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_ENCODER_LEFT_DIRECTION_R, manager->m_encoderLeft->GetDirection());
+            Log.infoln("[NodeHandler::SETUP_ENCODER_LEFT_DIRECTION_W] Encoder left direction: %T", manager->m_encoderLeft->GetDirection());
             break;
         }
 
         case COM_REQUEST_REG_ID_e::SETUP_ENCODER_RIGHT_DIRECTION_W: {
-            if ((bool)request->data == true){
-                manager->m_encoderRight->InvertDirection();
-                manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_ENCODER_RIGHT_DIRECTION_R, manager->m_encoderRight->GetDirection());
-                Log.infoln("[NodeHandler::SETUP_ENCODER_RIGHT_DIRECTION_W] Encoder right direction inverted: %T", manager->m_encoderRight->GetDirection());
-            }
+            manager->m_encoderRight->SetDirection((bool)request->data);
+            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_ENCODER_RIGHT_DIRECTION_R, manager->m_encoderRight->GetDirection());
+            Log.infoln("[NodeHandler::SETUP_ENCODER_RIGHT_DIRECTION_W] Encoder right direction: %T", manager->m_encoderRight->GetDirection());
             break;
         }
         
@@ -194,11 +180,9 @@ RC_e ExtHandler(Request* request){
         }
         
         case COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_DIRECTION_W: {
-            if ((bool)request->data == true){
-                manager->m_motionControl->m_PIDPitch->SetDirection(PIDDirection_e::PID_DIRECTION_INVERT);
-                manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_DIRECTION_R, manager->m_motionControl->m_PIDPitch->GetDirection());
-                Log.infoln("[NodeHandler::SETUP_MOTION_PID_PITCH_DIRECTION_W] Motion Control PID Pitch direction inverted: %T", manager->m_motionControl->m_PIDPitch->GetDirection());
-            }
+            manager->m_motionControl->m_PIDPitch->SetDirection((bool)request->data);
+            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_DIRECTION_R, manager->m_motionControl->m_PIDPitch->GetDirection());
+            Log.infoln("[NodeHandler::SETUP_MOTION_PID_PITCH_DIRECTION_W] Motion Control PID Pitch direction: %T", manager->m_motionControl->m_PIDPitch->GetDirection());
             break;
         }
         
@@ -238,11 +222,9 @@ RC_e ExtHandler(Request* request){
         }
         
         case COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_DIRECTION_W: {
-            if ((bool)request->data == true){
-                manager->m_motionControl->m_PIDPosition->SetDirection(PIDDirection_e::PID_DIRECTION_INVERT);
-                manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_DIRECTION_R, manager->m_motionControl->m_PIDPosition->GetDirection());
-                Log.infoln("[NodeHandler::SETUP_MOTION_PID_POSITION_DIRECTION_W] Motion Control PID Position direction inverted: %T", manager->m_motionControl->m_PIDPosition->GetDirection());
-            }
+            manager->m_motionControl->m_PIDPosition->SetDirection((bool)request->data);
+            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_DIRECTION_R, manager->m_motionControl->m_PIDPosition->GetDirection());
+            Log.infoln("[NodeHandler::SETUP_MOTION_PID_POSITION_DIRECTION_W] Motion Control PID Position direction: %T", manager->m_motionControl->m_PIDPosition->GetDirection());
             break;
         }
         
@@ -282,11 +264,9 @@ RC_e ExtHandler(Request* request){
         }
 
         case COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_DIRECTION_W: {
-            if ((bool)request->data == true){
-                manager->m_motionControl->m_PIDAngle->SetDirection(PIDDirection_e::PID_DIRECTION_INVERT);
-                manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_DIRECTION_R, manager->m_motionControl->m_PIDAngle->GetDirection());
-                Log.infoln("[NodeHandler::SETUP_MOTION_PID_ANGLE_DIRECTION_W] Motion Control PID Angle direction inverted: %T", manager->m_motionControl->m_PIDAngle->GetDirection());
-            }
+            manager->m_motionControl->m_PIDAngle->SetDirection((bool)request->data);
+            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_DIRECTION_R, manager->m_motionControl->m_PIDAngle->GetDirection());
+            Log.infoln("[NodeHandler::SETUP_MOTION_PID_ANGLE_DIRECTION_W] Motion Control PID Angle direction: %T", manager->m_motionControl->m_PIDAngle->GetDirection());
             break;
         }
 

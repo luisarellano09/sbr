@@ -79,11 +79,12 @@ RC_e IMU::Run(){
 
 //=====================================================================================================
 
-RC_e IMU::InvertRoll(){
+RC_e IMU::SetDirectionRoll(bool direction){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
-    this->m_invertRoll = true;
+    this->m_invertRoll = direction;
+    Log.traceln("[IMU::SetDirectionRoll] Roll Direction: %T", this->m_invertRoll);
     return retCode;
 }
 
@@ -97,11 +98,12 @@ bool IMU::GetDirectionRoll(){
 
 //=====================================================================================================
 
-RC_e IMU::InvertPitch(){
+RC_e IMU::SetDirectionPitch(bool direction){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
-    this->m_invertPitch = true;
+    this->m_invertPitch = direction;
+    Log.traceln("[IMU::SetDirectionPitch] Pitch Direction: %T", this->m_invertPitch);
     return retCode;
 }
 
@@ -115,11 +117,12 @@ bool IMU::GetDirectionPitch(){
 
 //=====================================================================================================
 
-RC_e IMU::InvertYaw(){
+RC_e IMU::SetDirectiontYaw(bool direction){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
-    this->m_invertYaw = true;
+    this->m_invertYaw = direction;
+    Log.traceln("[IMU::SetDirectiontYaw] Yaw Direction: %T", this->m_invertYaw);
     return retCode;
 }
 
@@ -138,6 +141,7 @@ RC_e IMU::SetPitchOffset(double pitchOffset){
     RC_e retCode = RC_e::SUCCESS;
 
     this->m_pitchOffset = pitchOffset;
+    Log.traceln("[IMU::SetPitchOffset] Pitch offset: %D", this->m_pitchOffset);
     return retCode;
 }
 
