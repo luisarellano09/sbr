@@ -3,9 +3,8 @@ use std::time::Instant;
 
 use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
-use crate::graphql_types::Esp32SetupMotor;
 use crate::rabbitmq_connection::publish_esp32_write;
-use crate::postgres_connection::query;
+use crate::postgres_connection::connect_postgres;
 
 
 //=====================================================================================================
@@ -100,7 +99,7 @@ impl Mutations {
     //=====================================================================================================
     fn SetEsp32SetupMotorLeftOffset(_context: &ContextGraphQL, offset: f64) -> FieldResult<bool> {
 
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTOR.LEFT_OFFSET_W".to_string(), (offset * 100.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTOR_LEFT.OFFSET_W".to_string(), (offset * 100.0) as i32)?;
 
         Ok(true)
     }
@@ -109,7 +108,7 @@ impl Mutations {
     //=====================================================================================================
     fn SetEsp32SetupMotorLeftDirection(_context: &ContextGraphQL, direction: bool) -> FieldResult<bool> {
 
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTOR.LEFT_DIRECTION_W".to_string(), direction as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTOR_LEFT.DIRECTION_W".to_string(), direction as i32)?;
 
         Ok(true)
     }
@@ -118,7 +117,7 @@ impl Mutations {
     //=====================================================================================================
     fn SetEsp32SetupMotorRightOffset(_context: &ContextGraphQL, offset: f64) -> FieldResult<bool> {
 
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTOR.RIGHT_OFFSET_W".to_string(), (offset * 100.0) as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTOR_RIGHT.OFFSET_W".to_string(), (offset * 100.0) as i32)?;
 
         Ok(true)
     }
@@ -127,7 +126,7 @@ impl Mutations {
     //=====================================================================================================
     fn SetEsp32SetupMotorRightDirection(_context: &ContextGraphQL, direction: bool) -> FieldResult<bool> {
 
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTOR.RIGHT_DIRECTION_W".to_string(), direction as i32)?;
+        publish_esp32_write("ESP32.WRITE.SETUP.MOTOR_RIGHT.DIRECTION_W".to_string(), direction as i32)?;
 
         Ok(true)
     }
@@ -455,71 +454,141 @@ impl Mutations {
     async fn LoadEsp32Setup(context: &ContextGraphQL) -> FieldResult<bool> {
 
         let start = Instant::now();
+
+        let client = connect_postgres().await?;
         
-        //Read postgresql db: Setup params
-
-        dbg!("Motor Left");
-        for row in query("SELECT * FROM SETUP_MOTORS WHERE NAME = 'LEFT'").await? {
+        for row in client.query("SELECT * FROM SETUP_ESP32 ORDER BY name ASC", &[]).await? {
             let name: String = row.try_get("NAME")?;
-            let offset: f32 = row.try_get("OFFSET")?;
-            let direction: bool = row.try_get("DIRECTION")?;
+            let value: f32 = row.try_get("VALUE")?;
 
-            dbg!(name, offset, direction);
+            match name.as_str() {
+                "motor_left_direction" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTOR_LEFT.DIRECTION_W".to_string(), value as i32)?;
+                },
+
+                "motor_left_offset" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTOR_LEFT.OFFSET_W".to_string(), (value * 100.0) as i32)?;
+                },
+
+                "motor_right_direction" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTOR_RIGHT.DIRECTION_W".to_string(), value as i32)?;
+                },
+
+                "motor_right_offset" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTOR_RIGHT.OFFSET_W".to_string(), (value * 100.0) as i32)?;
+                },
+
+                "encoder_left_direction" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.ENCODER_LEFT.DIRECTION_W".to_string(), value as i32)?;
+                },
+
+                "encoder_right_direction" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.ENCODER_RIGHT.DIRECTION_W".to_string(), value as i32)?;
+                },
+
+                "imu_invert_pitch" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.IMU.INVERT_PITCH_W".to_string(), value as i32)?;
+                },
+
+                "imu_invert_roll" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.IMU.INVERT_ROLL_W".to_string(), value as i32)?;
+                },
+
+                "imu_invert_yaw" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.IMU.INVERT_YAW_W".to_string(), value as i32)?;
+                },
+
+                "imu_offset_pitch" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.IMU.OFFSET_PITCH_W".to_string(), (value * 100.0) as i32)?;
+                },
+
+                "odometry_distance_wheels" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.ODOMETRY.DISTANCE_WHEELS_W".to_string(), (value * 1000.0) as i32)?;
+                },
+
+                "odometry_wheel_radio" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.ODOMETRY.WHEEL_RADIO_W".to_string(), (value * 1000.0) as i32)?;
+                },
+
+                "motion_pid_pitch_kp" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.KP_W".to_string(), (value * 1000.0) as i32)?;
+                },
+
+                "motion_pid_pitch_ki" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.KI_W".to_string(), (value * 1000.0) as i32)?;
+                },
+
+                "motion_pid_pitch_kd" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.KD_W".to_string(), (value * 1000.0) as i32)?;
+                },
+
+                "motion_pid_pitch_direction" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.DIRECTION_W".to_string(), value as i32)?;
+                },
+
+                "motion_pid_pitch_mv_min" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.MV_MIN_W".to_string(), (value * 100.0) as i32)?;
+                },
+
+                "motion_pid_pitch_mv_max" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.MV_MAX_W".to_string(), (value * 100.0) as i32)?;
+                },
+
+                "motion_pid_position_kp" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.KP_W".to_string(), (value * 1000.0) as i32)?;
+                },
+
+                "motion_pid_position_ki" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.KI_W".to_string(), (value * 1000.0) as i32)?;
+                },
+
+                "motion_pid_position_kd" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.KD_W".to_string(), (value * 1000.0) as i32)?;
+                },
+
+                "motion_pid_position_direction" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.DIRECTION_W".to_string(), value as i32)?;
+                },
+
+                "motion_pid_position_mv_min" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.MV_MIN_W".to_string(), (value * 100.0) as i32)?;
+                },
+
+                "motion_pid_position_mv_max" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.MV_MAX_W".to_string(), (value * 100.0) as i32)?;
+                },
+
+                "motion_pid_angle_kp" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.KP_W".to_string(), (value * 1000.0) as i32)?;
+                },
+
+                "motion_pid_angle_ki" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.KI_W".to_string(), (value * 1000.0) as i32)?;
+                },
+
+                "motion_pid_angle_kd" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.KD_W".to_string(), (value * 1000.0) as i32)?;
+                },
+
+                "motion_pid_angle_direction" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.DIRECTION_W".to_string(), value as i32)?;
+                },
+
+                "motion_pid_angle_mv_min" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.MV_MIN_W".to_string(), (value * 100.0) as i32)?;
+                },
+
+                "motion_pid_angle_mv_max" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.MV_MAX_W".to_string(), (value * 100.0) as i32)?;
+                },
+
+                _ => {}
+            }
         }
-
-        dbg!("Motor Right");
-        for row in query("SELECT * FROM SETUP_MOTORS WHERE NAME = 'RIGHT'").await? {
-            let name: String = row.try_get("NAME")?;
-            let offset: f32 = row.try_get("OFFSET")?;
-            let direction: bool = row.try_get("DIRECTION")?;
-
-            dbg!(name, offset, direction);
-        }
-
 
         let duration = start.elapsed();
 
         dbg!(format!("Time elapsed is: {:?}", duration));
-
-
-        /*   
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTOR.LEFT_OFFSET_W".to_string(), (motor_left_offset * 100.0) as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTOR.LEFT_DIRECTION_W".to_string(), motor_left_direction as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTOR.RIGHT_OFFSET_W".to_string(), (motor_right_offset * 100.0) as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTOR.RIGHT_DIRECTION_W".to_string(), motor_right_direction as i32)?;
-        
-        publish_esp32_write("ESP32.WRITE.SETUP.IMU.INVERT_PITCH_W".to_string(), imu_pitch_direction as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.IMU.INVERT_ROLL_W".to_string(), imu_roll_direction as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.IMU.INVERT_YAW_W".to_string(), imu_yaw_direction as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.IMU.OFFSET_PITCH_W".to_string(), (imu_pitch_offset * 100.0) as i32)?;
-        
-        publish_esp32_write("ESP32.WRITE.SETUP.ENCODER_LEFT.DIRECTION_W".to_string(), encoder_left_direction as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.ENCODER_RIGHT.DIRECTION_W".to_string(), encoder_right_direction as i32)?;
-        
-        publish_esp32_write("ESP32.WRITE.SETUP.ODOMETRY.WHEEL_RADIO_W".to_string(), (odometry_wheel_radio * 1000.0) as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.ODOMETRY.DISTANCE_WHEELS_W".to_string(), (odometry_distance_wheels * 1000.0) as i32)?;
-        
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.KP_W".to_string(), (motion_pid_pitch_kp * 1000.0) as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.KI_W".to_string(), (motion_pid_pitch_ki * 1000.0) as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.KD_W".to_string(), (motion_pid_pitch_kd * 1000.0) as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.DIRECTION_W".to_string(), motion_pid_pitch_direction as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.MV_MIN_W".to_string(), (motion_pid_pitch_mv_min * 100.0) as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_PITCH.MV_MAX_W".to_string(), (motion_pid_pitch_mv_max * 100.0) as i32)?;
-        
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.KP_W".to_string(), (motion_pid_position_kp * 1000.0) as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.KI_W".to_string(), (motion_pid_position_ki * 1000.0) as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.KD_W".to_string(), (motion_pid_position_kd * 1000.0) as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.DIRECTION_W".to_string(), motion_pid_position_direction as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.MV_MIN_W".to_string(), (motion_pid_position_mv_min * 100.0) as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_POSITION.MV_MAX_W".to_string(), (motion_pid_position_mv_max * 100.0) as i32)?;
-        
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.KP_W".to_string(), (motion_pid_angle_kp * 1000.0) as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.KI_W".to_string(), (motion_pid_angle_ki * 1000.0) as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.KD_W".to_string(), (motion_pid_angle_kd * 1000.0) as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.DIRECTION_W".to_string(), motion_pid_angle_direction as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.MV_MIN_W".to_string(), (motion_pid_angle_mv_min * 100.0) as i32)?;
-        publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.MV_MAX_W".to_string(), (motion_pid_angle_mv_max * 100.0) as i32)?;
-        */
 
         Ok(true)
     }

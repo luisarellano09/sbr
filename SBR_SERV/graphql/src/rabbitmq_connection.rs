@@ -5,8 +5,8 @@ use crate::message_esp32::MessageEsp32;
 
 
 //=====================================================================================================
-//const URL: &str = "amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/";
-const URL: &str = "amqp://rabbitmq:La123456.@sbrpi.local:5672/";
+const URL: &str = "amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/";
+//const URL: &str = "amqp://rabbitmq:La123456.@sbrpi.local:5672/";
 
 
 //=====================================================================================================

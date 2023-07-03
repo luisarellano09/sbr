@@ -96,22 +96,22 @@ services:
                 condition: service_started
             
 
-    # sbr_serv_graphql:
-    #     restart: unless-stopped
-    #     image: sbr/sbr_serv_graphql:1.0
-    #     container_name: sbr_serv_graphql
-    #     build: 
-    #         context: ../../SBR_SERV/graphql/
-    #         target: prod
-    #     ports:
-    #       - 4000:4000
-    #     depends_on:
-    #         sbr_rabbitmq:
-    #             condition: service_healthy
-    #         sbr_redis:
-    #             condition: service_healthy
-    #         sbr_serv_serial_connector:
-    #             condition: service_started
-    #         sbr_serv_redis_connector:
-    #             condition: service_started
+    sbr_serv_graphql:
+        restart: unless-stopped
+        image: sbr/sbr_serv_graphql:1.0
+        container_name: sbr_serv_graphql
+        build: 
+            context: ../../SBR_SERV/graphql/
+            target: prod
+        ports:
+          - 4000:4000
+        depends_on:
+            sbr_rabbitmq:
+                condition: service_healthy
+            sbr_redis:
+                condition: service_healthy
+            sbr_serv_serial_connector:
+                condition: service_started
+            sbr_serv_redis_connector:
+                condition: service_started
             

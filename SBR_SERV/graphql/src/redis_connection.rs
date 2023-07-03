@@ -4,6 +4,11 @@ use r2d2_redis::{RedisConnectionManager};
 
 
 //=====================================================================================================
+const URL: &str = "redis://sbr_redis:6379";
+//const URL: &str = "redis://sbrpi.local:6379";
+
+
+//=====================================================================================================
 pub type RedisPool = Pool<RedisConnectionManager>;
 
 
@@ -20,7 +25,7 @@ impl RedisConnection {
     pub fn new() -> RedisConnection {
         
         //let manager = RedisConnectionManager::new("redis://sbr_redis:6379").unwrap();
-        let manager = RedisConnectionManager::new("redis://sbrpi.local:6379").unwrap();
+        let manager = RedisConnectionManager::new(URL).unwrap();
         
         RedisConnection { redis_pool:  Pool::builder()
             .build(manager)
