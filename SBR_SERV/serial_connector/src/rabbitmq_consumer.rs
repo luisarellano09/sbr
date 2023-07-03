@@ -1,25 +1,28 @@
 #![allow(dead_code)]
 
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOptions, FieldTable, ConsumerOptions, ConsumerMessage};
-
 use std::{sync::mpsc::Sender, error::Error};
-
 use crate::message_esp32::MessageEsp32;
 
+
+//=====================================================================================================
 pub struct RabbitmqConsumer {
     m_sender_consumer_node: Sender<MessageEsp32>,
 }
 
 
+//=====================================================================================================
 impl RabbitmqConsumer {
 
+    //=====================================================================================================
     pub fn new(sender_consumer_node: Sender<MessageEsp32>) -> Self {
         RabbitmqConsumer {
             m_sender_consumer_node: sender_consumer_node,
         }
     }
 
-
+    
+    //=====================================================================================================
     pub fn run(&mut self)  -> Result<(), Box<dyn Error>> {
         // Open connection.
         let mut connection = Connection::insecure_open("amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/")?;

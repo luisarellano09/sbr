@@ -16,7 +16,7 @@
  *  												CONSTRUCTOR
  *******************************************************************************************************************************************/
 
-PID::PID(PIDDirection_e direction){
+PID::PID(bool direction){
     this->m_direction = direction;
     this->m_mode = PIDMode::PID_STOP;
     this->m_prevError = 0.0;
@@ -72,7 +72,7 @@ RC_e PID::Run(){
         }
 
         // Assign Output
-        if (this->m_direction == PIDDirection_e::PID_DIRECTION_DIRECT){
+        if (this->m_direction == 0){
             this->m_MV = mvU;
         } else {
             this->m_MV = mvU * -1.0;
@@ -276,13 +276,13 @@ double PID::GetCycleTime(){
 
 //=====================================================================================================
 
-RC_e PID::SetDirection(PIDDirection_e direction){
+RC_e PID::SetDirection(bool direction){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
     this->m_direction = direction;
 
-    Log.traceln("[PID::SetDirection] Direction setted: %D", this->m_direction);
+    Log.traceln("[PID::SetDirection] Direction setted: %T", this->m_direction);
 
     return retCode;
 }
@@ -290,7 +290,7 @@ RC_e PID::SetDirection(PIDDirection_e direction){
 
 //=====================================================================================================
 
-PIDDirection_e PID::GetDirection(){
+bool PID::GetDirection(){
     return this->m_direction;
 }
 
@@ -325,7 +325,7 @@ RC_e PID::SetMVRangeMin(double mvRangeMin){
 
     this->m_mvRangeMin = mvRangeMin;
 
-    Log.traceln("[PID::SetMVRangeMin] MVRangeMin setted: %D", this->m_mvRangeMin);
+    Log.traceln("[PID::SetMVRangeMin] MV Range Min setted: %D", this->m_mvRangeMin);
 
     return retCode;
 }
@@ -346,7 +346,7 @@ RC_e PID::SetMVRangeMax(double mvRangeMax){
 
     this->m_mvRangeMax = mvRangeMax;
 
-    Log.traceln("[PID::SetMVRangeMax] MVRangeMin setted: %D", this->m_mvRangeMax);
+    Log.traceln("[PID::SetMVRangeMax] MV Range Max setted: %D", this->m_mvRangeMax);
 
     return retCode;
 }

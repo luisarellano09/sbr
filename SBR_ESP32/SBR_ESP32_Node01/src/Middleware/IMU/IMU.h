@@ -66,9 +66,10 @@ public:
     /**
      * @brief Invert Roll
      * 
+     * @param direction Direction 0=Normal, 1=Invert
      * @return RC_e Result code.
      */
-    RC_e InvertRoll();
+    RC_e SetDirectionRoll(bool direction);
 
     /**
      * @brief Get the Direction Roll
@@ -80,9 +81,10 @@ public:
     /**
      * @brief Invert Pitch
      * 
+     * @param direction Direction 0=Normal, 1=Invert
      * @return RC_e Result code.
      */
-    RC_e InvertPitch();
+    RC_e SetDirectionPitch(bool direction);
 
     /**
      * @brief Get the Direction Pitch
@@ -94,9 +96,10 @@ public:
     /**
      * @brief Invert Yaw
      * 
+     * @param direction Direction 0=Normal, 1=Invert
      * @return RC_e Result code.
      */
-    RC_e InvertYaw();
+    RC_e SetDirectiontYaw(bool direction);
 
     /**
      * @brief Get the Direction Yaw
