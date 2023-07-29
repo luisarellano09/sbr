@@ -115,3 +115,17 @@ services:
             sbr_serv_redis_connector:
                 condition: service_started
             
+
+    sbr_serv_robot_control:
+        restart: unless-stopped
+        image: sbr/sbr_serv_robot_control:1.0
+        container_name: sbr_serv_robot_control
+        build: 
+            context: ../../SBR_SERV/robot_control/
+            target: prod
+        depends_on:
+            sbr_rabbitmq:
+                condition: service_healthy
+            sbr_serv_graphql:
+                condition: service_started
+            
