@@ -1,4 +1,4 @@
-FROM rust:1.71 as build
+FROM rust:1.71.0 as build
 RUN apt-get update
 RUN apt-get install -y libssl-dev 
 RUN USER=root cargo new --bin graphql
@@ -14,6 +14,6 @@ RUN rm ./target/release/deps/graphql*
 RUN cargo build --release
 
 
-FROM rust:1.71 as prod
+FROM rust:1.71.0 as prod
 COPY --from=build /graphql/target/release/graphql .
 CMD ["./graphql"]
