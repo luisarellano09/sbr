@@ -1,0 +1,7 @@
+mutation LoadEsp32Setup{
+  LoadEsp32Setup
+}
+
+mutation SetEsp32ModeNode1Start{
+  SetEsp32ModeNode1Start
+}

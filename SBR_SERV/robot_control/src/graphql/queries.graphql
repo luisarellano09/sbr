@@ -1,0 +1,8 @@
+
+query GetEsp32Status{
+    GetEsp32Status{
+        heartbeat,
+        nodeLinux,
+        nodeEsp32,
+    }
+}
