@@ -96,8 +96,8 @@ RC_e ExtHandler(Request* request){
         }
         
         case COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_W: {
-            manager->m_motorLeft->SetDirection((bool)request->data);
-            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_R, manager->m_motorLeft->GetDirection());
+            manager->m_motorRight->SetDirection((bool)request->data);
+            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_R, manager->m_motorRight->GetDirection());
             Log.infoln("[NodeHandler::SETUP_MOTOR_RIGHT_DIRECTION_W] Motor right direction: %T", manager->m_motorRight->GetDirection());
             break;
         }
