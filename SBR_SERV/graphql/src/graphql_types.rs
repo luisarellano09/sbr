@@ -127,9 +127,14 @@ pub struct Esp32Setup{
 //=====================================================================================================
 #[derive(GraphQLEnum)]
 pub enum RegisterCommand {
+    #[graphql(name="None")]
     None,
+    #[graphql(name="Requested")]
 	Requested,
+    #[graphql(name="InProgress")]
 	InProgress,
+    #[graphql(name="ReadyToComplete")]
 	ReadyToComplete,
+    #[graphql(name="Completed")]
 	Completed,
 }
