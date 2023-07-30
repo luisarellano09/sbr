@@ -6,3 +6,7 @@ query GetEsp32Status{
         nodeEsp32,
     }
 }
+
+query GetEsp32ModeNode1SyncData{
+    GetEsp32ModeNode1SyncData
+}

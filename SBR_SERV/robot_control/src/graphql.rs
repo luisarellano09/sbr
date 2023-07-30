@@ -4,6 +4,8 @@ use ::reqwest::blocking::Client;
 use graphql_client::{reqwest::post_graphql_blocking, GraphQLQuery};
 
 
+
+
 //=====================================================================================================
 const URL: &str = "http://sbr_serv_graphql:4000/graphql";
 //const URL: &str = "http://sbrpi.local:4000/graphql"; 
@@ -26,6 +28,26 @@ pub fn query_get_esp32_status(graphql_client: &Client) -> Result<self::get_esp32
     ).unwrap();
 
     Ok(response_body.data.unwrap().get_esp32_status)
+}
+
+
+//=====================================================================================================
+#[derive(GraphQLQuery)]
+#[graphql(
+    schema_path = "src/graphql/schema.json",
+    query_path = "src/graphql/queries.graphql",
+    response_derives = "Serialize",
+)]
+pub struct GetEsp32ModeNode1SyncData;
+
+pub fn query_get_esp32_mode_node1_sync_data(graphql_client: &Client) -> Result<self::get_esp32_mode_node1_sync_data::RegisterCommand, Box<dyn Error>>{
+    let response_body = post_graphql_blocking::<GetEsp32ModeNode1SyncData, _>(
+        graphql_client, 
+        URL, 
+        self::get_esp32_mode_node1_sync_data::Variables 
+    ).unwrap();
+
+    Ok(response_body.data.unwrap().get_esp32_mode_node1_sync_data)
 }
 
 
@@ -70,4 +92,26 @@ pub fn mutation_set_esp32_mode_node1_start(graphql_client: &Client) -> Result<bo
     ).unwrap();
 
     Ok(response_body.data.unwrap().set_esp32_mode_node1_start)
+}
+
+
+//=====================================================================================================
+#[derive(GraphQLQuery)]
+#[graphql(
+    schema_path = "src/graphql/schema.json",
+    query_path = "src/graphql/mutations.graphql",
+    response_derives = "Serialize",
+)]
+pub struct SetEsp32ModeNode1SyncData;
+
+pub fn mutation_set_esp32_mode_node1_sync_data(graphql_client: &Client, cmd: self::set_esp32_mode_node1_sync_data::RegisterCommand) -> Result<bool, Box<dyn Error>>{
+    let response_body = post_graphql_blocking::<SetEsp32ModeNode1SyncData, _>(
+        graphql_client, 
+        URL, 
+        self::set_esp32_mode_node1_sync_data::Variables {
+            sync_status: cmd
+        }
+    ).unwrap();
+
+    Ok(response_body.data.unwrap().set_esp32_mode_node1_sync_data)
 }
