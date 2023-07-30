@@ -380,7 +380,7 @@ RC_e UpdateRegistersSlow(){
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_OFFSET_R, manager->m_motorLeft->GetOffset() * 100);
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_DIRECTION_R, manager->m_motorLeft->GetDirection());
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_OFFSET_R, manager->m_motorRight->GetOffset() * 100);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_R, manager->m_motorLeft->GetDirection());
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_R, manager->m_motorRight->GetDirection());
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_PITCH_R, manager->m_IMU->GetDirectionPitch());
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_ROLL_R, manager->m_IMU->GetDirectionRoll());
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_YAW_R, manager->m_IMU->GetDirectionYaw());
