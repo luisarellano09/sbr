@@ -32,6 +32,56 @@ impl Queries {
 
 
     //=====================================================================================================
+    fn GetEsp32ModeManagerSyncData( context: &ContextGraphQL) -> FieldResult<RegisterCommand> {
+
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
+
+        let res_cmd: RedisResult<i32> = conn.get("ESP32.READ.MODE.MANAGER.SYNC_DATA_RW");
+
+        match res_cmd {
+            Ok(cmd) => {
+                match cmd{
+                    0 => Ok(RegisterCommand::None), 
+                    1 => Ok(RegisterCommand::Requested),
+                    2 => Ok(RegisterCommand::InProgress),
+                    3 => Ok(RegisterCommand::ReadyToComplete),
+                    4 => Ok(RegisterCommand::Completed),
+                    _ => Ok(RegisterCommand::None),
+                }
+            }, 
+            Err(_) => {
+                Ok(RegisterCommand::None)
+            }
+        }
+    }
+
+
+    //=====================================================================================================
+    fn GetEsp32ModeLinuxSyncData( context: &ContextGraphQL) -> FieldResult<RegisterCommand> {
+
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
+
+        let res_cmd: RedisResult<i32> = conn.get("ESP32.READ.MODE.LINUX.SYNC_DATA_RW");
+
+        match res_cmd {
+            Ok(cmd) => {
+                match cmd{
+                    0 => Ok(RegisterCommand::None), 
+                    1 => Ok(RegisterCommand::Requested),
+                    2 => Ok(RegisterCommand::InProgress),
+                    3 => Ok(RegisterCommand::ReadyToComplete),
+                    4 => Ok(RegisterCommand::Completed),
+                    _ => Ok(RegisterCommand::None),
+                }
+            }, 
+            Err(_) => {
+                Ok(RegisterCommand::None)
+            }
+        }
+    }
+
+
+    //=====================================================================================================
     fn GetEsp32ModeNode1SyncData( context: &ContextGraphQL) -> FieldResult<RegisterCommand> {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
