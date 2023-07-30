@@ -54,7 +54,9 @@ RC_e ExtHandler(Request* request){
         }
         
         case COM_REQUEST_REG_ID_e::MODE_NODE1_SYNC_DATA_RW: {
-            //ToDo
+            if ( (RegisterCommand_e)request->data == RegisterCommand_e::CMD_READY_TO_COMPLETE ) {
+                manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::MODE_NODE1_SYNC_DATA_RW, RegisterCommand_e::CMD_COMPLETED);
+            }
             break;
         }
         

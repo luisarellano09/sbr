@@ -63,6 +63,7 @@ Manager::Manager(){
 
     // Start Node 
     this->m_nodeESP32->Start();
+    this->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::MODE_NODE1_SYNC_DATA_RW, RegisterCommand_e::CMD_REQUESTED);
     Log.traceln("[Manager::Manager] NodeEsp32 started");
     
     Log.traceln("[Manager::Manager] Manager initialization finished");
