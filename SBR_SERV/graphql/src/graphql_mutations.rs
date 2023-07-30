@@ -1,6 +1,7 @@
 
 use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
+use crate::graphql_types::RegisterCommand;
 use crate::rabbitmq_connection::publish_esp32_write;
 use crate::postgres_connection::connect_postgres;
 
@@ -32,18 +33,18 @@ impl Mutations {
 
     
     //=====================================================================================================
-    fn SetEsp32ModeManagerSyncData(_context: &ContextGraphQL, sync_status: i32) -> FieldResult<bool> {
+    fn SetEsp32ModeManagerSyncData(_context: &ContextGraphQL, sync_status: RegisterCommand) -> FieldResult<bool> {
 
-        publish_esp32_write("ESP32.WRITE.MODE.MANAGER.SYNC_DATA_RW".to_string(), sync_status)?;
+        publish_esp32_write("ESP32.WRITE.MODE.MANAGER.SYNC_DATA_RW".to_string(), sync_status as i32)?;
 
         Ok(true)
     }
     
     
     //=====================================================================================================
-    fn SetEsp32ModeLinuxSyncData(_context: &ContextGraphQL, sync_status: i32) -> FieldResult<bool> {
+    fn SetEsp32ModeLinuxSyncData(_context: &ContextGraphQL, sync_status: RegisterCommand) -> FieldResult<bool> {
 
-        publish_esp32_write("ESP32.WRITE.MODE.LINUX.SYNC_DATA_RW".to_string(), sync_status)?;
+        publish_esp32_write("ESP32.WRITE.MODE.LINUX.SYNC_DATA_RW".to_string(), sync_status as i32)?;
 
         Ok(true)
     }
@@ -68,9 +69,9 @@ impl Mutations {
     
     
     //=====================================================================================================
-    fn SetEsp32ModeNode1SyncData(_context: &ContextGraphQL, sync_status: i32) -> FieldResult<bool> {
+    fn SetEsp32ModeNode1SyncData(_context: &ContextGraphQL, sync_status: RegisterCommand) -> FieldResult<bool> {
 
-        publish_esp32_write("ESP32.WRITE.MODE.NODE1.SYNC_DATA_RW".to_string(), sync_status)?;
+        publish_esp32_write("ESP32.WRITE.MODE.NODE1.SYNC_DATA_RW".to_string(), sync_status as i32)?;
 
         Ok(true)
     }

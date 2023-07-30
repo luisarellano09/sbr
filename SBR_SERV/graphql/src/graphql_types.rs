@@ -1,5 +1,5 @@
 
-use juniper::GraphQLObject;
+use juniper::{GraphQLObject, GraphQLEnum};
 
 
 //=====================================================================================================
@@ -123,3 +123,13 @@ pub struct Esp32Setup{
     pub motion_pid_angle: Esp32SetupMotionPID,
 }
 
+
+//=====================================================================================================
+#[derive(GraphQLEnum)]
+pub enum RegisterCommand {
+    None,
+	Requested,
+	InProgress,
+	ReadyToComplete,
+	Completed,
+}
