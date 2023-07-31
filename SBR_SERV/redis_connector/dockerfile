@@ -17,3 +17,19 @@ RUN cargo build --release
 FROM rust:1.71.0 as prod
 COPY --from=build /redis_connector/target/release/redis_connector .
 CMD ["./redis_connector"]
+
+
+FROM rust:1.71.0 as dev
+RUN apt-get update
+RUN apt-get install -y libssl-dev 
+RUN USER=root cargo new --bin redis_connector
+WORKDIR /redis_connector
+
+COPY ./Cargo.toml ./Cargo.toml
+
+RUN cargo build --release
+RUN rm src/*.rs
+
+COPY ./src ./src
+RUN cargo build --release
+CMD ["./target/release/redis_connector"]

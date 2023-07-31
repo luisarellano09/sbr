@@ -17,3 +17,19 @@ RUN cargo build --release
 FROM rust:1.71.0 as prod
 COPY --from=build /graphql/target/release/graphql .
 CMD ["./graphql"]
+
+
+FROM rust:1.71.0 as dev
+RUN apt-get update
+RUN apt-get install -y libssl-dev 
+RUN USER=root cargo new --bin graphql
+WORKDIR /graphql
+
+COPY ./Cargo.toml ./Cargo.toml
+
+RUN cargo build --release
+RUN rm src/*.rs
+
+COPY ./src ./src
+RUN cargo build --release
+CMD ["./target/release/graphql"]

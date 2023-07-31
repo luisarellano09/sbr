@@ -74,7 +74,7 @@ services:
             - /dev/ttyAMA0:/dev/ttyAMA0
         build: 
             context: ../../SBR_SERV/serial_connector/
-            target: prod
+            target: dev
         depends_on:
             sbr_rabbitmq:
                 condition: service_healthy
@@ -86,7 +86,7 @@ services:
         container_name: sbr_serv_redis_connector
         build: 
             context: ../../SBR_SERV/redis_connector/
-            target: prod
+            target: dev
         depends_on:
             sbr_rabbitmq:
                 condition: service_healthy
@@ -102,7 +102,7 @@ services:
         container_name: sbr_serv_graphql
         build: 
             context: ../../SBR_SERV/graphql/
-            target: prod
+            target: dev
         ports:
           - 4000:4000
         depends_on:
@@ -122,7 +122,7 @@ services:
         container_name: sbr_serv_robot_control
         build: 
             context: ../../SBR_SERV/robot_control/
-            target: prod
+            target: dev
         depends_on:
             sbr_rabbitmq:
                 condition: service_healthy
