@@ -31,6 +31,5 @@ RUN cargo build --release
 RUN rm src/*.rs
 
 COPY ./src ./src
-RUN rm ./target/release/deps/robot_control*
 RUN cargo build --release
 CMD ["./target/release/robot_control"]
