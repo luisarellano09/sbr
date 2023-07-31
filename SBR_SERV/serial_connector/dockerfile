@@ -6,7 +6,6 @@ RUN USER=root cargo new --bin serial_connector
 WORKDIR /serial_connector
 
 COPY ./Cargo.toml ./Cargo.toml
-RUN cargo build
 RUN cargo build --release
 RUN rm -rf src
 
@@ -28,7 +27,6 @@ RUN USER=root cargo new --bin serial_connector
 WORKDIR /serial_connector
 
 COPY ./Cargo.toml ./Cargo.toml
-RUN cargo build
 RUN cargo build --release
 RUN rm -rf src
 
