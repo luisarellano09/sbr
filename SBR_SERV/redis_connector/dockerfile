@@ -7,7 +7,7 @@ WORKDIR /redis_connector
 COPY ./Cargo.toml ./Cargo.toml
 
 RUN cargo build --release
-RUN rm src/*.rs
+RUN rm -rf src
 
 COPY ./src ./src
 RUN rm ./target/release/deps/redis_connector*
@@ -28,7 +28,7 @@ WORKDIR /redis_connector
 COPY ./Cargo.toml ./Cargo.toml
 
 RUN cargo build --release
-RUN rm src/*.rs
+RUN rm -rf src
 
 COPY ./src ./src
 RUN cargo build --release

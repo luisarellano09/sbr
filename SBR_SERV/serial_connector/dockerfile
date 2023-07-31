@@ -8,7 +8,7 @@ WORKDIR /serial_connector
 COPY ./Cargo.toml ./Cargo.toml
 
 RUN cargo build --release
-RUN rm src/*.rs
+RUN rm -rf src
 
 COPY ./src ./src
 RUN rm ./target/release/deps/serial_connector*
@@ -22,15 +22,15 @@ CMD ["./serial_connector"]
 
 FROM rust:1.71.0 as dev
 RUN apt-get update
-RUN apt-get install -y libssl-dev
-RUN apt-get install -y libssl-dev
+RUN apt-get install -y libudev-dev
+RUN apt-get install -y libssl-dev 
 RUN USER=root cargo new --bin serial_connector
 WORKDIR /serial_connector
 
 COPY ./Cargo.toml ./Cargo.toml
 
 RUN cargo build --release
-RUN rm src/*.rs
+RUN rm -rf src
 
 COPY ./src ./src
 RUN cargo build --release

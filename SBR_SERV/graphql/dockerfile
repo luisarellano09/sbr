@@ -7,7 +7,7 @@ WORKDIR /graphql
 COPY ./Cargo.toml ./Cargo.toml
 
 RUN cargo build --release
-RUN rm src/*.rs
+RUN rm -rf src
 
 COPY ./src ./src
 RUN rm ./target/release/deps/graphql*
@@ -28,7 +28,7 @@ WORKDIR /graphql
 COPY ./Cargo.toml ./Cargo.toml
 
 RUN cargo build --release
-RUN rm src/*.rs
+RUN rm -rf src
 
 COPY ./src ./src
 RUN cargo build --release
