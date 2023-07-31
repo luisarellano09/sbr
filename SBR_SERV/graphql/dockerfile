@@ -26,7 +26,6 @@ RUN USER=root cargo new --bin graphql
 WORKDIR /graphql
 
 COPY ./Cargo.toml ./Cargo.toml
-RUN rm -rf src
 
 RUN cargo build --release
 RUN rm -rf src

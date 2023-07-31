@@ -26,7 +26,6 @@ RUN USER=root cargo new --bin redis_connector
 WORKDIR /redis_connector
 
 COPY ./Cargo.toml ./Cargo.toml
-RUN rm -rf src
 
 RUN cargo build --release
 RUN rm -rf src
