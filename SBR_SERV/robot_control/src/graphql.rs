@@ -51,6 +51,25 @@ pub fn query_get_esp32_mode_node1_sync_data(graphql_client: &Client) -> Result<s
 }
 
 
+//=====================================================================================================
+#[derive(GraphQLQuery)]
+#[graphql(
+    schema_path = "src/graphql/schema.json",
+    query_path = "src/graphql/queries.graphql",
+    response_derives = "Serialize",
+)]
+pub struct GetEsp32LiveIMU;
+
+pub fn query_get_esp32_live_imu(graphql_client: &Client) -> Result<self::get_esp32_live_imu::GetEsp32LiveImuGetEsp32LiveImu, Box<dyn Error>>{
+    let response_body = post_graphql_blocking::<GetEsp32LiveIMU, _>(
+        graphql_client, 
+        URL, 
+        self::get_esp32_live_imu::Variables 
+    ).unwrap();
+
+    Ok(response_body.data.unwrap().get_esp32_live_imu)
+}
+
 //==========================================================================================================================================
 //==========================================================================================================================================
 
@@ -92,6 +111,26 @@ pub fn mutation_set_esp32_mode_node1_start(graphql_client: &Client) -> Result<bo
     ).unwrap();
 
     Ok(response_body.data.unwrap().set_esp32_mode_node1_start)
+}
+
+
+//=====================================================================================================
+#[derive(GraphQLQuery)]
+#[graphql(
+    schema_path = "src/graphql/schema.json",
+    query_path = "src/graphql/mutations.graphql",
+    response_derives = "Serialize",
+)]
+pub struct SetEsp32ModeNode1Stop;
+
+pub fn mutation_set_esp32_mode_node1_stop(graphql_client: &Client) -> Result<bool, Box<dyn Error>>{
+    let response_body = post_graphql_blocking::<SetEsp32ModeNode1Stop, _>(
+        graphql_client, 
+        URL, 
+        self::set_esp32_mode_node1_stop::Variables 
+    ).unwrap();
+
+    Ok(response_body.data.unwrap().set_esp32_mode_node1_stop)
 }
 
 

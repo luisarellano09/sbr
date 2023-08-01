@@ -6,6 +6,10 @@ mutation SetEsp32ModeNode1Start{
   SetEsp32ModeNode1Start
 }
 
+mutation SetEsp32ModeNode1Stop{
+  SetEsp32ModeNode1Stop
+}
+
 mutation SetEsp32ModeNode1SyncData( $syncStatus: RegisterCommand!) {
   SetEsp32ModeNode1SyncData(
     syncStatus: $syncStatus

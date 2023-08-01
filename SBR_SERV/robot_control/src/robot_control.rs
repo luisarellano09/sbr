@@ -1,16 +1,19 @@
+use std::sync::mpsc::Receiver;
 use std::{error::Error, thread, time};
 
 use ::reqwest::blocking::Client;
 
-use crate::graphql::{query_get_esp32_status, mutation_load_esp32_setup, mutation_set_esp32_mode_node1_start, mutation_set_esp32_mode_node1_sync_data, query_get_esp32_mode_node1_sync_data};
-
+use crate::graphql::{query_get_esp32_status, mutation_load_esp32_setup, mutation_set_esp32_mode_node1_start, mutation_set_esp32_mode_node1_sync_data, query_get_esp32_mode_node1_sync_data, query_get_esp32_live_imu, mutation_set_esp32_mode_node1_stop};
+use crate::collect_events::{RobotEvent, RobotCommand};
 
 //=====================================================================================================
 #[derive(Debug)]
 pub struct RobotControl {
     state: RobotState,
     mode_option: RobotModeOptions,
+    prev_event: RobotEvent,
     graphql_client: Client,
+    receiver_collect_events: Receiver<RobotEvent>,
 }
 
 //=====================================================================================================
@@ -21,21 +24,10 @@ enum RobotState {
     LoadDataEsp32,
     ConfirmLoadDataEsp32,
     ReadyToStart,
+    StandUp,
     StartMotion,
     IdleMode,
     Move,
-}
-
-//=====================================================================================================
-#[derive(Debug)]
-enum RobotEvent {
-    None,
-    Command(RobotCommand),
-    ChangeMode(RobotModeOptions),
-    HeartbeatError,
-    NodeLinuxError,
-    NodeEsp32Error,
-    RobotFall,
 }
 
 //=====================================================================================================
@@ -45,31 +37,22 @@ struct RobotModeOptions {
 }
 
 //=====================================================================================================
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 enum RobotMoveType {
     Polar,
 }
 
-
-//=====================================================================================================
-#[derive(Debug)]
-enum RobotCommand {
-    Start,
-    Stop,
-    Pause,
-}
-
-
-
 //=====================================================================================================
 impl RobotControl {
-    pub fn new() -> Self {
+    pub fn new(receiver_collect_events: Receiver<RobotEvent>) -> Self {
         Self { 
             state: RobotState::Init,
             mode_option: RobotModeOptions { 
                 move_type: RobotMoveType::Polar
             },
+            prev_event: RobotEvent::None,
             graphql_client: Client::new(),
+            receiver_collect_events: receiver_collect_events,
         }
     }
 
@@ -77,32 +60,42 @@ impl RobotControl {
     pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
 
         let event = self.get_events()?;
-        
+    
         match (&self.state, event) {
             (RobotState::Init, RobotEvent::None) => self.robot_state_init()?,
             (RobotState::CheckSystem, RobotEvent::None) => self.robot_state_check_system()?,
             (RobotState::LoadDataEsp32, RobotEvent::None) => self.robot_state_load_data_esp32()?,
             (RobotState::ConfirmLoadDataEsp32, RobotEvent::None) => self.robot_state_confirm_load_data_esp32()?,
             (RobotState::ReadyToStart, RobotEvent::None) => self.robot_state_ready_to_start()?,
+            (RobotState::StandUp, RobotEvent::None) => self.robot_state_standup()?,
             (RobotState::StartMotion, RobotEvent::None) => self.robot_state_start_motion()?,
             (RobotState::IdleMode, RobotEvent::None) => self.robot_state_idle_mode()?,
             (RobotState::Move, RobotEvent::None) => self.robot_state_move()?,
-            (_, RobotEvent::Command(cmd)) => self.robot_event_command(cmd)?,
-            (_, RobotEvent::ChangeMode(_mode)) => {},
             (_, RobotEvent::HeartbeatError) => self.robot_event_heartbeat_error()?,
             (_, RobotEvent::NodeLinuxError) => self.robot_event_node_linux_error()?,
             (_, RobotEvent::NodeEsp32Error) => self.robot_event_node_esp32_error()?,
+            (_, RobotEvent::RequestLoadDataEsp32) => self.robot_event_request_load_data_esp32()?,
             (_, RobotEvent::RobotFall) => self.robot_event_robot_fall()?,
+            (_, RobotEvent::Command(cmd)) => self.robot_event_command(cmd)?,
             //_ => todo!()
         }
-
+        
         Ok(())
     }
 
     //=====================================================================================================
     fn get_events(&mut self) -> Result<RobotEvent, Box<dyn Error>> {
 
-        Ok(RobotEvent::None)
+        match self.receiver_collect_events.try_recv() {
+            Ok(event) =>{
+                self.prev_event = event.clone();
+                dbg!(&event);
+                return Ok(event); 
+            }, 
+            Err(_)=>{}
+        }
+
+        return Ok(self.prev_event.clone())
     }
 
 
@@ -179,11 +172,29 @@ impl RobotControl {
 
         dbg!(&self.state);
 
-        self.state = RobotState::StartMotion;
+        self.state = RobotState::StandUp;
 
         Ok(())
     }
 
+
+    //=====================================================================================================
+    fn robot_state_standup(&mut self) -> Result<(), Box<dyn Error>> {
+
+        dbg!(&self.state);
+
+        let res = query_get_esp32_live_imu(&self.graphql_client)?;
+        let pitch = res.pitch;
+
+        thread::sleep(time::Duration::from_millis(100));
+
+        if pitch < 15.0 && pitch > -15.0 {
+            thread::sleep(time::Duration::from_millis(3000));
+            self.state = RobotState::StartMotion;
+        }
+
+        Ok(())
+    }
 
     //=====================================================================================================
     fn robot_state_start_motion(&mut self) -> Result<(), Box<dyn Error>> {
@@ -212,24 +223,16 @@ impl RobotControl {
     //=====================================================================================================
     fn robot_state_move(&mut self) -> Result<(), Box<dyn Error>> {
 
-        if matches!(self.mode_option.move_type, RobotMoveType::Polar) {
+        //dbg!(&self.state);
+
+        if self.mode_option.move_type == RobotMoveType::Polar {
             
         }
+
 
         Ok(())
     }
     
-
-    //=====================================================================================================
-    fn robot_event_command(&mut self, command: RobotCommand) -> Result<(), Box<dyn Error>> {
-
-        dbg!(&self.state);
-
-        dbg!(command);
-
-        Ok(())
-    }
-
 
     //=====================================================================================================
     fn robot_event_heartbeat_error(&mut self) -> Result<(), Box<dyn Error>> {
@@ -256,11 +259,32 @@ impl RobotControl {
 
 
     //=====================================================================================================
-    fn robot_event_robot_fall(&mut self) -> Result<(), Box<dyn Error>> {
-        self.state = RobotState::IdleMode;
+    fn robot_event_request_load_data_esp32(&mut self) -> Result<(), Box<dyn Error>> {
+        self.state = RobotState::Init;
 
         Ok(())
     }
+
+
+    //=====================================================================================================
+    fn robot_event_robot_fall(&mut self) -> Result<(), Box<dyn Error>> {
+        mutation_set_esp32_mode_node1_stop(&self.graphql_client)?;
+        self.state = RobotState::StandUp;
+
+        Ok(())
+    }
+
+
+    //=====================================================================================================
+    fn robot_event_command(&mut self, command: RobotCommand) -> Result<(), Box<dyn Error>> {
+
+        dbg!(&self.state);
+
+        dbg!(command);
+
+        Ok(())
+    }
+
 
 
 }
