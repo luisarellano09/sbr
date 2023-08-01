@@ -75,9 +75,11 @@ RC_e Manager::AddSubscribers(){
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::STATUS_NODE_ESP32_R, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::MODE_MANAGER_SYNC_DATA_RW, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::MODE_LINUX_SYNC_DATA_RW, DEVICE_e::LINUX);
+    this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::MODE_NODE1_SYNC_DATA_RW, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::MODE_NODE1_MODE_R, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_OFFSET_R, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_OFFSET_R, DEVICE_e::LINUX);
+    this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_DIRECTION_R, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_R, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_PITCH_R, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_ROLL_R, DEVICE_e::LINUX);

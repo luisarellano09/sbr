@@ -1,0 +1,20 @@
+
+query GetEsp32Status{
+    GetEsp32Status{
+        heartbeat,
+        nodeLinux,
+        nodeEsp32,
+    }
+}
+
+query GetEsp32ModeNode1SyncData{
+    GetEsp32ModeNode1SyncData
+}
+
+query GetEsp32LiveIMU{
+  GetEsp32LiveIMU{
+    pitch,
+    roll,
+    yaw,
+  }
+}

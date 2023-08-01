@@ -127,6 +127,13 @@ RC_e MotionControl::Start(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
+    this->m_odometry->Reset();
+    this->SetSPPos(0.0);
+    this->SetSPAngle(0.0);
+    this->m_PIDAngle->Reset();
+    this->m_PIDPitch->Reset();
+    this->m_PIDPosition->Reset();
+
     this->m_PIDPitch->Start();
     this->m_PIDPosition->Start();
     this->m_PIDAngle->Start();
@@ -144,6 +151,8 @@ RC_e MotionControl::Stop(){
     this->m_PIDPitch->Stop();
     this->m_PIDPosition->Stop();
     this->m_PIDAngle->Stop();
+    this->m_motorLeft->Stop();
+    this->m_motorRight->Stop();
 
     return retCode;
 }

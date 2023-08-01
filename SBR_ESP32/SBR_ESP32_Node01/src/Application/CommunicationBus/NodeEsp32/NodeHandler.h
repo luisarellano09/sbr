@@ -54,7 +54,9 @@ RC_e ExtHandler(Request* request){
         }
         
         case COM_REQUEST_REG_ID_e::MODE_NODE1_SYNC_DATA_RW: {
-            //ToDo
+            if ( (RegisterCommand_e)request->data == RegisterCommand_e::CMD_READY_TO_COMPLETE ) {
+                manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::MODE_NODE1_SYNC_DATA_RW, RegisterCommand_e::CMD_COMPLETED);
+            }
             break;
         }
         
@@ -96,8 +98,8 @@ RC_e ExtHandler(Request* request){
         }
         
         case COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_W: {
-            manager->m_motorLeft->SetDirection((bool)request->data);
-            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_R, manager->m_motorLeft->GetDirection());
+            manager->m_motorRight->SetDirection((bool)request->data);
+            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_R, manager->m_motorRight->GetDirection());
             Log.infoln("[NodeHandler::SETUP_MOTOR_RIGHT_DIRECTION_W] Motor right direction: %T", manager->m_motorRight->GetDirection());
             break;
         }
@@ -380,7 +382,7 @@ RC_e UpdateRegistersSlow(){
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_OFFSET_R, manager->m_motorLeft->GetOffset() * 100);
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_DIRECTION_R, manager->m_motorLeft->GetDirection());
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_OFFSET_R, manager->m_motorRight->GetOffset() * 100);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_R, manager->m_motorLeft->GetDirection());
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_R, manager->m_motorRight->GetDirection());
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_PITCH_R, manager->m_IMU->GetDirectionPitch());
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_ROLL_R, manager->m_IMU->GetDirectionRoll());
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_YAW_R, manager->m_IMU->GetDirectionYaw());

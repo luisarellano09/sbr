@@ -52,16 +52,11 @@ services:
     #     ports:
     #         - 6379:6379
 
-    sbr_serv_redis_connector:
+    sbr_serv_robot_control:
         restart: unless-stopped
-        image: sbr/sbr_serv_redis_connector:1.0
-        container_name: sbr_serv_redis_connector
+        image: sbr/sbr_serv_robot_control:1.0
+        container_name: sbr_serv_robot_control
         build: 
-            context: ../../SBR_SERV/redis_connector/
-            target: prod
-        # depends_on:
-        #     sbr_rabbitmq:
-        #         condition: service_healthy
-        # links: 
-        #     - sbr_rabbitmq
+            context: ../../SBR_SERV/robot_control/
+            target: dev
             

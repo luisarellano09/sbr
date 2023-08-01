@@ -1,11 +1,11 @@
 #![allow(dead_code)]
 
 use std::error::Error;
-use std::time::{Instant};
+use std::time::Instant;
 use std::collections::VecDeque;
 use std::sync::mpsc::{Sender, Receiver};
 use crate::request::{buffer_to_request, check_crc, calculate_crc_from_request, request_to_buffer, Request};
-use crate::register_table::{COM_REQUEST_REG_ID_e};
+use crate::register_table::COM_REQUEST_REG_ID_e;
 use crate::message_esp32::MessageEsp32;
 use crate::serial::Serial;
 
@@ -187,6 +187,9 @@ impl Node{
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::MODE_LINUX_SYNC_DATA_RW as u16){
             self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.MODE.LINUX.SYNC_DATA_RW".to_string(), data: request.data})?;
             
+        } else if request.reg_id == (COM_REQUEST_REG_ID_e::MODE_NODE1_SYNC_DATA_RW as u16){
+            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.MODE.NODE1.SYNC_DATA_RW".to_string(), data: request.data})?;
+            
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_OFFSET_R as u16){
             self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.MOTOR_LEFT.OFFSET_R".to_string(), data: request.data})?;
             
@@ -345,6 +348,9 @@ impl Node{
             
         } else if msg.name == "ESP32.WRITE.MODE.LINUX.SYNC_DATA_RW" {
             self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::MODE_LINUX_SYNC_DATA_RW as u16, msg.data));
+            
+        } else if msg.name == "ESP32.WRITE.MODE.NODE1.SYNC_DATA_RW" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::MODE_NODE1_SYNC_DATA_RW as u16, msg.data));
             
         } else if msg.name == "ESP32.WRITE.MODE.NODE1.RESTART_W" {
             self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::MODE_NODE1_RESTART_W as u16, msg.data));
