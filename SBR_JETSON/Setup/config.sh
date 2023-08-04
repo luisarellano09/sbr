@@ -11,9 +11,9 @@
 # Previous Steps
 #
 #   System
-#       User: nx
+#       User: sbrnx
 #       Password: La1123.
-#       Hostname: SBRNX
+#       Hostname: sbrnx
 #       Wireless LAN: sbrap / La123456
 #
 #   copy the config.sh in the root and execute.
@@ -35,16 +35,12 @@ if [ ! -f exec01 ]; then
     echo "****** Updating ******"
     sudo apt update
     sudo apt upgrade
-    sudo apt dist-upgrade
     sudo apt autoremove
 
     echo "****** Creating Folders ******"
     mkdir SBR
     cd SBR
-    mkdir Data
-
-    echo "****** Uninstall unsed apps ******"
-    uninstall all non use apps
+    mkdir data
 
     echo "****** Installing Applications ******"
     sudo apt install htop
@@ -57,25 +53,23 @@ if [ ! -f exec01 ]; then
     echo "****** Installing Serial lib ******"
     sudo apt install libudev-dev
 
-    echo "****** Installing Rust ******"
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    echo "****** Installing JTOP ******"
+    sudo apt install python3-pip
+    sudo pip3 install -U jetson-stats
 
     echo "****** Setup Docker ******"
-    sudo apt-get install \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release
-
+    sudo apt-get update
+    sudo apt-get install ca-certificates curl gnupg
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    echo \
+    "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+    "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt-get update
+    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    sudo groupadd docker
     sudo usermod -aG docker $USER
-
-    sudo apt-get install -y libffi-dev libssl-dev
-    sudo apt-get install -y python3 python3-pip
-    sudo pip3 install --upgrade pip
-    sudo pip3 install setuptools_rust
-    sudo pip3 -v install docker-compose
-
     sudo systemctl enable docker.service
     sudo systemctl enable containerd.service
 
@@ -84,6 +78,12 @@ if [ ! -f exec01 ]; then
     git clone https://github.com/JetsonHacksNano/installLibrealsense.git
     cd installLibrealsense
     ./installLibrealsense.sh 
+
+
+    cd
+    git clone https://github.com/mdegans/nano_build_opencv.git
+    cd nano_build_opencv
+    ./build_opencv.sh 4.8.0
 
 
     # create a flag file to check if we are resuming from reboot.
@@ -111,12 +111,12 @@ if [ ! -f exec03 ]; then
 
     echo "****** Create swap file on NVMe ******"
     mkdir nvme
-    sudo fallocate -l 100G /home/nx/nvme/swapfile
-    sudo chmod 600 /home/nx/nvme/swapfile
-    sudo mkswap /home/nx/nvme/swapfile
-    sudo swapon /home/nx/nvme/swapfile
+    sudo fallocate -l 50G /home/sbrnx/nvme/swapfile
+    sudo chmod 600 /home/sbrnx/nvme/swapfile
+    sudo mkswap /home/sbrnx/nvme/swapfile
+    sudo swapon /home/sbrnx/nvme/swapfile
     sudo swapon -s
-    echo "/home/nx/nvme/swapfile swap swap defaults 0 0" | sudo tee -a /etc/fstab
+    echo "/home/sbrnx/nvme/swapfile swap swap defaults 0 0" | sudo tee -a /etc/fstab
     
     # create a flag file to check if we are resuming from reboot.
     cd
@@ -131,9 +131,3 @@ rm -f exec02
 rm -f exec03
 
 exit 0
-
-
-# To disable GUI on boot
-#   sudo systemctl set-default multi-user.target
-# To enable GUI
-#   sudo systemctl set-default graphical.target
