@@ -44,7 +44,7 @@ sudo apt dist-upgrade
 echo "****** Creating Folders ******"
 mkdir SBR
 cd SBR
-mkdir Data
+mkdir data
 
 
 echo "****** Installing Docker ******"
@@ -63,12 +63,6 @@ sudo apt-get install -y libffi-dev libssl-dev
 sudo apt-get install -y python3 python3-pip
 sudo apt-get remove python-configparser
 sudo pip3 -v install docker-compose
-
-echo "****** Installing Serial lib ******"
-sudo apt install libudev-dev
-
-echo "****** Installing Rust ******"
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 
 exit 0

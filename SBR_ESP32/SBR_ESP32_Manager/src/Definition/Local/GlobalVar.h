@@ -2,8 +2,6 @@
  * @file GlobalVar.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Global variables of SBR
- * @version 1.0
- * @date 07.02.2023
  * 
  */
 
@@ -17,30 +15,12 @@
 #include <Preferences.h>
 #include "../../Application/Manager/Manager.h"
 
+
 /*******************************************************************************************************************************************
  *  												GLOBAL VARIABLES
  *******************************************************************************************************************************************/
 
-static Manager* manager;        /**@brief Instance of the manager */
-
-
-//=====================================================================================================
-
-static Preferences preferences;        /**@brief Preferences instance*/
-
-
-//=====================================================================================================
-
-TaskHandle_t TaskCLIHandle;             /**@brief Handle of Task CLI */
-TaskHandle_t TaskGetValueCLIHandle;     /**@brief Handle of Task Get Value CLI */
-TaskHandle_t TaskOTAHandle;             /**@brief Handle of Task OTA */
-TaskHandle_t TaskNodeESP32Handle;       /**@brief Handle of Task Node ESP32 */  
-TaskHandle_t TaskModesHandle;           /**@brief Handle of Task Modes*/  
-
-TickType_t TimerTaskCLI = 500 / portTICK_PERIOD_MS;         /**@brief Timer of Task CLI */
-TickType_t TimerTaskOTA = 2000 / portTICK_PERIOD_MS;        /**@brief Timer of Task OTA */
-TickType_t TimerTaskNodeESP32 = 1;                          /**@brief Timer of Task Node ESP32 */
-TickType_t TimerTaskModes= 500 / portTICK_PERIOD_MS;        /**@brief Timer of Task Modes */
-
+static Manager* manager;                /**@brief Instance of the manager */
+static Preferences preferences;         /**@brief Preferences instance*/
 
 #endif /* GLOBALVAR_H */

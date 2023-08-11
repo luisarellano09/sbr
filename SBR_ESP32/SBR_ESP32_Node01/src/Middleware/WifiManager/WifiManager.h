@@ -2,9 +2,6 @@
  * @file WifiManager.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to Manage the ESP32 Wifi
- * @version 1.0
- * @date 16.10.2022
- * 
  * 
  */
 
@@ -19,8 +16,8 @@
 #include <ESPmDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
-
 #include "../../Definition/Global/RC.h"
+
 
 /*******************************************************************************************************************************************
  *  												CLASS

@@ -2,8 +2,6 @@
  * @file Register.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to describe a register
- * @version 1.0
- * @date 14.09.2022
  * 
  */
 
@@ -17,6 +15,7 @@
 #include "../../../Definition/Global/RC.h"
 #include "../../../Definition/Global/Devices.h"
 #include "../../../Definition/Global/RegisterTableDef.h"
+
 
 /*******************************************************************************************************************************************
  *  												CLASS

@@ -2,8 +2,6 @@
  * @file Node.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to manage the communication node
- * @version 1.0
- * @date 10.09.2022
  * 
  */
 
@@ -18,6 +16,7 @@
 #include "../../../Definition/Global/RC.h"
 #include "../RequestBuffer/RequestBuffer.h"
 
+
 /*******************************************************************************************************************************************
  *  												CLASS
  *******************************************************************************************************************************************/
@@ -29,8 +28,6 @@
 class Node {
 public:  
 
-    bool m_start = false;   /**@brief Start command*/
-    
     /**
      * @brief Constructor
      * 
@@ -84,9 +81,10 @@ public:
     /**
      * @brief Function to Run the Node
      * 
+     * @param regHeartbeatCounter Register of the Heartbeat counter
      * @return RC_e Result code
      */
-    RC_e Run();
+    RC_e Run(COM_REQUEST_REG_ID_e regHeartbeatCounter);
 
     /**
      * @brief Function to start Run
@@ -103,17 +101,55 @@ public:
     RC_e Stop();
 
     /**
+     * @brief Token the Heartbeat Counter
+     * 
+     * @param HeartbeatCounter Heartbeat Counter
+     * @param regHeartbeatCounter Register of the Heartbeat counter
+     * @return RC_e Result code
+     */
+    RC_e TokenCounter(uint16_t HeartbeatCounter, COM_REQUEST_REG_ID_e regHeartbeatCounter);
+
+    /**
+     * @brief WatchDog
+     * 
+     * @param regHeartbeatCounter Register of the Heartbeat counter
+     * @return RC_e Result code
+     */
+    RC_e WatchDog(COM_REQUEST_REG_ID_e regHeartbeatCounter);
+
+    /**
+     * @brief Feed the WatchDog counter
+     * 
+     * @param regHeartbeatCounter Register of the Heartbeat counter
+     * @return RC_e Result code
+     */
+    RC_e FeedWatchDog(COM_REQUEST_REG_ID_e regHeartbeatCounter);
+
+    /**
+     * @brief Get the Error status
+     * 
+     * @return true Node is in Error
+     * @return false Node is ok
+     */
+    bool GetError();
+
+    /**
      * @brief Print Buffer of requests
      * 
-     * @return RC_e 
+     * @return RC_e Result code
      */
     RC_e PrintBuffer();  
 
 
-private:
+protected:
 
     HardwareSerial* m_serial;                       /**@brief Reference pointer of Serial Port */
     RequestBuffer* m_requestBuffer = NULL;          /**@brief Request Buffer object */
+    bool m_start = false;                           /**@brief Start command */
+    uint16_t m_counterHeartbeat = 0;                /**@brief Counter heartbeat */
+    uint16_t m_prevCounterHeartbeat = 0;            /**@brief Previous counter heartbeat */
+    bool m_error = false;                           /**@brief Error  */
+    long m_internalCounter = 0;                     /**@brief Internal Counter  */
 
     /**
      * @brief Function to configure serial port

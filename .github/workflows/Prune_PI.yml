@@ -1,0 +1,11 @@
+name: Prune system - PI
+
+on:
+  workflow_dispatch:
+  
+jobs: 
+  deploy:
+    runs-on: [self-hosted, sbr-pi]
+    steps:
+      - name: Prune
+        run: docker system prune -a -f

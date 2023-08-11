@@ -2,8 +2,6 @@
  * @file Devices.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Devices
- * @version 1.0
- * @date 08.02.2023
  * 
  */
 
@@ -20,7 +18,8 @@ enum DEVICE_e {
 	ESP32_NODE02,       /**@brief ESP32 Node02 */
     LINUX,              /**@brief Linux */
     NODE_MANAGER,       /**@brief Node Manager */
-    LENGTH_DEVICE       /**@brief Length */
+    LENGTH_DEVICE,      /**@brief Length */
+    NEXT_ONE            /**@brief The next device */
 };
 
 

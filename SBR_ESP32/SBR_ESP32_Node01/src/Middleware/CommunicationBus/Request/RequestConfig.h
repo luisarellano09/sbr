@@ -1,9 +1,7 @@
 /**
- * @file Definition.h
+ * @file RequestConfig.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
- * @brief Definitions for the Communication Bus
- * @version 1.0
- * @date 08.02.2023
+ * @brief Declaration for the request class
  * 
  */
 
@@ -19,9 +17,9 @@
  * 
  */
 enum COM_REQUEST_TYPE_e {
-    NONE = 0,       /**@brief None operation*/ 
-	READ,	        /**@brief Read operation*/
-	WRITE,		    /**@brief Write operation*/                   
+    REQUEST_NONE = 0,       /**@brief None operation*/ 
+	REQUEST_READ,	        /**@brief Read operation*/
+	REQUEST_WRITE,		    /**@brief Write operation*/                   
 };
 
 

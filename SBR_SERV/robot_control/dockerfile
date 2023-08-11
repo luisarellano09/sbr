@@ -1,0 +1,35 @@
+FROM rust:1.71.0 as build
+RUN apt-get update
+RUN apt-get install -y libssl-dev 
+RUN USER=root cargo new --bin robot_control
+WORKDIR /robot_control
+
+COPY ./Cargo.toml ./Cargo.toml
+RUN cargo build --release
+RUN rm -rf src
+
+COPY ./src ./src
+RUN rm ./target/release/deps/robot_control*
+RUN cargo build --release
+
+
+FROM rust:1.71.0 as prod
+COPY --from=build /robot_control/target/release/robot_control .
+CMD ["./robot_control"]
+
+
+FROM rust:1.71.0 as dev
+RUN apt-get update
+RUN apt-get install -y libssl-dev 
+RUN USER=root cargo new --bin robot_control
+WORKDIR /robot_control
+
+COPY ./Cargo.toml ./Cargo.toml
+RUN cargo build --release
+RUN rm -rf src
+
+COPY ./src ./src
+RUN rm ./target/release/deps/robot_control*
+RUN cargo build --release
+
+CMD ["./target/release/robot_control"]

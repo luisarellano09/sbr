@@ -2,9 +2,6 @@
  * @file Node01.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to Manage the Node
- * @version 1.0
- * @date 16.10.2022
- * 
  * 
  */
 
@@ -13,6 +10,7 @@
  *******************************************************************************************************************************************/
 #include "NodeEsp32.h"
 #include <ArduinoLog.h>
+
 
 /*******************************************************************************************************************************************
  *  												CONSTRUCTOR
@@ -45,12 +43,24 @@ RC_e NodeEsp32::UpdateRegister(COM_REQUEST_REG_ID_e regId, int32_t data){
     Log.traceln("[NodeEsp32::UpdateRegister] Sending update register: [%u]=%d", regId, data);
 
     // Add request to manager
-    if ((retCode = this->AddRequest(DEVICE_e::NODE_MANAGER, COM_REQUEST_TYPE_e::WRITE, regId, data)) != RC_e::SUCCESS){
+    if ((retCode = this->AddRequest(DEVICE_e::NODE_MANAGER, COM_REQUEST_TYPE_e::REQUEST_WRITE, regId, data)) != RC_e::SUCCESS){
         Log.errorln("[NodeEsp32::UpdateRegister] Error in AddRequest()");
         return retCode;
     }
 
     Log.traceln("[NodeEsp32::UpdateRegister] Register update sent");
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
+RC_e NodeEsp32::Run(){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    Node::Run(COM_REQUEST_REG_ID_e::STATUS_HEARTBEAT_ESP32_COUNTER_R);
 
     return retCode;
 }

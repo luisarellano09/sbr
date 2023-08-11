@@ -2,9 +2,6 @@
  * @file main.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief main
- * @version 1.0
- * @date 03.02.2023
- * 
  * 
  */
 
@@ -18,9 +15,11 @@
 #include <ArduinoLog.h>
 #include "soc/rtc_cntl_reg.h"
 #include "./Definition/Local/GlobalVar.h"
-#include "./Application/Tasks/Tasks.h"
-#include "./Application/CLI/CLI.h"
-#include "./Application/Modes/Modes.h"
+#include "./Application/System/Tasks/Tasks.h"
+#include "./Application/System/CLI/CLI.h"
+#include "./Application/System/Modes/Modes.h"
+#include "./Application/CommunicationBus/NodeEsp32/NodeEsp32Handler.h"
+#include "./Application/CommunicationBus/NodeLinux/NodeLinuxHandler.h"
 
 
 /*******************************************************************************************************************************************
@@ -51,13 +50,17 @@ void InitMain(){
     preferences.begin("SBR", false);
 
     // Logging
-    Log.begin(LOG_LEVEL_VERBOSE, &Serial);
+    Log.begin(LOG_LEVEL_INFO, &Serial);
 
     // Manager Instance
     manager = new Manager();
 
     // Wifi Config
     manager->m_wifiManager->SetWifiCredencials(preferences.getString("WifiName"), preferences.getString("WifiPass"), String(ESP32_HOSTNAME));
+
+    // External Handler
+    manager->m_nodeESP32->ExtHandler = ExtNodeEsp32Handler;
+    manager->m_nodeLinux->ExtHandler = ExtNodeLinuxHandler;
 
     // Init CLI
     InitCLI();
@@ -69,7 +72,5 @@ void InitMain(){
     InitModes();
 
 }
-
-
 
 #endif // MAIN_H

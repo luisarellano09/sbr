@@ -2,9 +2,6 @@
  * @file RequestBuffer.cpp
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to describe the Buffer of requests
- * @version 1.0
- * @date 16.10.2022
- * 
  * 
  */
 
@@ -14,6 +11,7 @@
 #include "RequestBuffer.h"
 #include "../Util/CommunicationBusUtil.h"
 #include <ArduinoLog.h>
+
 
 /*******************************************************************************************************************************************
  *  												CONSTRUCTOR
@@ -32,6 +30,7 @@ RequestBuffer::RequestBuffer(){
 //=====================================================================================================
 
 RequestBuffer::~RequestBuffer(){}
+
 
 /*******************************************************************************************************************************************
  *  												PUBLIC METHODS

@@ -2,9 +2,6 @@
  * @file main.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief main
- * @version 1.0
- * @date 03.02.2023
- * 
  * 
  */
 
@@ -17,10 +14,11 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include "soc/rtc_cntl_reg.h"
-#include "./Application/Tasks/Tasks.h"
-#include "./Application/CLI/CLI.h"
+#include "./Application/System/Tasks/Tasks.h"
+#include "./Application/System/CLI/CLI.h"
+#include "./Application/System/Datalog/Datalog.h"
 #include "./Application/CommunicationBus/NodeEsp32/NodeHandler.h"
-#include "./Application/Modes/Modes.h"
+#include "./Application/System/Modes/Modes.h"
 
 
 /*******************************************************************************************************************************************
@@ -50,13 +48,16 @@ void Init(){
     preferences.begin("SBR", false);
 
     // Logging
-    Log.begin(LOG_LEVEL_VERBOSE, &Serial);
+    Log.begin(LOG_LEVEL_INFO, &Serial);
 
     // Manager Instance
     manager = new Manager();
 
     // Wifi Config
     manager->m_wifiManager->SetWifiCredencials(preferences.getString("WifiName"), preferences.getString("WifiPass"), String(ESP32_HOSTNAME));
+
+    // IMU
+    manager->m_IMU->SetCycleRotationVector(TimerTaskIMU*2);
 
     // External Handler
     manager->m_nodeESP32->ExtHandler = ExtHandler;
@@ -67,6 +68,12 @@ void Init(){
     // Init Modes
     InitModes();
 
+    // Init Datalog
+    InitDatalog();
+    //ActivateDataset(Datasets_e::DATASET_MOTOR);
+    //ActivateDataset(Datasets_e::DATASET_IMU);
+    //ActivateDataset(Datasets_e::DATASET_ODOMETRY);
+    ActivateDataset(Datasets_e::DATASET_MOTION_CONTROL);
 }
 
 

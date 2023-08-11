@@ -1,19 +1,37 @@
-FROM rust:buster as build
-RUN apt-get update && apt-get install -y libudev-dev
+FROM rust:1.71.0 as build
+RUN apt-get update
+RUN apt-get install -y libudev-dev
+RUN apt-get install -y libssl-dev 
 RUN USER=root cargo new --bin serial_connector
 WORKDIR /serial_connector
 
-COPY ./Cargo.lock ./Cargo.lock
 COPY ./Cargo.toml ./Cargo.toml
-
 RUN cargo build --release
-RUN rm src/*.rs
+RUN rm -rf src
 
 COPY ./src ./src
 RUN rm ./target/release/deps/serial_connector*
 RUN cargo build --release
 
 
-FROM rust:buster as prod
+FROM rust:1.71.0 as prod
 COPY --from=build /serial_connector/target/release/serial_connector .
 CMD ["./serial_connector"]
+
+
+FROM rust:1.71.0 as dev
+RUN apt-get update
+RUN apt-get install -y libudev-dev
+RUN apt-get install -y libssl-dev 
+RUN USER=root cargo new --bin serial_connector
+WORKDIR /serial_connector
+
+COPY ./Cargo.toml ./Cargo.toml
+RUN cargo build --release
+RUN rm -rf src
+
+COPY ./src ./src
+RUN rm ./target/release/deps/serial_connector*
+RUN cargo build --release
+
+CMD ["./target/release/serial_connector"]

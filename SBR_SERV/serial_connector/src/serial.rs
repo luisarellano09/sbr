@@ -1,51 +1,44 @@
-/*******************************************************************************************************************************************
- *  												USE
- *******************************************************************************************************************************************/
+
  #![allow(dead_code)]
 
-use std::str;
+use std::{str, collections::VecDeque};
 use std::error::Error;
-use serialport::{available_ports, SerialPort};
+use serialport::{available_ports, SerialPort, SerialPortType, StopBits, Parity, DataBits, ClearBuffer};
 use std::time::Duration;
-
-/*******************************************************************************************************************************************
- *  												CONST
- *******************************************************************************************************************************************/
-const NO_TIMEOUT: u64 = 600000;
 
 
 /*******************************************************************************************************************************************
  *  												ENUMS
  *******************************************************************************************************************************************/
 
+/// Enumeration for Port visibility 
 pub enum PortVisibility {
     Found,
     NotFound,
 }
 
+
 /*******************************************************************************************************************************************
  *  												Serial
  *******************************************************************************************************************************************/
 
+//=====================================================================================================
+/// Serial 
 pub struct Serial {
     m_portname: String,
     m_baudrate: u32,
     m_timeout: u64,
-    m_port: Box<dyn SerialPort>,
+    pub m_port: Box<dyn SerialPort>,
+    m_buffer: VecDeque<u8>,
 }
 
 
+//=====================================================================================================
 impl Serial {
 
-//=====================================================================================================
+    //=====================================================================================================
     pub fn new(portname: String, baudrate: u32, timeout: u64) -> Result<Self,Box<dyn Error>> {
 
-        if let Err(er) = Self::list_ports() {
-            let e = format!("Error: {:?} <- new()", er);
-            eprintln!("{}",e);
-            return Err(e.into());
-        }
-    
         match Self::check_port(&portname){
             Ok(p) => {
                 match p {
@@ -66,6 +59,9 @@ impl Serial {
 
         let mut temp_port = match serialport::new(&portname, baudrate)
             .timeout(Duration::from_millis(timeout))
+            .stop_bits(StopBits::One)
+            .parity(Parity::None)
+            .data_bits(DataBits::Eight)
             .open(){
                 Ok(port) => port,
                 Err(er) => {
@@ -75,17 +71,20 @@ impl Serial {
                 }
         };
 
-        temp_port.write_request_to_send(false).unwrap();
+        temp_port.write_request_to_send(false)?;
+        temp_port.clear(ClearBuffer::All)?;
                   
         Ok(Serial{
             m_portname : portname.clone(),
             m_baudrate: baudrate,
             m_timeout: timeout,
             m_port: temp_port,
+            m_buffer: VecDeque::new(),
         })
     }
 
-//=====================================================================================================
+
+    //=====================================================================================================
     pub fn write_char(&mut self, payload: char) -> Result<(), Box<dyn Error>> {
 
         let mut buf: [u8;1]= [0];
@@ -100,19 +99,57 @@ impl Serial {
         Ok(())
     }
 
-//=====================================================================================================
-pub fn write_u8s(&mut self, payload: &[u8]) -> Result<(), Box<dyn Error>> {
 
-    if let Err(er) = self.m_port.write(payload){
-        let e = format!("Error: {:?} <- write() <- write_u8s()", er);
-        eprintln!("{}",e);
-        return Err(e.into());
+    //=====================================================================================================
+    pub fn write_u8s(&mut self, payload: &[u8]) -> Result<(), Box<dyn Error>> {
+
+        if let Err(er) = self.m_port.write(payload){
+            let e = format!("Error: {:?} <- write() <- write_u8s()", er);
+            eprintln!("{}",e);
+            return Err(e.into());
+        }
+
+        Ok(())
     }
 
-    Ok(())
-}
 
-//=====================================================================================================
+    //=====================================================================================================
+    pub fn read_buffer_crc(&mut self, len: usize, crc_error: bool) -> Result<Option<VecDeque<u8>>, Box<dyn Error>> {
+
+        let mut buffer: [u8; 1] = [0];
+
+        match self.m_port.read(&mut buffer) {
+            Ok(n) => {
+                if crc_error == true {
+                    self.m_buffer.pop_front();
+                } else if self.m_buffer.len() >= len {
+                    self.m_buffer.clear();
+                }
+                if n ==1 {
+                    self.m_buffer.push_back(buffer[0]);
+                }
+
+                if self.m_buffer.len() == len {
+                    Ok(Some(self.m_buffer.clone()))
+                } else {
+                    Ok(None)
+                }
+            },
+            Err(ref er) if er.kind() == std::io::ErrorKind::TimedOut => {
+                let e = format!("Error: Timeout <- read() <- read_buffer()");
+                eprintln!("{}",e);
+                return Err(e.into());
+            },
+            Err(er) => {
+                let e = format!("Error: {} <- read() <- read_buffer()", er);
+                eprintln!("{}",e);
+                return Err(e.into());
+            }
+        }
+    }
+
+
+    //=====================================================================================================
     pub fn read_buffer(&mut self, len: usize) -> Result<Vec<u8>, Box<dyn Error>> {
 
         let mut buffer: Vec<u8> = vec![0; len];
@@ -134,7 +171,8 @@ pub fn write_u8s(&mut self, payload: &[u8]) -> Result<(), Box<dyn Error>> {
         }
     }
 
-//=====================================================================================================
+
+    //=====================================================================================================
     pub fn read_buffer_string(&mut self, len: usize) -> Result<String, Box<dyn Error>> {
         match self.read_buffer(len) {
             Ok(buffer) => {
@@ -156,12 +194,9 @@ pub fn write_u8s(&mut self, payload: &[u8]) -> Result<(), Box<dyn Error>> {
             }
         };
     }
-}
 
 
-impl Serial {
-
-//=====================================================================================================
+    //=====================================================================================================
     pub fn list_ports() -> Result<(), Box<dyn Error>> {
         match available_ports() {
             Ok(ports) => {
@@ -173,6 +208,25 @@ impl Serial {
 
                 for p in ports {
                     println!("{}", p.port_name);
+
+                    match p.port_type {
+                        SerialPortType::UsbPort(info) => {
+                            println!("    Type: USB");
+                            println!("    VID:{:04x} PID:{:04x}", info.vid, info.pid);
+                            println!("    Serial Number: {}", info.serial_number.as_ref().map_or("", String::as_str));
+                            println!("    Manufacturer: {}", info.manufacturer.as_ref().map_or("", String::as_str));
+                            println!("    Product: {}", info.product.as_ref().map_or("", String::as_str));
+                        }
+                        SerialPortType::BluetoothPort => {
+                            println!("    Type: Bluetooth");
+                        }
+                        SerialPortType::PciPort => {
+                            println!("    Type: PCI");
+                        }
+                        SerialPortType::Unknown => {
+                            println!("    Type: Unknown");
+                        }
+                    }
                 }
 
                 println!("=============");
@@ -187,7 +241,8 @@ impl Serial {
         Ok(())
     }
 
-//=====================================================================================================
+
+    //=====================================================================================================
     pub fn get_ports() -> Result<Vec<String>, Box<dyn Error>> {
         match available_ports() {
             Ok(ports) => {
@@ -208,7 +263,8 @@ impl Serial {
         }
     }
 
-//=====================================================================================================
+
+    //=====================================================================================================
     pub fn check_port(portname: &String) -> Result<PortVisibility, Box<dyn Error>> {
         match available_ports() {
             Ok(ports) => {
@@ -228,25 +284,7 @@ impl Serial {
         Ok(PortVisibility::NotFound)
     }
 
-//=====================================================================================================
-    pub fn clone(source_port: &Serial) -> Result<Self, Box<dyn Error>> {
-        let temp_port = match source_port.m_port.try_clone(){
-            Ok(port) => port,
-            Err(er) => {
-                let e = format!("Error: {:?}, try_clone() <- close()", er);
-                eprintln!("{}",e);
-                return Err(e.into());
-            }
-        };
 
-        Ok(
-        Serial{
-            m_portname : source_port.m_portname.clone(),
-            m_baudrate: source_port.m_baudrate,
-            m_timeout: source_port.m_timeout,
-            m_port: temp_port,
-        })
-    }
 }
 
 

@@ -2,14 +2,17 @@ version: "3.8"
 
 services:
 
-    portainer:
+    sbr_portainer:
         restart: unless-stopped
         image: portainer/portainer-ce
         container_name: sbr_portainer
         volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
+            - /etc/localtime:/etc/localtime:ro
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ~SBR/data/portainer/portainer-data:/data
         ports:
             - 9000:9000
+
 
     sbr_rabbitmq:
         restart: unless-stopped
@@ -17,22 +20,112 @@ services:
         container_name: sbr_rabbitmq
         hostname: sbr_rabbitmq
         environment:
-            RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
-            RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
-            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+          RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
+          RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+          RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
         ports:
             - 5672:5672
             - 15672:15672
-        networks:
-            - sbr_net_internal
-            - sbr_net_external
+        healthcheck:
+            test: rabbitmq-diagnostics -q ping
+            interval: 60s
+            timeout: 60s
+            retries: 5
 
+
+    sbr_redis:
+        restart: unless-stopped
+        image: redis:alpine
+        container_name: sbr_redis
+        ports:
+            - 6379:6379
+        healthcheck:
+            test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+            interval: 1s
+            timeout: 3s
+            retries: 5
+
+
+    sbr_postgres:
+        restart: unless-stopped
+        image: postgres:alpine
+        container_name: sbr_postgres
+        environment:
+          - POSTGRES_USER=${POSTGRES_USER}
+          - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        ports:
+          - '5432:5432'
+        volumes: 
+            - ~SBR/data/postgresql/db:/var/lib/postgresql/data
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+
+    sbr_serv_serial_connector:
+        restart: unless-stopped
+        tty: true
+        image: sbr/sbr_serv_serial_connector:1.0
+        container_name: sbr_serv_serial_connector
+        privileged: true
+        devices: 
+            - /dev/ttyAMA0:/dev/ttyAMA0
+        build: 
+            context: ../../SBR_SERV/serial_connector/
+            target: dev
+        depends_on:
+            sbr_rabbitmq:
+                condition: service_healthy
+  
+
+    sbr_serv_redis_connector:
+        restart: unless-stopped
+        image: sbr/sbr_serv_redis_connector:1.0
+        container_name: sbr_serv_redis_connector
+        build: 
+            context: ../../SBR_SERV/redis_connector/
+            target: dev
+        depends_on:
+            sbr_rabbitmq:
+                condition: service_healthy
+            sbr_redis:
+                condition: service_healthy
+            sbr_serv_serial_connector:
+                condition: service_started
             
-networks:
-    sbr_net_internal: 
-        driver: bridge
-        internal: true
-    
-    sbr_net_external:
-        driver: bridge
+
+    sbr_serv_graphql:
+        restart: unless-stopped
+        image: sbr/sbr_serv_graphql:1.0
+        container_name: sbr_serv_graphql
+        build: 
+            context: ../../SBR_SERV/graphql/
+            target: dev
+        ports:
+          - 4000:4000
+        depends_on:
+            sbr_rabbitmq:
+                condition: service_healthy
+            sbr_redis:
+                condition: service_healthy
+            sbr_serv_serial_connector:
+                condition: service_started
+            sbr_serv_redis_connector:
+                condition: service_started
+            
+
+    sbr_serv_robot_control:
+        restart: unless-stopped
+        image: sbr/sbr_serv_robot_control:1.0
+        container_name: sbr_serv_robot_control
+        build: 
+            context: ../../SBR_SERV/robot_control/
+            target: dev
+        depends_on:
+            sbr_rabbitmq:
+                condition: service_healthy
+            sbr_serv_graphql:
+                condition: service_started
             

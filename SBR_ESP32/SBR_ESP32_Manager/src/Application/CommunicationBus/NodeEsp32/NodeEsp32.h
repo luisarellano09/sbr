@@ -2,8 +2,6 @@
  * @file NodeEsp32.h
  * @author Luis Arellano (luis.arellano09@gmail.com)
  * @brief Class to Manage the NodeEsp32
- * @version 1.0
- * @date 16.10.2022
  * 
  */
 
@@ -17,6 +15,7 @@
 #include "../../../Middleware/CommunicationBus/Node/Node.h"
 #include "../RegisterTable/RegisterTable.h"
 
+
 /*******************************************************************************************************************************************
  *  												CLASS
  *******************************************************************************************************************************************/
@@ -29,8 +28,12 @@ class NodeEsp32: public Node {
 public:  
 
     /**
-     * @brief Constructor
+     * @brief Construct a new Node Esp32 object
      * 
+     * @param serial Serial reference
+     * @param baud Baudrate
+     * @param RX RX pin
+     * @param TX TX pin
      */
     NodeEsp32(HardwareSerial* serial, uint32_t baud, uint8_t RX, uint8_t TX);
 
@@ -47,6 +50,21 @@ public:
      * @return RC_e Result code
      */
     RC_e ConnectRegisterTable(RegisterTable* tableRegister);
+
+    /**
+     * @brief Run
+     * 
+     * @return RC_e Result code
+     */
+    RC_e Run();
+
+    /**
+     * @brief Pointer of a function to handle a request externally
+     * 
+     * @param request Reference of a request object
+     * @return RC_e Result code
+     */
+    RC_e (*ExtHandler)(Request* request);
 
 
 private:
