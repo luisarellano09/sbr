@@ -1,4 +1,4 @@
-name: Prune system
+name: Restart System - PI
 
 on:
   workflow_dispatch:
@@ -7,5 +7,5 @@ jobs:
   deploy:
     runs-on: [self-hosted, sbr-pi]
     steps:
-      - name: Prune
-        run: docker system prune -a -f
+      - name: Restart
+        run: sudo reboot
