@@ -19,7 +19,7 @@
 #   copy the config.sh in the root and execute.
 
 # In Host
-# ssh-copy-id nx@sbrnx.local
+# ssh-copy-id sbrnx@sbrnx.local
 
 # NVMe SSD Boot
 # https://www.jetsonhacks.com/2021/08/25/native-boot-for-jetson-xaviers/
@@ -66,6 +66,7 @@ if [ ! -f exec01 ]; then
     "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
     "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
     sudo apt-get update
     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     sudo groupadd docker
