@@ -1,0 +1,11 @@
+name: Restart System
+
+on:
+  workflow_dispatch:
+  
+jobs: 
+  deploy:
+    runs-on: [self-hosted, sbr-nx]
+    steps:
+      - name: Restart
+        run: sudo reboot
