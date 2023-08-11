@@ -80,12 +80,16 @@ if [ ! -f exec01 ]; then
     cd installLibrealsense
     ./installLibrealsense.sh 
 
-
+    echo "****** Installing OpenCV with Cuda ******"
     cd
     git clone https://github.com/mdegans/nano_build_opencv.git
     cd nano_build_opencv
     ./build_opencv.sh 4.8.0
 
+    echo "****** Installing Jetpack ******"
+    sudo apt install nvidia-jetpack -y
+    sudo apt update
+    sudo apt dist-upgrade
 
     # create a flag file to check if we are resuming from reboot.
     cd
