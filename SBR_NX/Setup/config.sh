@@ -37,6 +37,11 @@ if [ ! -f exec01 ]; then
     sudo apt upgrade
     sudo apt autoremove
 
+    sudo usermod -a -G sudo sbrnx
+    # sudo visudo
+    # add at the last line
+    # sbrnx ALL=(ALL) NOPASSWD: ALL
+
     echo "****** Creating Folders ******"
     mkdir SBR
     cd SBR
