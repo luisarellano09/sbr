@@ -78,12 +78,25 @@ if [ ! -f exec01 ]; then
     sudo usermod -aG docker $USER
     sudo systemctl enable docker.service
     sudo systemctl enable containerd.service
+    # sudo nano /etc/docker/daemon.json
+    # {
+    #     "runtimes": {
+    #         "nvidia": {
+    #             "path": "nvidia-container-runtime",
+    #             "runtimeArgs": []
+    #         }
+    #     },
+
+    #     "default-runtime": "nvidia"
+    # }
+
 
     echo "****** Installing IntelRealSense ******"
     cd
     git clone https://github.com/JetsonHacksNano/installLibrealsense.git
     cd installLibrealsense
     ./installLibrealsense.sh 
+    #realsense-viewer # to start viewer
 
     echo "****** Installing OpenCV with Cuda ******"
     cd
@@ -95,6 +108,16 @@ if [ ! -f exec01 ]; then
     sudo apt install nvidia-jetpack -y
     sudo apt update
     sudo apt dist-upgrade
+
+    echo "****** Cleaning ******"
+    sudo apt remove --purge libreoffice*
+    sudo apt remove --purge thunderbird*
+    sudo apt clean
+    sudo apt autoremove -y
+
+    echo "****** Disable GUI ******"
+    sudo systemctl set-default multi-user.target
+    #sudo systemctl set-default graphical.target    # Enable
 
     # create a flag file to check if we are resuming from reboot.
     cd
