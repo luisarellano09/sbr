@@ -32,12 +32,6 @@ const Sidebar = ({
 					{!collapsed && (
 						<p className="font-mono font-bold text-4xl ml-10 text-[#39ac89]">SBR</p>
 					)}
-					{/* <button
-						className="grid place-content-center hover:bg-slate-600 w-10 h-10 rounded-full opacity-0 md:opacity-100"
-						onClick={() => setCollapsed(!collapsed)}
-					>
-						<Icon className="w-5" />
-					</button> */}
 				</div>
 
                 <nav className="flex-grow">

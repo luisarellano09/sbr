@@ -1,11 +1,12 @@
 
-import IMU from '@/components/IMU';
-import {Button} from '@nextui-org/button';
+import DashboardIMU from '@/components/Dashboards/DashboardIMU';
+import ChartIMU from '@/components/Charts/ChartIMU';
 
 export default function Home() {
 	return (
         <main>
-            <IMU />
+            <DashboardIMU />
+            <ChartIMU />
         </main>
     );
 }
