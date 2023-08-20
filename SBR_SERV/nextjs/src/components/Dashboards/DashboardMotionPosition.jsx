@@ -5,10 +5,10 @@ import {Spinner} from "@nextui-org/react";
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell} from "@nextui-org/react";
 
 import {useQuery} from  "@apollo/client";
-import { GET_ESP32_LIVE_IMU, POOLING_ESP32_LIVE_TIME } from "@/graphql/queries";
+import { GET_ESP32_LIVE_MOTION, POOLING_ESP32_LIVE_TIME } from "@/graphql/queries";
 
-export default function DashboardIMU() {
-    const {data, error, loading} = useQuery(GET_ESP32_LIVE_IMU, {
+export default function DashboardMotionPosition() {
+    const {data, error, loading} = useQuery(GET_ESP32_LIVE_MOTION, {
         pollInterval:POOLING_ESP32_LIVE_TIME,
         fetchPolicy: "no-cache" 
     });
@@ -25,21 +25,15 @@ export default function DashboardIMU() {
                     {data && 
                         <TableBody>
                             <TableRow key="1">
-                                <TableCell>Pitch</TableCell>
+                                <TableCell>SP Position</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[55px] text-center"> {data.GetEsp32LiveIMU.pitch.toFixed(2)} ° </p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[60px] text-center"> {data.GetEsp32LiveMotion.setpointPosition.toFixed(2)} m</p></Chip>
                                 </TableCell>
                             </TableRow>
                             <TableRow key="2">
-                                <TableCell>Roll</TableCell>
+                                <TableCell>Position</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[55px] text-center"> {data.GetEsp32LiveIMU.roll.toFixed(2)} ° </p></Chip>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow key="3">
-                                <TableCell>Yaw</TableCell>
-                                <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[55px] text-center"> {data.GetEsp32LiveIMU.yaw.toFixed(2)} ° </p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[60px] text-center"> {data.GetEsp32LiveOdometry.distance.toFixed(2)} m</p></Chip>
                                 </TableCell>
                             </TableRow>
                         </TableBody>

@@ -6,19 +6,18 @@ import Highcharts from "highcharts/highstock";
 import HighchartsReact from 'highcharts-react-official'
 
 import { useQuery } from "@apollo/client";
-import { GET_ESP32_LIVE_IMU, POOLING_ESP32_LIVE_TIME } from "@/graphql/queries";
+import { GET_ESP32_LIVE_MOTION, POOLING_ESP32_LIVE_TIME } from "@/graphql/queries";
 
 import { Button } from "@nextui-org/react";
 
 
 const MIN_DATA_POINTS = 120;
-let dataIMU = {
-    pitch: [],
-    roll: [],
-    yaw : [],
+let dataMotionPosition = {
+    sp_position: [],
+    position: [],
 }
 
-export default function ChartIMU() {
+export default function ChartMotionPosition() {
 
     const [chartOptions, setChartOptions] = useState({
         chart: {
@@ -26,7 +25,7 @@ export default function ChartIMU() {
             backgroundColor: "#18181B",
         },
         title: {
-            text: "IMU",
+            text: "Motion Position",
             align: "center",
             style: {
                 color: "#f1f5f9",
@@ -104,7 +103,7 @@ export default function ChartIMU() {
         },
         series: [
             {
-                name: "Pitch",
+                name: "SP Position",
                 data: [],
                 marker: {
                     enabled: false, // Disable markers (dots)
@@ -112,25 +111,17 @@ export default function ChartIMU() {
                 showInNavigator: true,
             },
             {
-                name: "Roll",
+                name: "Position",
                 data: [],
                 marker: {
                     enabled: false, // Disable markers (dots)
                 },
                 showInNavigator: true,
-            },
-            {
-                name: "Yaw",
-                data: [],
-                marker: {
-                    enabled: false, // Disable markers (dots)
-                },
-                showInNavigator: true,
-            },
+            }
         ],
     });
 
-	const { data, error, loading } = useQuery(GET_ESP32_LIVE_IMU, {
+	const { data, error, loading } = useQuery(GET_ESP32_LIVE_MOTION, {
 		pollInterval:POOLING_ESP32_LIVE_TIME,
         fetchPolicy: "no-cache" 
 	});
@@ -142,17 +133,15 @@ export default function ChartIMU() {
 
             const timeStamp = Date.now();
 
-            if (dataIMU.pitch.length == 0){
+            if (dataMotionPosition.sp_position.length == 0){
                 for (let index = 0; index < MIN_DATA_POINTS; index++) {
-                    dataIMU.pitch.push([timeStamp - (MIN_DATA_POINTS - index) * POOLING_ESP32_LIVE_TIME, data.GetEsp32LiveIMU.pitch])
-                    dataIMU.roll.push([timeStamp - (MIN_DATA_POINTS - index) * POOLING_ESP32_LIVE_TIME, data.GetEsp32LiveIMU.roll])
-                    dataIMU.yaw.push([timeStamp - (MIN_DATA_POINTS - index) * POOLING_ESP32_LIVE_TIME, data.GetEsp32LiveIMU.yaw])
+                    dataMotionPosition.sp_position.push([timeStamp - (MIN_DATA_POINTS - index) * POOLING_ESP32_LIVE_TIME, data.GetEsp32LiveMotion.setpointPosition])
+                    dataMotionPosition.position.push([timeStamp - (MIN_DATA_POINTS - index) * POOLING_ESP32_LIVE_TIME, data.GetEsp32LiveOdometry.distance])
                 }
             }
 
-            dataIMU.pitch = [...dataIMU.pitch, [timeStamp, data.GetEsp32LiveIMU.pitch]];
-            dataIMU.roll = [...dataIMU.roll, [timeStamp, data.GetEsp32LiveIMU.roll]];  
-            dataIMU.yaw = [...dataIMU.yaw, [timeStamp, data.GetEsp32LiveIMU.yaw]];
+            dataMotionPosition.sp_position = [...dataMotionPosition.sp_position, [timeStamp, data.GetEsp32LiveMotion.setpointPosition]];
+            dataMotionPosition.position = [...dataMotionPosition.position, [timeStamp, data.GetEsp32LiveOdometry.distance]];  
 
             if (showTooltip === false){
                 setChartOptions(prevOptions => ({
@@ -160,16 +149,12 @@ export default function ChartIMU() {
                     series: [
                         {
                             ...prevOptions.series[0],
-                            data: dataIMU.pitch,
+                            data: dataMotionPosition.sp_position,
                         }, 
                         {
                             ...prevOptions.series[1],
-                            data: dataIMU.roll,
+                            data: dataMotionPosition.position,
                         },
-                        {
-                            ...prevOptions.series[2],
-                            data: dataIMU.yaw,
-                        }
                     ],
                 }));
             }
