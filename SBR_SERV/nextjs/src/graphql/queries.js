@@ -35,4 +35,4 @@ export const GET_ESP32_LIVE_MOTION = gql`
 	}
 `
 
-export const POOLING_ESP32_LIVE_TIME = 1000;
+export const POOLING_ESP32_LIVE_TIME = 600;
