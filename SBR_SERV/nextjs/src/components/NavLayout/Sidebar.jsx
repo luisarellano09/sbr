@@ -22,7 +22,7 @@ const Sidebar = ({shown}) => {
 
 				</div>
 
-                <div className="flex-grow">
+                <div className="flex-grow border-r-1 border-t-1 border-[#181933]">
                     <SidebarItems />
                 </div>
 				
