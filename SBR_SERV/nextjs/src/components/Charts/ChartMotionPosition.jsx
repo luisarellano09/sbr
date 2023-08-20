@@ -23,6 +23,9 @@ export default function ChartMotionPosition() {
         chart: {
             zoomType: "xy",
             backgroundColor: "#18181B",
+            zooming:{
+                mouseWheel: false,
+            },
         },
         title: {
             text: "Motion Position",

@@ -24,6 +24,9 @@ export default function ChartIMU() {
         chart: {
             zoomType: "xy",
             backgroundColor: "#18181B",
+            zooming:{
+                mouseWheel: false,
+            },
         },
         title: {
             text: "IMU",
