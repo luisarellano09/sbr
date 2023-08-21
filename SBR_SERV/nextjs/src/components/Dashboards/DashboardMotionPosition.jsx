@@ -27,13 +27,13 @@ export default function DashboardMotionPosition() {
                             <TableRow key="1">
                                 <TableCell>SP Position</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[60px] text-center">{data.GetEsp32LiveMotion.setpointPosition.toFixed(2)} m</p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[56px] text-right">{data.GetEsp32LiveMotion.setpointPosition.toFixed(2)} m</p></Chip>
                                 </TableCell>
                             </TableRow>
                             <TableRow key="2">
                                 <TableCell>Position</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[60px] text-center">{data.GetEsp32LiveOdometry.distance.toFixed(2)} m</p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[56px] text-right">{data.GetEsp32LiveOdometry.distance.toFixed(2)} m</p></Chip>
                                 </TableCell>
                             </TableRow>
                         </TableBody>

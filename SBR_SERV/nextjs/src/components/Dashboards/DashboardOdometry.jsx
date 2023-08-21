@@ -27,25 +27,25 @@ export default function DashboardOdometry() {
                             <TableRow key="1">
                                 <TableCell>X</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[60px] text-center">{data.GetEsp32LiveOdometry.x.toFixed(2)} m</p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[56px] text-right">{data.GetEsp32LiveOdometry.x.toFixed(2)} m</p></Chip>
                                 </TableCell>
                             </TableRow>
                             <TableRow key="2">
                                 <TableCell>Y</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[60px] text-center">{data.GetEsp32LiveOdometry.y.toFixed(2)} m</p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[56px] text-right">{data.GetEsp32LiveOdometry.y.toFixed(2)} m</p></Chip>
                                 </TableCell>
                             </TableRow>
                             <TableRow key="3">
                                 <TableCell>Angle</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[60px] text-center">{data.GetEsp32LiveOdometry.angle.toFixed(2)} °</p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[56px] text-right">{data.GetEsp32LiveOdometry.angle.toFixed(2)} °</p></Chip>
                                 </TableCell>
                             </TableRow>
                             <TableRow key="4">
                                 <TableCell>Distance</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[60px] text-center">{data.GetEsp32LiveOdometry.distance.toFixed(2)} m</p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[56px] text-right">{data.GetEsp32LiveOdometry.distance.toFixed(2)} m</p></Chip>
                                 </TableCell>
                             </TableRow>
                         </TableBody>
