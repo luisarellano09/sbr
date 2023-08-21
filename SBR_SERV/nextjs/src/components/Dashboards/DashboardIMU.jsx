@@ -27,19 +27,19 @@ export default function DashboardIMU() {
                             <TableRow key="1">
                                 <TableCell>Pitch</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[55px] text-center"> {data.GetEsp32LiveIMU.pitch.toFixed(2)} ° </p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[60px] text-center">{data.GetEsp32LiveIMU.pitch.toFixed(2)} °</p></Chip>
                                 </TableCell>
                             </TableRow>
                             <TableRow key="2">
                                 <TableCell>Roll</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[55px] text-center"> {data.GetEsp32LiveIMU.roll.toFixed(2)} ° </p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[60px] text-center">{data.GetEsp32LiveIMU.roll.toFixed(2)} °</p></Chip>
                                 </TableCell>
                             </TableRow>
                             <TableRow key="3">
                                 <TableCell>Yaw</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[55px] text-center"> {data.GetEsp32LiveIMU.yaw.toFixed(2)} ° </p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[60px] text-center">{data.GetEsp32LiveIMU.yaw.toFixed(2)} °</p></Chip>
                                 </TableCell>
                             </TableRow>
                         </TableBody>

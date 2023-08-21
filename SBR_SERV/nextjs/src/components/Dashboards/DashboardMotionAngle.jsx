@@ -27,13 +27,13 @@ export default function DashboardMotionAngle() {
                             <TableRow key="1">
                                 <TableCell>SP Angle</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[60px] text-center"> {data.GetEsp32LiveMotion.setpointAngle.toFixed(2)} °</p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[60px] text-center">{data.GetEsp32LiveMotion.setpointAngle.toFixed(2)} °</p></Chip>
                                 </TableCell>
                             </TableRow>
                             <TableRow key="2">
                                 <TableCell>Angle</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[60px] text-center"> {data.GetEsp32LiveOdometry.angle.toFixed(2)} °</p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[60px] text-center">{data.GetEsp32LiveOdometry.angle.toFixed(2)} °</p></Chip>
                                 </TableCell>
                             </TableRow>
                         </TableBody>
