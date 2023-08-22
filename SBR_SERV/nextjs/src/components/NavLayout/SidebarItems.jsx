@@ -34,8 +34,8 @@ export default function SidebarItems({ collapsed }) {
 				</AccordionItem>
 
                 <AccordionItem key="4" title="PID Tunning" startContent={  <WrenchIcon className="w-4" /> } >
-					<Link href="/Tunning/Position"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Position PID</p> </Link>
-                    <Link href="/Tunning/Angle"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Angle PID</p> </Link>
+					<Link href="/Tunning/Position"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Position</p> </Link>
+                    <Link href="/Tunning/Angle"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Angle</p> </Link>
 				</AccordionItem>
 
 			</Accordion>
