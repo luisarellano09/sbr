@@ -5,13 +5,17 @@
   "scripts": {
     "dev": "next dev -p 5000",
     "build": "next build",
-    "start": "next start -p 5000"
+    "start": "next start -p 5000",
+    "lint": "next lint"
   },
   "dependencies": {
     "@apollo/client": "^3.8.1",
     "@heroicons/react": "^2.0.18",
     "@nextui-org/react": "^2.1.2",
+    "autoprefixer": "10.4.15",
     "classnames": "^2.3.2",
+    "eslint": "8.47.0",
+    "eslint-config-next": "13.4.13",
     "framer-motion": "^10.15.2",
     "graphql": "^16.8.0",
     "highcharts": "^11.1.0",
