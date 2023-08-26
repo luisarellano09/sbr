@@ -149,8 +149,8 @@ impl Queries {
         let encoder_right_direction_raw: bool = conn.get("ESP32.READ.SETUP.ENCODER_RIGHT.DIRECTION_R")?;
 
         Ok(Esp32SetupEncoders { 
-            encoder_left_direction: encoder_left_direction_raw,
-            encoder_right_direction: encoder_right_direction_raw,
+            encoder_left_direction: Some(encoder_left_direction_raw),
+            encoder_right_direction: Some(encoder_right_direction_raw),
         })
     }
     
@@ -166,10 +166,10 @@ impl Queries {
         let offset_pitch_raw: i32 = conn.get("ESP32.READ.SETUP.IMU.OFFSET_PITCH_R")?;
 
         Ok(Esp32SetupIMU { 
-            invert_pitch: invert_pitch_raw,
-            invert_roll: invert_roll_raw,
-            invert_yaw: invert_yaw_raw,
-            offset_pitch: (offset_pitch_raw as f64) / 100.0,
+            invert_pitch: Some(invert_pitch_raw),
+            invert_roll: Some(invert_roll_raw),
+            invert_yaw: Some(invert_yaw_raw),
+            offset_pitch: Some((offset_pitch_raw as f64) / 100.0),
         })
     }
 
@@ -183,8 +183,8 @@ impl Queries {
         let distance_wheels_raw: i32 = conn.get("ESP32.READ.SETUP.ODOMETRY.WHEEL_RADIO_R")?;
 
         Ok(Esp32SetupOdometry { 
-            wheel_radio: (wheel_radio_raw as f64) / 1000.0,
-            distance_wheels: (distance_wheels_raw as f64) / 1000.0,
+            wheel_radio: Some((wheel_radio_raw as f64) / 1000.0),
+            distance_wheels: Some((distance_wheels_raw as f64) / 1000.0),
         })
     }
 
@@ -203,13 +203,13 @@ impl Queries {
         let mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.MV_MAX_R")?;
 
         Ok(Esp32SetupMotionPID { 
-            kp: (kp_raw as f64) / 1000.0,
-            ki: (ki_raw as f64) / 1000.0,
-            kd: (kd_raw as f64) / 1000.0,
-            cycle: (cycle_raw  as f64) / 1000.0,
-            direction: direction_raw,
-            mv_min: (mv_min_raw as f64) / 100.0,
-            mv_max: (mv_max_raw as f64) / 100.0,
+            kp: Some((kp_raw as f64) / 1000.0),
+            ki: Some((ki_raw as f64) / 1000.0),
+            kd: Some((kd_raw as f64) / 1000.0),
+            cycle: Some((cycle_raw  as f64) / 1000.0),
+            direction: Some(direction_raw),
+            mv_min: Some((mv_min_raw as f64) / 100.0),
+            mv_max: Some((mv_max_raw as f64) / 100.0),
         })
     }
 
@@ -228,13 +228,13 @@ impl Queries {
         let mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.MV_MAX_R")?;
 
         Ok(Esp32SetupMotionPID { 
-            kp: (kp_raw as f64) / 1000.0,
-            ki: (ki_raw as f64) / 1000.0,
-            kd: (kd_raw as f64) / 1000.0,
-            cycle: (cycle_raw  as f64) / 1000.0,
-            direction: direction_raw,
-            mv_min: (mv_min_raw as f64) / 100.0,
-            mv_max: (mv_max_raw as f64) / 100.0,
+            kp: Some((kp_raw as f64) / 1000.0),
+            ki: Some((ki_raw as f64) / 1000.0),
+            kd: Some((kd_raw as f64) / 1000.0),
+            cycle: Some((cycle_raw  as f64) / 1000.0),
+            direction: Some(direction_raw),
+            mv_min: Some((mv_min_raw as f64) / 100.0),
+            mv_max: Some((mv_max_raw as f64) / 100.0),
         })
     }
 
@@ -253,13 +253,13 @@ impl Queries {
         let mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.MV_MAX_R")?;
 
         Ok(Esp32SetupMotionPID { 
-            kp: (kp_raw as f64) / 1000.0,
-            ki: (ki_raw as f64) / 1000.0,
-            kd: (kd_raw as f64) / 1000.0,
-            cycle: (cycle_raw  as f64) / 1000.0,
-            direction: direction_raw,
-            mv_min: (mv_min_raw as f64) / 100.0,
-            mv_max: (mv_max_raw as f64) / 100.0,
+            kp: Some((kp_raw as f64) / 1000.0),
+            ki: Some((ki_raw as f64) / 1000.0),
+            kd: Some((kd_raw as f64) / 1000.0),
+            cycle: Some((cycle_raw  as f64) / 1000.0),
+            direction: Some(direction_raw),
+            mv_min: Some((mv_min_raw as f64) / 100.0),
+            mv_max: Some((mv_max_raw as f64) / 100.0),
         })
     }
 
@@ -310,53 +310,53 @@ impl Queries {
         let motion_pid_angle_mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.MV_MAX_R")?;
 
         Ok( Esp32Setup{
-            motors: Esp32SetupMotors { 
+            motors: Some(Esp32SetupMotors { 
                 motor_left_offset: Some((motor_left_offset_raw as f64) / 100.0),
                 motor_right_offset: Some((motor_right_offset_raw as f64) / 100.0),
                 motor_left_direction: Some(motor_left_direction_raw),
                 motor_right_direction: Some(motor_right_direction_raw),
-            }, 
-            encoders: Esp32SetupEncoders { 
-                encoder_left_direction: encoder_left_direction_raw,
-                encoder_right_direction: encoder_right_direction_raw,
-            },
-            imu: Esp32SetupIMU { 
-                invert_pitch: invert_pitch_raw,
-                invert_roll: invert_roll_raw,
-                invert_yaw: invert_yaw_raw,
-                offset_pitch: (offset_pitch_raw as f64) / 100.0,
-            },
-            odometry: Esp32SetupOdometry { 
-                wheel_radio: (wheel_radio_raw as f64) / 1000.0,
-                distance_wheels: (distance_wheels_raw as f64) / 1000.0,
-            },
-            motion_pid_pitch: Esp32SetupMotionPID { 
-                kp: (motion_pid_pitch_kp_raw as f64) / 1000.0,
-                ki: (motion_pid_pitch_ki_raw as f64) / 1000.0,
-                kd: (motion_pid_pitch_kd_raw as f64) / 1000.0,
-                cycle: (motion_pid_pitch_cycle_raw  as f64) / 1000.0,
-                direction: motion_pid_pitch_direction_raw,
-                mv_min: (motion_pid_pitch_mv_min_raw as f64) / 100.0,
-                mv_max: (motion_pid_pitch_mv_max_raw as f64) / 100.0,
-            },
-            motion_pid_position: Esp32SetupMotionPID { 
-                kp: (motion_pid_position_kp_raw as f64) / 1000.0,
-                ki: (motion_pid_position_ki_raw as f64) / 1000.0,
-                kd: (motion_pid_position_kd_raw as f64) / 1000.0,
-                cycle: (motion_pid_position_cycle_raw  as f64) / 1000.0,
-                direction: motion_pid_position_direction_raw,
-                mv_min: (motion_pid_position_mv_min_raw as f64) / 100.0,
-                mv_max: (motion_pid_position_mv_max_raw as f64) / 100.0,
-            },
-            motion_pid_angle: Esp32SetupMotionPID { 
-                kp: (motion_pid_angle_kp_raw as f64) / 1000.0,
-                ki: (motion_pid_angle_ki_raw as f64) / 1000.0,
-                kd: (motion_pid_angle_kd_raw as f64) / 1000.0,
-                cycle: (motion_pid_angle_cycle_raw  as f64) / 1000.0,
-                direction: motion_pid_angle_direction_raw,
-                mv_min: (motion_pid_angle_mv_min_raw as f64) / 100.0,
-                mv_max: (motion_pid_angle_mv_max_raw as f64) / 100.0,
-            },
+            }), 
+            encoders: Some(Esp32SetupEncoders { 
+                encoder_left_direction: Some(encoder_left_direction_raw),
+                encoder_right_direction: Some(encoder_right_direction_raw),
+            }),
+            imu: Some(Esp32SetupIMU { 
+                invert_pitch: Some(invert_pitch_raw),
+                invert_roll: Some(invert_roll_raw),
+                invert_yaw: Some(invert_yaw_raw),
+                offset_pitch: Some((offset_pitch_raw as f64) / 100.0),
+            }),
+            odometry: Some(Esp32SetupOdometry { 
+                wheel_radio: Some((wheel_radio_raw as f64) / 1000.0),
+                distance_wheels: Some((distance_wheels_raw as f64) / 1000.0),
+            }),
+            motion_pid_pitch: Some(Esp32SetupMotionPID { 
+                kp: Some((motion_pid_pitch_kp_raw as f64) / 1000.0),
+                ki: Some((motion_pid_pitch_ki_raw as f64) / 1000.0),
+                kd: Some((motion_pid_pitch_kd_raw as f64) / 1000.0),
+                cycle: Some((motion_pid_pitch_cycle_raw  as f64) / 1000.0),
+                direction: Some(motion_pid_pitch_direction_raw),
+                mv_min: Some((motion_pid_pitch_mv_min_raw as f64) / 100.0),
+                mv_max: Some((motion_pid_pitch_mv_max_raw as f64) / 100.0),
+            }),
+            motion_pid_position: Some(Esp32SetupMotionPID { 
+                kp: Some((motion_pid_position_kp_raw as f64) / 1000.0),
+                ki: Some((motion_pid_position_ki_raw as f64) / 1000.0),
+                kd: Some((motion_pid_position_kd_raw as f64) / 1000.0),
+                cycle: Some((motion_pid_position_cycle_raw  as f64) / 1000.0),
+                direction: Some(motion_pid_position_direction_raw),
+                mv_min: Some((motion_pid_position_mv_min_raw as f64) / 100.0),
+                mv_max: Some((motion_pid_position_mv_max_raw as f64) / 100.0),
+            }),
+            motion_pid_angle: Some(Esp32SetupMotionPID { 
+                kp: Some((motion_pid_angle_kp_raw as f64) / 1000.0),
+                ki: Some((motion_pid_angle_ki_raw as f64) / 1000.0),
+                kd: Some((motion_pid_angle_kd_raw as f64) / 1000.0),
+                cycle: Some((motion_pid_angle_cycle_raw  as f64) / 1000.0),
+                direction: Some(motion_pid_angle_direction_raw),
+                mv_min: Some((motion_pid_angle_mv_min_raw as f64) / 100.0),
+                mv_max: Some((motion_pid_angle_mv_max_raw as f64) / 100.0),
+            }),
         })
     }
     
@@ -445,7 +445,7 @@ impl Queries {
     //=====================================================================================================
     async fn GetDbEsp32Setup(_context: &ContextGraphQL) -> FieldResult<Esp32Setup> {
 
-        let mut setup: Esp32Setup = Esp32Setup{..Default::default()};
+        let setup: Esp32Setup = Esp32Setup{..Default::default()};
 
         let client = connect_postgres().await?;
         
@@ -456,123 +456,123 @@ impl Queries {
             match name.as_str() {
                 
                 "motor_left_direction" => {
-                    setup.motors.motor_left_direction = if value == 1.0 {Some(true)} else {Some(false)};
+                    setup.motors.unwrap().motor_left_direction = if value == 1.0 {Some(true)} else {Some(false)};
                 },
 
                 "motor_left_offset" => {
-                    setup.motors.motor_left_offset = Some(value);
+                    setup.motors.unwrap().motor_left_offset = Some(value);
                 },
 
                 "motor_right_direction" => {
-                    setup.motors.motor_right_direction = if value == 1.0 {Some(true)} else {Some(false)};
+                    setup.motors.unwrap().motor_right_direction = if value == 1.0 {Some(true)} else {Some(false)};
                 },
 
                 "motor_right_offset" => {
-                    setup.motors.motor_right_offset = Some(value);
+                    setup.motors.unwrap().motor_right_offset = Some(value);
                 },
 
                 "encoder_left_direction" => {
-                    setup.encoders.encoder_left_direction = if value == 1.0 {true} else {false};
+                    setup.encoders.unwrap().encoder_left_direction = if value == 1.0 {Some(true)} else {Some(false)};
                 },
 
                 "encoder_right_direction" => {
-                    setup.encoders.encoder_right_direction = if value == 1.0 {true} else {false};
+                    setup.encoders.unwrap().encoder_right_direction = if value == 1.0 {Some(true)} else {Some(false)};
                 },
 
                 "imu_invert_pitch" => {
-                    setup.imu.invert_pitch = if value == 1.0 {true} else {false};
+                    setup.imu.unwrap().invert_pitch = if value == 1.0 {Some(true)} else {Some(false)};
                 },
 
                 "imu_invert_roll" => {
-                    setup.imu.invert_roll = if value == 1.0 {true} else {false};
+                    setup.imu.unwrap().invert_roll = if value == 1.0 {Some(true)} else {Some(false)};
                 },
 
                 "imu_invert_yaw" => {
-                    setup.imu.invert_yaw = if value == 1.0 {true} else {false};
+                    setup.imu.unwrap().invert_yaw = if value == 1.0 {Some(true)} else {Some(false)};
                 },
 
                 "imu_offset_pitch" => {
-                    setup.imu.offset_pitch = value;
+                    setup.imu.unwrap().offset_pitch = Some(value);
                 },
 
                 "odometry_distance_wheels" => {
-                    setup.odometry.distance_wheels = value;
+                    setup.odometry.unwrap().distance_wheels = Some(value);
                 },
 
                 "odometry_wheel_radio" => {
-                    setup.odometry.wheel_radio = value;
+                    setup.odometry.unwrap().wheel_radio = Some(value);
                 },
 
                 "motion_pid_pitch_kp" => {
-                    setup.motion_pid_pitch.kp = value;
+                    setup.motion_pid_pitch.unwrap().kp = Some(value);
                 },
 
                 "motion_pid_pitch_ki" => {
-                    setup.motion_pid_pitch.ki = value;
+                    setup.motion_pid_pitch.unwrap().ki = Some(value);
                 },
 
                 "motion_pid_pitch_kd" => {
-                    setup.motion_pid_pitch.kd = value;
+                    setup.motion_pid_pitch.unwrap().kd = Some(value);
                 },
 
                 "motion_pid_pitch_direction" => {
-                    setup.motion_pid_pitch.direction = if value == 1.0 {true} else {false};
+                    setup.motion_pid_pitch.unwrap().direction = if value == 1.0 {Some(true)} else {Some(false)};
                 },
 
                 "motion_pid_pitch_mv_min" => {
-                    setup.motion_pid_pitch.mv_min = value;
+                    setup.motion_pid_pitch.unwrap().mv_min = Some(value);
                 },
 
                 "motion_pid_pitch_mv_max" => {
-                    setup.motion_pid_pitch.mv_max = value;
+                    setup.motion_pid_pitch.unwrap().mv_max = Some(value);
                 },
 
                 "motion_pid_position_kp" => {
-                    setup.motion_pid_position.kp = value;
+                    setup.motion_pid_position.unwrap().kp = Some(value);
                 },
 
                 "motion_pid_position_ki" => {
-                    setup.motion_pid_position.ki = value;
+                    setup.motion_pid_position.unwrap().ki = Some(value);
                 },
 
                 "motion_pid_position_kd" => {
-                    setup.motion_pid_position.kd = value;
+                    setup.motion_pid_position.unwrap().kd = Some(value);
                 },
 
                 "motion_pid_position_direction" => {
-                    setup.motion_pid_position.direction = if value == 1.0 {true} else {false};
+                    setup.motion_pid_position.unwrap().direction = if value == 1.0 {Some(true)} else {Some(false)};
                 },
 
                 "motion_pid_position_mv_min" => {
-                    setup.motion_pid_position.mv_min = value;
+                    setup.motion_pid_position.unwrap().mv_min = Some(value);
                 },
 
                 "motion_pid_position_mv_max" => {
-                    setup.motion_pid_position.mv_max = value;
+                    setup.motion_pid_position.unwrap().mv_max = Some(value);
                 },
 
                 "motion_pid_angle_kp" => {
-                    setup.motion_pid_angle.kp = value;
+                    setup.motion_pid_angle.unwrap().kp = Some(value);
                 },
 
                 "motion_pid_angle_ki" => {
-                    setup.motion_pid_angle.ki = value;
+                    setup.motion_pid_angle.unwrap().ki = Some(value);
                 },
 
                 "motion_pid_angle_kd" => {
-                    setup.motion_pid_angle.kd = value;
+                    setup.motion_pid_angle.unwrap().kd = Some(value);
                 },
 
                 "motion_pid_angle_direction" => {
-                    setup.motion_pid_angle.direction = if value == 1.0 {true} else {false};
+                    setup.motion_pid_angle.unwrap().direction = if value == 1.0 {Some(true)} else {Some(false)};
                 },
 
                 "motion_pid_angle_mv_min" => {
-                    setup.motion_pid_angle.mv_min = value;
+                    setup.motion_pid_angle.unwrap().mv_min = Some(value);
                 },
 
                 "motion_pid_angle_mv_max" => {
-                    setup.motion_pid_angle.mv_max = value;
+                    setup.motion_pid_angle.unwrap().mv_max = Some(value);
                 },
 
                 _ => {}
