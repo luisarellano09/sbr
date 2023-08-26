@@ -22,10 +22,10 @@ pub struct Esp32Mode{
 //=====================================================================================================
 #[derive(Debug, Clone, Default, GraphQLObject)]
 pub struct Esp32SetupMotors{
-    pub motor_left_offset: f64,
-    pub motor_right_offset: f64,
-    pub motor_left_direction: bool,
-    pub motor_right_direction: bool,
+    pub motor_left_offset: Option<f64>,
+    pub motor_right_offset: Option<f64>,
+    pub motor_left_direction: Option<bool>,
+    pub motor_right_direction: Option<bool>,
 }
 
 

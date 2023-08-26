@@ -132,10 +132,10 @@ impl Queries {
         let motor_right_direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTOR_RIGHT.DIRECTION_R")?;
 
         Ok(Esp32SetupMotors { 
-            motor_left_offset: (motor_left_offset_raw as f64) / 100.0,
-            motor_right_offset: (motor_right_offset_raw as f64) / 100.0,
-            motor_left_direction: motor_left_direction_raw,
-            motor_right_direction: motor_right_direction_raw,
+            motor_left_offset: Some((motor_left_offset_raw as f64) / 100.0),
+            motor_right_offset: Some((motor_right_offset_raw as f64) / 100.0),
+            motor_left_direction: Some(motor_left_direction_raw),
+            motor_right_direction: Some(motor_right_direction_raw),
         })
     }
 
@@ -311,10 +311,10 @@ impl Queries {
 
         Ok( Esp32Setup{
             motors: Esp32SetupMotors { 
-                motor_left_offset: (motor_left_offset_raw as f64) / 100.0,
-                motor_right_offset: (motor_right_offset_raw as f64) / 100.0,
-                motor_left_direction: motor_left_direction_raw,
-                motor_right_direction: motor_right_direction_raw,
+                motor_left_offset: Some((motor_left_offset_raw as f64) / 100.0),
+                motor_right_offset: Some((motor_right_offset_raw as f64) / 100.0),
+                motor_left_direction: Some(motor_left_direction_raw),
+                motor_right_direction: Some(motor_right_direction_raw),
             }, 
             encoders: Esp32SetupEncoders { 
                 encoder_left_direction: encoder_left_direction_raw,
@@ -456,19 +456,19 @@ impl Queries {
             match name.as_str() {
                 
                 "motor_left_direction" => {
-                    setup.motors.motor_left_direction = if value == 1.0 {true} else {false};
+                    setup.motors.motor_left_direction = if value == 1.0 {Some(true)} else {Some(false)};
                 },
 
                 "motor_left_offset" => {
-                    setup.motors.motor_left_offset = value;
+                    setup.motors.motor_left_offset = Some(value);
                 },
 
                 "motor_right_direction" => {
-                    setup.motors.motor_right_direction = if value == 1.0 {true} else {false};
+                    setup.motors.motor_right_direction = if value == 1.0 {Some(true)} else {Some(false)};
                 },
 
                 "motor_right_offset" => {
-                    setup.motors.motor_right_offset = value;
+                    setup.motors.motor_right_offset = Some(value);
                 },
 
                 "encoder_left_direction" => {
