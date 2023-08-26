@@ -1,7 +1,7 @@
 
 use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
-use crate::graphql_types::{Esp32LiveMotors, Esp32Status, Esp32Mode, Esp32SetupMotors, Esp32SetupIMU, Esp32SetupEncoders, Esp32SetupMotionPID, Esp32LiveIMU, Esp32LiveEncoders, Esp32LiveOdometry, Esp32LiveMotion, Esp32Setup, RegisterCommand};
+use crate::graphql_types::{Esp32LiveMotors, Esp32Status, Esp32Mode, Esp32SetupMotors, Esp32SetupIMU, Esp32SetupEncoders, Esp32SetupMotionPID, Esp32LiveIMU, Esp32LiveEncoders, Esp32LiveOdometry, Esp32LiveMotion, Esp32Setup, RegisterCommand, Esp32SetupOdometry};
 use crate::postgres_connection::connect_postgres;
 use r2d2_redis::redis::{Commands, RedisResult};
 
@@ -139,6 +139,21 @@ impl Queries {
         })
     }
 
+
+    //=====================================================================================================
+    fn GetEsp32SetupEncoders( context: &ContextGraphQL) -> FieldResult<Esp32SetupEncoders> {
+
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
+
+        let encoder_left_direction_raw: bool = conn.get("ESP32.READ.SETUP.ENCODER_LEFT.DIRECTION_R")?;
+        let encoder_right_direction_raw: bool = conn.get("ESP32.READ.SETUP.ENCODER_RIGHT.DIRECTION_R")?;
+
+        Ok(Esp32SetupEncoders { 
+            encoder_left_direction: encoder_left_direction_raw,
+            encoder_right_direction: encoder_right_direction_raw,
+        })
+    }
+    
     
     //=====================================================================================================
     fn GetEsp32SetupIMU( context: &ContextGraphQL) -> FieldResult<Esp32SetupIMU> {
@@ -158,18 +173,18 @@ impl Queries {
         })
     }
 
-    
+
     //=====================================================================================================
-    fn GetEsp32SetupEncoders( context: &ContextGraphQL) -> FieldResult<Esp32SetupEncoders> {
+    fn GetEsp32SetupOdometry( context: &ContextGraphQL) -> FieldResult<Esp32SetupOdometry> {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let encoder_left_direction_raw: bool = conn.get("ESP32.READ.SETUP.ENCODER_LEFT.DIRECTION_R")?;
-        let encoder_right_direction_raw: bool = conn.get("ESP32.READ.SETUP.ENCODER_RIGHT.DIRECTION_R")?;
+        let wheel_radio_raw: i32 = conn.get("ESP32.READ.SETUP.ODOMETRY.DISTANCE_WHEELS_R")?;
+        let distance_wheels_raw: i32 = conn.get("ESP32.READ.SETUP.ODOMETRY.WHEEL_RADIO_R")?;
 
-        Ok(Esp32SetupEncoders { 
-            encoder_left_direction: encoder_left_direction_raw,
-            encoder_right_direction: encoder_right_direction_raw,
+        Ok(Esp32SetupOdometry { 
+            wheel_radio: (wheel_radio_raw as f64) / 1000.0,
+            distance_wheels: (distance_wheels_raw as f64) / 1000.0,
         })
     }
 
@@ -248,6 +263,103 @@ impl Queries {
         })
     }
 
+
+    //=====================================================================================================
+    fn GetEsp32Setup( context: &ContextGraphQL) -> FieldResult<Esp32Setup> {
+
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
+
+        let motor_left_offset_raw: i32 = conn.get("ESP32.READ.SETUP.MOTOR_LEFT.OFFSET_R")?;
+        let motor_right_offset_raw: i32 = conn.get("ESP32.READ.SETUP.MOTOR_RIGHT.OFFSET_R")?;
+        let motor_left_direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTOR_LEFT.DIRECTION_R")?;
+        let motor_right_direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTOR_RIGHT.DIRECTION_R")?;
+
+        let encoder_left_direction_raw: bool = conn.get("ESP32.READ.SETUP.ENCODER_LEFT.DIRECTION_R")?;
+        let encoder_right_direction_raw: bool = conn.get("ESP32.READ.SETUP.ENCODER_RIGHT.DIRECTION_R")?;
+
+        let invert_pitch_raw: bool = conn.get("ESP32.READ.SETUP.IMU.INVERT_PITCH_R")?;
+        let invert_roll_raw: bool = conn.get("ESP32.READ.SETUP.IMU.INVERT_ROLL_R")?;
+        let invert_yaw_raw: bool = conn.get("ESP32.READ.SETUP.IMU.INVERT_YAW_R")?;
+        let offset_pitch_raw: i32 = conn.get("ESP32.READ.SETUP.IMU.OFFSET_PITCH_R")?;
+
+        let wheel_radio_raw: i32 = conn.get("ESP32.READ.SETUP.ODOMETRY.DISTANCE_WHEELS_R")?;
+        let distance_wheels_raw: i32 = conn.get("ESP32.READ.SETUP.ODOMETRY.WHEEL_RADIO_R")?;
+
+        let motion_pid_pitch_kp_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.KP_R")?;
+        let motion_pid_pitch_ki_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.KI_R")?;
+        let motion_pid_pitch_kd_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.KD_R")?;
+        let motion_pid_pitch_cycle_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.CYCLE_R")?;
+        let motion_pid_pitch_direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.DIRECTION_R")?;
+        let motion_pid_pitch_mv_min_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.MV_MIN_R")?;
+        let motion_pid_pitch_mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.MV_MAX_R")?;
+
+        let motion_pid_position_kp_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.KP_R")?;
+        let motion_pid_position_ki_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.KI_R")?;
+        let motion_pid_position_kd_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.KD_R")?;
+        let motion_pid_position_cycle_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.CYCLE_R")?;
+        let motion_pid_position_direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.DIRECTION_R")?;
+        let motion_pid_position_mv_min_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.MV_MIN_R")?;
+        let motion_pid_position_mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.MV_MAX_R")?;
+
+        let motion_pid_angle_kp_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.KP_R")?;
+        let motion_pid_angle_ki_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.KI_R")?;
+        let motion_pid_angle_kd_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.KD_R")?;
+        let motion_pid_angle_cycle_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.CYCLE_R")?;
+        let motion_pid_angle_direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.DIRECTION_R")?;
+        let motion_pid_angle_mv_min_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.MV_MIN_R")?;
+        let motion_pid_angle_mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.MV_MAX_R")?;
+
+        Ok( Esp32Setup{
+            motors: Esp32SetupMotors { 
+                motor_left_offset: (motor_left_offset_raw as f64) / 100.0,
+                motor_right_offset: (motor_right_offset_raw as f64) / 100.0,
+                motor_left_direction: motor_left_direction_raw,
+                motor_right_direction: motor_right_direction_raw,
+            }, 
+            encoders: Esp32SetupEncoders { 
+                encoder_left_direction: encoder_left_direction_raw,
+                encoder_right_direction: encoder_right_direction_raw,
+            },
+            imu: Esp32SetupIMU { 
+                invert_pitch: invert_pitch_raw,
+                invert_roll: invert_roll_raw,
+                invert_yaw: invert_yaw_raw,
+                offset_pitch: (offset_pitch_raw as f64) / 100.0,
+            },
+            odometry: Esp32SetupOdometry { 
+                wheel_radio: (wheel_radio_raw as f64) / 1000.0,
+                distance_wheels: (distance_wheels_raw as f64) / 1000.0,
+            },
+            motion_pid_pitch: Esp32SetupMotionPID { 
+                kp: (motion_pid_pitch_kp_raw as f64) / 1000.0,
+                ki: (motion_pid_pitch_ki_raw as f64) / 1000.0,
+                kd: (motion_pid_pitch_kd_raw as f64) / 1000.0,
+                cycle: (motion_pid_pitch_cycle_raw  as f64) / 1000.0,
+                direction: motion_pid_pitch_direction_raw,
+                mv_min: (motion_pid_pitch_mv_min_raw as f64) / 100.0,
+                mv_max: (motion_pid_pitch_mv_max_raw as f64) / 100.0,
+            },
+            motion_pid_position: Esp32SetupMotionPID { 
+                kp: (motion_pid_position_kp_raw as f64) / 1000.0,
+                ki: (motion_pid_position_ki_raw as f64) / 1000.0,
+                kd: (motion_pid_position_kd_raw as f64) / 1000.0,
+                cycle: (motion_pid_position_cycle_raw  as f64) / 1000.0,
+                direction: motion_pid_position_direction_raw,
+                mv_min: (motion_pid_position_mv_min_raw as f64) / 100.0,
+                mv_max: (motion_pid_position_mv_max_raw as f64) / 100.0,
+            },
+            motion_pid_angle: Esp32SetupMotionPID { 
+                kp: (motion_pid_angle_kp_raw as f64) / 1000.0,
+                ki: (motion_pid_angle_ki_raw as f64) / 1000.0,
+                kd: (motion_pid_angle_kd_raw as f64) / 1000.0,
+                cycle: (motion_pid_angle_cycle_raw  as f64) / 1000.0,
+                direction: motion_pid_angle_direction_raw,
+                mv_min: (motion_pid_angle_mv_min_raw as f64) / 100.0,
+                mv_max: (motion_pid_angle_mv_max_raw as f64) / 100.0,
+            },
+        })
+    }
+    
     
     //=====================================================================================================
     fn GetEsp32LiveMotors( context: &ContextGraphQL) -> FieldResult<Esp32LiveMotors> {
