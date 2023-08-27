@@ -22,49 +22,49 @@ pub struct Esp32Mode{
 //=====================================================================================================
 #[derive(Debug, Clone, Copy, Default, GraphQLObject)]
 pub struct Esp32SetupMotors{
-    pub motor_left_offset: Option<f64>,
-    pub motor_right_offset: Option<f64>,
-    pub motor_left_direction: Option<bool>,
-    pub motor_right_direction: Option<bool>,
+    pub motor_left_offset: f64,
+    pub motor_right_offset: f64,
+    pub motor_left_direction: bool,
+    pub motor_right_direction: bool,
 }
 
 
 //=====================================================================================================
 #[derive(Debug, Clone, Copy, Default, GraphQLObject)]
 pub struct Esp32SetupIMU{
-    pub invert_pitch: Option<bool>,
-    pub invert_roll: Option<bool>,
-    pub invert_yaw: Option<bool>,
-    pub offset_pitch: Option<f64>,
+    pub invert_pitch: bool,
+    pub invert_roll: bool,
+    pub invert_yaw: bool,
+    pub offset_pitch: f64,
 }
 
 
 //=====================================================================================================
 #[derive(Debug, Clone, Copy, Default, GraphQLObject)]
 pub struct Esp32SetupEncoders{
-    pub encoder_left_direction: Option<bool>,
-    pub encoder_right_direction: Option<bool>,
+    pub encoder_left_direction: bool,
+    pub encoder_right_direction: bool,
 }
 
 
 //=====================================================================================================
 #[derive(Debug, Clone, Copy, Default, GraphQLObject)]
 pub struct Esp32SetupOdometry{
-    pub wheel_radio: Option<f64>,
-    pub distance_wheels: Option<f64>,
+    pub wheel_radio: f64,
+    pub distance_wheels: f64,
 }
 
 
 //=====================================================================================================
 #[derive(Debug, Clone, Copy, Default, GraphQLObject)]
 pub struct Esp32SetupMotionPID{
-    pub kp: Option<f64>,
-    pub ki: Option<f64>,
-    pub kd: Option<f64>,
-    pub cycle: Option<f64>,
-    pub direction: Option<bool>,
-    pub mv_min: Option<f64>,
-    pub mv_max: Option<f64>,
+    pub kp: f64,
+    pub ki: f64,
+    pub kd: f64,
+    pub cycle: f64,
+    pub direction: bool,
+    pub mv_min: f64,
+    pub mv_max: f64,
 }
 
 
@@ -114,13 +114,13 @@ pub struct Esp32LiveMotion {
 //=====================================================================================================
 #[derive(Debug, Clone, Default, GraphQLObject)]
 pub struct Esp32Setup{
-    pub motors: Option<Esp32SetupMotors>,
-    pub encoders: Option<Esp32SetupEncoders>,
-    pub imu: Option<Esp32SetupIMU>,
-    pub odometry: Option<Esp32SetupOdometry>,
-    pub motion_pid_pitch: Option<Esp32SetupMotionPID>,
-    pub motion_pid_position: Option<Esp32SetupMotionPID>,
-    pub motion_pid_angle: Option<Esp32SetupMotionPID>,
+    pub motors: Esp32SetupMotors,
+    pub encoders: Esp32SetupEncoders,
+    pub imu: Esp32SetupIMU,
+    pub odometry: Esp32SetupOdometry,
+    pub motion_pid_pitch: Esp32SetupMotionPID,
+    pub motion_pid_position: Esp32SetupMotionPID,
+    pub motion_pid_angle: Esp32SetupMotionPID,
 }
 
 
