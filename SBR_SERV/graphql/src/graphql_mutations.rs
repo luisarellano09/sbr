@@ -2,7 +2,7 @@
 use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
 use crate::graphql_types::{RegisterCommand, Esp32SetupInput};
-use crate::rabbitmq_connection::{publish_esp32_write};
+use crate::rabbitmq_connection::publish_esp32_write;
 use crate::postgres_connection::connect_postgres;
 
 

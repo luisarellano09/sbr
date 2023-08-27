@@ -1,5 +1,5 @@
 use std::error::Error;
-use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, Publish, Channel};
+use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, Publish};
 use serde_json::json;
 use crate::message_esp32::MessageEsp32;
 
