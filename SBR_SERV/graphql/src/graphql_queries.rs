@@ -282,8 +282,8 @@ impl Queries {
         let invert_yaw_raw: bool = conn.get("ESP32.READ.SETUP.IMU.INVERT_YAW_R")?;
         let offset_pitch_raw: i32 = conn.get("ESP32.READ.SETUP.IMU.OFFSET_PITCH_R")?;
 
-        let wheel_radio_raw: i32 = conn.get("ESP32.READ.SETUP.ODOMETRY.DISTANCE_WHEELS_R")?;
-        let distance_wheels_raw: i32 = conn.get("ESP32.READ.SETUP.ODOMETRY.WHEEL_RADIO_R")?;
+        let wheel_radio_raw: i32 = conn.get("ESP32.READ.SETUP.ODOMETRY.WHEEL_RADIO_R")?;
+        let distance_wheels_raw: i32 = conn.get("ESP32.READ.SETUP.ODOMETRY.DISTANCE_WHEELS_R")?;
 
         let motion_pid_pitch_kp_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.KP_R")?;
         let motion_pid_pitch_ki_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.KI_R")?;
