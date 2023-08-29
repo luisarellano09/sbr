@@ -18,7 +18,15 @@ export default function ControlSpPidPosition() {
         mutateSP({
             variables: {sp: Number(sp)}, 
             onCompleted: ()=> toast.success("Delta Position SP loaded: " + sp + " m"),
-            onError: (e)=> toast.error(e.message + ": " + e.networkError.result.errors[0].message),
+            onError: (e)=> {
+                let networkErrorMessage = "";
+                try{
+                    networkErrorMessage = e.networkError.result.errors[0].message;
+                }
+                catch{}
+
+                toast.error(e.message + ": " + networkErrorMessage);
+            }
         });
     }
 

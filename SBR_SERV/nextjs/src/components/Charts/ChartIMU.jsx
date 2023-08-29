@@ -133,7 +133,7 @@ export default function ChartIMU() {
         ],
     });
 
-	const { data, error, loading } = useQuery(GET_ESP32_LIVE_IMU, {
+	const { data } = useQuery(GET_ESP32_LIVE_IMU, {
 		pollInterval:POOLING_ESP32_LIVE_TIME,
         fetchPolicy: "no-cache" 
 	});

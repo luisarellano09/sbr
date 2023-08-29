@@ -124,7 +124,7 @@ export default function ChartMotionPosition() {
         ],
     });
 
-	const { data, error, loading } = useQuery(GET_ESP32_LIVE_MOTION, {
+	const { data } = useQuery(GET_ESP32_LIVE_MOTION, {
 		pollInterval:POOLING_ESP32_LIVE_TIME,
         fetchPolicy: "no-cache" 
 	});

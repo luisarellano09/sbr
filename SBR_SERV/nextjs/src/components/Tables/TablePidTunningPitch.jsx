@@ -15,8 +15,8 @@ import { toast } from "react-hot-toast";
 
 export default function TablePidTunningPitch() {
 
-    const queryDB = useQuery(GET_DB_ESP32_SETUP);
-    const queryRT = useQuery(GET_ESP32_SETUP);
+    const queryDB = useQuery(GET_DB_ESP32_SETUP, {fetchPolicy: "no-cache"});
+    const queryRT = useQuery(GET_ESP32_SETUP, {fetchPolicy: "no-cache"});
 
     const [render, setRender] = useState(false);
 
@@ -81,7 +81,15 @@ export default function TablePidTunningPitch() {
         setDbESP32Setup({
             variables: {setup: setup}, 
             onCompleted: ()=> toast.success("Successfully loaded in DB: " + JSON.stringify(setup)),
-            onError: (e)=> toast.error(e.message + ": " + e.networkError.result.errors[0].message),
+            onError: (e)=> {
+                let networkErrorMessage = "";
+                try{
+                    networkErrorMessage = e.networkError.result.errors[0].message;
+                }
+                catch{}
+
+                toast.error(e.message + ": " + networkErrorMessage);
+            }
         });
         RefreshAfterLoading();
     }
@@ -90,13 +98,21 @@ export default function TablePidTunningPitch() {
         setESP32Setup({
             variables: {setup: setup}, 
             onCompleted: ()=> toast.success("Successfully loaded in RT: " + JSON.stringify(setup)),
-            onError: (e)=> toast.error(e.message + ": " + e.networkError.result.errors[0].message),
+            onError: (e)=> {
+                let networkErrorMessage = "";
+                try{
+                    networkErrorMessage = e.networkError.result.errors[0].message;
+                }
+                catch{}
+
+                toast.error(e.message + ": " + networkErrorMessage);
+            }
         });
         RefreshAfterLoading();
     }
 
-    const [setDbESP32Setup] = useMutation(SET_DB_ESP32_SETUP);
-    const [setESP32Setup] = useMutation(SET_ESP32_SETUP);
+    const [setDbESP32Setup] = useMutation(SET_DB_ESP32_SETUP, {fetchPolicy: "no-cache"});
+    const [setESP32Setup] = useMutation(SET_ESP32_SETUP, {fetchPolicy: "no-cache"});
     
 
 	return (

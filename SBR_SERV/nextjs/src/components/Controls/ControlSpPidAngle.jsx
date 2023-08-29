@@ -18,7 +18,15 @@ export default function ControlSpPidAngle() {
         mutateSP({
             variables: {sp: Number(sp)}, 
             onCompleted: ()=> toast.success("Delta Angle SP loaded: " + sp + " °"),
-            onError: (e)=> toast.error(e.message + ": " + e.networkError.result.errors[0].message),
+            onError: (e)=> {
+                let networkErrorMessage = "";
+                try{
+                    networkErrorMessage = e.networkError.result.errors[0].message;
+                }
+                catch{}
+
+                toast.error(e.message + ": " + networkErrorMessage);
+            }
         });
     }
 
