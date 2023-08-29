@@ -12,9 +12,10 @@ export default function DashboardIMU() {
         pollInterval:POOLING_ESP32_LIVE_TIME,
         fetchPolicy: "no-cache" 
     });
+    
     return(
         <main>
-            <div className="grid grid-cols-1 gap-3 p-5">
+            <div className="p-2">
                 <Table hideHeader aria-label="IMU Table" className="w-[220px] text-left">
                     <TableHeader>
                         <TableColumn></TableColumn>
@@ -27,19 +28,19 @@ export default function DashboardIMU() {
                             <TableRow key="1">
                                 <TableCell>Pitch</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[56px] text-right">{data.GetEsp32LiveIMU.pitch.toFixed(2)} °</p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[70px] text-right">{data.GetEsp32LiveIMU.pitch.toFixed(2)} °</p></Chip>
                                 </TableCell>
                             </TableRow>
                             <TableRow key="2">
                                 <TableCell>Roll</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[56px] text-right">{data.GetEsp32LiveIMU.roll.toFixed(2)} °</p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[70px] text-right">{data.GetEsp32LiveIMU.roll.toFixed(2)} °</p></Chip>
                                 </TableCell>
                             </TableRow>
                             <TableRow key="3">
                                 <TableCell>Yaw</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[56px] text-right">{data.GetEsp32LiveIMU.yaw.toFixed(2)} °</p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[70px] text-right">{data.GetEsp32LiveIMU.yaw.toFixed(2)} °</p></Chip>
                                 </TableCell>
                             </TableRow>
                         </TableBody>

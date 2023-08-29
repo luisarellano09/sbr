@@ -12,9 +12,10 @@ export default function DashboardOdometry() {
         pollInterval:POOLING_ESP32_LIVE_TIME,
         fetchPolicy: "no-cache" 
     });
+    
     return(
         <main>
-            <div className="grid grid-cols-1 gap-3 p-5">
+            <div className="p-2">
                 <Table hideHeader aria-label="IMU Table" className="w-[220px] text-left">
                     <TableHeader>
                         <TableColumn></TableColumn>
@@ -27,25 +28,25 @@ export default function DashboardOdometry() {
                             <TableRow key="1">
                                 <TableCell>X</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[56px] text-right">{data.GetEsp32LiveOdometry.x.toFixed(2)} m</p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[70px] text-right">{data.GetEsp32LiveOdometry.x.toFixed(2)} m</p></Chip>
                                 </TableCell>
                             </TableRow>
                             <TableRow key="2">
                                 <TableCell>Y</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[56px] text-right">{data.GetEsp32LiveOdometry.y.toFixed(2)} m</p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[70px] text-right">{data.GetEsp32LiveOdometry.y.toFixed(2)} m</p></Chip>
                                 </TableCell>
                             </TableRow>
                             <TableRow key="3">
                                 <TableCell>Angle</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[56px] text-right">{data.GetEsp32LiveOdometry.angle.toFixed(2)} °</p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[70px] text-right">{data.GetEsp32LiveOdometry.angle.toFixed(2)} °</p></Chip>
                                 </TableCell>
                             </TableRow>
                             <TableRow key="4">
                                 <TableCell>Distance</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="success"> <p className="w-[56px] text-right">{data.GetEsp32LiveOdometry.distance.toFixed(2)} m</p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[70px] text-right">{data.GetEsp32LiveOdometry.distance.toFixed(2)} m</p></Chip>
                                 </TableCell>
                             </TableRow>
                         </TableBody>

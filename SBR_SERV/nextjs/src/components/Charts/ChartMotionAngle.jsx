@@ -184,7 +184,7 @@ export default function ChartMotionAngle() {
 
 	return (
 		<main>
-			<div className="p-5">
+			<div className="p-2">
                 <div>
                     <Button onClick={tooltipHandle} color={showTooltip ? "success": "default"} size="sm" radius="md" variant="faded">Show Tooltip</Button>
                 </div>
