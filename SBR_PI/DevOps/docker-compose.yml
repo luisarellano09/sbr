@@ -74,6 +74,20 @@ services:
             - sbr_net_external
 
 
+    sbr_nginx:
+        restart: unless-stopped
+        image: nginx:stable-alpine
+        container_name: sbr_nginx
+        hostname: sbr_nginx
+        volumes:
+            - ../../SBR_SERV/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+        ports:
+            - 80:80
+        networks:
+            - sbr_net_internal
+            - sbr_net_external
+
+
     sbr_serv_serial_connector:
         restart: unless-stopped
         tty: true
