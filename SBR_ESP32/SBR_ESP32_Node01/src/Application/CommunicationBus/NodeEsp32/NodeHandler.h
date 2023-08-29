@@ -149,14 +149,14 @@ RC_e ExtHandler(Request* request){
         case COM_REQUEST_REG_ID_e::SETUP_ODOMETRY_WHEEL_RADIO_W: {
             manager->m_odometry->SetRadio((double)request->data / 1000.0);
             manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_ODOMETRY_WHEEL_RADIO_R, manager->m_odometry->GetRadio() * 1000);
-            Log.infoln("[NodeHandler::SETUP_ODOMETRY_WHEEL_RADIO_W] Odometry Wheel radio setted: %D", manager->m_odometry->GetRadio());
+            Log.infoln("[NodeHandler::SETUP_ODOMETRY_WHEEL_RADIO_W] Odometry Wheel radio setted: %D cm", manager->m_odometry->GetRadio() * 100);
             break;
         }
         
         case COM_REQUEST_REG_ID_e::SETUP_ODOMETRY_DISTANCE_WHEELS_W: {
             manager->m_odometry->SetDistanceWheels((double)request->data / 1000.0);
             manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_ODOMETRY_DISTANCE_WHEELS_R, manager->m_odometry->GetDistanceWheels() * 1000);
-            Log.infoln("[NodeHandler::SETUP_ODOMETRY_DISTANCE_WHEELS_W] Odometry distance between wheels setted: %D", manager->m_odometry->GetDistanceWheels());
+            Log.infoln("[NodeHandler::SETUP_ODOMETRY_DISTANCE_WHEELS_W] Odometry distance between wheels setted: %D cm", manager->m_odometry->GetDistanceWheels() * 100);
             break;
         }
         

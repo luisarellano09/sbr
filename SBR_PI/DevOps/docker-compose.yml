@@ -128,4 +128,20 @@ services:
                 condition: service_healthy
             sbr_serv_graphql:
                 condition: service_started
+
+
+    sbr_serv_nextjs:
+        restart: unless-stopped
+        image: sbr/sbr_serv_nextjs:1.0
+        container_name: sbr_serv_nextjs
+        build: 
+            context: ../../SBR_SERV/nextjs/
+            target: dev
+        ports:
+        - 5000:5000
+        environment:
+        - GRAPHQL_URL="http://sbr_serv_graphql:4000/graphql"
+        depends_on:
+            sbr_serv_graphql:
+                condition: service_started
             

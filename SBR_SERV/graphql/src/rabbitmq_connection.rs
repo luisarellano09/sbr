@@ -35,3 +35,4 @@ pub fn publish_esp32_write(key: String, data: i32) -> Result<(), Box<dyn Error>>
 
     Ok(())
 }
+
