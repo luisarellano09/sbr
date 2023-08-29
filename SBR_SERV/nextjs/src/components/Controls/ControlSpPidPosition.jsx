@@ -33,7 +33,7 @@ export default function ControlSpPidPosition() {
     return (
         <div>
             <div className="pl-2 pt-2">
-                <Table hideHeader isCompact aria-label="Position SP" className="w-[220px] text-left">
+                <Table hideHeader isCompact aria-label="Position SP" className="w-[230px] text-left">
                     <TableHeader>
                         <TableColumn></TableColumn>
                         <TableColumn></TableColumn>

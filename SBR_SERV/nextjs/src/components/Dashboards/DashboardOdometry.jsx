@@ -16,7 +16,7 @@ export default function DashboardOdometry() {
     return(
         <main>
             <div className="p-2">
-                <Table hideHeader aria-label="IMU Table" className="w-[220px] text-left">
+                <Table hideHeader aria-label="IMU Table" className="w-[230px] text-left">
                     <TableHeader>
                         <TableColumn></TableColumn>
                         <TableColumn></TableColumn>

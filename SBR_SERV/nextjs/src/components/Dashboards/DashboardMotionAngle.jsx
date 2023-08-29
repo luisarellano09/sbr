@@ -16,7 +16,7 @@ export default function DashboardMotionAngle() {
     return(
         <main>
             <div className="pl-2 pt-2">
-                <Table hideHeader isCompact aria-label="IMU Table" className="w-[220px] text-left">
+                <Table hideHeader isCompact aria-label="IMU Table" className="w-[230px] text-left">
                     <TableHeader>
                         <TableColumn></TableColumn>
                         <TableColumn></TableColumn>

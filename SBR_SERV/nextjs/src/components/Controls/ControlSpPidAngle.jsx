@@ -33,7 +33,7 @@ export default function ControlSpPidAngle() {
     return (
         <div>
             <div className="pl-2 pt-2">
-                <Table hideHeader isCompact aria-label="Delta Angle SP" className="w-[220px] text-left">
+                <Table hideHeader isCompact aria-label="Delta Angle SP" className="w-[230px] text-left">
                     <TableHeader>
                         <TableColumn></TableColumn>
                         <TableColumn></TableColumn>
