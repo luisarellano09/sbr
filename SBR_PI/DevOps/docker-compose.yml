@@ -142,7 +142,7 @@ services:
                 condition: service_started
         networks:
             - sbr_net_internal
-            
+
 
     sbr_serv_robot_control:
         restart: unless-stopped
