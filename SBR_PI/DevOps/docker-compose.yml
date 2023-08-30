@@ -13,7 +13,7 @@ services:
         ports:
             - 9000:9000
         networks:
-            - sbr_net_external
+            - sbr_net_internal
 
 
     sbr_rabbitmq:
@@ -69,6 +69,20 @@ services:
             interval: 5s
             timeout: 5s
             retries: 5
+        networks:
+            - sbr_net_internal
+            - sbr_net_external
+
+
+    sbr_nginx:
+        restart: unless-stopped
+        image: nginx:stable-alpine
+        container_name: sbr_nginx
+        hostname: sbrpi
+        volumes:
+            - ../../SBR_SERV/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+        ports:
+            - 80:80
         networks:
             - sbr_net_internal
             - sbr_net_external
@@ -130,8 +144,7 @@ services:
                 condition: service_started
         networks:
             - sbr_net_internal
-            - sbr_net_external
-            
+
 
     sbr_serv_robot_control:
         restart: unless-stopped
@@ -158,13 +171,11 @@ services:
             target: dev
         ports:
         - 5000:5000
-        environment:
-        - GRAPHQL_URL="http://sbr_serv_graphql:4000/graphql"
         depends_on:
             sbr_serv_graphql:
                 condition: service_started
         networks:
-            - sbr_net_external
+            - sbr_net_internal
 
 
 networks:
