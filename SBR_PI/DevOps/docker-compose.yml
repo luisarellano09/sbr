@@ -13,7 +13,7 @@ services:
         ports:
             - 9000:9000
         networks:
-            - sbr_net_external
+            - sbr_net_internal
 
 
     sbr_rabbitmq:
@@ -50,7 +50,6 @@ services:
             retries: 5
         networks:
             - sbr_net_internal
-            - sbr_net_external
 
 
     sbr_postgres:
@@ -71,7 +70,6 @@ services:
             retries: 5
         networks:
             - sbr_net_internal
-            - sbr_net_external
 
 
     sbr_nginx:
@@ -144,7 +142,6 @@ services:
                 condition: service_started
         networks:
             - sbr_net_internal
-            - sbr_net_external
             
 
     sbr_serv_robot_control:
@@ -172,13 +169,11 @@ services:
             target: dev
         ports:
         - 5000:5000
-        environment:
-        - GRAPHQL_URL="http://sbr_serv_graphql:4000/graphql"
         depends_on:
             sbr_serv_graphql:
                 condition: service_started
         networks:
-            - sbr_net_external
+            - sbr_net_internal
 
 
 networks:

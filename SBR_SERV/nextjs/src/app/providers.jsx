@@ -1,16 +1,14 @@
 'use client'
 
 import {NextUIProvider} from '@nextui-org/react'
-import { ApolloClient, HttpLink, gql, InMemoryCache, ApolloProvider} from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache, ApolloProvider} from '@apollo/client';
 
 const client = new ApolloClient({
     cache: new InMemoryCache(),
     link: new HttpLink({
-        uri: process.env.GRAPHQL_URL || "http://sbrpi/graphql"
+        uri: "http://sbrpi/_sbr_serv_graphql"
     })
 });
-
-console.log(process.env.GRAPHQL_URL);
 
 export function Providers({children}) {
     return (
