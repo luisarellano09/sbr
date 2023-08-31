@@ -5,14 +5,16 @@ import {
     CogIcon,
     CpuChipIcon,
     WrenchIcon,
-    PaperAirplaneIcon
+    PaperAirplaneIcon,
+    LinkIcon,
+    CubeIcon
   } from "@heroicons/react/24/outline";
 
 export default function SidebarItems({ collapsed }) {
 
 	return (
 		<main>
-			<Accordion isCompact selectionMode="multiple" variant="light" defaultExpandedKeys={["1","2","3","4","5"]}
+			<Accordion isCompact selectionMode="multiple" variant="light" defaultExpandedKeys={["1","2","3","4","5","6"]}
             itemClasses={{
                 title: "font-bold text-medium text-indigo-100",
                 content: "text-small text-indigo-100 border-b border-b-slate-700",
@@ -41,6 +43,18 @@ export default function SidebarItems({ collapsed }) {
                 <AccordionItem key="5" title="PID Tunning" startContent={ <WrenchIcon className="w-4" /> } >
 					<Link href="/Tunning/Position"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Position</p> </Link>
                     <Link href="/Tunning/Angle"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Angle</p> </Link>
+				</AccordionItem>
+
+                <AccordionItem key="6" title="Utilities" startContent={ <CubeIcon className="w-4" /> } >
+					<Link href="/Utilities/Portainer"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Portainer</p> </Link>
+                    <Link href="/Utilities/Graphql"> <p className=" px-2 rounded-lg hover:bg-[#697083]">GraphQL</p> </Link>
+				</AccordionItem>
+
+                <AccordionItem key="7" title="Links" startContent={ <LinkIcon className="w-4" /> } >
+                    <Link href="https://github.com/luisarellano09/sbr" target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Github</p> </Link>
+                    <Link href="http://sbrpi/sbr_portainer/" target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Portainer</p> </Link>
+                    <Link href="http://sbrpi/sbr_rabbitmq_management" target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Rabbitmq</p> </Link>
+                    <Link href="http://sbrpi/sbr_serv_graphql_playground" target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">GraphQL</p> </Link>
 				</AccordionItem>
 
 			</Accordion>
