@@ -96,7 +96,8 @@ services:
         image: niruix/sshwifty:latest
         container_name: sbr_webssh
         environment:
-          - SSHWIFTY_HOSTNAME=""
+          - SSHWIFTY_DOCKER_TLSCERT="$(cat ~SBR/data/certs/nginx-selfsigned.crt)"
+          - SSHWIFTY_DOCKER_TLSCERTKEY="$(cat ~SBR/data/certs/nginx-selfsigned.key)"
         ports:
             - 8182:8182
         networks:
