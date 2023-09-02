@@ -1,19 +1,17 @@
 
 use std::thread;
 
-mod message_esp32;
-mod rabbitmq_consumer_esp32;
-
-use rabbitmq_consumer_esp32::RabbitmqConsumerESP32;
+mod rabbitmq_consumer_host;
+use rabbitmq_consumer_host::RabbitmqConsumerHost;
 
 
 //=====================================================================================================
 fn main() {
 
-    let mut rabbitmq_consumer_esp32: RabbitmqConsumerESP32 = RabbitmqConsumerESP32::new();
+    let mut rabbitmq_consumer_host: RabbitmqConsumerHost = RabbitmqConsumerHost::new();
 
     let thread_rabbitmq_consumer = thread::spawn(move || {
-        rabbitmq_consumer_esp32.run().expect("Error in rabbitmq consumer");
+        rabbitmq_consumer_host.run().expect("Error in rabbitmq consumer");
     });
 
 
