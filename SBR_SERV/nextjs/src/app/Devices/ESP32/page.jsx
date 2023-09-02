@@ -1,8 +1,7 @@
 export default function ESP32() {
     return (
-        <div className="h-[calc(100vh-74px)]">
-            Devices ESP32
-            
+        <div>
+            <iframe src="https://sbrpi:8182" className="w-[100%] h-[100vh]"/>
         </div>
     );
 }
