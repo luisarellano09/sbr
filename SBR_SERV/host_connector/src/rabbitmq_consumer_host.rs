@@ -7,6 +7,8 @@ use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOpti
 //=====================================================================================================
 const URL: &str = "amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/";
 //const URL: &str = "amqp://rabbitmq:La123456.@sbrpi.local:5672/";
+//const HOST: &str = "UBUNTU";
+const HOST: &str = "PI";
 
 
 //=====================================================================================================
@@ -44,11 +46,15 @@ impl RabbitmqConsumerHost {
             },
         )?;
 
+        let mut queue_name: String = String::from("Q_SBR_");
+        queue_name.push_str(HOST);
+        queue_name.push_str("_TO_HOST_CONNECTOR");
+
         // Declare the exclusive, server-named queue we will use to consume.
         let queue = channel.queue_declare(
-            "Q_SBR_TO_HOST_CONNECTOR",
+            queue_name,
             QueueDeclareOptions {
-                exclusive: false,
+                exclusive: true,
                 ..QueueDeclareOptions::default()
             },
         )?;
