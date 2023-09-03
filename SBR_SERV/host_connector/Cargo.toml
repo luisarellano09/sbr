@@ -7,5 +7,3 @@ edition = "2021"
 
 [dependencies]
 amiquip = "0.4 "
-serde_json = "1.0"
-serde = "1.0"
