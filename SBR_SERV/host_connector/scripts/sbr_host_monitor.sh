@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set the path to the file you want to monitor
-directory="/home/$USER/SBR/data/host_connector/requests"
+directory="/home/$(whoami)/SBR/data/host_connector/requests"
 
 # Infinite loop to continuously check if the file exists
 while true; do
