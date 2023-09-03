@@ -48,7 +48,7 @@ impl RabbitmqConsumerHost {
         let queue = channel.queue_declare(
             "Q_SBR_TO_HOST_CONNECTOR",
             QueueDeclareOptions {
-                exclusive: true,
+                exclusive: false,
                 ..QueueDeclareOptions::default()
             },
         )?;
