@@ -15,6 +15,6 @@ jobs:
       - name: Delete old images
         run: docker image prune -f
       - name: Install Services
-        uses: ./.github/workflows/InstallServices_NX
+        uses: ./.github/workflows/InstallServices_NX.yml
         with:
           workflow-to-trigger: "Deploy Robot - NX"

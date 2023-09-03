@@ -18,6 +18,6 @@ jobs:
       - name: Delete old images
         run: docker image prune -f
       - name: Install Services
-        uses: ./.github/workflows/InstallServices_PI
+        uses: ./.github/workflows/InstallServices_PI.yml
         with:
           workflow-to-trigger: "Deploy Robot - PI"
