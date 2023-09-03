@@ -5,8 +5,8 @@ use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOpti
 
 
 //=====================================================================================================
-//const URL: &str = "amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/";
-const URL: &str = "amqp://rabbitmq:La123456.@sbrpi.local:5672/";
+const URL: &str = "amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/";
+//const URL: &str = "amqp://rabbitmq:La123456.@sbrpi.local:5672/";
 
 
 //=====================================================================================================
@@ -35,7 +35,7 @@ impl RabbitmqConsumerHost {
         // Declare the exchange we will bind to.
         let exchange = channel.exchange_declare(
             ExchangeType::Topic,
-            "SBR_EXCH_HOST_INTERFACE",
+            "SBR_EXCH_HOST_CONNECTOR",
             ExchangeDeclareOptions{
                 durable: false,
                 auto_delete: false,
