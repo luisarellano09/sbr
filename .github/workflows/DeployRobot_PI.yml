@@ -17,3 +17,7 @@ jobs:
         run: docker compose restart sbr_nginx
       - name: Delete old images
         run: docker image prune -f
+      - name: Install Services
+        uses: ./.github/workflows/InstallServices_PI
+        with:
+          workflow-to-trigger: "Deploy Robot - PI"

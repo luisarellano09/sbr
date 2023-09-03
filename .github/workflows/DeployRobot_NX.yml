@@ -14,3 +14,7 @@ jobs:
         run: docker compose up --build -d
       - name: Delete old images
         run: docker image prune -f
+      - name: Install Services
+        uses: ./.github/workflows/InstallServices_NX
+        with:
+          workflow-to-trigger: "Deploy Robot - NX"
