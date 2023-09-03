@@ -5,7 +5,7 @@ hostname=$(hostname)
 
 if [ "$hostname" == "sbrpi" ]; then
     user="pi"
-elif [[ "$filename" == "sbrnx" ]]; then
+elif [[ "$hostname" == "sbrnx" ]]; then
     user="sbrnx"
 fi
 
