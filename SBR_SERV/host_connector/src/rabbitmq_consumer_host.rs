@@ -108,12 +108,18 @@ impl RabbitmqConsumerHost {
     //=====================================================================================================
     fn create_file(&self, file: &str)  -> Result<(), Box<dyn Error>> {
 
-        fs::create_dir("/app")?;
-        
+        match fs::create_dir("/app") {
+            Ok(_) => {}
+            Err(_)=> {}
+        }
+
         let mut path: String = String::from("/app/");
         path.push_str(file);
 
-        File::create(path)?;
+        match File::create(path) {
+            Ok(_) => {}
+            Err(_)=> {}
+        }
 
         Ok(())
     }
