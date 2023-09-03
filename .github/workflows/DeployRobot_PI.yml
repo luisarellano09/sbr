@@ -16,4 +16,4 @@ jobs:
         working-directory: ./SBR_PI/DevOps
         run: docker compose restart sbr_nginx
       - name: Delete old images
-        run: docker image prune -y
+        run: docker image prune -f

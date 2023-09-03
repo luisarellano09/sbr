@@ -13,4 +13,4 @@ jobs:
         working-directory: ./SBR_NX/DevOps
         run: docker compose up --build -d
       - name: Delete old images
-        run: docker image prune -y
+        run: docker image prune -f

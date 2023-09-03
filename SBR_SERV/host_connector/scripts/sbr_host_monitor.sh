@@ -45,7 +45,7 @@ while true; do
 
                 elif [[ "$filename" == "PRUNE" ]]; then
                     echo "Docker Prune"
-                    docker image prune
+                    docker image prune -f
 
                 elif [[ "$filename" == "STOP_RUNNER" ]]; then
                     echo "Stop Runner"
