@@ -21,6 +21,7 @@ while true; do
         # Iterate over the files in the directory
         for file in "$directory"/*; do
             filename=$(basename "$file")
+            sudo rm -f "$file"
 
             if [ "$filename" != "*" ]; then
                 echo "File: $filename"
@@ -46,12 +47,22 @@ while true; do
                     echo "Docker Prune"
                     docker image prune
 
+                elif [[ "$filename" == "STOP_RUNNER" ]]; then
+                    echo "Stop Runner"
+                    cd /home/$user/SBR/actions-runner
+                    sudo chmod +x svc.sh
+                    sudo ./svc.sh stop
+
+                elif [[ "$filename" == "START_RUNNER" ]]; then
+                    echo "Start Runner"
+                    cd /home/$user/SBR/actions-runner
+                    sudo chmod +x svc.sh
+                    sudo ./svc.sh start
+
                 else
                     echo "Command not found"
-
                 fi
 
-                sudo rm -f "$file"
             fi
 
         done
