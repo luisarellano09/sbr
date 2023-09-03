@@ -28,11 +28,8 @@ services:
         build:
             context: ../../SBR_SERV/host_connector/
             target: dev
-        depends_on:
-            sbr_rabbitmq:
-                condition: service_healthy
         networks:
-            - sbr_net_internal
+            - sbr_net_external
 
 
 networks:
