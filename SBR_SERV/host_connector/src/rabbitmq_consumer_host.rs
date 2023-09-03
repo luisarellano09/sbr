@@ -2,13 +2,14 @@
 
 use std::error::Error;
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOptions, FieldTable, ConsumerOptions, ConsumerMessage};
+use std::fs::File;
 
 
 //=====================================================================================================
-//const URL: &str = "amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/";
-const URL: &str = "amqp://rabbitmq:La123456.@sbrpi.local:5672/";
-const HOST: &str = "UBUNTU";
-//const HOST: &str = "PI";
+const URL: &str = "amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/";
+//const URL: &str = "amqp://rabbitmq:La123456.@sbrpi.local:5672/";
+//const HOST: &str = "UBUNTU";
+const HOST: &str = "PI";
 
 
 //=====================================================================================================
@@ -101,6 +102,7 @@ impl RabbitmqConsumerHost {
         match request.as_str() {
             "SHUTDOWN"=> {
                 dbg!("Shutting Down");
+                self.create_file("SHUTDOWN")?;
             }
 
             "RESTART"=> {
@@ -115,4 +117,17 @@ impl RabbitmqConsumerHost {
 
         Ok(())
     }
+
+
+    //=====================================================================================================
+    fn create_file(&self, file: &str)  -> Result<(), Box<dyn Error>> {
+
+        let mut path: String = String::from("/app/");
+        path.push_str(file);
+
+        File::create(path)?;
+
+        Ok(())
+    }
+
 }
