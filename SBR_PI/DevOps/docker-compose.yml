@@ -195,6 +195,8 @@ services:
         restart: unless-stopped
         image: sbr/sbr_serv_host_connector:1.0
         container_name: sbr_serv_host_connector
+        volumes:
+            - ~SBR/data/host_connector/requests:/app
         build:
             context: ../../SBR_SERV/host_connector/
             target: dev
