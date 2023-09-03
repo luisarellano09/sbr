@@ -17,6 +17,8 @@ jobs:
         run: sudo systemctl daemon-reload
       - name: Enable the Service
         run: sudo systemctl enable sbr_host_monitor.service
+      - name: Stop the Service
+        run: sudo systemctl stop sbr_host_monitor.service
       - name: Start the Service
         run: sudo systemctl start sbr_host_monitor.service
       - name: Check Status

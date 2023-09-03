@@ -1,7 +1,17 @@
 #!/bin/bash
 
+# Get PC Name
+hostname=$(hostname)
+
+if [ "$hostname" == "sbrpi" ]; then
+    user="pi"
+elif [[ "$filename" == "sbrnx" ]]; then
+    user="sbrnx"
+fi
+
+
 # Set the path to the file you want to monitor
-directory="/home/$(whoami)/SBR/data/host_connector/requests"
+directory="/home/$user/SBR/data/host_connector/requests"
 echo $directory
 
 # Infinite loop to continuously check if the file exists
