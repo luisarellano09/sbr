@@ -5,10 +5,10 @@ use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOpti
 
 
 //=====================================================================================================
-const URL: &str = "amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/";
-//const URL: &str = "amqp://rabbitmq:La123456.@sbrpi.local:5672/";
-//const HOST: &str = "UBUNTU";
-const HOST: &str = "PI";
+//const URL: &str = "amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/";
+const URL: &str = "amqp://rabbitmq:La123456.@sbrpi.local:5672/";
+const HOST: &str = "UBUNTU";
+//const HOST: &str = "PI";
 
 
 //=====================================================================================================
@@ -60,8 +60,13 @@ impl RabbitmqConsumerHost {
         )?;
 
         //Binding
+
+        let mut key: String = String::from("HOST.");
+        key.push_str(HOST);
+        key.push_str(".#");
+
         //ToDo: Set PI as env Variable in docker compose
-        queue.bind(&exchange, "HOST.PI.#", FieldTable::new())?;
+        queue.bind(&exchange, key, FieldTable::new())?;
 
         let consumer = queue.consume(ConsumerOptions {
             no_ack: true,
