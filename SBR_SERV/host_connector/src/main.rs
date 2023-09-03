@@ -8,7 +8,7 @@ use rabbitmq_consumer_host::RabbitmqConsumerHost;
 //=====================================================================================================
 fn main() {
 
-    let mut rabbitmq_consumer_host: RabbitmqConsumerHost = RabbitmqConsumerHost::new();
+    let rabbitmq_consumer_host: RabbitmqConsumerHost = RabbitmqConsumerHost::new();
 
     let thread_rabbitmq_consumer = thread::spawn(move || {
         rabbitmq_consumer_host.run().expect("Error in rabbitmq consumer");
