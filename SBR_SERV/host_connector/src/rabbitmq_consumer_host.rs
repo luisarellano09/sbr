@@ -3,13 +3,10 @@
 use std::{error::Error, fs};
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOptions, FieldTable, ConsumerOptions, ConsumerMessage};
 use std::fs::File;
-
+use std::env;
 
 //=====================================================================================================
-const URL: &str = "amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/";
-//const URL: &str = "amqp://rabbitmq:La123456.@sbrpi.local:5672/";
-//const HOST: &str = "UBUNTU";
-const HOST: &str = "PI";
+const URL: &str = "amqp://rabbitmq:La123456.@HOST:5672/";
 
 
 //=====================================================================================================
@@ -29,8 +26,14 @@ impl RabbitmqConsumerHost {
     
     //=====================================================================================================
     pub fn run(&self)  -> Result<(), Box<dyn Error>> {
+
+        let rabbitmq_host = env::var("RABBITMQ_HOST").unwrap_or(String::from("sbrpi.local"));
+        let host = env::var("RABBITMQ_HOST").unwrap_or(String::from("DEV"));
+
+        let url = URL.replace("HOST", &rabbitmq_host);
+
         // Open connection.
-        let mut connection = Connection::insecure_open(URL)?;
+        let mut connection = Connection::insecure_open(url.as_str())?;
 
         // Open a channel - None says let the library choose the channel ID.
         let channel = connection.open_channel(None)?;
@@ -48,7 +51,7 @@ impl RabbitmqConsumerHost {
         )?;
 
         let mut queue_name: String = String::from("Q_SBR_");
-        queue_name.push_str(HOST);
+        queue_name.push_str(&host);
         queue_name.push_str("_TO_HOST_CONNECTOR");
 
         // Declare the exclusive, server-named queue we will use to consume.
@@ -62,7 +65,7 @@ impl RabbitmqConsumerHost {
 
         //Binding
         let mut key: String = String::from("HOST.");
-        key.push_str(HOST);
+        key.push_str(&host);
         key.push_str(".#");
 
         //ToDo: Set PI as env Variable in docker compose
