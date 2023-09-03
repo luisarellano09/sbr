@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use std::error::Error;
+use std::{error::Error, fs};
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOptions, FieldTable, ConsumerOptions, ConsumerMessage};
 use std::fs::File;
 
@@ -61,7 +61,6 @@ impl RabbitmqConsumerHost {
         )?;
 
         //Binding
-
         let mut key: String = String::from("HOST.");
         key.push_str(HOST);
         key.push_str(".#");
@@ -83,7 +82,7 @@ impl RabbitmqConsumerHost {
             match message {
                 ConsumerMessage::Delivery(delivery) => {
                     let body = String::from_utf8_lossy(&delivery.body).to_string();
-                    self.handle_request(body)?;
+                    self.handle_request(body.as_str())?;
                 }
                 other => {
                     println!("Consumer ended: {:?}", other);
@@ -97,24 +96,11 @@ impl RabbitmqConsumerHost {
 
 
     //=====================================================================================================
-    fn handle_request(&self, request: String)  -> Result<(), Box<dyn Error>> {
+    fn handle_request(&self, request: &str)  -> Result<(), Box<dyn Error>> {
 
-        match request.as_str() {
-            "SHUTDOWN"=> {
-                dbg!("Shutting Down");
-                self.create_file("SHUTDOWN")?;
-            }
-
-            "RESTART"=> {
-                dbg!("Shutting Down");
-            }
-
-            other =>{
-                dbg!(String::from("Command not found: ") + other);
-            }
-        }
-
-
+        println!("Request: {}", request);
+        self.create_file(request)?;
+        
         Ok(())
     }
 
@@ -122,6 +108,8 @@ impl RabbitmqConsumerHost {
     //=====================================================================================================
     fn create_file(&self, file: &str)  -> Result<(), Box<dyn Error>> {
 
+        fs::create_dir("/app")?;
+        
         let mut path: String = String::from("/app/");
         path.push_str(file);
 
