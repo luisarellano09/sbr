@@ -197,6 +197,9 @@ services:
         container_name: sbr_serv_host_connector
         volumes:
             - ~SBR/data/host_connector/requests:/app
+        environment:
+            RABBITMQ_HOST: "sbr_rabbitmq"
+            HOST: "PI"
         build:
             context: ../../SBR_SERV/host_connector/
             target: dev

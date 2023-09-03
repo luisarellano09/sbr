@@ -28,7 +28,7 @@ impl RabbitmqConsumerHost {
     pub fn run(&self)  -> Result<(), Box<dyn Error>> {
 
         let rabbitmq_host = env::var("RABBITMQ_HOST").unwrap_or(String::from("sbrpi.local"));
-        let host = env::var("RABBITMQ_HOST").unwrap_or(String::from("DEV"));
+        let host = env::var("HOST").unwrap_or(String::from("DEV"));
 
         let url = URL.replace("HOST", &rabbitmq_host);
 
