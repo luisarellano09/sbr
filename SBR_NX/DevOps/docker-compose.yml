@@ -1,38 +1,41 @@
 version: "3.8"
 
 services:
-
-    portainer:
+    sbr_portainer:
         restart: unless-stopped
         image: portainer/portainer-ce
         container_name: sbr_portainer
         volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
+            - /etc/localtime:/etc/localtime:ro
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ~SBR/data/portainer/portainer-data:/data
         ports:
             - 9000:9000
-
-    sbr_rabbitmq:
-        restart: unless-stopped
-        image: rabbitmq:management-alpine
-        container_name: sbr_rabbitmq
-        hostname: sbr_rabbitmq
-        environment:
-            RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
-            RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
-            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
-        ports:
-            - 5672:5672
-            - 15672:15672
         networks:
             - sbr_net_internal
             - sbr_net_external
 
-            
+
+    sbr_serv_host_connector:
+        restart: unless-stopped
+        image: sbr/sbr_serv_host_connector:1.0
+        container_name: sbr_serv_host_connector
+        volumes:
+            - ~SBR/data/host_connector/requests:/app
+        build:
+            context: ../../SBR_SERV/host_connector/
+            target: dev
+        depends_on:
+            sbr_rabbitmq:
+                condition: service_healthy
+        networks:
+            - sbr_net_internal
+
+
 networks:
-    sbr_net_internal: 
+    sbr_net_internal:
         driver: bridge
         internal: true
-    
+
     sbr_net_external:
         driver: bridge
-            
