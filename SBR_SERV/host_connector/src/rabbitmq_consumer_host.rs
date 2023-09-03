@@ -68,7 +68,7 @@ impl RabbitmqConsumerHost {
         key.push_str(&host);
         key.push_str(".#");
 
-        //ToDo: Set PI as env Variable in docker compose
+        
         queue.bind(&exchange, key, FieldTable::new())?;
 
         let consumer = queue.consume(ConsumerOptions {

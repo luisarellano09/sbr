@@ -29,6 +29,7 @@ services:
             context: ../../SBR_SERV/host_connector/
             target: dev
         networks:
+            - sbr_net_internal
             - sbr_net_external
 
 
