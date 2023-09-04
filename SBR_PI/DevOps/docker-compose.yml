@@ -36,7 +36,7 @@ services:
         networks:
             - sbr_net_internal
             - sbr_net_external
-            - sbr_net_external_ethernet
+            - sbr_net_swarm
 
 
     sbr_redis:
@@ -219,7 +219,5 @@ networks:
     sbr_net_external:
         driver: bridge
 
-    sbr_net_external_ethernet:
-        driver: ipvlan
-        driver_opts:
-            parent: eth0
+    sbr_net_swarm:
+        driver: overlay

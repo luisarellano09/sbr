@@ -22,13 +22,13 @@ services:
         volumes:
             - ~SBR/data/host_connector/requests:/app
         environment:
-            RABBITMQ_HOST: "sbrpi.local"
+            RABBITMQ_HOST: "sbr_rabbitmq"
             HOST: "NX"
         build:
             context: ../../SBR_SERV/host_connector/
             target: dev
         networks:
-            - sbr_net_external_ethernet
+            - sbr_net_swarm
 
 
 networks:
@@ -39,8 +39,6 @@ networks:
     sbr_net_external:
         driver: bridge
 
-    sbr_net_external_ethernet:
-        driver: ipvlan
-        driver_opts:
-            parent: eth0
+    sbr_net_swarm:
+        driver: overlay
 

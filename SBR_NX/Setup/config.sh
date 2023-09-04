@@ -16,13 +16,12 @@
 #       Hostname: sbrnx
 #       Wireless LAN: sbrap / La123456
 #
+#       eth0: 172.168.10.11 /24 172.168.10.1
+#
 #   copy the config.sh in the root and execute.
 
 # In Host
 # ssh-copy-id sbrnx@sbrnx.local
-
-# NVMe SSD Boot
-# https://www.jetsonhacks.com/2021/08/25/native-boot-for-jetson-xaviers/
 
 
 if [ ! -f exec01 ]; then
@@ -118,6 +117,13 @@ if [ ! -f exec01 ]; then
     echo "****** Disable GUI ******"
     sudo systemctl set-default multi-user.target
     #sudo systemctl set-default graphical.target    # Enable
+
+
+    echo "****** Docker Swarm ******"
+    # see the current token from the sbrpi: docker swarm join-token manager
+    docker swarm join --token SWMTKN-1-26q18j5orh7nnhob5vevg0lpxhsgbc3erlioct56wafdbqhh0e-2p4xu2npkxp1fierun3yw1xa5 172.168.10.10:2377
+
+
 
     # create a flag file to check if we are resuming from reboot.
     cd

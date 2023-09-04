@@ -80,4 +80,16 @@ cd certs
 sudo openssl req   -newkey rsa:4096 -nodes -keyout domain.key -x509 -days 800 -out domain.crt
 
 
+echo "****** Set eth0 IP ******"
+# nano /etc/dhcpcd.conf
+# Change the following lines: 
+# interface eth0
+# static ip_address=172.168.10.10/24
+# static routers=172.168.10.1
+# static domain_name_servers=172.168.10.1
+
+
+echo "****** Docker Swarm ******"
+docker swarm init --advertise-addr 172.168.10.10
+
 exit 0
