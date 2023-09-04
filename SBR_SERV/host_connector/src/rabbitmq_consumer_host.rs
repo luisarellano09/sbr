@@ -32,7 +32,7 @@ impl RabbitmqConsumerHost {
         const url: &str = "amqps://rabbitmq:La123456.@sbrpi.local:5672";
 
         // Open connection.
-        let mut connection = Connection::insecure_open(url)?;
+        let mut connection = Connection::open(url)?;
 
         // Open a channel - None says let the library choose the channel ID.
         let channel = connection.open_channel(None)?;
