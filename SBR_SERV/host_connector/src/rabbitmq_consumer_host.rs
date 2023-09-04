@@ -29,7 +29,7 @@ impl RabbitmqConsumerHost {
         let host = env::var("HOST").unwrap_or(String::from("DEV"));
 
         //let url = URL.replace("HOST", &rabbitmq_host);
-        const url: &str = "amqp://rabbitmq:La123456.x@sbrpi.local:5672";
+        const url: &str = "amqp://rabbitmq:La123456@sbrpi:5672";
 
         // Open connection.
         let mut connection = Connection::insecure_open(url)?;
