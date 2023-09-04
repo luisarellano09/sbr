@@ -118,12 +118,9 @@ if [ ! -f exec01 ]; then
     sudo systemctl set-default multi-user.target
     #sudo systemctl set-default graphical.target    # Enable
 
-
     echo "****** Docker Swarm ******"
     # see the current token from the sbrpi: docker swarm join-token manager
     docker swarm join --token SWMTKN-1-26q18j5orh7nnhob5vevg0lpxhsgbc3erlioct56wafdbqhh0e-2p4xu2npkxp1fierun3yw1xa5 172.168.10.10:2377
-
-
 
     # create a flag file to check if we are resuming from reboot.
     cd
@@ -133,7 +130,6 @@ fi
 
 if [ ! -f exec02 ]; then
     # run your scripts here
-
     echo "****** Turn off zram ******"
     cd /etc/systemd
     sudo mv nvzramconfig.sh nvzramconfig.sh.orig
@@ -147,7 +143,6 @@ fi
 
 if [ ! -f exec03 ]; then
     # run your scripts here
-
     echo "****** Create swap file on NVMe ******"
     mkdir nvme
     sudo fallocate -l 50G /home/sbrnx/nvme/swapfile

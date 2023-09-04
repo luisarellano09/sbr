@@ -69,26 +69,23 @@ sudo usermod -aG docker $USER
 sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
 
-echo "****** Disable GUI ******"
-sudo systemctl set-default multi-user.target
-#sudo systemctl set-default graphical.target    # Enable
-
 echo "****** Create SSL Certificates ******"
 cd /home/pi/SBR/data
 mkdir certs
 cd certs
-sudo openssl req   -newkey rsa:4096 -nodes -keyout domain.key -x509 -days 800 -out domain.crt
+sudo openssl req -newkey rsa:4096 -nodes -keyout domain.key -x509 -days 800 -out domain.crt
 
 
 echo "****** Set eth0 IP ******"
-# nano /etc/dhcpcd.conf
-# Change the following lines: 
-# interface eth0
-# static ip_address=172.168.10.10/24
-# static routers=172.168.10.1
-# static domain_name_servers=8.8.8.8 8.8.4.4
-# interface wlan0
-# static domain_name_servers=8.8.8.8 8.8.4.4
+sudo apt install network-manager -y
+sudo nmcli connection modify "Wired connection 1" ifname eth0  ipv4.method manual ipv4.address 172.168.10.10/24 ipv4.gateway 172.168.10.1
+sudo nmcli connection modify "Wired connection 1" ipv4.dns "8.8.8.8 8.8.4.4"
+sudo nmcli connection up "Wired connection 1"
+sudo systemctl enable systemd-resolved
+sudo systemctl start systemd-resolved
+sudo systemd-resolve --set-dns=8.8.8.8 --set-dns=8.8.4.4
+systemd-resolve --status
+sudo systemctl restart dhcpcd
 
 
 echo "****** Docker Swarm ******"
@@ -96,5 +93,9 @@ docker swarm init --advertise-addr 172.168.10.10
 # After adding the swarm in sbrnx
 docker node promote sbrnx
 docker network create --driver overlay --attachable sbr_net_swarm
+
+echo "****** Disable GUI ******"
+sudo systemctl set-default multi-user.target
+#sudo systemctl set-default graphical.target    # Enable
 
 exit 0

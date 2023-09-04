@@ -71,3 +71,7 @@ while true; do
     fi
     sleep 5 # Adjust the sleep duration (in seconds) as needed
 done
+
+
+# To monitor the Service:
+# sudo journalctl -fu sbr_host_monitor.service
