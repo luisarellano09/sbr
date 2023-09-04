@@ -29,7 +29,7 @@ services:
             target: dev
         networks:
             sbr_net_external_ethernet:
-                ipv4_address: 172.168.10.11
+                ipv4_address: 172.168.10.13
 
 
 networks:
@@ -44,5 +44,4 @@ networks:
         driver: ipvlan
         driver_opts:
             parent: eth0
-            subnet: 172.168.10.0/24
 
