@@ -220,4 +220,4 @@ networks:
         driver: bridge
 
     sbr_net_swarm:
-        driver: overlay
+        external: true

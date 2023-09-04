@@ -86,10 +86,15 @@ echo "****** Set eth0 IP ******"
 # interface eth0
 # static ip_address=172.168.10.10/24
 # static routers=172.168.10.1
-# static domain_name_servers=172.168.10.1
+# static domain_name_servers=8.8.8.8 8.8.4.4
+# interface wlan0
+# static domain_name_servers=8.8.8.8 8.8.4.4
 
 
 echo "****** Docker Swarm ******"
 docker swarm init --advertise-addr 172.168.10.10
+# After adding the swarm in sbrnx
+docker node promote sbrnx
+docker network create --driver overlay --attachable sbr_net_swarm
 
 exit 0
