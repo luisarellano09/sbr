@@ -4,7 +4,7 @@ use std::fs::File;
 use std::env;
 
 //=====================================================================================================
-//const URL: &str = "amqp://rabbitmq:La123456.@HOST:5672/";
+const URL: &str = "amqp://rabbitmq:La123456.@HOST:5672/";
 
 
 //=====================================================================================================
@@ -28,11 +28,10 @@ impl RabbitmqConsumerHost {
         let rabbitmq_host = env::var("RABBITMQ_HOST").unwrap_or(String::from("sbrpi.local"));
         let host = env::var("HOST").unwrap_or(String::from("DEV"));
 
-        //let url = URL.replace("HOST", &rabbitmq_host);
-        const url: &str = "amqp://rabbitmq:La123456.@sbrpi:5672";
+        let url = URL.replace("HOST", &rabbitmq_host);
 
         // Open connection.
-        let mut connection = Connection::insecure_open(url)?;
+        let mut connection = Connection::insecure_open(url.as_str())?;
 
         // Open a channel - None says let the library choose the channel ID.
         let channel = connection.open_channel(None)?;
