@@ -28,8 +28,7 @@ services:
             context: ../../SBR_SERV/host_connector/
             target: dev
         networks:
-            sbr_net_external_ethernet:
-                ipv4_address: 172.168.10.13
+            - sbr_net_external_ethernet
 
 
 networks:
