@@ -29,10 +29,10 @@ impl RabbitmqConsumerHost {
         let host = env::var("HOST").unwrap_or(String::from("DEV"));
 
         //let url = URL.replace("HOST", &rabbitmq_host);
-        const url: &str = "amqps://rabbitmq:La123456.@sbrpi.local:5672";
+        const url: &str = "amqp://rabbitmq:La123456.x@sbrpi.local:5672";
 
         // Open connection.
-        let mut connection = Connection::open(url)?;
+        let mut connection = Connection::insecure_open(url)?;
 
         // Open a channel - None says let the library choose the channel ID.
         let channel = connection.open_channel(None)?;
