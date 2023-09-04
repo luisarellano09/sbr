@@ -43,5 +43,4 @@ networks:
         driver: ipvlan
         driver_opts:
             parent: eth0
-            subnet: 172.168.10.0/24
 
