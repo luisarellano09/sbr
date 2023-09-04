@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use std::{error::Error, fs};
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOptions, FieldTable, ConsumerOptions, ConsumerMessage};
 use std::fs::File;
@@ -31,7 +29,7 @@ impl RabbitmqConsumerHost {
         let host = env::var("HOST").unwrap_or(String::from("DEV"));
 
         //let url = URL.replace("HOST", &rabbitmq_host);
-        const url: &str = "amqp://rabbitmq:La123456.@sbrpi.local:5672/";
+        const url: &str = "amqps://rabbitmq:La123456.@sbrpi.local:5672";
 
         // Open connection.
         let mut connection = Connection::insecure_open(url)?;
