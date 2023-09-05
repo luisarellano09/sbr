@@ -1,0 +1,21 @@
+name: Install Services - PI
+
+on:
+  workflow_dispatch:
+  
+jobs: 
+  deploy:
+    runs-on: [self-hosted, sbr-pi]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Copy Service
+        run: sudo cp /home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/Services/sbr_host_monitor.service /etc/systemd/system/
+      - name: Reload Systemd
+        run: sudo systemctl daemon-reload
+      - name: Enable the Service
+        run: sudo systemctl enable sbr_host_monitor.service
+      - name: Start the Service
+        run: sudo systemctl start sbr_host_monitor.service
+      - name: Check Status
+        run: sudo systemctl status sbr_host_monitor.service
