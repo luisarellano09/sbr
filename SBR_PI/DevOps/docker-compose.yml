@@ -90,6 +90,16 @@ services:
         networks:
             - sbr_net_internal
             - sbr_net_external
+        depends_on:
+            sbr_serv_nextjs:
+                condition: service_started
+            sbr_portainer:
+                condition: service_started
+            sbr_rabbitmq:
+                condition: service_started
+            sbr_serv_graphql:
+                condition: service_started
+
 
 
     sbr_webssh:
