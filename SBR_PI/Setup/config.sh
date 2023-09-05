@@ -34,24 +34,35 @@
 
 clear
 
+
 echo "This script install all the dependencies of the system"
+
 
 echo "****** Updating ******"
 sudo apt update
 sudo apt upgrade
 sudo apt dist-upgrade
 
+
 echo "****** Creating Folders ******"
 mkdir SBR
 cd SBR
 mkdir data
 
+
+echo "****** Set Timezone ******"
+sudo timedatectl set-timezone Europe/Berlin
+sudo timedatectl set-ntp true
+
+
 echo "****** Installing Applications ******"
 sudo apt install htop
 sudo apt install nano
 
+
 echo "****** Installing Serial lib ******"
 sudo apt install libudev-dev
+
 
 echo "****** Setup Docker ******"
 sudo apt-get update
@@ -69,6 +80,7 @@ sudo usermod -aG docker $USER
 sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
 
+
 echo "****** Create SSL Certificates ******"
 cd /home/pi/SBR/data
 mkdir certs
@@ -77,13 +89,15 @@ sudo openssl req -newkey rsa:4096 -nodes -keyout domain.key -x509 -days 800 -out
 
 
 echo "****** Set eth0 IP ******"
-sudo apt install network-manager -y
-sudo nmcli connection modify "Wired connection 1" ifname eth0  ipv4.method manual ipv4.address 172.168.10.10/24 ipv4.gateway 172.168.10.1
-sudo nmcli connection modify "Wired connection 1" ipv4.dns "8.8.8.8 8.8.4.4"
-sudo nmcli connection up "Wired connection 1"
+# Edit in: sudo nano /etc/dhcpcd.conf
+# interface eth0
+# metric 20100
+# static ip_address=172.168.10.10/24
+# static routers=172.168.10.1
+# interface wlan0
+# static domain_name_servers=8.8.8.8 8.8.4.4
 sudo systemctl enable systemd-resolved
 sudo systemctl start systemd-resolved
-sudo systemd-resolve --set-dns=8.8.8.8 --set-dns=8.8.4.4
 systemd-resolve --status
 sudo systemctl restart dhcpcd
 
@@ -93,6 +107,7 @@ docker swarm init --advertise-addr 172.168.10.10
 # After adding the swarm in sbrnx
 docker node promote sbrnx
 docker network create --driver overlay --attachable sbr_net_swarm
+
 
 echo "****** Disable GUI ******"
 sudo systemctl set-default multi-user.target
