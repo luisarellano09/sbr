@@ -23,3 +23,9 @@ export const SET_ESP32_MOTION_SP_ANGLE = gql`
         SetEsp32LiveMotionSpAngle(sp: $sp)
     }
 `;
+
+export const SEND_HOST_REQUEST = gql`
+    mutation SendHostRequest($host: String!, $request: String!){
+    SendHostRequest(host: $host, request: $request)
+    }
+`;

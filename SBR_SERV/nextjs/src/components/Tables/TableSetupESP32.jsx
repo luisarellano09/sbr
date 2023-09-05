@@ -238,7 +238,7 @@ export default function TableSetupESP32() {
 	return (
 		<div className="md:max-w-2xl max-w-[410px] md:p-5 p-1">
             <Button size="sm" variant="light" isIconOnly onClick={Refresh}> <ArrowPathIcon className="w-5"/> </Button>
-			<Table isHeaderSticky aria-label="Setup ESP32" className="max-h-[calc(100vh-230px)] overflow">
+			<Table disableAnimation isHeaderSticky aria-label="Setup ESP32" className="max-h-[calc(100vh-230px)] overflow">
 				<TableHeader>
 					<TableColumn><p className="text-lg font-bold text-[#45a089]">PARAMETER</p></TableColumn>
 					<TableColumn><p className="text-lg font-bold text-[#45a089]">DB VALUE</p></TableColumn>

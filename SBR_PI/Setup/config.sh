@@ -94,8 +94,6 @@ echo "****** Set eth0 IP ******"
 # metric 20100
 # static ip_address=172.168.10.10/24
 # static routers=172.168.10.1
-# interface wlan0
-# static domain_name_servers=8.8.8.8 8.8.4.4
 ### Check with: 'ip route' that the metric of ethetnet is higher than wlan0
 sudo systemctl enable systemd-resolved
 sudo systemctl start systemd-resolved
