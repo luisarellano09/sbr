@@ -52,9 +52,9 @@ export default function SidebarItems({ collapsed }) {
 
                 <AccordionItem key="7" title="Links" startContent={ <LinkIcon className="w-4" /> } >
                     <Link href="https://github.com/luisarellano09/sbr" target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Github</p> </Link>
-                    <Link href="http://sbrpi/sbr_portainer/" target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Portainer</p> </Link>
-                    <Link href="http://sbrpi/sbr_rabbitmq_management" target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Rabbitmq</p> </Link>
-                    <Link href="http://sbrpi/sbr_serv_graphql_playground" target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">GraphQL</p> </Link>
+                    <Link href="https://sbrpi.local/sbr_portainer/" target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Portainer</p> </Link>
+                    <Link href="https://sbrpi.local/sbr_rabbitmq_management" target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Rabbitmq</p> </Link>
+                    <Link href="https://sbrpi.local/sbr_serv_graphql_playground" target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">GraphQL</p> </Link>
 				</AccordionItem>
 
 			</Accordion>

@@ -2,7 +2,7 @@
 use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
 use crate::graphql_types::{RegisterCommand, Esp32SetupInput};
-use crate::rabbitmq_connection::publish_esp32_write;
+use crate::rabbitmq_connection::{publish_esp32_write, publish_host_connector};
 use crate::postgres_connection::connect_postgres;
 
 
@@ -11,6 +11,7 @@ pub struct Mutations;
 
 
 //=====================================================================================================
+// ESP32
 #[graphql_object(Context = ContextGraphQL)]
 impl Mutations {
 
@@ -702,6 +703,15 @@ impl Mutations {
     fn SetEsp32LiveMotionSpAngle(_context: &ContextGraphQL, sp: f64) -> FieldResult<bool> {
 
         publish_esp32_write("ESP32.WRITE.LIVE.MOTION.SP_ANGLE_W".to_string(), (sp * 100.0) as i32)?;
+
+        Ok(true)
+    }
+
+
+    //=====================================================================================================
+    fn SendHostRequest(_context: &ContextGraphQL, host: String, request: String) -> FieldResult<bool> {
+
+        publish_host_connector(host, request)?;
 
         Ok(true)
     }

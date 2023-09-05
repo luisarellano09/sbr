@@ -16,4 +16,18 @@ jobs:
         working-directory: ./SBR_PI/DevOps
         run: docker compose restart sbr_nginx
       - name: Delete old images
-        run: docker image prune -y
+        run: docker image prune -f
+      - name: Copy Service
+        run: sudo cp /home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/Services/sbr_host_monitor.service /etc/systemd/system/
+      - name: Permisison
+        run: chmod +x /home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_SERV/host_connector/scripts/sbr_host_monitor.sh
+      - name: Reload Systemd
+        run: sudo systemctl daemon-reload
+      - name: Enable the Service
+        run: sudo systemctl enable sbr_host_monitor.service
+      - name: Stop the Service
+        run: sudo systemctl stop sbr_host_monitor.service
+      - name: Start the Service
+        run: sudo systemctl start sbr_host_monitor.service
+      - name: Check Status
+        run: sudo systemctl status sbr_host_monitor.service
