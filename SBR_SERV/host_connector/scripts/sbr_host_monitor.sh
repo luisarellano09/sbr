@@ -81,7 +81,7 @@ while true; do
             
             if [ "$hostname" == "sbrpi" ]; then
                 echo "Restarting Docker Compose"
-                sudo systemctl restart dhcpcd
+                #sudo systemctl restart dhcpcd
             elif [[ "$hostname" == "sbrnx" ]]; then
             fi
 
@@ -92,7 +92,7 @@ while true; do
         echo "No IP address is assigned to eth0."
         if [ "$hostname" == "sbrpi" ]; then
             echo "Restarting NET"
-            sudo systemctl restart dhcpcd
+            #sudo systemctl restart dhcpcd
         elif [[ "$hostname" == "sbrnx" ]]; then
         fi
     fi
