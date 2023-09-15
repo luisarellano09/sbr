@@ -69,6 +69,18 @@ while true; do
     else
         echo "Directory does not exist: $directory"
     fi
+
+    # Get the IP address of eth0
+    ip_address=$(ip addr show eth0 | grep -oP 'inet \K[\d.]+')
+
+    # Check if an IP address is assigned
+    if [ -n "$ip_address" ]; then
+        echo "IP address $ip_address is assigned to eth0."
+    else
+        echo "No IP address is assigned to eth0."
+    fi
+
+
     sleep 5 # Adjust the sleep duration (in seconds) as needed
 done
 
