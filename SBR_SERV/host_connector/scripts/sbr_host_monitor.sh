@@ -76,23 +76,14 @@ while true; do
     # Check if an IP address is assigned
     if [ -n "$ip_address" ]; then
         echo "IP address $ip_address is assigned to eth0."
-
-        if [ $no_ip_found == 1 ]; then
-            
-            if [ "$hostname" == "sbrpi" ]; then
-                echo "RESTARTING NET"
-                sudo systemctl restart dhcpcd
-            elif [[ "$hostname" == "sbrnx" ]]; then
-                echo "RESTARTING NET"
-            fi
-
-        fi
-
-        no_ip_found=0
-
     else
         echo "No IP address is assigned to eth0."
-        no_ip_found=1
+        if [ "$hostname" == "sbrpi" ]; then
+            echo "RESTARTING NET"
+            sudo systemctl restart dhcpcd
+        elif [[ "$hostname" == "sbrnx" ]]; then
+            echo "RESTARTING NET"
+        fi
     fi
 
 
