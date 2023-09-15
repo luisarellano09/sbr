@@ -29,6 +29,9 @@ services:
             target: dev
         networks:
             - sbr_net_swarm
+        depends_on:
+            sbr_rabbitmq:
+                condition: service_started
 
 
 networks:
