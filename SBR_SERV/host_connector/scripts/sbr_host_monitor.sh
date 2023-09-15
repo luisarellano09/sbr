@@ -80,9 +80,10 @@ while true; do
         if [ $no_ip_found == 1 ]; then
             
             if [ "$hostname" == "sbrpi" ]; then
-                echo "RESTARTING NET PI"
+                echo "RESTARTING NET"
+                sudo systemctl restart dhcpcd
             elif [[ "$hostname" == "sbrnx" ]]; then
-                echo "RESTARTING NET PI"
+                echo "RESTARTING NET"
             fi
 
         fi
