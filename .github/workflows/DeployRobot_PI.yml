@@ -31,3 +31,5 @@ jobs:
         run: sudo systemctl start sbr_host_monitor.service
       - name: Check Status
         run: sudo systemctl status sbr_host_monitor.service
+      - name: Restart DHCPCD
+        run: sudo systemctl restart dhcpcd
