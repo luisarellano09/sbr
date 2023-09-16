@@ -6,9 +6,10 @@ import { useStoreWeb } from "@/store/store";
 export default function PI() {
 
     const hostName = useStoreWeb((state) => state.hostName);
+    const SetCurrentPage = useStoreWeb((state) => state.SetCurrentPage);
 
     return (
-        <div className="h-[calc(100vh-74px)] md:flex justify-start">
+        <div onLoad={SetCurrentPage("Devices - PI")} className="h-[calc(100vh-74px)] md:flex justify-start">
             <div className="pl-5 pt-5 pb-5">
                 <ControlHost host="PI"/>
             </div>

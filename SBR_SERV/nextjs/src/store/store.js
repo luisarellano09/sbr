@@ -3,6 +3,7 @@ import { create } from "zustand";
 export const useStoreWeb = create((set, get) => ({
 
 	hostName: "sbrpi.local",
+    currentPage: "",
 
 	UpdateHost: () => {
         if (typeof window !== 'undefined') {
@@ -12,5 +13,9 @@ export const useStoreWeb = create((set, get) => ({
             } 
         }
     },
+
+    SetCurrentPage: (page) => {
+        set({currentPage: page})
+    }
 
 }));
