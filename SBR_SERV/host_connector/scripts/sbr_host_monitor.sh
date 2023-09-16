@@ -2,6 +2,9 @@
 
 sleep 5 # Init Delay
 
+first_try=1
+no_ip_found=0
+
 # Get PC Name
 hostname=$(hostname)
 
@@ -74,7 +77,6 @@ while true; do
 
     # Get the IP address of eth0
     ip_address=$(ip addr show eth0 | grep -oP 'inet \K[\d.]+')
-    first_try=1
 
     # Check if an IP address is assigned
     if [ -n "$ip_address" ]; then
@@ -93,7 +95,7 @@ while true; do
         echo "No IP address is assigned to eth0."
         no_ip_found=1
         
-        if [ $first_try == 1]; then
+        if [ $first_try == 1 ]; then
 
             if [ "$hostname" == "sbrpi" ]; then
                 echo "Restarting NET"
