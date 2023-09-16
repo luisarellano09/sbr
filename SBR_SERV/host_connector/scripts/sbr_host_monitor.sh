@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sleep 5 # Init Delay
+
 # Get PC Name
 hostname=$(hostname)
 
@@ -26,34 +28,34 @@ while true; do
             if [ "$filename" != "*" ]; then
                 echo "File: $filename"
 
-                if [[ "$filename" == "SHUTDOWN" ]]; then
+                if [ "$filename" == "SHUTDOWN" ]; then
                     echo "Shutting Down"
-                    sleep 30
+                    sleep 10
                     sudo shutdown now
 
-                elif [[ "$filename" == "RESTART" ]]; then
+                elif [ "$filename" == "RESTART" ]; then
                     echo "Restarting"
-                    sleep 30
+                    sleep 10
                     sudo reboot
 
-                elif [[ "$filename" == "UPDATE" ]]; then
+                elif [ "$filename" == "UPDATE" ]; then
                     echo "Updating"
                     sudo apt update -y
                     sudo apt upgrade -y
                     sudo apt dist-upgrade -y
                     sudo apt autoremove -y
 
-                elif [[ "$filename" == "PRUNE" ]]; then
+                elif [ "$filename" == "PRUNE" ]; then
                     echo "Docker Prune"
                     docker image prune -f
 
-                elif [[ "$filename" == "STOP_RUNNER" ]]; then
+                elif [ "$filename" == "STOP_RUNNER" ]; then
                     echo "Stop Runner"
                     cd /home/$user/SBR/actions-runner
                     sudo chmod +x svc.sh
                     sudo ./svc.sh stop
 
-                elif [[ "$filename" == "START_RUNNER" ]]; then
+                elif [ "$filename" == "START_RUNNER" ]; then
                     echo "Start Runner"
                     cd /home/$user/SBR/actions-runner
                     sudo chmod +x svc.sh
@@ -72,33 +74,39 @@ while true; do
 
     # Get the IP address of eth0
     ip_address=$(ip addr show eth0 | grep -oP 'inet \K[\d.]+')
+    first_try=true
 
     # Check if an IP address is assigned
     if [ -n "$ip_address" ]; then
         echo "IP address $ip_address is assigned to eth0."
         
         if [ $no_ip_found == 1 ]; then
-            
             if [ "$hostname" == "sbrpi" ]; then
                 echo "Restarting Docker Compose"
                 #sudo systemctl restart dhcpcd
             #elif [[ "$hostname" == "sbrnx" ]]; then
             fi
-
         fi
-
         no_ip_found=0
+
     else
         echo "No IP address is assigned to eth0."
-        if [ "$hostname" == "sbrpi" ]; then
-            echo "Restarting NET"
-            sudo systemctl restart dhcpcd
-        #elif [[ "$hostname" == "sbrnx" ]]; then
+        no_ip_found=1
+        
+        if [ $first_try == true]; then
+
+            if [ "$hostname" == "sbrpi" ]; then
+                echo "Restarting NET"
+                sudo systemctl restart dhcpcd
+            #elif [[ "$hostname" == "sbrnx" ]]; then
+            fi
+            first_try=false
         fi
+
     fi
 
 
-    sleep 5 # Adjust the sleep duration (in seconds) as needed
+    sleep 5
 done
 
 
