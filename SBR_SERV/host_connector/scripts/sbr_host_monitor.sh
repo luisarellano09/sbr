@@ -83,11 +83,10 @@ while true; do
         echo "IP address $ip_address is assigned to eth0."
         
         if [ $no_ip_found == 1 ]; then
-            if [ "$hostname" == "sbrpi" ]; then
-                echo "Restarting Docker Compose"
-                #sudo systemctl restart dhcpcd
-            #elif [[ "$hostname" == "sbrnx" ]]; then
-            fi
+            # if [ "$hostname" == "sbrpi" ]; then
+            #     echo "Restarting Docker Compose"
+            # elif [[ "$hostname" == "sbrnx" ]]; then
+            # fi
         fi
         no_ip_found=0
         first_try=0
