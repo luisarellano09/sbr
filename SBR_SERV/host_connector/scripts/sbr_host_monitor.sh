@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sleep 5 # Init Delay
+sleep 30 # Init Delay
 
 first_try=1
 no_ip_found=0
