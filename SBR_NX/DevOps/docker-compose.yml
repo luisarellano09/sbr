@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
     sbr_portainer:
-        restart: always
+        restart: unless-stopped
         image: portainer/portainer-ce
         container_name: sbr_portainer
         volumes:
@@ -16,7 +16,7 @@ services:
 
 
     sbr_serv_host_connector:
-        restart: always
+        restart: unless-stopped
         image: sbr/sbr_serv_host_connector:1.0
         container_name: sbr_serv_host_connector
         volumes:

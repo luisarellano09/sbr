@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
     sbr_portainer:
-        restart: always
+        restart: unless-stopped
         image: portainer/portainer-ce
         container_name: sbr_portainer
         volumes:
@@ -17,7 +17,7 @@ services:
 
 
     sbr_rabbitmq:
-        restart: always
+        restart: unless-stopped
         image: rabbitmq:management-alpine
         container_name: sbr_rabbitmq
         hostname: sbr_rabbitmq
@@ -28,11 +28,6 @@ services:
         ports:
             - 5672:5672
             - 15672:15672
-        healthcheck:
-            test: rabbitmq-diagnostics -q ping
-            interval: 60s
-            timeout: 60s
-            retries: 5
         networks:
             - sbr_net_internal
             - sbr_net_external
@@ -40,23 +35,18 @@ services:
 
 
     sbr_redis:
-        restart: always
+        restart: unless-stopped
         image: redis:alpine
         container_name: sbr_redis
         ports:
             - 6379:6379
-        healthcheck:
-            test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
-            interval: 1s
-            timeout: 3s
-            retries: 5
         networks:
             - sbr_net_internal
             - sbr_net_external
 
 
     sbr_postgres:
-        restart: always
+        restart: unless-stopped
         image: postgres:alpine
         container_name: sbr_postgres
         environment:
@@ -77,7 +67,7 @@ services:
 
 
     sbr_nginx:
-        restart: always
+        restart: unless-stopped
         image: nginx:stable-alpine
         container_name: sbr_nginx
         hostname: sbrpi
@@ -103,7 +93,7 @@ services:
 
 
     sbr_webssh:
-        restart: always
+        restart: unless-stopped
         image: niruix/sshwifty:latest
         container_name: sbr_webssh
         volumes:
@@ -113,7 +103,7 @@ services:
 
 
     sbr_serv_serial_connector:
-        restart: always
+        restart: unless-stopped
         tty: true
         image: sbr/sbr_serv_serial_connector:1.0
         container_name: sbr_serv_serial_connector
@@ -131,7 +121,7 @@ services:
 
 
     sbr_serv_redis_connector:
-        restart: always
+        restart: unless-stop
         image: sbr/sbr_serv_redis_connector:1.0
         container_name: sbr_serv_redis_connector
         build:
@@ -141,7 +131,7 @@ services:
             sbr_rabbitmq:
                 condition: service_started
             sbr_redis:
-                condition: service_healthy
+                condition: service_started
             sbr_serv_serial_connector:
                 condition: service_started
         networks:
@@ -149,7 +139,7 @@ services:
 
 
     sbr_serv_graphql:
-        restart: always
+        restart: unless-stopped
         image: sbr/sbr_serv_graphql:1.0
         container_name: sbr_serv_graphql
         build:
@@ -161,7 +151,7 @@ services:
             sbr_rabbitmq:
                 condition: service_started
             sbr_redis:
-                condition: service_healthy
+                condition: service_started
             sbr_serv_serial_connector:
                 condition: service_started
             sbr_serv_redis_connector:
@@ -171,7 +161,7 @@ services:
 
 
     sbr_serv_robot_control:
-        restart: always
+        restart: unless-stopped
         image: sbr/sbr_serv_robot_control:1.0
         container_name: sbr_serv_robot_control
         build:
@@ -187,7 +177,7 @@ services:
 
 
     sbr_serv_nextjs:
-        restart: always
+        restart: unless-stopped
         image: sbr/sbr_serv_nextjs:1.0
         container_name: sbr_serv_nextjs
         build:
@@ -203,7 +193,7 @@ services:
 
 
     sbr_serv_host_connector:
-        restart: always
+        restart: unless-stopped
         image: sbr/sbr_serv_host_connector:1.0
         container_name: sbr_serv_host_connector
         volumes:
