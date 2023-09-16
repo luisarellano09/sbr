@@ -10,7 +10,11 @@ import {
     CubeIcon
   } from "@heroicons/react/24/outline";
 
+import { useStoreWeb } from "@/store/store";
+
 export default function SidebarItems({ collapsed }) {
+
+    const hostName = useStoreWeb((state) => state.hostName);
 
 	return (
 		<main>
@@ -28,16 +32,16 @@ export default function SidebarItems({ collapsed }) {
 					<Link href="/Live/ESP32"> <p className=" px-2 rounded-lg hover:bg-[#697083]">ESP32</p> </Link>
 				</AccordionItem>
 
-				<AccordionItem key="3" title="Setup" startContent={ <CogIcon className="w-4" /> } >
-					<Link href="/Setup/ESP32"> <p className=" px-2 rounded-lg hover:bg-[#697083]">ESP32</p> </Link>
-                    <Link href="/Setup/PI"> <p className=" px-2 rounded-lg hover:bg-[#697083]">PI</p> </Link>
-                    <Link href="/Setup/NX"> <p className=" px-2 rounded-lg hover:bg-[#697083]">NX</p> </Link>
-				</AccordionItem>
-
-                <AccordionItem key="4" title="Devices" startContent={ <CpuChipIcon className="w-4" /> } >
+                <AccordionItem key="3" title="Devices" startContent={ <CpuChipIcon className="w-4" /> } >
 					<Link href="/Devices/ESP32"> <p className=" px-2 rounded-lg hover:bg-[#697083]">ESP32</p> </Link>
                     <Link href="/Devices/PI"> <p className=" px-2 rounded-lg hover:bg-[#697083]">PI</p> </Link>
                     <Link href="/Devices/NX"> <p className=" px-2 rounded-lg hover:bg-[#697083]">NX</p> </Link>
+				</AccordionItem>
+
+				<AccordionItem key="4" title="Setup" startContent={ <CogIcon className="w-4" /> } >
+					<Link href="/Setup/ESP32"> <p className=" px-2 rounded-lg hover:bg-[#697083]">ESP32</p> </Link>
+                    <Link href="/Setup/PI"> <p className=" px-2 rounded-lg hover:bg-[#697083]">PI</p> </Link>
+                    <Link href="/Setup/NX"> <p className=" px-2 rounded-lg hover:bg-[#697083]">NX</p> </Link>
 				</AccordionItem>
 
                 <AccordionItem key="5" title="PID Tunning" startContent={ <WrenchIcon className="w-4" /> } >
@@ -52,9 +56,9 @@ export default function SidebarItems({ collapsed }) {
 
                 <AccordionItem key="7" title="Links" startContent={ <LinkIcon className="w-4" /> } >
                     <Link href="https://github.com/luisarellano09/sbr" target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Github</p> </Link>
-                    <Link href="https://sbrpi.local/sbr_portainer/" target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Portainer</p> </Link>
-                    <Link href="https://sbrpi.local/sbr_rabbitmq_management" target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Rabbitmq</p> </Link>
-                    <Link href="https://sbrpi.local/sbr_serv_graphql_playground" target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">GraphQL</p> </Link>
+                    <Link href={"https://" + hostName + "/sbr_portainer/"} target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Portainer</p> </Link>
+                    <Link href={"https://" + hostName + "/sbr_rabbitmq_management"} target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Rabbitmq</p> </Link>
+                    <Link href={"https://" + hostName + "/sbr_serv_graphql_playground"} target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">GraphQL</p> </Link>
 				</AccordionItem>
 
 			</Accordion>

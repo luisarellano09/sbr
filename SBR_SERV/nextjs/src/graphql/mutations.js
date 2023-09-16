@@ -26,6 +26,30 @@ export const SET_ESP32_MOTION_SP_ANGLE = gql`
 
 export const SEND_HOST_REQUEST = gql`
     mutation SendHostRequest($host: String!, $request: String!){
-    SendHostRequest(host: $host, request: $request)
+        SendHostRequest(host: $host, request: $request)
+    }
+`;
+
+export const SET_ESP32_MODE_MANAGER_RESTART = gql`
+    mutation{
+        SetEsp32ModeManagerRestart
+    }
+`;
+
+export const SET_ESP32_MODE_MANAGER_PROGRAM = gql`
+    mutation{
+        SetEsp32ModeManagerProgram
+    }
+`;
+
+export const SET_ESP32_MODE_NODE1_RESTART = gql`
+    mutation{
+        SetEsp32ModeNode1Restart
+    }
+`;
+
+export const SET_ESP32_MODE_NODE1_PROGRAM = gql`
+    mutation{
+        SetEsp32ModeNode1Program
     }
 `;
