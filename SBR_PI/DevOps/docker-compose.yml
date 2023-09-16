@@ -56,11 +56,6 @@ services:
             - "5432:5432"
         volumes:
             - ~SBR/data/postgresql/db:/var/lib/postgresql/data
-        healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U postgres"]
-            interval: 5s
-            timeout: 5s
-            retries: 5
         networks:
             - sbr_net_internal
             - sbr_net_external
@@ -89,7 +84,6 @@ services:
                 condition: service_started
             sbr_serv_graphql:
                 condition: service_started
-
 
 
     sbr_webssh:
