@@ -90,6 +90,7 @@ while true; do
             fi
         fi
         no_ip_found=0
+        first_try=0
 
     else
         echo "No IP address is assigned to eth0."
