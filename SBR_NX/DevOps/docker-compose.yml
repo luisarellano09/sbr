@@ -10,7 +10,7 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - ~SBR/data/portainer/portainer-data:/data
         ports:
-            - 9000:9000
+            - 9001:9000
         networks:
             - sbr_net_external
             - sbr_net_swarm
