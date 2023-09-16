@@ -121,7 +121,7 @@ services:
 
 
     sbr_serv_redis_connector:
-        restart: unless-stop
+        restart: unless-stopped
         image: sbr/sbr_serv_redis_connector:1.0
         container_name: sbr_serv_redis_connector
         build:
