@@ -1,10 +1,10 @@
 version: "3.8"
 
 services:
-    sbr_portainer:
+    sbr_portainer_nx:
         restart: unless-stopped
         image: portainer/portainer-ce
-        container_name: sbr_portainer
+        container_name: sbr_portainer_nx
         volumes:
             - /etc/localtime:/etc/localtime:ro
             - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -13,6 +13,7 @@ services:
             - 9000:9000
         networks:
             - sbr_net_external
+            - sbr_net_swarm
 
 
     sbr_serv_host_connector:

@@ -1,10 +1,10 @@
 version: "3.8"
 
 services:
-    sbr_portainer:
+    sbr_portainer_pi:
         restart: unless-stopped
         image: portainer/portainer-ce
-        container_name: sbr_portainer
+        container_name: sbr_portainer_pi
         volumes:
             - /etc/localtime:/etc/localtime:ro
             - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -75,10 +75,11 @@ services:
         networks:
             - sbr_net_internal
             - sbr_net_external
+            - sbr_net_swarm
         depends_on:
             sbr_serv_nextjs:
                 condition: service_started
-            sbr_portainer:
+            sbr_portainer_pi:
                 condition: service_started
             sbr_rabbitmq:
                 condition: service_started
@@ -152,6 +153,7 @@ services:
                 condition: service_started
         networks:
             - sbr_net_internal
+            - sbr_net_swarm
 
 
     sbr_serv_robot_control:
