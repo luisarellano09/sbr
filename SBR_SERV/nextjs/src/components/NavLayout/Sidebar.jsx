@@ -2,7 +2,7 @@
 import classNames from "classnames";
 import SidebarItems from "./SidebarItems";
 
-const Sidebar = ({shown}) => {
+export default function Sidebar({shown}) {
 
 	return (
 		<div
@@ -30,4 +30,3 @@ const Sidebar = ({shown}) => {
 		</div>
 	);
 };
-export default Sidebar;

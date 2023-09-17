@@ -5,7 +5,7 @@ import { Bars3Icon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 
 
-const Navbar = (props) => {
+export default function Navbar(props) {
 
     const hostName = useStoreWeb((state) => state.hostName);
     const currentPage = useStoreWeb((state) => state.currentPage);
@@ -30,5 +30,3 @@ const Navbar = (props) => {
         </nav>
     );
 };
-
-export default Navbar;
