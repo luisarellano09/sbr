@@ -2,14 +2,19 @@
 
 import ControlHost from "@/components/Controls/ControlHost";
 import { useStoreWeb } from "@/store/store";
+import { useEffect } from "react";
 
 export default function NX() {
 
     const hostName = useStoreWeb((state) => state.hostName);
     const SetCurrentPage = useStoreWeb((state) => state.SetCurrentPage);
 
+    useEffect(()=>{
+        SetCurrentPage("Devices - NX");
+    },[]);
+
     return (
-        <div onLoad={SetCurrentPage("Devices - NX")} className="h-[calc(100vh-74px)] md:flex justify-start">
+        <div className="h-[calc(100vh-74px)] md:flex justify-start">
             <div className="pl-5 pt-5 pb-5">
                 <ControlHost host="NX"/>
             </div>

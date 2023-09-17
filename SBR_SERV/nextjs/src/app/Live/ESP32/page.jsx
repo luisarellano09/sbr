@@ -8,13 +8,18 @@ import DashboardMotionAngle from '@/components/Dashboards/DashboardMotionAngle';
 import ChartMotionPosition from '@/components/Charts/ChartMotionPosition';
 import ChartMotionAngle from '@/components/Charts/ChartMotionAngle';
 import { useStoreWeb } from '@/store/store';
+import { useEffect } from 'react';
 
 export default function ESP32() {
 
     const SetCurrentPage = useStoreWeb((state) => state.SetCurrentPage);
 
+    useEffect(()=>{
+        SetCurrentPage("LIVE - ESP32");
+    },[]);
+
     return (
-        <div onLoad={SetCurrentPage("LIVE - ESP32")}>
+        <div>
             <div className="flex justify-start flex-wrap">
                 <DashboardIMU />
                 <DashboardOdometry />
