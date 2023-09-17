@@ -1,8 +1,9 @@
+"use client"
 
 import classNames from "classnames";
 import SidebarItems from "./SidebarItems";
 
-const Sidebar = ({shown}) => {
+export default function Sidebar({shown}) {
 
 	return (
 		<div
@@ -15,11 +16,9 @@ const Sidebar = ({shown}) => {
 			})}
 		>
 			<div className="flex flex-col justify-between h-screen sticky">
-	
+
 				<div className="flex items-center p-4 bg-gradient-to-r from-[#0e1730] to-[#272b46]">
-
                     <p className="font-mono font-bold text-4xl ml-10 text-[#39ac89]">SBR</p>
-
 				</div>
 
                 <div className="flex-grow border-r-1 border-t-1 border-[#181933]">
@@ -30,4 +29,3 @@ const Sidebar = ({shown}) => {
 		</div>
 	);
 };
-export default Sidebar;
