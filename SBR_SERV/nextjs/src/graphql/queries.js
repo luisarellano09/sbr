@@ -139,4 +139,12 @@ export const GET_ESP32_SETUP = gql`
 	}
 `;
 
-
+export const GET_ESP32_STATUS = gql`
+	query{
+        GetEsp32Status{
+            nodeEsp32,
+            nodeLinux,
+            heartbeat
+        }
+    }
+`;
