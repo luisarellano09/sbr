@@ -40,7 +40,4 @@ export const useStoreRobot = create((set, get) => ({
 
     },
 
-
-
-
 }));
