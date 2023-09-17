@@ -19,3 +19,25 @@ export const useStoreWeb = create((set, get) => ({
     }
 
 }));
+
+
+export const useStoreRobot = create((set, get) => ({
+
+	statusNodeEsp32: true,
+    statusNodeLinux: true,
+    nodeHeartbeat: 0,
+    prevNodeHeartbeat: -1,
+
+    UpdateStatusNode: (statusNodeEsp32, statusNodeLinux, nodeHeartbeat) => {
+        const prevNodeHeartbeat = get().nodeHeartbeat;
+        const statusHeatbeat = nodeHeartbeat > prevNodeHeartbeat;
+        set({
+            statusNodeEsp32: statusHeatbeat & statusNodeEsp32, 
+            statusNodeLinux: statusHeatbeat & statusNodeLinux, 
+            nodeHeartbeat: nodeHeartbeat,
+            prevNodeHeartbeat: prevNodeHeartbeat,
+        });
+
+    },
+
+}));

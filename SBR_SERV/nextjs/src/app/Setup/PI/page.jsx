@@ -1,13 +1,18 @@
 "use client"
 
 import { useStoreWeb } from "@/store/store";
+import { useEffect } from "react";
 
 export default function PI() {
 
     const SetCurrentPage = useStoreWeb((state) => state.SetCurrentPage);
 
+    useEffect(()=>{
+        SetCurrentPage("Setup - PI");
+    },[]);
+
     return (
-        <div onLoad={SetCurrentPage("Setup - PI")} className="h-[calc(100vh-74px)]">
+        <div className="h-[calc(100vh-74px)]">
             Setup PI
             
         </div>
