@@ -12,15 +12,19 @@ export default function Titlebar() {
 
     return (
         <div className="flex flex-grow">
+
             <div className="flex-initial font-bold text-xs">
                 <Chip size="sm" color="success">{hostName}</Chip>
             </div>
+
             <div className="flex-auto text-center md:mr-[200px] font-bold md:text-lg text-md text-[#e9eee9]">
                 <p>{currentPage}</p>
             </div>
+
             <div className="flex-initial text-right">
                 <BellIcon className="w-9 pr-4"/>
             </div>
+            
         </div>
     );
 };
