@@ -31,6 +31,6 @@ jobs:
         run: sudo systemctl status sbr_host_monitor.service
 
       - name: Permisison Install SBR Script
-        run: chmod +x /home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_NX/Scripts/install_sbr.sh
+        run: chmod +x /home/sbrnx/SBR/actions-runner/_work/sbr/sbr/SBR_NX/Scripts/install_sbr.sh
       - name: Install SBR Script
         run: /home/sbrnx/SBR/actions-runner/_work/sbr/sbr/SBR_NX/Scripts/install_sbr.sh
