@@ -17,6 +17,7 @@ jobs:
         run: docker compose restart sbr_nginx
       - name: Delete old images
         run: docker image prune -f
+
       - name: Copy Service
         run: sudo cp /home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/Services/sbr_host_monitor.service /etc/systemd/system/
       - name: Permisison
@@ -31,3 +32,8 @@ jobs:
         run: sudo systemctl start sbr_host_monitor.service
       - name: Check Status
         run: sudo systemctl status sbr_host_monitor.service
+
+      - name: Permisison Install SBR Script
+        run: chmod +x /home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/Scripts/install_sbr.sh
+      - name: Install SBR Script
+        run: /home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/Scripts/install_sbr.sh
