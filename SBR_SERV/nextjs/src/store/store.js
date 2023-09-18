@@ -23,10 +23,10 @@ export const useStoreWeb = create((set, get) => ({
 
 export const useStoreRobot = create((set, get) => ({
 
-	statusNodeEsp32: true,
-    statusNodeLinux: true,
+	statusNodeEsp32: false,
+    statusNodeLinux: false,
     nodeHeartbeat: 0,
-    prevNodeHeartbeat: -1,
+    prevNodeHeartbeat: 0,
 
     UpdateStatusNode: (statusNodeEsp32, statusNodeLinux, nodeHeartbeat) => {
         const prevNodeHeartbeat = get().nodeHeartbeat;
