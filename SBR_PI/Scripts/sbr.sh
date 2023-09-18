@@ -4,7 +4,7 @@
 OPTIONS=(
   "Update" "Update/Upgrade System"
   "Host Monitor" "Monitor the service: sbr_host_monitor.service"
-  "Serial Node Manager" "Serial connection with Node01"
+  "Serial Node Manager" "Serial connection with Manager"
   "Serial Node01" "Serial connection with Node01"
 )
 
