@@ -2,10 +2,10 @@
 
 # Define menu options
 OPTIONS=(
-  "Option 1" "Description for Option 1"
-  "Option 2" "Description for Option 2"
-  "Option 3" "Description for Option 3"
-  "Option 4" "Description for Option 4"
+  "Update" "Update/Upgrade System"
+  "Host Monitor" "Monitor the service: sbr_host_monitor.service"
+  "Serial Node Manager" "Serial connection with Node01"
+  "Serial Node01" "Serial connection with Node01"
 )
 
 # Show the menu using whiptail
@@ -15,18 +15,21 @@ CHOICE=$(whiptail --title "SBR Menu" --menu "Choose an option:" 15 60 5 "${OPTIO
 if [ $? -eq 0 ]; then
   # User made a selection
   case "$CHOICE" in
-    "Option 1")
-      # Action for Option 1
-      ;;
-    "Option 2")
-      # Action for Option 2
-      ;;
-    "Option 3")
-      # Action for Option 3
-      ;;
-    "Option 4")
-      # Action for Option 4
-      ;;
+    "Update")
+        sudo apt update
+        sudo apt upgrade
+        sudo apt dist-upgrade
+        sudo apt autoremove
+        ;;
+    "Host Monitor")
+        sudo journalctl -fu sbr_host_monitor.service
+        ;;
+    "Serial Node Manager")
+        sudo screen /dev/ttyUSB_ESP32_NODE_MANAGER 115200 
+        ;;
+    "Serial Node01")
+        sudo screen /dev/ttyUSB_ESP32_NODE_01 115200
+        ;;
   esac
 else
   # User pressed Cancel or closed the menu
