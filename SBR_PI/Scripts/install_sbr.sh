@@ -1,19 +1,19 @@
 #!/bin/bash
 
-# Path to the script you want to add to the profile
-SCRIPT_PATH="/home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/Scripts/sbr.sh"
+# Path to the script folder
+SCRIPT_PATH="/home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/Scripts/"
 
-# Check if the script file exists
-if [ -f "$SCRIPT_PATH" ]; then
-  # Check if the script is already added to ~/.bashrc
+# Check if the script folder exists
+if [ -d "$SCRIPT_PATH" ]; then
+  # Check if the script folder is already added to ~/.profile
   if grep -q "$SCRIPT_PATH" /home/pi/.profile; then
-    echo "The script is already added to /home/pi/.profile."
+    echo "The script folder is already added to /home/pi/.profile."
   else
-    echo "Adding the script to /home/pi/.profile."
-    echo "export PATH=\$PATH:$SCRIPT_PATH" | sudo tee -a ~/.profile
-    sudo chmod +x $SCRIPT_PATH
+    echo "Adding the script folder to /home/pi/.profile."
+    echo "export PATH=\$PATH:$SCRIPT_PATH" | sudo tee -a /home/pi/.profile
+    sudo chmod +x "$SCRIPT_PATH/sbr.sh"
     source /home/pi/.profile
   fi
 else
-  echo "Error: The script file does not exist at $SCRIPT_PATH."
+  echo "Error: The script folder does not exist at $SCRIPT_PATH."
 fi
