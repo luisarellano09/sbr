@@ -198,7 +198,7 @@ services:
             - 5000:5000
         depends_on:
             sbr_serv_graphql:
-                condition: service_healthy
+                condition: service_started
         networks:
             - sbr_net_internal
 
