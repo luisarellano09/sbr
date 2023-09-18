@@ -37,7 +37,6 @@ export const useStoreRobot = create((set, get) => ({
             nodeHeartbeat: nodeHeartbeat,
             prevNodeHeartbeat: prevNodeHeartbeat,
         });
-
     },
 
 }));

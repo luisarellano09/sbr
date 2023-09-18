@@ -55,7 +55,7 @@ export default function Titlebar() {
 
             <div className="flex-initial font-bold text-xs">
                 <div className="grid grid-cols-1 gap-1">
-                    <Chip size="sm" variant="dot" color={statusNodeEsp32 ? "success": "danger"}><p className="w-[80px]">NodeEsp32</p></Chip>
+                    <Chip size="sm" variant="dot" color={statusNodeEsp32 ? "success": "danger"}><p className="w-[80px]">NodeESP32</p></Chip>
                     <Chip size="sm" variant="dot" color={statusNodeLinux ? "success": "danger"}><p className="w-[80px]">NodeLinux</p></Chip>
                 </div>
             </div>
