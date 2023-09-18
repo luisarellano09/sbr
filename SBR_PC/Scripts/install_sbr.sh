@@ -11,7 +11,7 @@ if [ -d "$SCRIPT_PATH" ]; then
   else
     echo "Adding the script folder to /home/ubuntu/.profile."
     echo "export PATH=\$PATH:$SCRIPT_PATH" | sudo tee -a /home/ubuntu/.profile
-    sudo chmod +x "$SCRIPT_PATH/sbr.sh"
+    sudo chmod +x $SCRIPT_PATH/sbr.sh
     source /home/ubuntu/.profile
   fi
 else
