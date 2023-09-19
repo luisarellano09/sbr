@@ -3,6 +3,7 @@ use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOpti
 use std::fs::File;
 use std::env;
 
+
 //=====================================================================================================
 const URL: &str = "amqp://RABBITMQ_USER:RABBITMQ_PASS@RABBITMQ_HOST:5672/";
 

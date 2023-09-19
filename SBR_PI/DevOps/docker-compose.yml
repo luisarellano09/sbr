@@ -134,6 +134,10 @@ services:
         restart: unless-stopped
         image: sbr/sbr_serv_redis_connector:1.0
         container_name: sbr_serv_redis_connector
+        environment:
+            RABBITMQ_HOST: "sbr_rabbitmq"
+            RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
         build:
             context: ../../SBR_SERV/redis_connector/
             target: dev

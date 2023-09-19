@@ -18,5 +18,4 @@ fn main() {
 
 
     thread_rabbitmq_consumer.join().expect("Error in thread rabbitmq consumer");
-    
 }
