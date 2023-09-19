@@ -190,7 +190,7 @@ services:
     sbr_serv_nextjs:
         restart: unless-stopped
         image: sbr/sbr_serv_nextjs:1.0
-        container_name: sbr_serv_nextjs
+        container_name: sbr_serv_nextjssi no te preocupes 
         build:
             context: ../../SBR_SERV/nextjs/
             target: dev
@@ -211,6 +211,8 @@ services:
             - ~SBR/data/host_connector/requests:/app
         environment:
             RABBITMQ_HOST: "sbr_rabbitmq"
+            RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
             HOST: "PI"
         build:
             context: ../../SBR_SERV/host_connector/
@@ -220,7 +222,6 @@ services:
                 condition: service_healthy
         networks:
             - sbr_net_internal
-
 
 networks:
     sbr_net_internal:

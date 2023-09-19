@@ -4,7 +4,7 @@ use std::fs::File;
 use std::env;
 
 //=====================================================================================================
-const URL: &str = "amqp://rabbitmq:La123456.@HOST:5672/";
+const URL: &str = "amqp://RABBITMQ_USER:RABBITMQ_PASS@RABBITMQ_HOST:5672/";
 
 
 //=====================================================================================================
@@ -25,10 +25,14 @@ impl RabbitmqConsumerHost {
     //=====================================================================================================
     pub fn run(&self)  -> Result<(), Box<dyn Error>> {
 
-        let rabbitmq_host = env::var("RABBITMQ_HOST").unwrap_or(String::from("sbrpi.local"));
-        let host = env::var("HOST").unwrap_or(String::from("DEV"));
+        let rabbitmq_user = env::var("RABBITMQ_HOST")?;
+        let rabbitmq_password = env::var("RABBITMQ_USER")?;
+        let rabbitmq_host = env::var("RABBITMQ_PASS")?;
+        let host = env::var("HOST")?;
 
-        let url = URL.replace("HOST", &rabbitmq_host);
+        let url = URL.replace("RABBITMQ_HOST", &rabbitmq_host);
+        let url = url.replace("RABBITMQ_USER", &rabbitmq_user);
+        let url = url.replace("RABBITMQ_PASS", &rabbitmq_password);
 
         // Open connection.
         let mut connection = Connection::insecure_open(url.as_str())?;
