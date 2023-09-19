@@ -25,9 +25,9 @@ impl RabbitmqConsumerHost {
     //=====================================================================================================
     pub fn run(&self)  -> Result<(), Box<dyn Error>> {
 
-        let rabbitmq_user = env::var("RABBITMQ_HOST")?;
-        let rabbitmq_password = env::var("RABBITMQ_USER")?;
-        let rabbitmq_host = env::var("RABBITMQ_PASS")?;
+        let rabbitmq_user = env::var("RABBITMQ_USER")?;
+        let rabbitmq_password = env::var("RABBITMQ_PASS")?;
+        let rabbitmq_host = env::var("RABBITMQ_HOST")?;
         let host = env::var("HOST")?;
 
         let url = URL.replace("RABBITMQ_HOST", &rabbitmq_host);
