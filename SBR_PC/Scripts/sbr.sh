@@ -4,12 +4,10 @@
 OPTIONS=(
     "Update" "Update/Upgrade System"
     "Host Monitor" "Monitor the service: sbr_host_monitor.service"
-    "Serial Node Manager" "Serial connection with Manager"
-    "Serial Node01" "Serial connection with Node01"
 )
 
 # Show the menu using whiptail
-CHOICE=$(whiptail --title "SBR Menu" --menu "Choose an option:" 15 90 5 "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
+CHOICE=$(whiptail --title "SBR Menu" --menu "Choose an option:" 15 80 5 "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
 
 # Check the exit status to see if the user pressed Cancel or OK
 if [ $? -eq 0 ]; then
