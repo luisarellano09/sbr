@@ -23,7 +23,9 @@ services:
         volumes:
             - ~SBR/data/host_connector/requests:/app
         environment:
-            RABBITMQ_HOST: "sbr_rabbitmq"
+            RABBITMQ_HOST: ${RABBITMQ_HOST}
+            RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
             HOST: "NX"
         build:
             context: ../../SBR_SERV/host_connector/
