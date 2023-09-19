@@ -120,6 +120,10 @@ services:
         privileged: true
         devices:
             - /dev/ttyAMA0:/dev/ttyAMA0
+        environment:
+            RABBITMQ_HOST: "sbr_rabbitmq"
+            RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
         build:
             context: ../../SBR_SERV/serial_connector/
             target: dev
