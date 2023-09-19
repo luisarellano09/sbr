@@ -2,18 +2,26 @@ use std::error::Error;
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, Publish};
 use serde_json::json;
 use crate::message_esp32::MessageEsp32;
+use std::env;
 
 
 //=====================================================================================================
-const URL: &str = "amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/";
-//const URL: &str = "amqp://rabbitmq:La123456.@sbrpi.local:5672/";
+const URL: &str = "amqp://RABBITMQ_USER:RABBITMQ_PASS@RABBITMQ_HOST:5672/";
 
 
 //=====================================================================================================
 pub fn publish_esp32_write(key: String, data: i32) -> Result<(), Box<dyn Error>> {
 
+    let rabbitmq_user = env::var("RABBITMQ_USER")?;
+    let rabbitmq_password = env::var("RABBITMQ_PASS")?;
+    let rabbitmq_host = env::var("RABBITMQ_HOST")?;
+
+    let url = URL.replace("RABBITMQ_HOST", &rabbitmq_host);
+    let url = url.replace("RABBITMQ_USER", &rabbitmq_user);
+    let url = url.replace("RABBITMQ_PASS", &rabbitmq_password);
+
     // Open connection.
-    let mut connection = Connection::insecure_open(URL)?;
+    let mut connection = Connection::insecure_open(url.as_str())?;
 
     // Open a channel - None says let the library choose the channel ID.
     let channel = connection.open_channel(None)?;
@@ -40,8 +48,16 @@ pub fn publish_esp32_write(key: String, data: i32) -> Result<(), Box<dyn Error>>
 //=====================================================================================================
 pub fn publish_host_connector(host: String, request: String) -> Result<(), Box<dyn Error>> {
 
+    let rabbitmq_user = env::var("RABBITMQ_USER")?;
+    let rabbitmq_password = env::var("RABBITMQ_PASS")?;
+    let rabbitmq_host = env::var("RABBITMQ_HOST")?;
+
+    let url = URL.replace("RABBITMQ_HOST", &rabbitmq_host);
+    let url = url.replace("RABBITMQ_USER", &rabbitmq_user);
+    let url = url.replace("RABBITMQ_PASS", &rabbitmq_password);
+
     // Open connection.
-    let mut connection = Connection::insecure_open(URL)?;
+    let mut connection = Connection::insecure_open(url.as_str())?;
 
     // Open a channel - None says let the library choose the channel ID.
     let channel = connection.open_channel(None)?;

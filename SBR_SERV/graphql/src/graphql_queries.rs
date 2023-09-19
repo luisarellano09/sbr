@@ -1,4 +1,3 @@
-
 use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
 use crate::graphql_types::{Esp32LiveMotors, Esp32Status, Esp32Mode, Esp32SetupMotors, Esp32SetupIMU, Esp32SetupEncoders, Esp32SetupMotionPID, Esp32LiveIMU, Esp32LiveEncoders, Esp32LiveOdometry, Esp32LiveMotion, Esp32Setup, RegisterCommand, Esp32SetupOdometry};

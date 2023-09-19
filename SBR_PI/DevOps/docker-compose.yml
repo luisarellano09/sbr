@@ -160,6 +160,14 @@ services:
         restart: unless-stopped
         image: sbr/sbr_serv_graphql:1.0
         container_name: sbr_serv_graphql
+        environment:
+            POSTGRES_HOST: "sbr_postgres"
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            RABBITMQ_HOST: "sbr_rabbitmq"
+            RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
+            REDIS_HOST: "sbr_redis"
         build:
             context: ../../SBR_SERV/graphql/
             target: dev
