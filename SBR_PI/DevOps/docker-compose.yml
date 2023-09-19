@@ -210,7 +210,7 @@ services:
         volumes:
             - ~SBR/data/host_connector/requests:/app
         environment:
-            RABBITMQ_HOST: ${RABBITMQ_HOST}
+            RABBITMQ_HOST: "sbr_rabbitmq"
             RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
             RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
             HOST: "PI"
