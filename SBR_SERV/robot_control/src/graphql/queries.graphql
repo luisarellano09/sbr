@@ -12,9 +12,9 @@ query GetEsp32ModeNode1SyncData{
 }
 
 query GetEsp32LiveIMU{
-  GetEsp32LiveIMU{
-    pitch,
-    roll,
-    yaw,
-  }
+    GetEsp32LiveIMU{
+        pitch,
+        roll,
+        yaw,
+    }
 }

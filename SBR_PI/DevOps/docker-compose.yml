@@ -179,6 +179,8 @@ services:
         restart: unless-stopped
         image: sbr/sbr_serv_robot_control:1.0
         container_name: sbr_serv_robot_control
+        environment:
+            GRAPHQL_HOST: "sbr_serv_graphql"
         build:
             context: ../../SBR_SERV/robot_control/
             target: dev
