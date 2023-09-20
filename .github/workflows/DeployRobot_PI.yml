@@ -12,11 +12,11 @@ jobs:
       - name: Create env file
         working-directory: ./SBR_PI/DevOps
         run: |
-          echo "RABBITMQ_ERLANG_COOKIE='${{ secrets.RABBITMQ_ERLANG_COOKIE }}'" > ./.env
-          echo "RABBITMQ_DEFAULT_USER='${{ secrets.RABBITMQ_DEFAULT_USER }}'" >> ./.env
-          echo "RABBITMQ_DEFAULT_PASS='${{ secrets.RABBITMQ_DEFAULT_PASS }}'" >> ./.env
-          echo "POSTGRES_USER='${{ secrets.POSTGRES_USER }}'" >> ./.env
-          echo "POSTGRES_PASSWORD='${{ secrets.POSTGRES_PASSWORD }}'" >> ./.env
+          echo "RABBITMQ_ERLANG_COOKIE=\"${{ secrets.RABBITMQ_ERLANG_COOKIE }}\"" > ./.env
+          echo "RABBITMQ_DEFAULT_USER=\"${{ secrets.RABBITMQ_DEFAULT_USER }}\"" >> ./.env
+          echo "RABBITMQ_DEFAULT_PASS=\"${{ secrets.RABBITMQ_DEFAULT_PASS }}\"" >> ./.env
+          echo "POSTGRES_USER=\"${{ secrets.POSTGRES_USER }}\"" >> ./.env
+          echo "POSTGRES_PASSWORD=\"${{ secrets.POSTGRES_PASSWORD }}\"" >> ./.env
         shell: bash
       - name: Docker Compose
         working-directory: ./SBR_PI/DevOps
