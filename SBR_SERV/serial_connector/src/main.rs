@@ -1,4 +1,3 @@
-
 use std::thread;
 use std::sync::mpsc::channel;
 
@@ -39,5 +38,4 @@ fn main() {
     thread_node_linux.join().expect("Error in thread node linux");
     thread_rabbitmq_consumer.join().expect("Error in thread rabbitmq consumer");
     thread_rabbitmq_producer.join().expect("Error in thread rabbitmq producer");
-    
 }

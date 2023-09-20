@@ -5,6 +5,7 @@ use ::reqwest::blocking::Client;
 
 use crate::graphql::{query_get_esp32_status, query_get_esp32_mode_node1_sync_data, mutation_set_esp32_mode_node1_sync_data, query_get_esp32_live_imu};
 
+
 //=====================================================================================================
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RobotEvent {
@@ -16,6 +17,7 @@ pub enum RobotEvent {
     RobotFall,
     Command(RobotCommand),
 }
+
 
 //=====================================================================================================
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -144,6 +146,5 @@ impl CollectEvents {
 
         Ok(RobotEvent::None)
     }
-
 
 }

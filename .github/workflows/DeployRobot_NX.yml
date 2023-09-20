@@ -9,6 +9,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Create env file
+        working-directory: ./SBR_NX/DevOps
+        run: |
+          echo "RABBITMQ_ERLANG_COOKIE=${{ secrets.RABBITMQ_ERLANG_COOKIE }}" > ./.env
+          echo "RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}" >> ./.env
+          echo "RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}" >> ./.env
       - name: Docker Compose
         working-directory: ./SBR_NX/DevOps
         run: docker compose up --build -d

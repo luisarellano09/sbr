@@ -1,4 +1,3 @@
-
 use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
 use crate::graphql_types::{RegisterCommand, Esp32SetupInput};
