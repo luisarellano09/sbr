@@ -22,9 +22,9 @@ pub fn query_get_esp32_status(graphql_client: &Client) -> Result<self::get_esp32
         graphql_client, 
         URL.replace("GRAPHQL_HOST", env::var("GRAPHQL_HOST")?.as_str()), 
         self::get_esp32_status::Variables 
-    ).unwrap();
+    )?;
 
-    Ok(response_body.data.unwrap().get_esp32_status)
+    Ok(response_body.data.expect("Error in feching data from GraphQL").get_esp32_status)
 }
 
 
@@ -42,9 +42,9 @@ pub fn query_get_esp32_mode_node1_sync_data(graphql_client: &Client) -> Result<s
         graphql_client, 
         URL.replace("GRAPHQL_HOST", env::var("GRAPHQL_HOST")?.as_str()),
         self::get_esp32_mode_node1_sync_data::Variables 
-    ).unwrap();
+    )?;
 
-    Ok(response_body.data.unwrap().get_esp32_mode_node1_sync_data)
+    Ok(response_body.data.expect("Error in feching data from GraphQL").get_esp32_mode_node1_sync_data)
 }
 
 
@@ -62,9 +62,9 @@ pub fn query_get_esp32_live_imu(graphql_client: &Client) -> Result<self::get_esp
         graphql_client, 
         URL.replace("GRAPHQL_HOST", env::var("GRAPHQL_HOST")?.as_str()),
         self::get_esp32_live_imu::Variables 
-    ).unwrap();
+    )?;
 
-    Ok(response_body.data.unwrap().get_esp32_live_imu)
+    Ok(response_body.data.expect("Error in feching data from GraphQL").get_esp32_live_imu)
 }
 
 //==========================================================================================================================================
@@ -85,9 +85,9 @@ pub fn mutation_load_esp32_setup(graphql_client: &Client) -> Result<bool, Box<dy
         graphql_client, 
         URL.replace("GRAPHQL_HOST", env::var("GRAPHQL_HOST")?.as_str()),
         self::load_esp32_setup::Variables 
-    ).unwrap();
+    )?;
 
-    Ok(response_body.data.unwrap().load_esp32_setup)
+    Ok(response_body.data.expect("Error in feching data from GraphQL").load_esp32_setup)
 }
 
 
@@ -105,9 +105,9 @@ pub fn mutation_set_esp32_mode_node1_start(graphql_client: &Client) -> Result<bo
         graphql_client, 
         URL.replace("GRAPHQL_HOST", env::var("GRAPHQL_HOST")?.as_str()),
         self::set_esp32_mode_node1_start::Variables 
-    ).unwrap();
+    )?;
 
-    Ok(response_body.data.unwrap().set_esp32_mode_node1_start)
+    Ok(response_body.data.expect("Error in feching data from GraphQL").set_esp32_mode_node1_start)
 }
 
 
@@ -125,9 +125,9 @@ pub fn mutation_set_esp32_mode_node1_stop(graphql_client: &Client) -> Result<boo
         graphql_client, 
         URL.replace("GRAPHQL_HOST", env::var("GRAPHQL_HOST")?.as_str()),
         self::set_esp32_mode_node1_stop::Variables 
-    ).unwrap();
+    )?;
 
-    Ok(response_body.data.unwrap().set_esp32_mode_node1_stop)
+    Ok(response_body.data.expect("Error in feching data from GraphQL").set_esp32_mode_node1_stop)
 }
 
 
@@ -147,7 +147,7 @@ pub fn mutation_set_esp32_mode_node1_sync_data(graphql_client: &Client, cmd: sel
         self::set_esp32_mode_node1_sync_data::Variables {
             sync_status: cmd
         }
-    ).unwrap();
+    )?;
 
-    Ok(response_body.data.unwrap().set_esp32_mode_node1_sync_data)
+    Ok(response_body.data.expect("Error in feching data from GraphQL").set_esp32_mode_node1_sync_data)
 }
