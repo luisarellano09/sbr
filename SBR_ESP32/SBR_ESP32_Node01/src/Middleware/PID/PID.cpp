@@ -112,6 +112,8 @@ RC_e PID::Stop(){
     RC_e retCode = RC_e::SUCCESS;
 
     this->m_mode = PIDMode::PID_STOP;
+    this->m_prevError = 0.0;
+    this->m_prevMVIntegral = 0.0;
     Log.traceln("[PID::Stop] PID stopped");
 
     return retCode;

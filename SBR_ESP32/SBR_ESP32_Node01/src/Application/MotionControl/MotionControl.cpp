@@ -53,7 +53,7 @@ RC_e MotionControl::Run(){
         this->m_PIDAngle->Reset();
         this->m_PIDPitch->Reset();
         this->m_PIDPosition->Reset();
-        vTaskDelay(1000);
+        vTaskDelay(2000);
     } else {
 
         // Reduce the call cycle 
