@@ -189,7 +189,7 @@ impl RobotControl {
         thread::sleep(time::Duration::from_millis(100));
 
         if pitch < 15.0 && pitch > -15.0 {
-            thread::sleep(time::Duration::from_millis(3000));
+            thread::sleep(time::Duration::from_millis(1000));
             self.state = RobotState::StartMotion;
         }
 
