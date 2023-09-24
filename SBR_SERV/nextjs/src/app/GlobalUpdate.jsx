@@ -24,6 +24,13 @@ export default function GlobalUpdate() {
         }
 	}, [getESP32Status.data]);
 
+    useEffect(() => {
+        if (getESP32Status.error != undefined) {
+            console.log(getESP32Status.error);
+        }
+	}, [getESP32Status.error]);
+
+
     return (
         <span>
         </span>
