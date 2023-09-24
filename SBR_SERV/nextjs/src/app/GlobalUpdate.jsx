@@ -7,13 +7,13 @@ import { useStoreRobot } from "@/store/store";
 
 export default function GlobalUpdate() {
 
+    const UpdateStatusNode = useStoreRobot((state) => state.UpdateStatusNode);
+
     const getESP32Status = useQuery(GET_ESP32_STATUS, {
 		pollInterval:3000,
-        fetchPolicy: "no-cache" 
+        fetchPolicy: "no-cache",
 	});
 
-    const UpdateStatusNode = useStoreRobot((state) => state.UpdateStatusNode);
-    
     useEffect(() => {
         if (getESP32Status.data != undefined) {
             UpdateStatusNode(
@@ -24,9 +24,17 @@ export default function GlobalUpdate() {
         }
 	}, [getESP32Status.data]);
 
+    useEffect(() => {
+        console.log(getESP32Status);
+        if (getESP32Status.error != undefined) {
+            UpdateStatusNode(false,false,0);
+        }
+	}, [getESP32Status.error]);
+
+
     return (
-        <span>
-        </span>
+        <snap>
+        </snap>
     ); 
     
 }
