@@ -4,6 +4,7 @@
 OPTIONS=(
     "Update" "Update/Upgrade System"
     "Host Monitor" "Monitor the service: sbr_host_monitor.service"
+    "Start Runner" "Start the GitHub Actions Runner"
 )
 
 # Show the menu using whiptail
@@ -14,13 +15,18 @@ if [ $? -eq 0 ]; then
     # User made a selection
     case "$CHOICE" in
         "Update")
-            sudo apt update
-            sudo apt upgrade
-            sudo apt dist-upgrade
-            sudo apt autoremove
+            sudo apt update -y
+            sudo apt upgrade -y
+            sudo apt dist-upgrade -y
+            sudo apt autoremove -y
             ;;
         "Host Monitor")
             sudo journalctl -fu sbr_host_monitor.service
+            ;;
+        "Start Runner")
+            cd /home/sbrnx/SBR/actions-runner
+            sudo chmod +x svc.sh
+            sudo ./svc.sh start
             ;;
     esac
 else

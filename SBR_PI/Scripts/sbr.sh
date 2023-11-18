@@ -4,6 +4,7 @@
 OPTIONS=(
     "Update" "Update/Upgrade System"
     "Host Monitor" "Monitor the service: sbr_host_monitor.service"
+    "Start Runner" "Start the GitHub Actions Runner"
     "Serial Node Manager" "Serial connection with Manager (exit: Ctrl-A k)"
     "Serial Node01" "Serial connection with Node01 (exit: Ctrl-A k)"
 )
@@ -16,13 +17,18 @@ if [ $? -eq 0 ]; then
     # User made a selection
     case "$CHOICE" in
         "Update")
-            sudo apt update
-            sudo apt upgrade
-            sudo apt dist-upgrade
-            sudo apt autoremove
+            sudo apt update -y
+            sudo apt upgrade -y
+            sudo apt dist-upgrade -y
+            sudo apt autoremove -y
             ;;
         "Host Monitor")
             sudo journalctl -fu sbr_host_monitor.service
+            ;;
+        "Start Runner")
+            cd /home/pi/SBR/actions-runner
+            sudo chmod +x svc.sh
+            sudo ./svc.sh start
             ;;
         "Serial Node Manager")
             sudo screen /dev/ttyUSB_ESP32_NODE_MANAGER 115200 
