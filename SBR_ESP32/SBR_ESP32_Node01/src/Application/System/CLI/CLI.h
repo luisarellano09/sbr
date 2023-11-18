@@ -1246,6 +1246,7 @@ void F_CLI_Debug_GetLogLevel(){
 
 void F_CLI_Debug_SetLogLevelFatal(){
     Log.setLevel(LOG_LEVEL_FATAL);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_FATAL);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -1254,6 +1255,7 @@ void F_CLI_Debug_SetLogLevelFatal(){
 
 void F_CLI_Debug_SetLogLevelError(){
     Log.setLevel(LOG_LEVEL_ERROR);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_ERROR);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -1262,6 +1264,7 @@ void F_CLI_Debug_SetLogLevelError(){
 
 void F_CLI_Debug_SetLogLevelWarning(){
     Log.setLevel(LOG_LEVEL_WARNING);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_WARNING);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -1270,6 +1273,7 @@ void F_CLI_Debug_SetLogLevelWarning(){
 
 void F_CLI_Debug_SetLogLevelInfo(){
     Log.setLevel(LOG_LEVEL_INFO);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_INFO);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -1278,6 +1282,7 @@ void F_CLI_Debug_SetLogLevelInfo(){
 
 void F_CLI_Debug_SetLogLevelTrace(){
     Log.setLevel(LOG_LEVEL_TRACE);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_TRACE);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -1286,6 +1291,7 @@ void F_CLI_Debug_SetLogLevelTrace(){
 
 void F_CLI_Debug_SetLogLevelVerbose(){
     Log.setLevel(LOG_LEVEL_VERBOSE);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_VERBOSE);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -1459,24 +1465,6 @@ void F_CLI_Profile_Profile1(){
 
 void F_CLI_Profile_Profile2(){
 
-    manager->m_IMU->SetPitchOffset(0.0);
-
-    manager->m_motionControl->m_PIDPitch->SetCycleTime(0.01);
-    manager->m_motionControl->m_PIDPitch->SetParameters(11.0, 3.0, 0.04);
-    manager->m_motionControl->m_PIDPitch->SetMVRange(-100.0, 100.0);
-
-    manager->m_motionControl->m_PIDPosition->SetCycleTime(0.01);
-    manager->m_motionControl->m_PIDPosition->SetParameters(1.0, 1.0, 0.8);
-    manager->m_motionControl->m_PIDPosition->SetMVRange(-10.0, 10.0);
-    
-    manager->m_motionControl->m_PIDAngle->SetCycleTime(0.01);
-    manager->m_motionControl->m_PIDAngle->SetParameters(11.0, 2.0, 0.02);
-    manager->m_motionControl->m_PIDAngle->SetMVRange(-100.0, 100.0);
-
-    manager->m_motionControl->m_PIDPitch->Print();
-    manager->m_motionControl->m_PIDPosition->Print();
-    manager->m_motionControl->m_PIDAngle->Print();
-
     Serial.println("Profle2 loaded");
 }
 
@@ -1499,24 +1487,6 @@ void F_CLI_Test_Test1(){
 
 void F_CLI_Test_Test2(){
 
-    manager->m_IMU->SetPitchOffset(0.0);
-
-    manager->m_motionControl->m_PIDPitch->SetCycleTime(0.01);
-    manager->m_motionControl->m_PIDPitch->SetParameters(11.0, 3.0, 0.04);
-    manager->m_motionControl->m_PIDPitch->SetMVRange(-100.0, 100.0);
-
-    manager->m_motionControl->m_PIDPosition->SetCycleTime(0.01);
-    manager->m_motionControl->m_PIDPosition->SetParameters(1.0, 1.0, 0.8);
-    manager->m_motionControl->m_PIDPosition->SetMVRange(-10.0, 10.0);
-    
-    manager->m_motionControl->m_PIDAngle->SetCycleTime(0.01);
-    manager->m_motionControl->m_PIDAngle->SetParameters(11.0, 2.0, 0.02);
-    manager->m_motionControl->m_PIDAngle->SetMVRange(-100.0, 100.0);
-
-    manager->m_motionControl->m_PIDPitch->Print();
-    manager->m_motionControl->m_PIDPosition->Print();
-    manager->m_motionControl->m_PIDAngle->Print();
-    Serial.println("Profle2 loaded");
 }
 
 
@@ -1531,13 +1501,6 @@ void F_CLI_Test_Test3(){
 
 void F_CLI_Test_Test4(){
 
-    StartMode(Modes_e::Mode_Motion);
-
-    manager->m_motionControl->Start();
-
-    manager->m_motionControl->m_PIDPitch->Print();
-    manager->m_motionControl->m_PIDPosition->Print();
-    manager->m_motionControl->m_PIDAngle->Print();
 }
 
 

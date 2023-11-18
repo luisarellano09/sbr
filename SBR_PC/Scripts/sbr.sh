@@ -3,7 +3,8 @@
 # Define menu options
 OPTIONS=(
     "Update" "Update/Upgrade System"
-    "Host Monitor" "Monitor the service: sbr_host_monitor.service"
+    "ssh pi" "ssh into raspberry pi"
+    "ssh nx" "ssh into jetson xavier nx"
 )
 
 # Show the menu using whiptail
@@ -14,19 +15,16 @@ if [ $? -eq 0 ]; then
     # User made a selection
     case "$CHOICE" in
         "Update")
-            sudo apt update
-            sudo apt upgrade
-            sudo apt dist-upgrade
-            sudo apt autoremove
+            sudo apt update -y
+            sudo apt upgrade -y
+            sudo apt dist-upgrade -y
+            sudo apt autoremove -y
             ;;
-        "Host Monitor")
-            sudo journalctl -fu sbr_host_monitor.service
+        "ssh pi")
+            ssh pi@sbrpi.local
             ;;
-        "Serial Node Manager")
-            sudo screen /dev/ttyUSB_ESP32_NODE_MANAGER 115200 
-            ;;
-        "Serial Node01")
-            sudo screen /dev/ttyUSB_ESP32_NODE_01 115200
+        "ssh nx")
+            ssh sbrnx@sbrnx.local
             ;;
     esac
 else

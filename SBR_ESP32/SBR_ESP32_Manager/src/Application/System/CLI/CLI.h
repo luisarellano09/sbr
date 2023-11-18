@@ -531,6 +531,7 @@ void F_CLI_Debug_GetLogLevel(){
 
 void F_CLI_Debug_SetLogLevelFatal(){
     Log.setLevel(LOG_LEVEL_FATAL);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_FATAL);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -539,6 +540,7 @@ void F_CLI_Debug_SetLogLevelFatal(){
 
 void F_CLI_Debug_SetLogLevelError(){
     Log.setLevel(LOG_LEVEL_ERROR);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_ERROR);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -547,6 +549,7 @@ void F_CLI_Debug_SetLogLevelError(){
 
 void F_CLI_Debug_SetLogLevelWarning(){
     Log.setLevel(LOG_LEVEL_WARNING);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_WARNING);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -555,6 +558,7 @@ void F_CLI_Debug_SetLogLevelWarning(){
 
 void F_CLI_Debug_SetLogLevelInfo(){
     Log.setLevel(LOG_LEVEL_INFO);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_INFO);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -563,6 +567,7 @@ void F_CLI_Debug_SetLogLevelInfo(){
 
 void F_CLI_Debug_SetLogLevelTrace(){
     Log.setLevel(LOG_LEVEL_TRACE);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_TRACE);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -571,6 +576,7 @@ void F_CLI_Debug_SetLogLevelTrace(){
 
 void F_CLI_Debug_SetLogLevelVerbose(){
     Log.setLevel(LOG_LEVEL_VERBOSE);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_VERBOSE);
     F_CLI_Debug_GetLogLevel();
 }
 
