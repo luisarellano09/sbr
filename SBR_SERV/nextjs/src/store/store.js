@@ -30,12 +30,28 @@ export const useStoreRobot = create((set, get) => ({
 
     UpdateStatusNode: (statusNodeEsp32, statusNodeLinux, nodeHeartbeat) => {
         const prevNodeHeartbeat = get().nodeHeartbeat;
-        const statusHeatbeat = nodeHeartbeat > prevNodeHeartbeat;
+        const statusHeatbeat = nodeHeartbeat != prevNodeHeartbeat;
         set({
             statusNodeEsp32: statusHeatbeat & statusNodeEsp32, 
             statusNodeLinux: statusHeatbeat & statusNodeLinux, 
             nodeHeartbeat: nodeHeartbeat,
             prevNodeHeartbeat: prevNodeHeartbeat,
+        });
+    },
+
+    CheckHeartbeat: () => {
+        const currentNodeHeartbeat = get().nodeHeartbeat;
+        const prevNodeHeartbeat = get().prevNodeHeartbeat;
+        if (currentNodeHeartbeat == prevNodeHeartbeat) {
+            set({
+                statusNodeEsp32: false, 
+                statusNodeLinux: false, 
+                prevNodeHeartbeat: currentNodeHeartbeat,
+            });
+        }
+        
+        set({
+            prevNodeHeartbeat: currentNodeHeartbeat,
         });
     },
 

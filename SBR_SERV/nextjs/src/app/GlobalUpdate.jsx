@@ -7,12 +7,25 @@ import { useStoreRobot } from "@/store/store";
 
 export default function GlobalUpdate() {
 
+    CheckNodeStatus();
+
+    return (
+        <span>
+        </span>
+    ); 
+                     
+}
+
+// Function that is called every 3 seconds to update the status of the nodes
+function CheckNodeStatus(){
+
     const getESP32Status = useQuery(GET_ESP32_STATUS, {
 		pollInterval:3000,
-        fetchPolicy: "no-cache" 
+        fetchPolicy: "no-cache",
 	});
 
     const UpdateStatusNode = useStoreRobot((state) => state.UpdateStatusNode);
+    const CheckHeartbeat = useStoreRobot((state) => state.CheckHeartbeat);
     
     useEffect(() => {
         if (getESP32Status.data != undefined) {
@@ -25,15 +38,11 @@ export default function GlobalUpdate() {
 	}, [getESP32Status.data]);
 
     useEffect(() => {
-        if (getESP32Status.error != undefined) {
-            console.log(getESP32Status.error);
-        }
-	}, [getESP32Status.error]);
+        const interval = setInterval(() => {
+            CheckHeartbeat();
+        }, 6000);
+      
+        return () => clearInterval(interval);
+      }, []);
 
-
-    return (
-        <span>
-        </span>
-    ); 
-    
 }
