@@ -4,6 +4,7 @@
 OPTIONS=(
     "Update" "Update/Upgrade System"
     "Host Monitor" "Monitor the service: sbr_host_monitor.service"
+    "Start Runner" "Start the GitHub Actions Runner"
     "Serial Node Manager" "Serial connection with Manager (exit: Ctrl-A k)"
     "Serial Node01" "Serial connection with Node01 (exit: Ctrl-A k)"
 )
@@ -23,6 +24,11 @@ if [ $? -eq 0 ]; then
             ;;
         "Host Monitor")
             sudo journalctl -fu sbr_host_monitor.service
+            ;;
+        "Start Runner")
+            cd /home/sbrnx/SBR/actions-runner
+            sudo chmod +x svc.sh
+            sudo ./svc.sh start
             ;;
         "Serial Node Manager")
             sudo screen /dev/ttyUSB_ESP32_NODE_MANAGER 115200 

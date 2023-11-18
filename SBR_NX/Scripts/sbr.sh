@@ -4,6 +4,7 @@
 OPTIONS=(
     "Update" "Update/Upgrade System"
     "Host Monitor" "Monitor the service: sbr_host_monitor.service"
+    "Start Runner" "Start the GitHub Actions Runner"
 )
 
 # Show the menu using whiptail
@@ -21,6 +22,11 @@ if [ $? -eq 0 ]; then
             ;;
         "Host Monitor")
             sudo journalctl -fu sbr_host_monitor.service
+            ;;
+        "Start Runner")
+            cd /home/sbrnx/SBR/actions-runner
+            sudo chmod +x svc.sh
+            sudo ./svc.sh start
             ;;
     esac
 else
