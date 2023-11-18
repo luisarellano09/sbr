@@ -11,7 +11,7 @@
   "dependencies": {
     "@apollo/client": "^3.8.1",
     "@heroicons/react": "^2.0.18",
-    "@nextui-org/react": "^2.1.13",
+    "@nextui-org/react": "^2.2.9",
     "autoprefixer": "10.4.15",
     "classnames": "^2.3.2",
     "eslint": "8.47.0",
