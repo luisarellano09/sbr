@@ -26,7 +26,7 @@ if [ $? -eq 0 ]; then
             sudo journalctl -fu sbr_host_monitor.service
             ;;
         "Start Runner")
-            cd /home/sbrnx/SBR/actions-runner
+            cd /home/pi/SBR/actions-runner
             sudo chmod +x svc.sh
             sudo ./svc.sh start
             ;;
