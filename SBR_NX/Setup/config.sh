@@ -138,7 +138,7 @@ sudo apt-get update
     echo "****** Docker Swarm ******"
     # see the current token from the sbrpi: docker swarm join-token manager
     docker swarm join --token SWMTKN-1-26q18j5orh7nnhob5vevg0lpxhsgbc3erlioct56wafdbqhh0e-2p4xu2npkxp1fierun3yw1xa5 172.168.10.10:2377
-
+    docker network create --driver overlay --attachable sbr_net_swarm
 
     # create a flag file to check if we are resuming from reboot.
     cd
