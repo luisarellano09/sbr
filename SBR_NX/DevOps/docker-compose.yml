@@ -13,7 +13,7 @@ services:
             - 9000:9000
         networks:
             - sbr_net_external
-            # - sbr_net_swarm
+            - sbr_net_swarm
 
 
     sbr_serv_host_connector:
