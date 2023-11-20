@@ -20,7 +20,7 @@ jobs:
         shell: bash
       - name: Docker Compose
         working-directory: ./SBR_PI/DevOps
-        run: docker compose up --build --force-recreate -d
+        run: docker compose up --build -d
       - name: Restart NGINX
         working-directory: ./SBR_PI/DevOps
         run: docker compose restart sbr_nginx
