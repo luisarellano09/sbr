@@ -105,7 +105,6 @@ echo "****** Docker Swarm ******"
 docker swarm init --advertise-addr 172.168.10.10
 # After adding the swarm in sbrnx
 docker node promote sbrnx
-docker network create --driver overlay --attachable sbr_net_swarm
 
 
 echo "****** Disable GUI ******"
