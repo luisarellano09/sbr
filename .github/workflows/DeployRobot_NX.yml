@@ -17,7 +17,7 @@ jobs:
           echo "RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}" >> ./.env
       - name: Docker Compose
         working-directory: ./SBR_NX/DevOps
-        run: docker compose up --build -d
+        run: docker compose up --build --force-recreate -d
       - name: Delete old images
         run: docker image prune -f
 
