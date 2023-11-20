@@ -5,6 +5,7 @@ OPTIONS=(
     "Update" "Update/Upgrade System"
     "Host Monitor" "Monitor the service: sbr_host_monitor.service"
     "Start Runner" "Start the GitHub Actions Runner"
+    "Docker Compose" "cd into the docker-compose folder"
     "Restart" "Restart the system"
     "Shutdown" "Shutdown the system"
 )
@@ -29,6 +30,9 @@ if [ $? -eq 0 ]; then
             cd /home/sbrnx/SBR/actions-runner
             sudo chmod +x svc.sh
             sudo ./svc.sh start
+            ;;
+        "Docker Compose")
+            cd ~/SBR/actions-runner/_work/sbr/sbr/SBR_NX/DevOps
             ;;
         "Restart")
             sudo reboot

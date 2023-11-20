@@ -7,6 +7,7 @@ OPTIONS=(
     "Start Runner" "Start the GitHub Actions Runner"
     "Serial Node Manager" "Serial connection with Manager (exit: Ctrl-A k)"
     "Serial Node01" "Serial connection with Node01 (exit: Ctrl-A k)"
+    "Docker Compose" "cd into the docker-compose folder"
     "Restart" "Restart the system"
     "Shutdown" "Shutdown the system"
 )
@@ -37,6 +38,9 @@ if [ $? -eq 0 ]; then
             ;;
         "Serial Node01")
             sudo screen /dev/ttyUSB_ESP32_NODE_01 115200
+            ;;
+        "Docker Compose")
+            cd ~/SBR/actions-runner/_work/sbr/sbr/SBR_PI/DevOps
             ;;
         "Restart")
             sudo reboot
