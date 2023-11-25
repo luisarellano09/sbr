@@ -91,6 +91,15 @@ while true; do
         no_ip_found=0
         first_try=0
 
+        # Docker compose Patrol
+        if [ "$hostname" == "sbrpi" ]; then
+            cd /home/$user/SBR/actions-runner/_work/sbr/sbr/SBR_PI/DevOps
+            docker compose up -d
+        elif [[ "$hostname" == "sbrnx" ]]; then
+            cd /home/$user/SBR/actions-runner/_work/sbr/sbr/SBR_NX/DevOps
+            docker compose up -d
+        fi
+
     else
         echo "No IP address is assigned to eth0."
         no_ip_found=1
