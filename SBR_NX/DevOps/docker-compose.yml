@@ -21,7 +21,7 @@ services:
         image: sbr/sbr_serv_host_connector:1.0
         container_name: sbr_serv_host_connector
         volumes:
-            - ~SBR/data/host_connector/requests:/app
+            - /home/sbrnx/SBR/data/host_connector/requests:/app
         environment:
             RABBITMQ_HOST: "sbr_rabbitmq"
             RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
