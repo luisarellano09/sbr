@@ -32,7 +32,7 @@ if [ $? -eq 0 ]; then
             sudo ./svc.sh start
             ;;
         "Docker Compose")
-            cd ~/SBR/actions-runner/_work/sbr/sbr/SBR_NX/DevOps
+            external_cd "~/SBR/actions-runner/_work/sbr/sbr/SBR_NX/DevOps"
             ;;
         "Restart")
             sudo reboot
@@ -45,3 +45,11 @@ else
     # User pressed Cancel or closed the menu
     echo "Menu canceled."
 fi
+
+external_cd() {
+    if [ -z "$1" ]; then
+        return 1
+    fi
+    
+    cd "$1"
+}

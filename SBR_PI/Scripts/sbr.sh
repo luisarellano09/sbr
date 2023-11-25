@@ -40,7 +40,7 @@ if [ $? -eq 0 ]; then
             sudo screen /dev/ttyUSB_ESP32_NODE_01 115200
             ;;
         "Docker Compose")
-            cd ~/SBR/actions-runner/_work/sbr/sbr/SBR_PI/DevOps
+            external_cd "~/SBR/actions-runner/_work/sbr/sbr/SBR_PI/DevOps"
             ;;
         "Restart")
             sudo reboot
@@ -53,3 +53,11 @@ else
     # User pressed Cancel or closed the menu
     echo "Menu canceled."
 fi
+
+external_cd() {
+    if [ -z "$1" ]; then
+        return 1
+    fi
+    
+    cd "$1"
+}
