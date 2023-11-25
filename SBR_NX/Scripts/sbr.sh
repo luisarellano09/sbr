@@ -13,6 +13,15 @@ OPTIONS=(
 # Show the menu using whiptail
 CHOICE=$(whiptail --title "SBR Menu" --menu "Choose an option:" 15 80 5 "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
 
+# cd to a directory outside of the current directory
+external_cd() {
+    if [ -z "$1" ]; then
+        return 1
+    fi
+    
+    cd "$1"
+}
+
 # Check the exit status to see if the user pressed Cancel or OK
 if [ $? -eq 0 ]; then
     # User made a selection
@@ -45,11 +54,3 @@ else
     # User pressed Cancel or closed the menu
     echo "Menu canceled."
 fi
-
-external_cd() {
-    if [ -z "$1" ]; then
-        return 1
-    fi
-    
-    cd "$1"
-}
