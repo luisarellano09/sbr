@@ -49,7 +49,7 @@ if [ $? -eq 0 ]; then
             sudo screen /dev/ttyUSB_ESP32_NODE_01 115200
             ;;
         "Docker Compose")
-            external_cd "~/SBR/actions-runner/_work/sbr/sbr/SBR_PI/DevOps"
+            external_cd "/home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/DevOps"
             ;;
         "Restart")
             sudo reboot

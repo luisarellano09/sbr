@@ -41,7 +41,7 @@ if [ $? -eq 0 ]; then
             sudo ./svc.sh start
             ;;
         "Docker Compose")
-            external_cd "~/SBR/actions-runner/_work/sbr/sbr/SBR_NX/DevOps"
+            external_cd "/home/sbrnx/SBR/actions-runner/_work/sbr/sbr/SBR_NX/DevOps"
             ;;
         "Restart")
             sudo reboot
