@@ -11,16 +11,8 @@ OPTIONS=(
 )
 
 # Show the menu using whiptail
-CHOICE=$(whiptail --title "SBR Menu" --menu "Choose an option:" 15 80 5 "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
+CHOICE=$(whiptail --title "SBR Menu" --menu "Choose an option:" 20 80 10 "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
 
-# cd to a directory outside of the current directory
-external_cd() {
-    if [ -z "$1" ]; then
-        return 1
-    fi
-    
-    cd "$1"
-}
 
 # Check the exit status to see if the user pressed Cancel or OK
 if [ $? -eq 0 ]; then
@@ -41,7 +33,7 @@ if [ $? -eq 0 ]; then
             sudo ./svc.sh start
             ;;
         "Docker Compose")
-            external_cd "/home/sbrnx/SBR/actions-runner/_work/sbr/sbr/SBR_NX/DevOps"
+            cd ~/SBR/actions-runner/_work/sbr/sbr/SBR_NX/DevOps
             ;;
         "Restart")
             sudo reboot
