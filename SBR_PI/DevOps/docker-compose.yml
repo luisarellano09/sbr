@@ -8,7 +8,7 @@ services:
         volumes:
             - /etc/localtime:/etc/localtime:ro
             - /var/run/docker.sock:/var/run/docker.sock:ro
-            - ~SBR/data/portainer/portainer-data:/data
+            - /home/pi/SBR/data/portainer/portainer-data:/data
         ports:
             - 9000:9000
         networks:
@@ -65,7 +65,7 @@ services:
         ports:
             - "5432:5432"
         volumes:
-            - ~SBR/data/postgresql/db:/var/lib/postgresql/data
+            - /home/pi/SBR/data/postgresql/db:/var/lib/postgresql/data
         healthcheck:
             test: ["CMD-SHELL", "pg_isready -U postgres"]
             interval: 5s
@@ -83,7 +83,7 @@ services:
         hostname: sbrpi
         volumes:
             - ../../SBR_SERV/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-            - ~SBR/data/certs:/etc/nginx/certs
+            - /home/pi/SBR/data/certs:/etc/nginx/certs
         ports:
             - 80:80
             - 443:443
@@ -107,8 +107,8 @@ services:
         image: niruix/sshwifty:latest
         container_name: sbr_webssh
         volumes:
-            - ~SBR/data/certs/domain.key:/tmp/certkey
-            - ~SBR/data/certs/domain.crt:/tmp/cert
+            - /home/pi/SBR/data/certs/domain.key:/tmp/certkey
+            - /home/pi/SBR/data/certs/domain.crt:/tmp/cert
         network_mode: "host"
 
 
@@ -226,7 +226,7 @@ services:
         image: sbr/sbr_serv_host_connector:1.0
         container_name: sbr_serv_host_connector
         volumes:
-            - ~SBR/data/host_connector/requests:/app
+            - /home/pi/SBR/data/host_connector/requests:/app
         environment:
             RABBITMQ_HOST: "sbr_rabbitmq"
             RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
