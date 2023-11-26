@@ -148,17 +148,17 @@ task_monitor_docker_compose() {
 # Infinite loop
 while true; do
 
-    echo $"\n\n======================= HOST MONITORING ======================="
+    printf "\n\n======================= HOST MONITORING ======================="
 
-    echo $"\n============= NETWORK MONITORING ============="
+    printf "\n============= NETWORK MONITORING ============="
     task_monitor_network
 
-    echo $"\n============== FILES MONITORING =============="
+    printf "\n============== FILES MONITORING =============="
     task_monitor_files
 
     # Run every 15 seconds
     if (( counter_timer % 3 == 0 )); then
-        echo $"\n=========  DOCKER COMPOSE MONITORING ========="
+        printf "\n=========  DOCKER COMPOSE MONITORING ========="
         task_monitor_docker_compose
     fi
 
