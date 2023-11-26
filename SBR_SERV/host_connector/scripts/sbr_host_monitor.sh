@@ -6,6 +6,7 @@ sleep 30 # Init Delay
 counter_timer=0
 first_try=1
 no_ip_found=0
+stop_docker_monitor=0
 
 # Get PC Name
 hostname=$(hostname)
@@ -81,6 +82,14 @@ task_monitor_files() {
                         sudo chmod +x svc.sh
                         sudo ./svc.sh start
 
+                    elif [ "$filename" == "STOP_DOCKER_MONITOR" ]; then
+                        echo "Stop Docker Monitor"
+                        stop_docker_monitor=1
+                    
+                    elif [ "$filename" == "START_DOCKER_MONITOR" ]; then
+                        echo "Start Docker Monitor"
+                        stop_docker_monitor=0
+
                     else
                         echo "Command not found"
                     fi
@@ -132,15 +141,21 @@ task_monitor_network() {
 task_monitor_docker_compose() {
     
     # Check if an IP address is assigned
-    if [ -n "$ip_address" ]; then
-        # Docker compose Patrol
-        if [ "$hostname" == "sbrpi" ]; then
-            cd /home/$user/SBR/actions-runner/_work/sbr/sbr/SBR_PI/DevOps
+    if [ -n "$ip_address"]; then
+
+        if [ $stop_docker_monitor == 0 ]; then
+
+            # Docker compose Patrol
+            if [ "$hostname" == "sbrpi" ]; then
+                cd /home/$user/SBR/actions-runner/_work/sbr/sbr/SBR_PI/DevOps
+            elif [[ "$hostname" == "sbrnx" ]]; then
+                cd /home/$user/SBR/actions-runner/_work/sbr/sbr/SBR_NX/DevOps
+            fi
+
             docker compose up -d
-        elif [[ "$hostname" == "sbrnx" ]]; then
-            cd /home/$user/SBR/actions-runner/_work/sbr/sbr/SBR_NX/DevOps
-            docker compose up -d
+
         fi
+       
     fi
 }
 
