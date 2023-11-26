@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 export default function PortainerNX() {
 
-    const hostName = useStoreWeb((state) => state.hostName);
+    const hostName = "sbrnx.local";
     const SetCurrentPage = useStoreWeb((state) => state.SetCurrentPage);
 
     useEffect(()=>{
@@ -14,7 +14,7 @@ export default function PortainerNX() {
 
     return (
         <div>
-            <iframe src={"https://" + hostName+ "/sbr_portainer_nx/"} className="w-[100%] h-[100vh]"/>
+            <iframe src={"http://" + hostName+ ":9000"} className="w-[100%] h-[100vh]"/>
         </div>
     );
 }
