@@ -141,7 +141,7 @@ task_monitor_network() {
 task_monitor_docker_compose() {
     
     # Check if an IP address is assigned
-    if [ -n "$ip_address"]; then
+    if [ -n "$ip_address" ]; then
 
         if [ $stop_docker_monitor == 0 ]; then
 
