@@ -52,8 +52,6 @@ export default function SidebarItems({ collapsed }) {
 				</AccordionItem>
 
                 <AccordionItem key="6" title="Utilities" startContent={ <CubeIcon className="w-4" /> } >
-					<Link href="/Utilities/PortainerPI"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Portainer PI</p> </Link>
-                    <Link href="/Utilities/PortainerNX"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Portainer NX</p> </Link>
                     <Link href="/Utilities/Graphql"> <p className=" px-2 rounded-lg hover:bg-[#697083]">GraphQL</p> </Link>
 				</AccordionItem>
 
