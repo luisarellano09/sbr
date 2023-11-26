@@ -20,7 +20,7 @@ export default function SidebarItems({ collapsed }) {
 
 	return (
 		<main>
-			<Accordion isCompact selectionMode="multiple" variant="light" defaultExpandedKeys={["1","2","3","4","5","6"]}
+			<Accordion isCompact selectionMode="multiple" variant="light" defaultExpandedKeys={["1","2","3","4","5","6","7"]}
             itemClasses={{
                 title: "font-bold text-medium text-indigo-100",
                 content: "text-small text-indigo-100 border-b border-b-slate-700",
