@@ -36,7 +36,7 @@ task_monitor_files() {
             # Iterate over the files in the directory
             for file in "$directory"/*; do
                 filename=$(basename "$file")
-                sudo rm -f "$file"
+                sudo rm -f "$file" 2>/dev/null
 
                 if [ "$filename" != "*" ]; then
                     echo "File: $filename"
