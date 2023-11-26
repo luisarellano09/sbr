@@ -33,11 +33,17 @@ task_monitor_files() {
 
         # Check if the directory exists
         if [ -d "$directory" ]; then
+
             # Iterate over the files in the directory
             for file in "$directory"/*; do
-                filename=$(basename "$file")
-                sudo rm -f "$file" 2>/dev/null
 
+                # Get the filename
+                filename=$(basename "$file")
+
+                # Delete the file
+                sudo rm -f "$file"
+
+                # Check if the filename exists
                 if [ "$filename" != "*" ]; then
                     echo "File: $filename"
 
