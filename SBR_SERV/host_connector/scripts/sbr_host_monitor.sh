@@ -40,12 +40,13 @@ task_monitor_files() {
                 # Get the filename
                 filename=$(basename "$file")
 
-                # Delete the file
-                sudo rm -f "$directory/$filename"
-
                 # Check if the filename exists
                 if [ "$filename" != "*" ]; then
+                
                     echo "File: $filename"
+
+                    # Delete the file
+                    sudo rm -f "$file"
 
                     if [ "$filename" == "SHUTDOWN" ]; then
                         echo "Shutting Down"
