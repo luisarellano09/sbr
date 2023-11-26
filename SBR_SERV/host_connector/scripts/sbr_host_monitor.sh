@@ -41,7 +41,7 @@ task_monitor_files() {
                 filename=$(basename "$file")
 
                 # Delete the file
-                sudo rm -f "$file"
+                sudo rm -f "$directory/$filename"
 
                 # Check if the filename exists
                 if [ "$filename" != "*" ]; then
