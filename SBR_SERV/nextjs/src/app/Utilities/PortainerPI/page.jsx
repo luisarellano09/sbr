@@ -14,7 +14,7 @@ export default function PortainerPI() {
 
     return (
         <div>
-            <iframe src={"https://" + hostName+ "/sbr_portainer_pi/"} className="w-[100%] h-[100vh]"/>
+            <iframe src={"http://" + hostName+ ":9000"} className="w-[100%] h-[100vh]"/>
         </div>
     );
 }
