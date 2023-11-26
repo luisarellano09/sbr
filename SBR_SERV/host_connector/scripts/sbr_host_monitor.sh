@@ -143,7 +143,6 @@ while true; do
 
     task_monitor_network
     task_monitor_files
-    task_monitor_docker_compose
 
     # Run every 15 seconds
     if (( counter_timer % 3 == 0 )); then
