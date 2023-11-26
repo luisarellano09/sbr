@@ -42,7 +42,7 @@ task_monitor_files() {
 
                 # Check if the filename exists
                 if [ "$filename" != "*" ]; then
-                
+
                     echo "File: $filename"
 
                     # Delete the file
@@ -148,11 +148,17 @@ task_monitor_docker_compose() {
 # Infinite loop
 while true; do
 
+    echo "********************* Host Monitoring *********************"
+
+    echo "****** Network Monitoring ******"
     task_monitor_network
+
+    echo "****** Files Monitoring ******"
     task_monitor_files
 
     # Run every 15 seconds
     if (( counter_timer % 3 == 0 )); then
+        echo "****** Docker Compose Monitoring ******"
         task_monitor_docker_compose
     fi
 
