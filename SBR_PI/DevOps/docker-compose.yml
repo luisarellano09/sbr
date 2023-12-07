@@ -184,6 +184,7 @@ services:
                 condition: service_started
         networks:
             - sbr_net_internal
+            - sbr_net_external
             - sbr_net_swarm
 
 
