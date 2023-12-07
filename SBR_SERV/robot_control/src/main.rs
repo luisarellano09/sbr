@@ -1,6 +1,7 @@
 
 use std::{thread, time};
 use std::sync::mpsc::channel;
+use dotenv::dotenv;
 
 mod graphql;
 mod robot_control;
@@ -10,6 +11,8 @@ use robot_control::RobotControl;
 use collect_events::CollectEvents;
 
 fn main() {
+
+    dotenv().ok();
 
     let (sender_control_robot, receiver_collect_events) = channel();
 
