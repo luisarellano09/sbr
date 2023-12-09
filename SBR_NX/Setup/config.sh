@@ -79,11 +79,11 @@ if [ ! -f exec01 ]; then
     sudo apt-get install ca-certificates curl gnupg
     sudo install -m 0755 -d /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-    echo \
-    "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-    "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt-get update
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     sudo groupadd docker
     sudo usermod -aG docker $USER
@@ -138,7 +138,6 @@ if [ ! -f exec01 ]; then
     echo "****** Docker Swarm ******"
     # see the current token from the sbrpi: docker swarm join-token manager
     docker swarm join --token SWMTKN-1-26q18j5orh7nnhob5vevg0lpxhsgbc3erlioct56wafdbqhh0e-2p4xu2npkxp1fierun3yw1xa5 172.168.10.10:2377
-
 
     # create a flag file to check if we are resuming from reboot.
     cd

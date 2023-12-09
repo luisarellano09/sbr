@@ -5,10 +5,14 @@ OPTIONS=(
     "Update" "Update/Upgrade System"
     "Host Monitor" "Monitor the service: sbr_host_monitor.service"
     "Start Runner" "Start the GitHub Actions Runner"
+    "Docker Compose" "cd into the docker-compose folder"
+    "Restart" "Restart the system"
+    "Shutdown" "Shutdown the system"
 )
 
 # Show the menu using whiptail
-CHOICE=$(whiptail --title "SBR Menu" --menu "Choose an option:" 15 80 5 "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
+CHOICE=$(whiptail --title "SBR Menu" --menu "Choose an option:" 20 80 10 "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
+
 
 # Check the exit status to see if the user pressed Cancel or OK
 if [ $? -eq 0 ]; then
@@ -27,6 +31,15 @@ if [ $? -eq 0 ]; then
             cd /home/sbrnx/SBR/actions-runner
             sudo chmod +x svc.sh
             sudo ./svc.sh start
+            ;;
+        "Docker Compose")
+            cd ~/SBR/actions-runner/_work/sbr/sbr/SBR_NX/DevOps
+            ;;
+        "Restart")
+            sudo reboot
+            ;;
+        "Shutdown")
+            sudo shutdown -h now
             ;;
     esac
 else

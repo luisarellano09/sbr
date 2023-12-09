@@ -7,6 +7,18 @@ use crate::graphql::{query_get_esp32_status, query_get_esp32_mode_node1_sync_dat
 
 
 //=====================================================================================================
+// Struct for CollectEvents
+pub struct CollectEvents{
+    graphql_client: Client,
+    sender_robot_control: Sender<RobotEvent>,
+    prev_heartbeat: (u64, i64),
+    heartbeat_error: bool,
+    prev_event: RobotEvent,
+    robot_up: bool,
+}
+
+//=====================================================================================================
+// Events
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RobotEvent {
     None,
@@ -18,8 +30,8 @@ pub enum RobotEvent {
     Command(RobotCommand),
 }
 
-
 //=====================================================================================================
+// Commands
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RobotCommand {
     Start,
@@ -27,17 +39,13 @@ pub enum RobotCommand {
     Pause,
 }
 
-pub struct CollectEvents{
-    graphql_client: Client,
-    sender_robot_control: Sender<RobotEvent>,
-    prev_heartbeat: (u64, i64),
-    heartbeat_error: bool,
-    prev_event: RobotEvent,
-    robot_up: bool,
-}
 
-
+//===================================================================================================================================
+//===================================================================================================================================
 impl CollectEvents {
+
+    //=====================================================================================================
+    // Constructor for CollectEvents
     pub fn new(sender_robot_control: Sender<RobotEvent>) -> Self {
         Self {
             graphql_client: Client::new(),
@@ -50,6 +58,8 @@ impl CollectEvents {
     }
 
 
+    //=====================================================================================================
+    // Main loop for CollectEvents
     pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
         
         let new_event = self.collect_events()?;
@@ -64,6 +74,7 @@ impl CollectEvents {
     }
 
 
+    //=====================================================================================================
     pub fn collect_events(&mut self) -> Result<RobotEvent, Box<dyn Error>> {
         
         let new_event = self.collect_event_esp32()?;
@@ -85,6 +96,7 @@ impl CollectEvents {
     }
 
 
+    //=====================================================================================================
     fn collect_event_esp32(&mut self) -> Result<RobotEvent, Box<dyn Error>> {
 
         let res = query_get_esp32_status(&self.graphql_client)?;
@@ -119,7 +131,9 @@ impl CollectEvents {
     }
 
 
+    //=====================================================================================================
     fn collect_request_load_data_esp32(&mut self) -> Result<RobotEvent, Box<dyn Error>> {
+
         let res = query_get_esp32_mode_node1_sync_data(&self.graphql_client)?;
         if matches!(res, crate::graphql::get_esp32_mode_node1_sync_data::RegisterCommand::Requested) {
             mutation_set_esp32_mode_node1_sync_data(&self.graphql_client, crate::graphql::set_esp32_mode_node1_sync_data::RegisterCommand::InProgress)?;
@@ -130,10 +144,11 @@ impl CollectEvents {
     }
 
 
+    //=====================================================================================================
     fn collect_robot_fall(&mut self) -> Result<RobotEvent, Box<dyn Error>> {
+        
         let res = query_get_esp32_live_imu(&self.graphql_client)?;
         let pitch = res.pitch;
-
 
         if pitch < 15.0 && pitch > -15.0 {
             self.robot_up = true;

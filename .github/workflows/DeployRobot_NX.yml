@@ -15,11 +15,15 @@ jobs:
           echo "RABBITMQ_ERLANG_COOKIE=${{ secrets.RABBITMQ_ERLANG_COOKIE }}" > ./.env
           echo "RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}" >> ./.env
           echo "RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}" >> ./.env
+      - name: Stop Docker Monitor in host
+        run: sudo touch /home/sbrnx/SBR/data/host_connector/requests/STOP_DOCKER_MONITOR
       - name: Docker Compose
         working-directory: ./SBR_NX/DevOps
         run: docker compose up --build -d
       - name: Delete old images
         run: docker image prune -f
+      - name: Start Docker Monitor in host
+        run: sudo touch /home/sbrnx/SBR/data/host_connector/requests/START_DOCKER_MONITOR
 
       - name: Copy Service
         run: sudo cp /home/sbrnx/SBR/actions-runner/_work/sbr/sbr/SBR_NX/Services/sbr_host_monitor.service /etc/systemd/system/
