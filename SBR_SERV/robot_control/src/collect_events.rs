@@ -3,7 +3,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use std::sync::mpsc::Sender;
 use ::reqwest::blocking::Client;
 
-use crate::graphql::{query_get_esp32_status, query_get_esp32_mode_node1_sync_data, mutation_set_esp32_mode_node1_sync_data, query_get_esp32_live_imu};
+use crate::graphql::{query_get_esp32_status, query_get_esp32_mode_node1_sync_data, query_get_esp32_live_imu};
 
 
 //=====================================================================================================
@@ -41,6 +41,7 @@ pub enum RobotCommand {
 
 
 //===================================================================================================================================
+// CollectEvents
 //===================================================================================================================================
 impl CollectEvents {
 
@@ -136,7 +137,6 @@ impl CollectEvents {
 
         let res = query_get_esp32_mode_node1_sync_data(&self.graphql_client)?;
         if matches!(res, crate::graphql::get_esp32_mode_node1_sync_data::RegisterCommand::Requested) {
-            mutation_set_esp32_mode_node1_sync_data(&self.graphql_client, crate::graphql::set_esp32_mode_node1_sync_data::RegisterCommand::InProgress)?;
             return Ok(RobotEvent::RequestLoadDataEsp32);
         }
 

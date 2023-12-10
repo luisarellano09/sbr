@@ -347,7 +347,7 @@ RC_e ExtHandler(Request* request){
 
 //=====================================================================================================
 
-RC_e UpdateRegistersFast(){
+RC_e UpdateRegistersRT(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
@@ -366,52 +366,6 @@ RC_e UpdateRegistersFast(){
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::LIVE_ODOMETRY_DISTANCE_R, manager->m_odometry->GetDistance() * 1000);
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::LIVE_MOTION_SP_POSITION_R, manager->m_motionControl->GetSPPos() * 1000);
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::LIVE_MOTION_SP_ANGLE_R, manager->m_motionControl->GetSPAngle() * 100);
-    }
-
-    return retCode;
-}
-
-
-//=====================================================================================================
-
-RC_e UpdateRegistersSlow(){
-    // Result code
-    RC_e retCode = RC_e::SUCCESS;
-
-    if (manager->m_nodeESP32->GetError() == false) {
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_OFFSET_R, manager->m_motorLeft->GetOffset() * 100);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_LEFT_DIRECTION_R, manager->m_motorLeft->GetDirection());
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_OFFSET_R, manager->m_motorRight->GetOffset() * 100);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTOR_RIGHT_DIRECTION_R, manager->m_motorRight->GetDirection());
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_PITCH_R, manager->m_IMU->GetDirectionPitch());
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_ROLL_R, manager->m_IMU->GetDirectionRoll());
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_IMU_INVERT_YAW_R, manager->m_IMU->GetDirectionYaw());
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_IMU_OFFSET_PITCH_R, manager->m_IMU->GetPitchOffset() * 100);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_ENCODER_LEFT_DIRECTION_R, manager->m_encoderLeft->GetDirection());
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_ENCODER_RIGHT_DIRECTION_R, manager->m_encoderRight->GetDirection());
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_ODOMETRY_WHEEL_RADIO_R, manager->m_odometry->GetRadio() * 1000);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_ODOMETRY_DISTANCE_WHEELS_R, manager->m_odometry->GetDistanceWheels() * 1000);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_KP_R, manager->m_motionControl->m_PIDPitch->GetKp() * 1000);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_KI_R, manager->m_motionControl->m_PIDPitch->GetKi() * 1000);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_KD_R, manager->m_motionControl->m_PIDPitch->GetKd() * 1000);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_CYCLE_R, manager->m_motionControl->m_PIDPitch->GetCycleTime() * 1000);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_DIRECTION_R, manager->m_motionControl->m_PIDPitch->GetDirection());
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_MV_MIN_R, manager->m_motionControl->m_PIDPitch->GetMVRangeMin() * 100);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_MV_MAX_R, manager->m_motionControl->m_PIDPitch->GetMVRangeMax() * 100);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_KP_R, manager->m_motionControl->m_PIDPosition->GetKp() * 1000);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_KI_R, manager->m_motionControl->m_PIDPosition->GetKi() * 1000);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_KD_R, manager->m_motionControl->m_PIDPosition->GetKd() * 1000);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_CYCLE_R, manager->m_motionControl->m_PIDPosition->GetCycleTime() * 1000);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_DIRECTION_R, manager->m_motionControl->m_PIDPosition->GetDirection());
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_MV_MIN_R, manager->m_motionControl->m_PIDPosition->GetMVRangeMin() * 100);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_MV_MAX_R, manager->m_motionControl->m_PIDPosition->GetMVRangeMax() * 100);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_KP_R, manager->m_motionControl->m_PIDAngle->GetKp() * 1000);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_KI_R, manager->m_motionControl->m_PIDAngle->GetKi() * 1000);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_KD_R, manager->m_motionControl->m_PIDAngle->GetKd() * 1000);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_CYCLE_R, manager->m_motionControl->m_PIDAngle->GetCycleTime() * 1000);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_DIRECTION_R, manager->m_motionControl->m_PIDAngle->GetDirection());
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_MV_MIN_R, manager->m_motionControl->m_PIDAngle->GetMVRangeMin() * 100);
-        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_MV_MAX_R, manager->m_motionControl->m_PIDAngle->GetMVRangeMax() * 100);
     }
 
     return retCode;
