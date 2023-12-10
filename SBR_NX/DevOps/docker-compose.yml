@@ -3,7 +3,7 @@ version: "3.8"
 services:
     sbr_portainer_nx:
         restart: unless-stopped
-        image: portainer/portainer-ce
+        image: portainer/portainer-ce:latest
         container_name: sbr_portainer_nx
         volumes:
             - /etc/localtime:/etc/localtime:ro
