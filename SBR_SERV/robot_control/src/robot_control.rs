@@ -62,7 +62,7 @@ impl RobotControl {
     // Main function for the robot control state machine.
     pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
 
-        dbg!(&self.state);
+        //dbg!(&self.state);
 
         // Get the current event from the event collector.
         let event = self.get_events()?;
