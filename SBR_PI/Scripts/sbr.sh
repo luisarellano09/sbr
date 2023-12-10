@@ -6,8 +6,10 @@ OPTIONS=(
     "Host Monitor" "Monitor the service: sbr_host_monitor.service"
     "Start Runner" "Start the GitHub Actions Runner"
     "Serial Node Manager" "Serial connection with Manager (exit: Ctrl-A k)"
-    "Serial Node01" "Serial connection with Node01 (exit: Ctrl-A k)"
+    "Serial Node 01" "Serial connection with Node 01 (exit: Ctrl-A k)"
     "Docker Compose" "cd into the docker-compose folder"
+    "Start Docker Monitor" "Start the Docker Monitor service"
+    "Stop Docker Monitor" "Stop the Docker Monitor service"
     "Restart" "Restart the system"
     "Shutdown" "Shutdown the system"
 )
@@ -41,6 +43,12 @@ if [ $? -eq 0 ]; then
             ;;
         "Docker Compose")
             cd ~/SBR/actions-runner/_work/sbr/sbr/SBR_PI/DevOps
+            ;;
+        "Start Docker Monitor")
+            sudo touch ~/SBR/data/host_connector/requests/START_DOCKER_MONITOR
+            ;;
+        "Stop Docker Monitor")
+            sudo touch ~/SBR/data/host_connector/requests/STOP_DOCKER_MONITOR
             ;;
         "Restart")
             sudo reboot
