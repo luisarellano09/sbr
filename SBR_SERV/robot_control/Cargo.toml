@@ -10,3 +10,4 @@ dotenv = "0.15.0"
 graphql_client = { version = "0.13.0", features = ["reqwest-blocking"] }
 reqwest = "0.11.18"
 serde = "1.0"
+amiquip = "0.4"
