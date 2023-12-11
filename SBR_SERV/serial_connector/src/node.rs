@@ -6,7 +6,7 @@ use std::collections::VecDeque;
 use std::sync::mpsc::{Sender, Receiver};
 use crate::request::{buffer_to_request, check_crc, calculate_crc_from_request, request_to_buffer, Request};
 use crate::register_table::COM_REQUEST_REG_ID_e;
-use crate::message_esp32::MessageEsp32;
+use crate::type_message_esp32::MessageEsp32;
 use crate::serial::Serial;
 
 

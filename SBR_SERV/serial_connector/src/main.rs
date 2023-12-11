@@ -3,7 +3,7 @@ use std::sync::mpsc::channel;
 
 mod serial;
 mod node;
-mod message_esp32;
+mod type_message_esp32;
 mod rabbitmq_consumer;
 mod rabbitmq_producer;
 mod register_table;

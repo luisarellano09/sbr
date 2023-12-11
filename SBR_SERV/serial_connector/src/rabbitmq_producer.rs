@@ -3,7 +3,7 @@
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, Publish};
 use serde_json::json;
 use std::{sync::mpsc::Receiver, error::Error};
-use crate::message_esp32::MessageEsp32;
+use crate::type_message_esp32::MessageEsp32;
 use std::env;
 
 
