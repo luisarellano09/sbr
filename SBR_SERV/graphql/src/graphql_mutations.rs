@@ -1,8 +1,9 @@
 use juniper::{graphql_object, FieldResult};
 use crate::graphql_context::ContextGraphQL;
 use crate::graphql_types::{RegisterCommand, Esp32SetupInput};
-use crate::rabbitmq_connection::{publish_esp32_write, publish_host_connector};
+use crate::rabbitmq_connection::{publish_esp32_write, publish_host_connector, publish_command};
 use crate::postgres_connection::connect_postgres;
+use crate::type_command::Command;
 
 
 //=====================================================================================================
@@ -712,6 +713,74 @@ impl Mutations {
 
         publish_host_connector(host, request)?;
 
+        Ok(true)
+    }
+
+
+    //=====================================================================================================
+    fn SendCommandBool(_context: &ContextGraphQL, endpoint: String, name: String, value: bool) -> FieldResult<bool> {
+
+        let cmd = Command {
+            name: name,
+            value_bool: value,
+            value_int: 0,
+            value_float: 0.0,
+            value_string: "".to_string(),
+        };
+        
+        publish_command(endpoint, cmd)?;
+            
+        Ok(true)
+    }
+
+
+    //=====================================================================================================
+    fn SendCommandInt(_context: &ContextGraphQL, endpoint: String, name: String, value: i32) -> FieldResult<bool> {
+
+        let cmd = Command {
+            name: name,
+            value_bool: false,
+            value_int: value,
+            value_float: 0.0,
+            value_string: "".to_string(),
+        };
+        
+        publish_command(endpoint, cmd)?;
+            
+        Ok(true)
+    }
+
+
+    //=====================================================================================================
+    fn SendCommandFloat(_context: &ContextGraphQL, endpoint: String, name: String, value: f64) -> FieldResult<bool> {
+
+        let cmd = Command {
+            name: name,
+            value_bool: false,
+            value_int: 0,
+            value_float: value,
+            value_string: "".to_string(),
+        };
+        
+        publish_command(endpoint, cmd)?;
+            
+        Ok(true)
+    }
+
+
+    //=====================================================================================================
+    fn SendCommandString(_context: &ContextGraphQL, endpoint: String, name: String, value: String) -> FieldResult<bool> {
+
+        let cmd = Command {
+            name: name,
+            value_bool: false,
+            value_int: 0,
+            value_float: 0.0,
+            value_string: value,
+        };
+        
+        publish_command(endpoint, cmd)?;
+            
         Ok(true)
     }
     
