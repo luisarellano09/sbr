@@ -1,7 +1,7 @@
 use std::error::Error;
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOptions, FieldTable, ConsumerOptions, ConsumerMessage};
 use redis::Commands;
-use crate::message_esp32::MessageEsp32;
+use crate::type_message_esp32::MessageEsp32;
 use std::env;
 
 
