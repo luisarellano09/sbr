@@ -7,6 +7,7 @@ mod graphql;
 mod robot_control;
 mod collect_events;
 mod rabbitmq_consumer_commands;
+mod type_command;
 
 use robot_control::RobotControl;
 use collect_events::CollectEvents;

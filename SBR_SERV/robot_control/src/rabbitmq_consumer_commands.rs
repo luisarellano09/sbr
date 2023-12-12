@@ -2,6 +2,8 @@ use std::error::Error;
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOptions, FieldTable, ConsumerOptions, ConsumerMessage};
 use std::env;
 
+use crate::type_command::Command;
+
 
 //=====================================================================================================
 const URL: &str = "amqp://RABBITMQ_USER:RABBITMQ_PASS@RABBITMQ_HOST:5672/";
@@ -16,9 +18,7 @@ impl RabbitmqConsumerCommands {
 
     //=====================================================================================================
     pub fn new() -> Self {
-        RabbitmqConsumerCommands {
-            
-        }
+        RabbitmqConsumerCommands {}
     }
 
     
@@ -64,7 +64,7 @@ impl RabbitmqConsumerCommands {
         )?;
 
         //Binding
-        let key: String = String::from("COMMAND.#");
+        let key: String = String::from("COMMANDS.ROBOT_CONTROL");
         queue.bind(&exchange, key, FieldTable::new())?;
 
         let consumer = queue.consume(ConsumerOptions {
@@ -81,7 +81,18 @@ impl RabbitmqConsumerCommands {
             match message {
                 ConsumerMessage::Delivery(delivery) => {
                     let body = String::from_utf8_lossy(&delivery.body).to_string();
-                    dbg!(&body);
+                    match serde_json::from_str::<Command>(&body){
+                        Ok(json) =>{
+                            dbg!(json.name);
+                            dbg!(json.value_bool);
+                            dbg!(json.value_int);
+                            dbg!(json.value_float);
+                            dbg!(json.value_string);
+                        }, 
+                        Err(er) => {
+                            eprintln!("{}", er);
+                        }
+                    }
                 }
                 other => {
                     println!("Consumer ended: {:?}", other);
