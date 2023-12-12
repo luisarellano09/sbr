@@ -116,6 +116,8 @@ pub fn publish_command(endpoint: String, cmd: Command) -> Result<(), Box<dyn Err
 
     let mut key = String::from("COMMAND.");
     key.push_str(endpoint.as_str());
+    key.push_str(".");
+    key.push_str(cmd.name.as_str());
     
     exchange.publish(Publish::new(json!(cmd).to_string().as_bytes(), key))?;
 
