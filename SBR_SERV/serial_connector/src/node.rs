@@ -403,13 +403,13 @@ impl Node{
             self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_ODOMETRY_DISTANCE_WHEELS_W as u16, (msg.data * 1000.0) as i32));
             
         } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_PITCH.KP_W" {
-            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_KP_W as u16, (msg.data * 100.0) as i32));
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_KP_W as u16, (msg.data * 1000.0) as i32));
             
         } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_PITCH.KI_W" {
-            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_KI_W as u16, (msg.data * 100.0) as i32));
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_KI_W as u16, (msg.data * 1000.0) as i32));
             
         } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_PITCH.KD_W" {
-            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_KD_W as u16, (msg.data * 100.0) as i32));
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_KD_W as u16, (msg.data * 1000.0) as i32));
             
         } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_PITCH.DIRECTION_W" {
             self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_DIRECTION_W as u16, msg.data as i32));
