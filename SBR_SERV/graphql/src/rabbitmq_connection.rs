@@ -10,7 +10,7 @@ const URL: &str = "amqp://RABBITMQ_USER:RABBITMQ_PASS@RABBITMQ_HOST:5672/";
 
 
 //=====================================================================================================
-pub fn publish_esp32_write(key: String, data: i32) -> Result<(), Box<dyn Error>> {
+pub fn publish_esp32_write(key: String, data: f64) -> Result<(), Box<dyn Error>> {
 
     let rabbitmq_user = env::var("RABBITMQ_USER")?;
     let rabbitmq_password = env::var("RABBITMQ_PASS")?;
