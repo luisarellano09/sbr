@@ -629,7 +629,7 @@ impl Mutations {
                 },
 
                 "motion_falldown_offset" => {
-                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.FALLDOWN_OFFSET".to_string(), value)?;
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.FALLDOWN_OFFSET_W".to_string(), value)?;
                 },
 
                 _ => {}
