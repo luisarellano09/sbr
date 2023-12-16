@@ -3,7 +3,7 @@ use std::{error::Error, thread, time};
 
 use ::reqwest::blocking::Client;
 
-use crate::graphql::{query_get_esp32_status, mutation_load_esp32_setup, mutation_set_esp32_mode_node1_start, mutation_set_esp32_mode_node1_sync_data, query_get_esp32_mode_node1_sync_data, query_get_esp32_live_imu, mutation_set_esp32_mode_node1_stop};
+use crate::graphql::{mutation_load_esp32_setup, mutation_set_esp32_mode_node1_start, mutation_set_esp32_mode_node1_sync_data, mutation_set_esp32_mode_node1_stop};
 use crate::collect_events::{RobotEvent, RobotCommand};
 
 
@@ -138,21 +138,21 @@ impl RobotControl {
             },
             StateStep::Processing => {
 
-                let res = query_get_esp32_status(&self.graphql_client)?;
-                let heartbeat_1 = res.heartbeat;
-                let node_esp32_1 = res.node_esp32;
-                let node_linux_1 = res.node_linux;
+            //     let res = query_get_esp32_status(&self.graphql_client)?;
+            //     let heartbeat_1 = res.heartbeat;
+            //     let node_esp32_1 = res.node_esp32;
+            //     let node_linux_1 = res.node_linux;
 
-                thread::sleep(time::Duration::from_millis(2000));
+            //     thread::sleep(time::Duration::from_millis(2000));
 
-                let res = query_get_esp32_status(&self.graphql_client)?;
-                let heartbeat_2 = res.heartbeat;
-                let node_esp32_2 = res.node_esp32;
-                let node_linux_2 = res.node_linux;
+            //     let res = query_get_esp32_status(&self.graphql_client)?;
+            //     let heartbeat_2 = res.heartbeat;
+            //     let node_esp32_2 = res.node_esp32;
+            //     let node_linux_2 = res.node_linux;
                 
-                if node_esp32_1 == true && node_linux_1 == true && node_esp32_2 == true && node_linux_2 == true && heartbeat_1 < heartbeat_2 {
-                    self.state = RobotState::CheckSystem(StateStep::Termination);
-                }
+            //     if node_esp32_1 == true && node_linux_1 == true && node_esp32_2 == true && node_linux_2 == true && heartbeat_1 < heartbeat_2 {
+            //         self.state = RobotState::CheckSystem(StateStep::Termination);
+            //     }
             },
             StateStep::Termination => {
                 self.state = RobotState::LoadDataEsp32(StateStep::Initialization);
@@ -195,10 +195,10 @@ impl RobotControl {
                 self.state = RobotState::ConfirmLoadDataEsp32(StateStep::Processing);
             },
             StateStep::Processing => {
-                let res = query_get_esp32_mode_node1_sync_data(&self.graphql_client)?;
-                if matches!(res, crate::graphql::get_esp32_mode_node1_sync_data::RegisterCommand::Completed) {
-                    self.state = RobotState::ConfirmLoadDataEsp32(StateStep::Termination);
-                }
+                // let res = query_get_esp32_mode_node1_sync_data(&self.graphql_client)?;
+                // if matches!(res, crate::graphql::get_esp32_mode_node1_sync_data::RegisterCommand::Completed) {
+                //     self.state = RobotState::ConfirmLoadDataEsp32(StateStep::Termination);
+                // }
             },
             StateStep::Termination => {
                 self.state = RobotState::ReadyToStart(StateStep::Initialization);
@@ -238,15 +238,15 @@ impl RobotControl {
                 self.state = RobotState::StandUp(StateStep::Processing);
             },
             StateStep::Processing => {
-                let res = query_get_esp32_live_imu(&self.graphql_client)?;
-                let pitch = res.pitch;
+                // let res = query_get_esp32_live_imu(&self.graphql_client)?;
+                // let pitch = res.pitch;
 
-                thread::sleep(time::Duration::from_millis(100));
+                // thread::sleep(time::Duration::from_millis(100));
 
-                if pitch < 15.0 && pitch > -15.0 {
-                    thread::sleep(time::Duration::from_millis(1000));
-                    self.state = RobotState::StandUp(StateStep::Termination);
-                }
+                // if pitch < 15.0 && pitch > -15.0 {
+                //     thread::sleep(time::Duration::from_millis(1000));
+                //     self.state = RobotState::StandUp(StateStep::Termination);
+                // }
             },
             StateStep::Termination => {
                 self.state = RobotState::StartMotion(StateStep::Initialization);
