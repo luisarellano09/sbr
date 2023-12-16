@@ -70,7 +70,6 @@ Manager::~Manager(){}
 RC_e Manager::AddSubscribers(){
 
     // LINUX
-    
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::STATUS_NODE_LINUX_R, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::STATUS_NODE_ESP32_R, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::MODE_MANAGER_SYNC_DATA_RW, DEVICE_e::LINUX);
@@ -110,6 +109,7 @@ RC_e Manager::AddSubscribers(){
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_DIRECTION_R, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_MV_MIN_R, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_MV_MAX_R, DEVICE_e::LINUX);
+    this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::SETUP_MOTION_FALL_DOWN_OFFSET_R, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::LIVE_MOTOR_LEFT_SPEED_R, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::LIVE_MOTOR_RIGHT_SPEED_R, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::LIVE_IMU_PITCH_R, DEVICE_e::LINUX);
@@ -123,8 +123,8 @@ RC_e Manager::AddSubscribers(){
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::LIVE_ODOMETRY_DISTANCE_R, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::LIVE_MOTION_SP_POSITION_R, DEVICE_e::LINUX);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::LIVE_MOTION_SP_ANGLE_R, DEVICE_e::LINUX);
+    this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::LIVE_MOTION_FALL_DOWN_R, DEVICE_e::LINUX);
     
-
 
     // ESP32_NODE01
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::MODE_NODE1_RESTART_W, DEVICE_e::ESP32_NODE01);
@@ -162,6 +162,7 @@ RC_e Manager::AddSubscribers(){
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_DIRECTION_W, DEVICE_e::ESP32_NODE01);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_MV_MIN_W, DEVICE_e::ESP32_NODE01);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_MV_MAX_W, DEVICE_e::ESP32_NODE01);
+    this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::SETUP_MOTION_FALL_DOWN_OFFSET_W, DEVICE_e::ESP32_NODE01);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::LIVE_MOTOR_LEFT_SPEED_W, DEVICE_e::ESP32_NODE01);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::LIVE_MOTOR_RIGHT_SPEED_W, DEVICE_e::ESP32_NODE01);
     this->m_tableRegister->AddSubscriber(COM_REQUEST_REG_ID_e::LIVE_ODOMETRY_X_W, DEVICE_e::ESP32_NODE01);
