@@ -106,8 +106,8 @@ enum COM_REQUEST_REG_ID_e {
     SETUP_MOTION_PID_ANGLE_MV_MIN_R,	        /**@brief Factor: 100 */
     SETUP_MOTION_PID_ANGLE_MV_MAX_W,            /**@brief Factor: 100 */
     SETUP_MOTION_PID_ANGLE_MV_MAX_R,            /**@brief Factor: 100 */
-    SETUP_MOTION_FALL_DOWN_OFFSET_W,            /**@brief Factor: 100 */
-    SETUP_MOTION_FALL_DOWN_OFFSET_R,            /**@brief Factor: 100 */
+    SETUP_MOTION_FALLDOWN_OFFSET_W,             /**@brief Factor: 100 */
+    SETUP_MOTION_FALLDOWN_OFFSET_R,             /**@brief Factor: 100 */
     LIVE_MOTOR_LEFT_SPEED_W,                    /**@brief Factor: 100 */
     LIVE_MOTOR_LEFT_SPEED_R,                    /**@brief Factor: 100 */
     LIVE_MOTOR_RIGHT_SPEED_W,                   /**@brief Factor: 100 */
@@ -130,7 +130,7 @@ enum COM_REQUEST_REG_ID_e {
     LIVE_MOTION_SP_POSITION_R,	                /**@brief Factor: 1000 */
     LIVE_MOTION_SP_ANGLE_W,	                    /**@brief Factor: 100 */
     LIVE_MOTION_SP_ANGLE_R,	                    /**@brief Factor: 100 */
-    LIVE_MOTION_FALL_DOWN_R,	                /**@brief Bit */
+    LIVE_MOTION_FALLDOWN_R,	                    /**@brief Bit */
 	LENGTH_REG_ID                               /**@brief Number of registers */					            
 };
 
