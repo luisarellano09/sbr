@@ -120,6 +120,7 @@ pub struct Esp32Setup{
     pub motion_pid_pitch: Esp32SetupMotionPID,
     pub motion_pid_position: Esp32SetupMotionPID,
     pub motion_pid_angle: Esp32SetupMotionPID,
+    pub motion_falldown_offset: f64,
 }
 
 
@@ -165,6 +166,8 @@ pub struct Esp32SetupInput{
     pub motion_pid_angle_direction: Option<bool>,
     pub motion_pid_angle_mv_min: Option<f64>,
     pub motion_pid_angle_mv_max: Option<f64>,
+
+    pub motion_falldown_offset: Option<f64>,
 }
 
 //=====================================================================================================

@@ -1,7 +1,7 @@
 
 use std::thread;
 
-mod message_esp32;
+mod type_message_esp32;
 mod rabbitmq_consumer_esp32;
 
 use rabbitmq_consumer_esp32::RabbitmqConsumerESP32;

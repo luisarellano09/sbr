@@ -1,8 +1,8 @@
 use std::error::Error;
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOptions, FieldTable, ConsumerOptions, ConsumerMessage};
-use redis::Commands;
-use crate::type_message_esp32::MessageEsp32;
 use std::env;
+
+use crate::type_message_esp32::MessageEsp32;
 
 
 //=====================================================================================================
@@ -10,23 +10,21 @@ const URL: &str = "amqp://RABBITMQ_USER:RABBITMQ_PASS@RABBITMQ_HOST:5672/";
 
 
 //=====================================================================================================
-pub struct RabbitmqConsumerESP32 {}
+pub struct RabbitmqConsumerEsp32 {}
 
 
 //=====================================================================================================
-impl RabbitmqConsumerESP32 {
+impl RabbitmqConsumerEsp32 {
 
     //=====================================================================================================
     pub fn new() -> Self {
-        RabbitmqConsumerESP32 {
-            
-        }
+        RabbitmqConsumerEsp32 {}
     }
 
     
     //=====================================================================================================
-    pub fn run(&mut self)  -> Result<(), Box<dyn Error>> {
-        
+    pub fn run(&self)  -> Result<(), Box<dyn Error>> {
+
         let rabbitmq_user = env::var("RABBITMQ_USER")?;
         let rabbitmq_password = env::var("RABBITMQ_PASS")?;
         let rabbitmq_host = env::var("RABBITMQ_HOST")?;
@@ -53,40 +51,37 @@ impl RabbitmqConsumerESP32 {
             },
         )?;
 
+        // Queue name
+        let queue_name = "Q_SBR_ESP32_TO_ROBOT_CONTROL";
+
         // Declare the exclusive, server-named queue we will use to consume.
         let queue = channel.queue_declare(
-            "Q_SBR_ESP32_TO_REDIS",
+            queue_name,
             QueueDeclareOptions {
                 exclusive: true,
                 ..QueueDeclareOptions::default()
             },
         )?;
 
-        //Binding
-        queue.bind(&exchange, "ESP32.READ.#", FieldTable::new())?;
+        //Bindings
+        //queue.bind(&exchange, "ESP32.READ.LIVE.IMU.#", FieldTable::new())?;
+        //queue.bind(&exchange, "ESP32.READ.STATUS.#", FieldTable::new())?;
+        queue.bind(&exchange, "ESP32.READ.MODE.NODE1.SYNC_DATA_RW", FieldTable::new())?;
 
         let consumer = queue.consume(ConsumerOptions {
             no_ack: true,
             ..ConsumerOptions::default()
         })?;
 
-        println!("Rabbitmq config done");
-
-        //Redis connection
-        let redis_client = redis::Client::open("redis://sbr_redis:6379")?;
-        let mut redis_connection = redis_client.get_connection()?;
-        println!("Redis config done");
-
 
         // Loop wait for messages
-        println!("Listening for messages");
         for (_, message) in consumer.receiver().iter().enumerate() {
             match message {
                 ConsumerMessage::Delivery(delivery) => {
                     let body = String::from_utf8_lossy(&delivery.body).to_string();
                     match serde_json::from_str::<MessageEsp32>(&body){
                         Ok(json) =>{
-                            redis_connection.set(json.name, json.data)?;
+                            dbg!(json);
                         }, 
                         Err(er) => {
                             eprintln!("{}", er);
@@ -102,4 +97,5 @@ impl RabbitmqConsumerESP32 {
         
         Ok(())
     }
+
 }

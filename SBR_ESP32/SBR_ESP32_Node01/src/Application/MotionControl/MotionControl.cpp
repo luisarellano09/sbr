@@ -123,6 +123,31 @@ double MotionControl::GetSPAngle(){
 
 //=====================================================================================================
 
+RC_e MotionControl::SetFalldownOffset(double offset){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_FalldownOffset = offset;
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
+double MotionControl::GetFalldownOffset(){
+    return this->m_FalldownOffset;
+}
+
+
+//=====================================================================================================
+bool MotionControl::IsFalldown(){
+    return this->m_Falldown;
+}
+
+
+//=====================================================================================================
+
 RC_e MotionControl::Start(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
@@ -162,3 +187,17 @@ RC_e MotionControl::Stop(){
  *  												PRIVATE METHODS
  *******************************************************************************************************************************************/
 
+//=====================================================================================================
+
+RC_e MotionControl::CalculateFalldown(){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    if (abs(this->m_IMU->GetPitch()) > this->m_FalldownOffset) {
+        this->m_Falldown = true;
+    } else {
+        this->m_Falldown = false;
+    }
+
+    return retCode;
+}

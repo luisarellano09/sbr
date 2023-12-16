@@ -2,7 +2,7 @@
 
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOptions, FieldTable, ConsumerOptions, ConsumerMessage};
 use std::{sync::mpsc::Sender, error::Error};
-use crate::message_esp32::MessageEsp32;
+use crate::type_message_esp32::MessageEsp32;
 use std::env;
 
 

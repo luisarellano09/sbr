@@ -84,6 +84,29 @@ public:
     double GetSPAngle();
 
     /**
+     * @brief Set Falldown Offset
+     * 
+     * @param offset Falldown Offset
+     * @return RC_e Result Code
+     */
+    RC_e SetFalldownOffset(double offset);
+
+    /**
+     * @brief Get Falldown Offset
+     * 
+     * @return double Falldown Offset
+     */
+    double GetFalldownOffset();
+
+    /**
+     * @brief Is Falldown
+     * 
+     * @return true Falldown
+     * @return false Not Falldown
+     */
+    bool IsFalldown();
+
+    /**
      * @brief Start the Motion control
      * 
      * @return RC_e Result Code.
@@ -107,6 +130,15 @@ private:
     double m_SPAngle = 0.0;         /**@brief Angle SP. */
     double m_SPPos = 0.0;           /**@brief Position SP. */
     long m_CycleCounter = 0;        /**@brief Cycle counter. */
+    double m_FalldownOffset = 45.0; /**@brief Falldown offset. */
+    bool m_Falldown = false;        /**@brief Falldown flag. */
+
+    /**
+     * @brief Calculate the Falldown
+     * 
+     * @return RC_e Result Code
+     */
+    RC_e CalculateFalldown();
 };
 
 #endif // MOTIONCONTROL_H

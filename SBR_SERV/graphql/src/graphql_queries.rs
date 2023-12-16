@@ -18,14 +18,14 @@ impl Queries {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let heartbeat_raw: i32 = conn.get("ESP32.READ.STATUS.HEARTBEAT")?;
-        let node_linux_raw: bool = conn.get("ESP32.READ.STATUS.NODE_LINUX_R")?;
-        let node_esp32_raw: bool = conn.get("ESP32.READ.STATUS.NODE_ESP32_R")?;
+        let heartbeat_raw: f64 = conn.get("ESP32.READ.STATUS.HEARTBEAT")?;
+        let node_linux_raw: f64 = conn.get("ESP32.READ.STATUS.NODE_LINUX_R")?;
+        let node_esp32_raw: f64 = conn.get("ESP32.READ.STATUS.NODE_ESP32_R")?;
 
         Ok(Esp32Status { 
-            heartbeat: heartbeat_raw,
-            node_linux: node_linux_raw,
-            node_esp32: node_esp32_raw,
+            heartbeat: heartbeat_raw as i32,
+            node_linux: if node_linux_raw == 1.0 {true} else {false} ,
+            node_esp32: if node_esp32_raw == 1.0 {true} else {false} ,
         })
     }
 
@@ -35,11 +35,11 @@ impl Queries {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let res_cmd: RedisResult<i32> = conn.get("ESP32.READ.MODE.MANAGER.SYNC_DATA_RW");
+        let res_cmd: RedisResult<f64> = conn.get("ESP32.READ.MODE.MANAGER.SYNC_DATA_RW");
 
         match res_cmd {
             Ok(cmd) => {
-                match cmd{
+                match cmd as i32{
                     0 => Ok(RegisterCommand::None), 
                     1 => Ok(RegisterCommand::Requested),
                     2 => Ok(RegisterCommand::InProgress),
@@ -60,11 +60,11 @@ impl Queries {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let res_cmd: RedisResult<i32> = conn.get("ESP32.READ.MODE.LINUX.SYNC_DATA_RW");
+        let res_cmd: RedisResult<f64> = conn.get("ESP32.READ.MODE.LINUX.SYNC_DATA_RW");
 
         match res_cmd {
             Ok(cmd) => {
-                match cmd{
+                match cmd as i32{
                     0 => Ok(RegisterCommand::None), 
                     1 => Ok(RegisterCommand::Requested),
                     2 => Ok(RegisterCommand::InProgress),
@@ -85,11 +85,11 @@ impl Queries {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let res_cmd: RedisResult<i32> = conn.get("ESP32.READ.MODE.NODE1.SYNC_DATA_RW");
+        let res_cmd: RedisResult<f64> = conn.get("ESP32.READ.MODE.NODE1.SYNC_DATA_RW");
 
         match res_cmd {
             Ok(cmd) => {
-                match cmd{
+                match cmd as i32{
                     0 => Ok(RegisterCommand::None), 
                     1 => Ok(RegisterCommand::Requested),
                     2 => Ok(RegisterCommand::InProgress),
@@ -110,12 +110,12 @@ impl Queries {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let manager_sync_data_raw: i32 = conn.get("ESP32.READ.MODE.MANAGER.SYNC_DATA_RW")?;
-        let linux_sync_data_raw: i32 = conn.get("ESP32.READ.MODE.LINUX.SYNC_DATA_RW")?;
+        let manager_sync_data_raw: f64 = conn.get("ESP32.READ.MODE.MANAGER.SYNC_DATA_RW")?;
+        let linux_sync_data_raw: f64 = conn.get("ESP32.READ.MODE.LINUX.SYNC_DATA_RW")?;
 
         Ok(Esp32Mode { 
-            manager_sync_data: manager_sync_data_raw,
-            linux_sync_data: linux_sync_data_raw,
+            manager_sync_data: manager_sync_data_raw as i32,
+            linux_sync_data: linux_sync_data_raw as i32,
         })
     }
 
@@ -125,16 +125,16 @@ impl Queries {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let motor_left_offset_raw: i32 = conn.get("ESP32.READ.SETUP.MOTOR_LEFT.OFFSET_R")?;
-        let motor_right_offset_raw: i32 = conn.get("ESP32.READ.SETUP.MOTOR_RIGHT.OFFSET_R")?;
-        let motor_left_direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTOR_LEFT.DIRECTION_R")?;
-        let motor_right_direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTOR_RIGHT.DIRECTION_R")?;
+        let motor_left_offset_raw: f64 = conn.get("ESP32.READ.SETUP.MOTOR_LEFT.OFFSET_R")?;
+        let motor_right_offset_raw: f64 = conn.get("ESP32.READ.SETUP.MOTOR_RIGHT.OFFSET_R")?;
+        let motor_left_direction_raw: f64 = conn.get("ESP32.READ.SETUP.MOTOR_LEFT.DIRECTION_R")?;
+        let motor_right_direction_raw: f64 = conn.get("ESP32.READ.SETUP.MOTOR_RIGHT.DIRECTION_R")?;
 
         Ok(Esp32SetupMotors { 
-            motor_left_offset: (motor_left_offset_raw as f64) / 100.0,
-            motor_right_offset: (motor_right_offset_raw as f64) / 100.0,
-            motor_left_direction: motor_left_direction_raw,
-            motor_right_direction: motor_right_direction_raw,
+            motor_left_offset: motor_left_offset_raw,
+            motor_right_offset: motor_right_offset_raw,
+            motor_left_direction: if motor_left_direction_raw == 1.0 {true} else {false} ,
+            motor_right_direction: if motor_right_direction_raw == 1.0 {true} else {false},
         })
     }
 
@@ -144,12 +144,12 @@ impl Queries {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let encoder_left_direction_raw: bool = conn.get("ESP32.READ.SETUP.ENCODER_LEFT.DIRECTION_R")?;
-        let encoder_right_direction_raw: bool = conn.get("ESP32.READ.SETUP.ENCODER_RIGHT.DIRECTION_R")?;
+        let encoder_left_direction_raw: f64 = conn.get("ESP32.READ.SETUP.ENCODER_LEFT.DIRECTION_R")?;
+        let encoder_right_direction_raw: f64 = conn.get("ESP32.READ.SETUP.ENCODER_RIGHT.DIRECTION_R")?;
 
         Ok(Esp32SetupEncoders { 
-            encoder_left_direction: encoder_left_direction_raw,
-            encoder_right_direction: encoder_right_direction_raw,
+            encoder_left_direction: if encoder_left_direction_raw == 1.0 {true} else {false},
+            encoder_right_direction: if encoder_right_direction_raw == 1.0 {true} else {false},
         })
     }
     
@@ -159,16 +159,16 @@ impl Queries {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let invert_pitch_raw: bool = conn.get("ESP32.READ.SETUP.IMU.INVERT_PITCH_R")?;
-        let invert_roll_raw: bool = conn.get("ESP32.READ.SETUP.IMU.INVERT_ROLL_R")?;
-        let invert_yaw_raw: bool = conn.get("ESP32.READ.SETUP.IMU.INVERT_YAW_R")?;
-        let offset_pitch_raw: i32 = conn.get("ESP32.READ.SETUP.IMU.OFFSET_PITCH_R")?;
+        let invert_pitch_raw: f64 = conn.get("ESP32.READ.SETUP.IMU.INVERT_PITCH_R")?;
+        let invert_roll_raw: f64 = conn.get("ESP32.READ.SETUP.IMU.INVERT_ROLL_R")?;
+        let invert_yaw_raw: f64 = conn.get("ESP32.READ.SETUP.IMU.INVERT_YAW_R")?;
+        let offset_pitch_raw: f64 = conn.get("ESP32.READ.SETUP.IMU.OFFSET_PITCH_R")?;
 
         Ok(Esp32SetupIMU { 
-            invert_pitch: invert_pitch_raw,
-            invert_roll: invert_roll_raw,
-            invert_yaw: invert_yaw_raw,
-            offset_pitch: (offset_pitch_raw as f64) / 100.0,
+            invert_pitch: if invert_pitch_raw == 1.0 {true} else {false},
+            invert_roll: if invert_roll_raw == 1.0 {true} else {false},
+            invert_yaw: if invert_yaw_raw == 1.0 {true} else {false},
+            offset_pitch: offset_pitch_raw,
         })
     }
 
@@ -178,12 +178,12 @@ impl Queries {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let wheel_radio_raw: i32 = conn.get("ESP32.READ.SETUP.ODOMETRY.DISTANCE_WHEELS_R")?;
-        let distance_wheels_raw: i32 = conn.get("ESP32.READ.SETUP.ODOMETRY.WHEEL_RADIO_R")?;
+        let wheel_radio_raw: f64 = conn.get("ESP32.READ.SETUP.ODOMETRY.DISTANCE_WHEELS_R")?;
+        let distance_wheels_raw: f64 = conn.get("ESP32.READ.SETUP.ODOMETRY.WHEEL_RADIO_R")?;
 
         Ok(Esp32SetupOdometry { 
-            wheel_radio: (wheel_radio_raw as f64) / 1000.0,
-            distance_wheels: (distance_wheels_raw as f64) / 1000.0,
+            wheel_radio: wheel_radio_raw,
+            distance_wheels: distance_wheels_raw,
         })
     }
 
@@ -197,18 +197,18 @@ impl Queries {
         let ki_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.KI_R")?;
         let kd_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.KD_R")?;
         let cycle_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.CYCLE_R")?;
-        let direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.DIRECTION_R")?;
+        let direction_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.DIRECTION_R")?;
         let mv_min_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.MV_MIN_R")?;
         let mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.MV_MAX_R")?;
 
         Ok(Esp32SetupMotionPID { 
-            kp: (kp_raw as f64) / 1000.0,
-            ki: (ki_raw as f64) / 1000.0,
-            kd: (kd_raw as f64) / 1000.0,
-            cycle: (cycle_raw  as f64) / 1000.0,
-            direction: direction_raw,
-            mv_min: (mv_min_raw as f64) / 100.0,
-            mv_max: (mv_max_raw as f64) / 100.0,
+            kp: kp_raw,
+            ki: ki_raw,
+            kd: kd_raw,
+            cycle: cycle_raw,
+            direction: if direction_raw == 1.0 {true} else {false},
+            mv_min: mv_min_raw,
+            mv_max: mv_max_raw,
         })
     }
 
@@ -222,18 +222,18 @@ impl Queries {
         let ki_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.KI_R")?;
         let kd_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.KD_R")?;
         let cycle_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.CYCLE_R")?;
-        let direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.DIRECTION_R")?;
+        let direction_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.DIRECTION_R")?;
         let mv_min_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.MV_MIN_R")?;
         let mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.MV_MAX_R")?;
 
         Ok(Esp32SetupMotionPID { 
-            kp: (kp_raw as f64) / 1000.0,
-            ki: (ki_raw as f64) / 1000.0,
-            kd: (kd_raw as f64) / 1000.0,
-            cycle: (cycle_raw  as f64) / 1000.0,
-            direction: direction_raw,
-            mv_min: (mv_min_raw as f64) / 100.0,
-            mv_max: (mv_max_raw as f64) / 100.0,
+            kp: kp_raw,
+            ki: ki_raw,
+            kd: kd_raw,
+            cycle: cycle_raw,
+            direction: if direction_raw == 1.0 {true} else {false},
+            mv_min: mv_min_raw,
+            mv_max: mv_max_raw,
         })
     }
 
@@ -247,19 +247,29 @@ impl Queries {
         let ki_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.KI_R")?;
         let kd_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.KD_R")?;
         let cycle_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.CYCLE_R")?;
-        let direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.DIRECTION_R")?;
+        let direction_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.DIRECTION_R")?;
         let mv_min_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.MV_MIN_R")?;
         let mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.MV_MAX_R")?;
 
         Ok(Esp32SetupMotionPID { 
-            kp: (kp_raw as f64) / 1000.0,
-            ki: (ki_raw as f64) / 1000.0,
-            kd: (kd_raw as f64) / 1000.0,
-            cycle: (cycle_raw  as f64) / 1000.0,
-            direction: direction_raw,
-            mv_min: (mv_min_raw as f64) / 100.0,
-            mv_max: (mv_max_raw as f64) / 100.0,
+            kp: kp_raw,
+            ki: ki_raw,
+            kd: kd_raw,
+            cycle: cycle_raw,
+            direction: if direction_raw == 1.0 {true} else {false},
+            mv_min: mv_min_raw,
+            mv_max: mv_max_raw,
         })
+    }
+
+    //=====================================================================================================
+    fn GetEsp32SetupMotionFalldownOffset( context: &ContextGraphQL) -> FieldResult<f64> {
+
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
+
+        let offset: f64 = conn.get("ESP32.READ.SETUP.MOTION.FALLDOWN_OFFSET")?;
+
+        Ok(offset)
     }
 
 
@@ -268,27 +278,27 @@ impl Queries {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let motor_left_offset_raw: i32 = conn.get("ESP32.READ.SETUP.MOTOR_LEFT.OFFSET_R")?;
-        let motor_right_offset_raw: i32 = conn.get("ESP32.READ.SETUP.MOTOR_RIGHT.OFFSET_R")?;
-        let motor_left_direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTOR_LEFT.DIRECTION_R")?;
-        let motor_right_direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTOR_RIGHT.DIRECTION_R")?;
+        let motor_left_offset_raw: f64 = conn.get("ESP32.READ.SETUP.MOTOR_LEFT.OFFSET_R")?;
+        let motor_right_offset_raw: f64 = conn.get("ESP32.READ.SETUP.MOTOR_RIGHT.OFFSET_R")?;
+        let motor_left_direction_raw: f64 = conn.get("ESP32.READ.SETUP.MOTOR_LEFT.DIRECTION_R")?;
+        let motor_right_direction_raw: f64 = conn.get("ESP32.READ.SETUP.MOTOR_RIGHT.DIRECTION_R")?;
 
-        let encoder_left_direction_raw: bool = conn.get("ESP32.READ.SETUP.ENCODER_LEFT.DIRECTION_R")?;
-        let encoder_right_direction_raw: bool = conn.get("ESP32.READ.SETUP.ENCODER_RIGHT.DIRECTION_R")?;
+        let encoder_left_direction_raw: f64 = conn.get("ESP32.READ.SETUP.ENCODER_LEFT.DIRECTION_R")?;
+        let encoder_right_direction_raw: f64 = conn.get("ESP32.READ.SETUP.ENCODER_RIGHT.DIRECTION_R")?;
 
-        let invert_pitch_raw: bool = conn.get("ESP32.READ.SETUP.IMU.INVERT_PITCH_R")?;
-        let invert_roll_raw: bool = conn.get("ESP32.READ.SETUP.IMU.INVERT_ROLL_R")?;
-        let invert_yaw_raw: bool = conn.get("ESP32.READ.SETUP.IMU.INVERT_YAW_R")?;
-        let offset_pitch_raw: i32 = conn.get("ESP32.READ.SETUP.IMU.OFFSET_PITCH_R")?;
+        let invert_pitch_raw: f64 = conn.get("ESP32.READ.SETUP.IMU.INVERT_PITCH_R")?;
+        let invert_roll_raw: f64 = conn.get("ESP32.READ.SETUP.IMU.INVERT_ROLL_R")?;
+        let invert_yaw_raw: f64 = conn.get("ESP32.READ.SETUP.IMU.INVERT_YAW_R")?;
+        let offset_pitch_raw: f64 = conn.get("ESP32.READ.SETUP.IMU.OFFSET_PITCH_R")?;
 
-        let wheel_radio_raw: i32 = conn.get("ESP32.READ.SETUP.ODOMETRY.WHEEL_RADIO_R")?;
-        let distance_wheels_raw: i32 = conn.get("ESP32.READ.SETUP.ODOMETRY.DISTANCE_WHEELS_R")?;
+        let wheel_radio_raw: f64 = conn.get("ESP32.READ.SETUP.ODOMETRY.WHEEL_RADIO_R")?;
+        let distance_wheels_raw: f64 = conn.get("ESP32.READ.SETUP.ODOMETRY.DISTANCE_WHEELS_R")?;
 
         let motion_pid_pitch_kp_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.KP_R")?;
         let motion_pid_pitch_ki_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.KI_R")?;
         let motion_pid_pitch_kd_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.KD_R")?;
         let motion_pid_pitch_cycle_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.CYCLE_R")?;
-        let motion_pid_pitch_direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.DIRECTION_R")?;
+        let motion_pid_pitch_direction_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.DIRECTION_R")?;
         let motion_pid_pitch_mv_min_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.MV_MIN_R")?;
         let motion_pid_pitch_mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_PITCH.MV_MAX_R")?;
 
@@ -296,7 +306,7 @@ impl Queries {
         let motion_pid_position_ki_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.KI_R")?;
         let motion_pid_position_kd_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.KD_R")?;
         let motion_pid_position_cycle_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.CYCLE_R")?;
-        let motion_pid_position_direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.DIRECTION_R")?;
+        let motion_pid_position_direction_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.DIRECTION_R")?;
         let motion_pid_position_mv_min_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.MV_MIN_R")?;
         let motion_pid_position_mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_POSITION.MV_MAX_R")?;
 
@@ -304,58 +314,61 @@ impl Queries {
         let motion_pid_angle_ki_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.KI_R")?;
         let motion_pid_angle_kd_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.KD_R")?;
         let motion_pid_angle_cycle_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.CYCLE_R")?;
-        let motion_pid_angle_direction_raw: bool = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.DIRECTION_R")?;
+        let motion_pid_angle_direction_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.DIRECTION_R")?;
         let motion_pid_angle_mv_min_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.MV_MIN_R")?;
         let motion_pid_angle_mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.MV_MAX_R")?;
 
+        let motion_falldown_offset_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.FALLDOWN_OFFSET")?;
+
         Ok( Esp32Setup{
             motors: Esp32SetupMotors { 
-                motor_left_offset: (motor_left_offset_raw as f64) / 100.0,
-                motor_right_offset: (motor_right_offset_raw as f64) / 100.0,
-                motor_left_direction: motor_left_direction_raw,
-                motor_right_direction: motor_right_direction_raw,
+                motor_left_offset: motor_left_offset_raw,
+                motor_right_offset: motor_right_offset_raw,
+                motor_left_direction: if motor_left_direction_raw == 1.0 {true} else {false},
+                motor_right_direction: if motor_right_direction_raw == 1.0 {true} else {false},
             }, 
             encoders: Esp32SetupEncoders { 
-                encoder_left_direction: encoder_left_direction_raw,
-                encoder_right_direction: encoder_right_direction_raw,
+                encoder_left_direction: if encoder_left_direction_raw == 1.0 {true} else {false},
+                encoder_right_direction: if encoder_right_direction_raw == 1.0 {true} else {false},
             },
             imu: Esp32SetupIMU { 
-                invert_pitch: invert_pitch_raw,
-                invert_roll: invert_roll_raw,
-                invert_yaw: invert_yaw_raw,
-                offset_pitch: (offset_pitch_raw as f64) / 100.0,
+                invert_pitch: if invert_pitch_raw == 1.0 {true} else {false},
+                invert_roll: if invert_roll_raw == 1.0 {true} else {false},
+                invert_yaw: if invert_yaw_raw == 1.0 {true} else {false},
+                offset_pitch: offset_pitch_raw,
             },
             odometry: Esp32SetupOdometry { 
-                wheel_radio: (wheel_radio_raw as f64) / 1000.0,
-                distance_wheels: (distance_wheels_raw as f64) / 1000.0,
+                wheel_radio: wheel_radio_raw,
+                distance_wheels: distance_wheels_raw,
             },
             motion_pid_pitch: Esp32SetupMotionPID { 
-                kp: (motion_pid_pitch_kp_raw as f64) / 1000.0,
-                ki: (motion_pid_pitch_ki_raw as f64) / 1000.0,
-                kd: (motion_pid_pitch_kd_raw as f64) / 1000.0,
-                cycle: (motion_pid_pitch_cycle_raw  as f64) / 1000.0,
-                direction: motion_pid_pitch_direction_raw,
-                mv_min: (motion_pid_pitch_mv_min_raw as f64) / 100.0,
-                mv_max: (motion_pid_pitch_mv_max_raw as f64) / 100.0,
+                kp: motion_pid_pitch_kp_raw,
+                ki: motion_pid_pitch_ki_raw,
+                kd: motion_pid_pitch_kd_raw,
+                cycle: motion_pid_pitch_cycle_raw,
+                direction: if motion_pid_pitch_direction_raw == 1.0 {true} else {false},
+                mv_min: motion_pid_pitch_mv_min_raw,
+                mv_max: motion_pid_pitch_mv_max_raw,
             },
             motion_pid_position: Esp32SetupMotionPID { 
-                kp: (motion_pid_position_kp_raw as f64) / 1000.0,
-                ki: (motion_pid_position_ki_raw as f64) / 1000.0,
-                kd: (motion_pid_position_kd_raw as f64) / 1000.0,
-                cycle: (motion_pid_position_cycle_raw  as f64) / 1000.0,
-                direction: motion_pid_position_direction_raw,
-                mv_min: (motion_pid_position_mv_min_raw as f64) / 100.0,
-                mv_max: (motion_pid_position_mv_max_raw as f64) / 100.0,
+                kp: motion_pid_position_kp_raw,
+                ki: motion_pid_position_ki_raw,
+                kd: motion_pid_position_kd_raw,
+                cycle: motion_pid_position_cycle_raw,
+                direction: if motion_pid_position_direction_raw == 1.0 {true} else {false},
+                mv_min: motion_pid_position_mv_min_raw,
+                mv_max: motion_pid_position_mv_max_raw,
             },
             motion_pid_angle: Esp32SetupMotionPID { 
-                kp: (motion_pid_angle_kp_raw as f64) / 1000.0,
-                ki: (motion_pid_angle_ki_raw as f64) / 1000.0,
-                kd: (motion_pid_angle_kd_raw as f64) / 1000.0,
-                cycle: (motion_pid_angle_cycle_raw  as f64) / 1000.0,
-                direction: motion_pid_angle_direction_raw,
-                mv_min: (motion_pid_angle_mv_min_raw as f64) / 100.0,
-                mv_max: (motion_pid_angle_mv_max_raw as f64) / 100.0,
+                kp: motion_pid_angle_kp_raw,
+                ki: motion_pid_angle_ki_raw,
+                kd: motion_pid_angle_kd_raw,
+                cycle: motion_pid_angle_cycle_raw,
+                direction: if motion_pid_angle_direction_raw == 1.0 {true} else {false},
+                mv_min: motion_pid_angle_mv_min_raw,
+                mv_max: motion_pid_angle_mv_max_raw,
             },
+            motion_falldown_offset: motion_falldown_offset_raw,
         })
     }
     
@@ -365,12 +378,12 @@ impl Queries {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let motor_left_speed_raw: i32 = conn.get("ESP32.READ.LIVE.MOTOR_LEFT.SPEED_R")?;
-        let motor_right_speed_raw: i32 = conn.get("ESP32.READ.LIVE.MOTOR_RIGHT.SPEED_R")?;
+        let motor_left_speed_raw: f64 = conn.get("ESP32.READ.LIVE.MOTOR_LEFT.SPEED_R")?;
+        let motor_right_speed_raw: f64 = conn.get("ESP32.READ.LIVE.MOTOR_RIGHT.SPEED_R")?;
 
         Ok(Esp32LiveMotors { 
-            motor_left_speed: (motor_left_speed_raw as f64) / 100.0,
-            motor_right_speed: (motor_right_speed_raw as f64) / 100.0, 
+            motor_left_speed: motor_left_speed_raw,
+            motor_right_speed: motor_right_speed_raw, 
         })
     }
 
@@ -380,14 +393,14 @@ impl Queries {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let pitch_raw: i32 = conn.get("ESP32.READ.LIVE.IMU.PITCH_R")?;
-        let roll_raw: i32 = conn.get("ESP32.READ.LIVE.IMU.ROLL_R")?;
-        let yaw_raw: i32 = conn.get("ESP32.READ.LIVE.IMU.YAW_R")?;
+        let pitch_raw: f64 = conn.get("ESP32.READ.LIVE.IMU.PITCH_R")?;
+        let roll_raw: f64 = conn.get("ESP32.READ.LIVE.IMU.ROLL_R")?;
+        let yaw_raw: f64 = conn.get("ESP32.READ.LIVE.IMU.YAW_R")?;
 
         Ok(Esp32LiveIMU { 
-            pitch: (pitch_raw as f64) / 100.0,
-            roll: (roll_raw as f64) / 100.0,
-            yaw: (yaw_raw as f64) / 100.0, 
+            pitch: pitch_raw,
+            roll:roll_raw,
+            yaw: yaw_raw, 
         })
     }
 
@@ -397,12 +410,12 @@ impl Queries {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let encoder_left_count_raw: i32 = conn.get("ESP32.READ.LIVE.ENCODER.LEFT_COUNT_R")?;
-        let encoder_right_count_raw: i32 = conn.get("ESP32.READ.LIVE.ENCODER.RIGHT_COUNT_R")?;
+        let encoder_left_count_raw: f64 = conn.get("ESP32.READ.LIVE.ENCODER.LEFT_COUNT_R")?;
+        let encoder_right_count_raw: f64 = conn.get("ESP32.READ.LIVE.ENCODER.RIGHT_COUNT_R")?;
 
         Ok(Esp32LiveEncoders { 
-            encoder_left_count: (encoder_left_count_raw as f64),
-            encoder_right_count: (encoder_right_count_raw as f64),
+            encoder_left_count: encoder_left_count_raw,
+            encoder_right_count: encoder_right_count_raw,
         })
     }
 
@@ -412,16 +425,16 @@ impl Queries {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let x_raw: i32 = conn.get("ESP32.READ.LIVE.ODOMETRY.X_R")?;
-        let y_raw: i32 = conn.get("ESP32.READ.LIVE.ODOMETRY.Y_R")?;
-        let angle_raw: i32 = conn.get("ESP32.READ.LIVE.ODOMETRY.ANGLE_R")?;
-        let distance_raw: i32 = conn.get("ESP32.READ.LIVE.ODOMETRY.DISTANCE_R")?;
+        let x_raw: f64 = conn.get("ESP32.READ.LIVE.ODOMETRY.X_R")?;
+        let y_raw: f64 = conn.get("ESP32.READ.LIVE.ODOMETRY.Y_R")?;
+        let angle_raw: f64 = conn.get("ESP32.READ.LIVE.ODOMETRY.ANGLE_R")?;
+        let distance_raw: f64 = conn.get("ESP32.READ.LIVE.ODOMETRY.DISTANCE_R")?;
 
         Ok(Esp32LiveOdometry { 
-            x: (x_raw as f64) / 1000.0,
-            y: (y_raw as f64) / 1000.0,
-            angle: (angle_raw as f64) / 100.0,
-            distance: (distance_raw as f64) / 1000.0,
+            x: x_raw,
+            y: y_raw,
+            angle: angle_raw,
+            distance: distance_raw,
         })
     }
 
@@ -431,12 +444,12 @@ impl Queries {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let setpoint_angle_raw: i32 = conn.get("ESP32.READ.LIVE.MOTION.SP_ANGLE_R")?;
-        let setpoint_position_raw: i32 = conn.get("ESP32.READ.LIVE.MOTION.SP_POSITION_R")?;
+        let setpoint_angle_raw: f64 = conn.get("ESP32.READ.LIVE.MOTION.SP_ANGLE_R")?;
+        let setpoint_position_raw: f64 = conn.get("ESP32.READ.LIVE.MOTION.SP_POSITION_R")?;
 
         Ok(Esp32LiveMotion { 
-            setpoint_angle: (setpoint_angle_raw as f64) / 100.0,
-            setpoint_position: (setpoint_position_raw as f64) / 1000.0,
+            setpoint_angle: setpoint_angle_raw,
+            setpoint_position: setpoint_position_raw,
         })
     }
 
@@ -572,6 +585,10 @@ impl Queries {
 
                 "motion_pid_angle_mv_max" => {
                     setup.motion_pid_angle.mv_max = value;
+                },
+
+                "motion_falldown_offset" => {
+                    setup.motion_falldown_offset = value;
                 },
 
                 _ => {}

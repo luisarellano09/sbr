@@ -1,8 +1,8 @@
 use std::error::Error;
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOptions, FieldTable, ConsumerOptions, ConsumerMessage};
-use redis::Commands;
-use crate::type_message_esp32::MessageEsp32;
 use std::env;
+
+use crate::type_command::Command;
 
 
 //=====================================================================================================
@@ -10,23 +10,21 @@ const URL: &str = "amqp://RABBITMQ_USER:RABBITMQ_PASS@RABBITMQ_HOST:5672/";
 
 
 //=====================================================================================================
-pub struct RabbitmqConsumerESP32 {}
+pub struct RabbitmqConsumerCommands {}
 
 
 //=====================================================================================================
-impl RabbitmqConsumerESP32 {
+impl RabbitmqConsumerCommands {
 
     //=====================================================================================================
     pub fn new() -> Self {
-        RabbitmqConsumerESP32 {
-            
-        }
+        RabbitmqConsumerCommands {}
     }
 
     
     //=====================================================================================================
-    pub fn run(&mut self)  -> Result<(), Box<dyn Error>> {
-        
+    pub fn run(&self)  -> Result<(), Box<dyn Error>> {
+
         let rabbitmq_user = env::var("RABBITMQ_USER")?;
         let rabbitmq_password = env::var("RABBITMQ_PASS")?;
         let rabbitmq_host = env::var("RABBITMQ_HOST")?;
@@ -44,7 +42,7 @@ impl RabbitmqConsumerESP32 {
         // Declare the exchange we will bind to.
         let exchange = channel.exchange_declare(
             ExchangeType::Topic,
-            "SBR_EXCH_READ_ESP32",
+            "SBR_EXCH_ROBOT_COMMANDS",
             ExchangeDeclareOptions{
                 durable: false,
                 auto_delete: false,
@@ -53,9 +51,12 @@ impl RabbitmqConsumerESP32 {
             },
         )?;
 
+        // Queue name
+        let queue_name = "Q_SBR_COMMANDS_TO_ROBOT_CONTROL";
+
         // Declare the exclusive, server-named queue we will use to consume.
         let queue = channel.queue_declare(
-            "Q_SBR_ESP32_TO_REDIS",
+            queue_name,
             QueueDeclareOptions {
                 exclusive: true,
                 ..QueueDeclareOptions::default()
@@ -63,7 +64,11 @@ impl RabbitmqConsumerESP32 {
         )?;
 
         //Binding
-        queue.bind(&exchange, "ESP32.READ.#", FieldTable::new())?;
+        let key: String = String::from("COMMAND.ROBOT_CONTROL.#");
+        queue.bind(&exchange, key, FieldTable::new())?;
+
+        let key: String = String::from("X.ROBOT_CONTROL.#");
+        queue.bind(&exchange, key, FieldTable::new())?;
 
         let consumer = queue.consume(ConsumerOptions {
             no_ack: true,
@@ -72,11 +77,6 @@ impl RabbitmqConsumerESP32 {
 
         println!("Rabbitmq config done");
 
-        //Redis connection
-        let redis_client = redis::Client::open("redis://sbr_redis:6379")?;
-        let mut redis_connection = redis_client.get_connection()?;
-        println!("Redis config done");
-
 
         // Loop wait for messages
         println!("Listening for messages");
@@ -84,9 +84,13 @@ impl RabbitmqConsumerESP32 {
             match message {
                 ConsumerMessage::Delivery(delivery) => {
                     let body = String::from_utf8_lossy(&delivery.body).to_string();
-                    match serde_json::from_str::<MessageEsp32>(&body){
+                    match serde_json::from_str::<Command>(&body){
                         Ok(json) =>{
-                            redis_connection.set(json.name, json.data)?;
+                            dbg!(json.name);
+                            dbg!(json.value_bool);
+                            dbg!(json.value_int);
+                            dbg!(json.value_float);
+                            dbg!(json.value_string);
                         }, 
                         Err(er) => {
                             eprintln!("{}", er);
@@ -102,4 +106,5 @@ impl RabbitmqConsumerESP32 {
         
         Ok(())
     }
+
 }
