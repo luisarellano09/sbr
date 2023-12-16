@@ -250,6 +250,11 @@ impl Mutations {
             None =>{}
         };
 
+        match setup.motion_falldown_offset {
+            Some(offset) => {publish_esp32_write("ESP32.WRITE.SETUP.MOTION.FALLDOWN_OFFSET".to_string(), offset)?;},
+            None =>{}
+        };
+
 
         Ok(true)
     }
@@ -481,6 +486,13 @@ impl Mutations {
             None =>{}
         };
 
+        match setup.motion_falldown_offset {
+            Some(offset) => {
+                client.execute("UPDATE SETUP_ESP32 SET VALUE=$1 WHERE NAME='motion_falldown_offset'", &[&offset]).await?;
+            },
+            None =>{}
+        };
+
 
         Ok(true)
     }
@@ -614,6 +626,10 @@ impl Mutations {
 
                 "motion_pid_angle_mv_max" => {
                     publish_esp32_write("ESP32.WRITE.SETUP.MOTION.PID_ANGLE.MV_MAX_W".to_string(), value)?;
+                },
+
+                "motion_falldown_offset" => {
+                    publish_esp32_write("ESP32.WRITE.SETUP.MOTION.FALLDOWN_OFFSET".to_string(), value)?;
                 },
 
                 _ => {}

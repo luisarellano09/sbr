@@ -262,6 +262,16 @@ impl Queries {
         })
     }
 
+    //=====================================================================================================
+    fn GetEsp32SetupMotionFalldownOffset( context: &ContextGraphQL) -> FieldResult<f64> {
+
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
+
+        let offset: f64 = conn.get("ESP32.READ.SETUP.MOTION.FALLDOWN_OFFSET")?;
+
+        Ok(offset)
+    }
+
 
     //=====================================================================================================
     fn GetEsp32Setup( context: &ContextGraphQL) -> FieldResult<Esp32Setup> {
@@ -307,6 +317,8 @@ impl Queries {
         let motion_pid_angle_direction_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.DIRECTION_R")?;
         let motion_pid_angle_mv_min_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.MV_MIN_R")?;
         let motion_pid_angle_mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.MV_MAX_R")?;
+
+        let motion_falldown_offset_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.FALLDOWN_OFFSET")?;
 
         Ok( Esp32Setup{
             motors: Esp32SetupMotors { 
@@ -356,6 +368,7 @@ impl Queries {
                 mv_min: motion_pid_angle_mv_min_raw,
                 mv_max: motion_pid_angle_mv_max_raw,
             },
+            motion_falldown_offset: motion_falldown_offset_raw,
         })
     }
     
@@ -572,6 +585,10 @@ impl Queries {
 
                 "motion_pid_angle_mv_max" => {
                     setup.motion_pid_angle.mv_max = value;
+                },
+
+                "motion_falldown_offset" => {
+                    setup.motion_falldown_offset = value;
                 },
 
                 _ => {}
