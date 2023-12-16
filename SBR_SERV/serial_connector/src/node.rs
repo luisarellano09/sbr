@@ -288,8 +288,8 @@ impl Node{
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_MV_MAX_R as u16){
             self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.MOTION.PID_ANGLE.MV_MAX_R".to_string(), data: (request.data as f64)/100.0})?;
 
-        } else if request.reg_id == (COM_REQUEST_REG_ID_e::SETUP_MOTION_FALL_DOWN_OFFSET_R as u16){
-            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.MOTION.FALL_DOWN_OFFSET_R".to_string(), data: (request.data as f64)/100.0})?;
+        } else if request.reg_id == (COM_REQUEST_REG_ID_e::SETUP_MOTION_FALLDOWN_OFFSET_R as u16){
+            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.SETUP.MOTION.FALLDOWN_OFFSET_R".to_string(), data: (request.data as f64)/100.0})?;
 
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::LIVE_MOTOR_LEFT_SPEED_R as u16){
             self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.LIVE.MOTOR_LEFT.SPEED_R".to_string(), data: (request.data as f64)/100.0})?;
@@ -330,8 +330,8 @@ impl Node{
         } else if request.reg_id == (COM_REQUEST_REG_ID_e::LIVE_MOTION_SP_ANGLE_R as u16){
             self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.LIVE.MOTION.SP_ANGLE_R".to_string(), data: (request.data as f64)/100.0})?;
         
-        } else if request.reg_id == (COM_REQUEST_REG_ID_e::LIVE_MOTION_FALL_DOWN_R as u16){
-            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.LIVE.MOTION.FALL_DOWN_R".to_string(), data: request.data as f64})?;
+        } else if request.reg_id == (COM_REQUEST_REG_ID_e::LIVE_MOTION_FALLDOWN_R as u16){
+            self.m_sender_node_producer.send(MessageEsp32 { name: "ESP32.READ.LIVE.MOTION.FALLDOWN_R".to_string(), data: request.data as f64})?;
         }
 
         Ok(())
@@ -461,8 +461,8 @@ impl Node{
         } else if msg.name == "ESP32.WRITE.SETUP.MOTION.PID_ANGLE.MV_MAX_W" {
             self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_MV_MAX_W as u16, (msg.data * 100.0) as i32));
 
-        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.FALL_DOWN_OFFSET_W" {
-            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_FALL_DOWN_OFFSET_W as u16, (msg.data * 100.0) as i32));
+        } else if msg.name == "ESP32.WRITE.SETUP.MOTION.FALLDOWN_OFFSET_W" {
+            self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::SETUP_MOTION_FALLDOWN_OFFSET_W as u16, (msg.data * 100.0) as i32));
             
         } else if msg.name == "ESP32.WRITE.LIVE.MOTOR_LEFT.SPEED_W" {
             self.m_buffer_requests.push_back(create_request(COM_REQUEST_REG_ID_e::LIVE_MOTOR_LEFT_SPEED_W as u16, (msg.data * 100.0) as i32));
