@@ -143,6 +143,7 @@ void TaskIMU(void *parameter){
     while(true) {
         vTaskDelayUntil(&xLastWakeTime, TimerTaskIMU);
         manager->m_IMU->Run();
+        manager->m_motionControl->CalculateFalldown();
     }
 }
 

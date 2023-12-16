@@ -107,6 +107,13 @@ public:
     bool IsFalldown();
 
     /**
+     * @brief Calculate the Falldown
+     * 
+     * @return RC_e Result Code
+     */
+    RC_e CalculateFalldown();
+
+    /**
      * @brief Start the Motion control
      * 
      * @return RC_e Result Code.
@@ -131,14 +138,7 @@ private:
     double m_SPPos = 0.0;           /**@brief Position SP. */
     long m_CycleCounter = 0;        /**@brief Cycle counter. */
     double m_FalldownOffset = 45.0; /**@brief Falldown offset. */
-    bool m_Falldown = false;        /**@brief Falldown flag. */
-
-    /**
-     * @brief Calculate the Falldown
-     * 
-     * @return RC_e Result Code
-     */
-    RC_e CalculateFalldown();
+    bool m_Falldown = true;         /**@brief Falldown flag. */
 };
 
 #endif // MOTIONCONTROL_H
