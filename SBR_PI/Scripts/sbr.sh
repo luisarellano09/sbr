@@ -38,7 +38,7 @@ if [ $? -eq 0 ]; then
         "Serial Node Manager")
             sudo screen /dev/ttyUSB_ESP32_NODE_MANAGER 115200 
             ;;
-        "Serial Node01")
+        "Serial Node 01")
             sudo screen /dev/ttyUSB_ESP32_NODE_01 115200
             ;;
         "Docker Compose")
