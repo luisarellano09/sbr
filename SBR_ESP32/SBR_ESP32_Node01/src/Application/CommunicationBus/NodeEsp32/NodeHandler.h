@@ -286,6 +286,13 @@ RC_e ExtHandler(Request* request){
             break;
         }
 
+        case COM_REQUEST_REG_ID_e::SETUP_MOTION_FALLDOWN_OFFSET_W: {
+            manager->m_motionControl->SetFalldownOffset((double)request->data / 100.0);
+            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_FALLDOWN_OFFSET_R, manager->m_motionControl->GetFalldownOffset() * 100);
+            Log.infoln("[NodeHandler::SETUP_MOTION_FALLDOWN_OFFSET_W] Motion Control FallDown offset setted: %D", manager->m_motionControl->GetFalldownOffset());
+            break;
+        }
+
         case COM_REQUEST_REG_ID_e::LIVE_MOTOR_LEFT_SPEED_W: {
             manager->m_motorLeft->SetSpeed((double)request->data / 100.0);
             Log.infoln("[NodeHandler::LIVE_MOTOR_LEFT_SPEED_W] Motor left speed setted: %D", manager->m_motorLeft->GetSpeed());
@@ -366,6 +373,7 @@ RC_e UpdateRegistersRT(){
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::LIVE_ODOMETRY_DISTANCE_R, manager->m_odometry->GetDistance() * 1000);
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::LIVE_MOTION_SP_POSITION_R, manager->m_motionControl->GetSPPos() * 1000);
         manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::LIVE_MOTION_SP_ANGLE_R, manager->m_motionControl->GetSPAngle() * 100);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::LIVE_MOTION_FALLDOWN_R, manager->m_motionControl->IsFalldown());
     }
 
     return retCode;
