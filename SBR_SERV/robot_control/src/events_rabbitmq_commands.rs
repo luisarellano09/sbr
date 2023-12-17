@@ -1,8 +1,8 @@
-use std::error::Error;
+use std::{error::Error, sync::mpsc::Sender};
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOptions, FieldTable, ConsumerOptions, ConsumerMessage};
 use std::env;
 
-use crate::type_command::Command;
+use crate::{type_command::Command, type_event::{RobotEvent, RobotCommand}};
 
 
 //=====================================================================================================
@@ -10,20 +10,24 @@ const URL: &str = "amqp://RABBITMQ_USER:RABBITMQ_PASS@RABBITMQ_HOST:5672/";
 
 
 //=====================================================================================================
-pub struct RabbitmqConsumerCommands {}
+pub struct EventsRabbitmqCommands {
+    sender_events: Sender<RobotEvent>,
+}
 
 
 //=====================================================================================================
-impl RabbitmqConsumerCommands {
+impl EventsRabbitmqCommands {
 
     //=====================================================================================================
-    pub fn new() -> Self {
-        RabbitmqConsumerCommands {}
+    pub fn new(sender: Sender<RobotEvent>) -> Self {
+        EventsRabbitmqCommands {
+            sender_events: sender,
+        }
     }
 
     
     //=====================================================================================================
-    pub fn run(&self)  -> Result<(), Box<dyn Error>> {
+    pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
 
         let rabbitmq_user = env::var("RABBITMQ_USER")?;
         let rabbitmq_password = env::var("RABBITMQ_PASS")?;
@@ -54,7 +58,7 @@ impl RabbitmqConsumerCommands {
         // Queue name
         let queue_name = "Q_SBR_COMMANDS_TO_ROBOT_CONTROL";
 
-        // Declare the exclusive, server-named queue we will use to consume.
+        // Declare the exclusive, server-named queue 
         let queue = channel.queue_declare(
             queue_name,
             QueueDeclareOptions {
@@ -64,33 +68,22 @@ impl RabbitmqConsumerCommands {
         )?;
 
         //Binding
-        let key: String = String::from("COMMAND.ROBOT_CONTROL.#");
-        queue.bind(&exchange, key, FieldTable::new())?;
+        queue.bind(&exchange, "COMMAND.ROBOT_CONTROL.#", FieldTable::new())?;
 
-        let key: String = String::from("X.ROBOT_CONTROL.#");
-        queue.bind(&exchange, key, FieldTable::new())?;
-
+        // Start a consumer
         let consumer = queue.consume(ConsumerOptions {
             no_ack: true,
             ..ConsumerOptions::default()
         })?;
 
-        println!("Rabbitmq config done");
-
-
         // Loop wait for messages
-        println!("Listening for messages");
         for (_, message) in consumer.receiver().iter().enumerate() {
             match message {
                 ConsumerMessage::Delivery(delivery) => {
                     let body = String::from_utf8_lossy(&delivery.body).to_string();
                     match serde_json::from_str::<Command>(&body){
-                        Ok(json) =>{
-                            dbg!(json.name);
-                            dbg!(json.value_bool);
-                            dbg!(json.value_int);
-                            dbg!(json.value_float);
-                            dbg!(json.value_string);
+                        Ok(cmd) =>{
+                            self.handle_command(cmd)?;
                         }, 
                         Err(er) => {
                             eprintln!("{}", er);
@@ -104,6 +97,25 @@ impl RabbitmqConsumerCommands {
             }
         }
         
+        Ok(())
+    }
+
+
+    //=====================================================================================================
+    pub fn handle_command(&mut self, cmd: Command) -> Result<(), Box<dyn Error>> {
+        match cmd.name.as_str(){
+            "ROBOT_START" => {
+               self.sender_events.send(RobotEvent::Command(RobotCommand::RobotStart))?;
+            },
+            "ROBOT_STOP" => {
+                self.sender_events.send(RobotEvent::Command(RobotCommand::RobotStop))?;
+            },
+            "ROBOT_PAUSE" => {
+                self.sender_events.send(RobotEvent::Command(RobotCommand::RobotPause))?;
+            },
+            _ => {}
+        }
+
         Ok(())
     }
 
