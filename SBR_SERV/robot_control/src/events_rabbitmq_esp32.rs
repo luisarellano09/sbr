@@ -22,9 +22,9 @@ pub struct EventsRabbitmqEsp32 {
 impl EventsRabbitmqEsp32 {
 
     //=====================================================================================================
-    pub fn new(sender: Sender<RobotEvent>) -> Self {
+    pub fn new(sender_events: Sender<RobotEvent>) -> Self {
         EventsRabbitmqEsp32 {
-            sender_events: sender,
+            sender_events: sender_events,
             connection_esp32_error: false,
             connection_linux_error: false,
             robot_falldown: false,
@@ -49,7 +49,7 @@ impl EventsRabbitmqEsp32 {
         // Open a channel - None says let the library choose the channel ID.
         let channel = connection.open_channel(None)?;
 
-        // Declare the exchange we will bind to.
+        // Declare the exchange
         let exchange = channel.exchange_declare(
             ExchangeType::Topic,
             "SBR_EXCH_READ_ESP32",
@@ -100,8 +100,7 @@ impl EventsRabbitmqEsp32 {
                     }
                 }
                 other => {
-                    println!("Consumer ended: {:?}", other);
-                    break;
+                    panic!("Consumer ended: {:?}", other);
                 }
             }
         }

@@ -2,7 +2,7 @@ use std::{error::Error, sync::mpsc::Sender};
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOptions, FieldTable, ConsumerOptions, ConsumerMessage};
 use std::env;
 
-use crate::{type_command::Command, type_event::{RobotEvent, RobotCommand}};
+use crate::type_heartbeat_message::HeartbeatMessage;
 
 
 //=====================================================================================================
@@ -10,24 +10,24 @@ const URL: &str = "amqp://RABBITMQ_USER:RABBITMQ_PASS@RABBITMQ_HOST:5672/";
 
 
 //=====================================================================================================
-pub struct EventsRabbitmqCommands {
-    sender_events: Sender<RobotEvent>,
+pub struct RabbitmqHeartbeats {
+    sender_hearbeats: Sender<HeartbeatMessage>,
 }
 
 
 //=====================================================================================================
-impl EventsRabbitmqCommands {
+impl RabbitmqHeartbeats {
 
     //=====================================================================================================
-    pub fn new(sender_events: Sender<RobotEvent>) -> Self {
-        EventsRabbitmqCommands {
-            sender_events: sender_events,
+    pub fn new(sender_hearbeats: Sender<HeartbeatMessage>) -> Self {
+        RabbitmqHeartbeats {
+            sender_hearbeats: sender_hearbeats,
         }
     }
 
     
     //=====================================================================================================
-    pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
+    pub fn run(&self) -> Result<(), Box<dyn Error>> {
 
         let rabbitmq_user = env::var("RABBITMQ_USER")?;
         let rabbitmq_password = env::var("RABBITMQ_PASS")?;
@@ -44,9 +44,9 @@ impl EventsRabbitmqCommands {
         let channel = connection.open_channel(None)?;
 
         // Declare the exchange
-        let exchange = channel.exchange_declare(
+        let exchange_esp32 = channel.exchange_declare(
             ExchangeType::Topic,
-            "SBR_EXCH_ROBOT_COMMANDS",
+            "SBR_EXCH_READ_ESP32",
             ExchangeDeclareOptions{
                 durable: false,
                 auto_delete: false,
@@ -56,9 +56,9 @@ impl EventsRabbitmqCommands {
         )?;
 
         // Queue name
-        let queue_name = "Q_SBR_COMMANDS_TO_ROBOT_CONTROL";
+        let queue_name = "Q_HEARTBEATS_TO_ROBOT_CONTROL";
 
-        // Declare the exclusive, server-named queue 
+        // Declare the exclusive, server-named queue we will use to consume.
         let queue = channel.queue_declare(
             queue_name,
             QueueDeclareOptions {
@@ -67,8 +67,8 @@ impl EventsRabbitmqCommands {
             },
         )?;
 
-        //Binding
-        queue.bind(&exchange, "COMMAND.ROBOT_CONTROL.#", FieldTable::new())?;
+        // Bindings
+        queue.bind(&exchange_esp32, "ESP32.READ.STATUS.HEARTBEAT", FieldTable::new())?;
 
         // Start a consumer
         let consumer = queue.consume(ConsumerOptions {
@@ -81,9 +81,9 @@ impl EventsRabbitmqCommands {
             match message {
                 ConsumerMessage::Delivery(delivery) => {
                     let body = String::from_utf8_lossy(&delivery.body).to_string();
-                    match serde_json::from_str::<Command>(&body){
-                        Ok(cmd) =>{
-                            self.handle_command(cmd)?;
+                    match serde_json::from_str::<HeartbeatMessage>(&body){
+                        Ok(msg) =>{
+                            self.handle_message(msg)?;
                         }, 
                         Err(er) => {
                             eprintln!("{}", er);
@@ -101,19 +101,9 @@ impl EventsRabbitmqCommands {
 
 
     //=====================================================================================================
-    pub fn handle_command(&mut self, cmd: Command) -> Result<(), Box<dyn Error>> {
-        match cmd.name.as_str(){
-            "ROBOT_START" => {
-               self.sender_events.send(RobotEvent::Command(RobotCommand::RobotStart))?;
-            },
-            "ROBOT_STOP" => {
-                self.sender_events.send(RobotEvent::Command(RobotCommand::RobotStop))?;
-            },
-            "ROBOT_PAUSE" => {
-                self.sender_events.send(RobotEvent::Command(RobotCommand::RobotPause))?;
-            },
-            _ => {}
-        }
+    pub fn handle_message(&self, msg: HeartbeatMessage) -> Result<(), Box<dyn Error>> {
+
+        self.sender_hearbeats.send(msg)?;
 
         Ok(())
     }

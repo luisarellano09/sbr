@@ -44,11 +44,11 @@ impl RobotControl {
     
     //=====================================================================================================
     // Constructor for the RobotControl struct.
-    pub fn new(receiver: Receiver<RobotEvent>) -> Self {
+    pub fn new(receiver_events: Receiver<RobotEvent>) -> Self {
         Self { 
             state: RobotState::Init(StateStep::Initialization),
             graphql_client: Client::new(),
-            receiver_events: receiver,
+            receiver_events: receiver_events,
         }
     }
 
@@ -57,7 +57,7 @@ impl RobotControl {
     // Main function for the robot control state machine.
     pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
 
-        dbg!(&self.state);
+        //dbg!(&self.state);
 
         // Get the current event from the event collector.
         let event = self.get_events()?;
@@ -90,7 +90,7 @@ impl RobotControl {
 
         match self.receiver_events.try_recv() {
             Ok(event) =>{
-                dbg!(&event);
+                //dbg!(&event);
                 return Ok(event); 
             }, 
             Err(_)=>{}
