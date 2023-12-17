@@ -46,7 +46,7 @@ if [ $? -eq 0 ]; then
             cd ~/SBR/actions-runner/_work/sbr/sbr/SBR_PI/DevOps
             ;;
         "Docker System Prune")
-            sudo docker system prune -y
+            sudo docker system prune
             ;;
         "Start Docker Monitor")
             sudo touch ~/SBR/data/host_connector/requests/START_DOCKER_MONITOR
