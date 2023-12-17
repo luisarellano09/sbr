@@ -8,6 +8,7 @@ OPTIONS=(
     "Serial Node Manager" "Serial connection with Manager (exit: Ctrl-A k)"
     "Serial Node 01" "Serial connection with Node 01 (exit: Ctrl-A k)"
     "Docker Compose" "cd into the docker-compose folder"
+    "Docker System Prune" "Prune the Docker system"
     "Start Docker Monitor" "Start the Docker Monitor service"
     "Stop Docker Monitor" "Stop the Docker Monitor service"
     "Restart" "Restart the system"
@@ -43,6 +44,9 @@ if [ $? -eq 0 ]; then
             ;;
         "Docker Compose")
             cd ~/SBR/actions-runner/_work/sbr/sbr/SBR_PI/DevOps
+            ;;
+        "Docker System Prune")
+            sudo docker system prune -y
             ;;
         "Start Docker Monitor")
             sudo touch ~/SBR/data/host_connector/requests/START_DOCKER_MONITOR
