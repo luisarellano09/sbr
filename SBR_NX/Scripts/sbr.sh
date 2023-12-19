@@ -14,7 +14,7 @@ OPTIONS=(
 )
 
 # Show the menu using whiptail
-CHOICE=$(whiptail --title "SBR Menu" --menu "Choose an option:" 20 80 10 "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
+CHOICE=$(whiptail --title "SBR Menu" --menu "Choose an option:" 20 80 12 "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
 
 
 # Check the exit status to see if the user pressed Cancel or OK
