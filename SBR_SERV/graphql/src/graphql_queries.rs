@@ -598,4 +598,15 @@ impl Queries {
         Ok(setup)
     }
 
+
+     //=====================================================================================================
+     fn GetRobotStatus(context: &ContextGraphQL, endpoint: String, status: String) -> FieldResult<String> {
+
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
+        let key: String = format!("{}.{}", endpoint, status);
+        let value: String = conn.get(key)?;
+
+        Ok(value)
+    }
+
 }

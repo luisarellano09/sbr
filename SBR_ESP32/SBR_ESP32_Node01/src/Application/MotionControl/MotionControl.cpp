@@ -43,16 +43,22 @@ RC_e MotionControl::Run(){
 
     this->m_CycleCounter++;
 
-    // Check if the Robot is down
-    if (this->m_IMU->GetPitch() > 45.0 || this->m_IMU->GetPitch() < -45.0) {
+    // Check if the Robot is falldown
+    if (this->IsFalldown()) {
+        // Stop the motors
         this->m_motorLeft->Stop();
         this->m_motorRight->Stop();
+
+        // Reset the Odometry
         this->m_odometry->Reset();
+
+        // Reset the PID
         this->SetSPPos(0.0);
         this->SetSPAngle(0.0);
         this->m_PIDAngle->Reset();
         this->m_PIDPitch->Reset();
         this->m_PIDPosition->Reset();
+        
         vTaskDelay(2000);
     } else {
 
@@ -148,6 +154,22 @@ bool MotionControl::IsFalldown(){
 
 //=====================================================================================================
 
+RC_e MotionControl::CalculateFalldown(){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    if (abs(this->m_IMU->GetPitch()) > this->m_FalldownOffset) {
+        this->m_Falldown = true;
+    } else {
+        this->m_Falldown = false;
+    }
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
 RC_e MotionControl::Start(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
@@ -187,17 +209,3 @@ RC_e MotionControl::Stop(){
  *  												PRIVATE METHODS
  *******************************************************************************************************************************************/
 
-//=====================================================================================================
-
-RC_e MotionControl::CalculateFalldown(){
-    // Result code
-    RC_e retCode = RC_e::SUCCESS;
-
-    if (abs(this->m_IMU->GetPitch()) > this->m_FalldownOffset) {
-        this->m_Falldown = true;
-    } else {
-        this->m_Falldown = false;
-    }
-
-    return retCode;
-}

@@ -1,8 +1,8 @@
-use std::error::Error;
+use std::{error::Error, sync::mpsc::Sender};
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOptions, FieldTable, ConsumerOptions, ConsumerMessage};
 use std::env;
 
-use crate::type_message_esp32::MessageEsp32;
+use crate::type_heartbeat_message::HeartbeatMessage;
 
 
 //=====================================================================================================
@@ -10,20 +10,24 @@ const URL: &str = "amqp://RABBITMQ_USER:RABBITMQ_PASS@RABBITMQ_HOST:5672/";
 
 
 //=====================================================================================================
-pub struct RabbitmqConsumerEsp32 {}
+pub struct RabbitmqHeartbeats {
+    sender_hearbeats: Sender<HeartbeatMessage>,
+}
 
 
 //=====================================================================================================
-impl RabbitmqConsumerEsp32 {
+impl RabbitmqHeartbeats {
 
     //=====================================================================================================
-    pub fn new() -> Self {
-        RabbitmqConsumerEsp32 {}
+    pub fn new(sender_hearbeats: Sender<HeartbeatMessage>) -> Self {
+        RabbitmqHeartbeats {
+            sender_hearbeats: sender_hearbeats,
+        }
     }
 
     
     //=====================================================================================================
-    pub fn run(&self)  -> Result<(), Box<dyn Error>> {
+    pub fn run(&self) -> Result<(), Box<dyn Error>> {
 
         let rabbitmq_user = env::var("RABBITMQ_USER")?;
         let rabbitmq_password = env::var("RABBITMQ_PASS")?;
@@ -39,8 +43,8 @@ impl RabbitmqConsumerEsp32 {
         // Open a channel - None says let the library choose the channel ID.
         let channel = connection.open_channel(None)?;
 
-        // Declare the exchange we will bind to.
-        let exchange = channel.exchange_declare(
+        // Declare the exchange
+        let exchange_esp32 = channel.exchange_declare(
             ExchangeType::Topic,
             "SBR_EXCH_READ_ESP32",
             ExchangeDeclareOptions{
@@ -52,7 +56,7 @@ impl RabbitmqConsumerEsp32 {
         )?;
 
         // Queue name
-        let queue_name = "Q_SBR_ESP32_TO_ROBOT_CONTROL";
+        let queue_name = "Q_HEARTBEATS_TO_ROBOT_CONTROL";
 
         // Declare the exclusive, server-named queue we will use to consume.
         let queue = channel.queue_declare(
@@ -63,25 +67,23 @@ impl RabbitmqConsumerEsp32 {
             },
         )?;
 
-        //Bindings
-        //queue.bind(&exchange, "ESP32.READ.LIVE.IMU.#", FieldTable::new())?;
-        //queue.bind(&exchange, "ESP32.READ.STATUS.#", FieldTable::new())?;
-        queue.bind(&exchange, "ESP32.READ.MODE.NODE1.SYNC_DATA_RW", FieldTable::new())?;
+        // Bindings
+        queue.bind(&exchange_esp32, "ESP32.READ.STATUS.HEARTBEAT", FieldTable::new())?;
 
+        // Start a consumer
         let consumer = queue.consume(ConsumerOptions {
             no_ack: true,
             ..ConsumerOptions::default()
         })?;
-
 
         // Loop wait for messages
         for (_, message) in consumer.receiver().iter().enumerate() {
             match message {
                 ConsumerMessage::Delivery(delivery) => {
                     let body = String::from_utf8_lossy(&delivery.body).to_string();
-                    match serde_json::from_str::<MessageEsp32>(&body){
-                        Ok(json) =>{
-                            dbg!(json);
+                    match serde_json::from_str::<HeartbeatMessage>(&body){
+                        Ok(msg) =>{
+                            self.handle_message(msg)?;
                         }, 
                         Err(er) => {
                             eprintln!("{}", er);
@@ -89,12 +91,20 @@ impl RabbitmqConsumerEsp32 {
                     }
                 }
                 other => {
-                    println!("Consumer ended: {:?}", other);
-                    break;
+                    panic!("Consumer ended: {:?}", other);
                 }
             }
         }
         
+        Ok(())
+    }
+
+
+    //=====================================================================================================
+    pub fn handle_message(&self, msg: HeartbeatMessage) -> Result<(), Box<dyn Error>> {
+
+        self.sender_hearbeats.send(msg)?;
+
         Ok(())
     }
 

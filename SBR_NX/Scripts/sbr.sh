@@ -6,6 +6,7 @@ OPTIONS=(
     "Host Monitor" "Monitor the service: sbr_host_monitor.service"
     "Start Runner" "Start the GitHub Actions Runner"
     "Docker Compose" "cd into the docker-compose folder"
+    "Docker System Prune" "Prune the Docker system"
     "Start Docker Monitor" "Start the Docker Monitor service"
     "Stop Docker Monitor" "Stop the Docker Monitor service"
     "Restart" "Restart the system"
@@ -13,7 +14,7 @@ OPTIONS=(
 )
 
 # Show the menu using whiptail
-CHOICE=$(whiptail --title "SBR Menu" --menu "Choose an option:" 20 80 10 "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
+CHOICE=$(whiptail --title "SBR Menu" --menu "Choose an option:" 20 80 12 "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
 
 
 # Check the exit status to see if the user pressed Cancel or OK
@@ -36,6 +37,9 @@ if [ $? -eq 0 ]; then
             ;;
         "Docker Compose")
             cd ~/SBR/actions-runner/_work/sbr/sbr/SBR_NX/DevOps
+            ;;
+        "Docker System Prune")
+            sudo docker system prune
             ;;
         "Start Docker Monitor")
             sudo touch ~/SBR/data/host_connector/requests/START_DOCKER_MONITOR

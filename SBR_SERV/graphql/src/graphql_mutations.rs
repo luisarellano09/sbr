@@ -1,4 +1,5 @@
 use juniper::{graphql_object, FieldResult};
+use r2d2_redis::redis::Commands;
 use crate::graphql_context::ContextGraphQL;
 use crate::graphql_types::{RegisterCommand, Esp32SetupInput};
 use crate::rabbitmq_connection::{publish_esp32_write, publish_host_connector, publish_command};
@@ -797,6 +798,17 @@ impl Mutations {
         
         publish_command(endpoint, cmd)?;
             
+        Ok(true)
+    }
+
+
+    //=====================================================================================================
+    fn SetRobotStatus(context: &ContextGraphQL, endpoint: String, status: String, value: String) -> FieldResult<bool> {
+
+        let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
+        let key: String = format!("{}.{}", endpoint, status);
+        conn.set(key, value)?;
+
         Ok(true)
     }
     

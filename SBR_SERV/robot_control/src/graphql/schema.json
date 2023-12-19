@@ -292,6 +292,22 @@
                   "ofType": null
                 }
               }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "motionFalldownOffset",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Float",
+                  "ofType": null
+                }
+              }
             }
           ],
           "inputFields": null,
@@ -882,6 +898,22 @@
                 "ofType": {
                   "kind": "OBJECT",
                   "name": "Esp32SetupMotionPID",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "GetEsp32SetupMotionFalldownOffset",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Float",
                   "ofType": null
                 }
               }
@@ -2260,6 +2292,16 @@
               "defaultValue": null,
               "description": null,
               "name": "motionPidAngleMvMax",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            {
+              "defaultValue": null,
+              "description": null,
+              "name": "motionFalldownOffset",
               "type": {
                 "kind": "SCALAR",
                 "name": "Float",
