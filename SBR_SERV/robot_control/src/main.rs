@@ -10,6 +10,7 @@ mod events_rabbitmq_esp32;
 mod events_heartbeats;
 mod rabbitmq_heartbeats;
 mod type_message_esp32;
+mod type_state;
 mod type_command;
 mod type_event;
 mod type_heartbeat_message;

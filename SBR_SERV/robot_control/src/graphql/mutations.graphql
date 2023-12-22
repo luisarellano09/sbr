@@ -15,3 +15,11 @@ mutation SetEsp32ModeNode1SyncData( $syncStatus: RegisterCommand!) {
         syncStatus: $syncStatus
     ) 
 }
+
+mutation SetRobotStatus( $endpoint: String!, $status: String!, $value: String! ) {
+    SetRobotStatus(
+        endpoint: $endpoint,
+        status: $status,
+        value: $value
+    ) 
+}

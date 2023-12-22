@@ -110,3 +110,25 @@ pub fn mutation_set_esp32_mode_node1_sync_data(graphql_client: &Client, cmd: sel
 
     Ok(response_body.data.expect("Error in feching data from GraphQL").set_esp32_mode_node1_sync_data)
 }
+
+
+//=====================================================================================================
+#[derive(GraphQLQuery)]
+#[graphql(
+    schema_path = "src/graphql/schema.json",
+    query_path = "src/graphql/mutations.graphql",
+    response_derives = "Serialize",
+)]
+pub struct SetRobotStatus;
+
+pub fn mutation_set_robot_status(graphql_client: &Client, endpoint: String, status: String, value: String) -> Result<bool, Box<dyn Error>>{
+    let response_body = post_graphql_blocking::<SetRobotStatus, _>(graphql_client, get_graphql_url()?, self::set_robot_status::Variables {endpoint: endpoint, status: status, value: value})?;
+
+    if let Some(errors) = response_body.errors {
+        if let Some(first_error) = errors.first() {
+            panic!("{}",first_error.message);
+        }
+    }
+
+    Ok(response_body.data.expect("Error in feching data from GraphQL").set_robot_status)
+}
