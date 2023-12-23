@@ -68,11 +68,13 @@ impl RabbitmqConsumer {
         //Bindiing
         queue.bind(&exchange, "ESP32.WRITE.#", FieldTable::new())?;
 
+        // Start a consumer
         let consumer = queue.consume(ConsumerOptions {
             no_ack: true,
             ..ConsumerOptions::default()
         })?;
 
+        // Loop wait for messages
         for (_, message) in consumer.receiver().iter().enumerate() {
             match message {
                 ConsumerMessage::Delivery(delivery) => {
