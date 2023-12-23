@@ -55,12 +55,9 @@ impl RabbitmqHeartbeats {
             },
         )?;
 
-        // Queue name
-        let queue_name = "Q_HEARTBEATS_TO_ROBOT_CONTROL";
-
-        // Declare the exclusive, server-named queue we will use to consume.
+        // Declare the queue
         let queue = channel.queue_declare(
-            queue_name,
+            "Q_HEARTBEATS_TO_ROBOT_CONTROL",
             QueueDeclareOptions {
                 exclusive: true,
                 ..QueueDeclareOptions::default()
