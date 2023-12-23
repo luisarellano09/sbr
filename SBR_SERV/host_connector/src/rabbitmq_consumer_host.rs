@@ -57,7 +57,7 @@ impl RabbitmqConsumerHost {
         queue_name.push_str(&host);
         queue_name.push_str("_TO_HOST_CONNECTOR");
 
-        // Declare the exclusive
+        // Declare the queue
         let queue = channel.queue_declare(
             queue_name,
             QueueDeclareOptions {
