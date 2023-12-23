@@ -28,7 +28,7 @@ impl EventsRabbitmqCommands {
     
     //=====================================================================================================
     pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
-
+        
         let rabbitmq_user = env::var("RABBITMQ_USER")?;
         let rabbitmq_password = env::var("RABBITMQ_PASS")?;
         let rabbitmq_host = env::var("RABBITMQ_HOST")?;

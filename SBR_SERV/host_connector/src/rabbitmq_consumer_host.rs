@@ -41,7 +41,7 @@ impl RabbitmqConsumerHost {
         // Open a channel - None says let the library choose the channel ID.
         let channel = connection.open_channel(None)?;
 
-        // Declare the exchange we will bind to.
+        // Declare the exchange
         let exchange = channel.exchange_declare(
             ExchangeType::Topic,
             "SBR_EXCH_HOST_CONNECTOR",
@@ -57,7 +57,7 @@ impl RabbitmqConsumerHost {
         queue_name.push_str(&host);
         queue_name.push_str("_TO_HOST_CONNECTOR");
 
-        // Declare the exclusive, server-named queue we will use to consume.
+        // Declare the exclusive
         let queue = channel.queue_declare(
             queue_name,
             QueueDeclareOptions {
@@ -70,17 +70,15 @@ impl RabbitmqConsumerHost {
         let mut key: String = String::from("HOST.");
         key.push_str(&host);
         key.push_str(".#");
-
-
         queue.bind(&exchange, key, FieldTable::new())?;
 
+        // Start a consumer
         let consumer = queue.consume(ConsumerOptions {
             no_ack: true,
             ..ConsumerOptions::default()
         })?;
 
         println!("Rabbitmq config done");
-
 
         // Loop wait for messages
         println!("Listening for messages");
@@ -91,7 +89,7 @@ impl RabbitmqConsumerHost {
                     self.handle_request(body.as_str())?;
                 }
                 other => {
-                    println!("Consumer ended: {:?}", other);
+                    panic!("Consumer ended: {:?}", other);
                     break;
                 }
             }
