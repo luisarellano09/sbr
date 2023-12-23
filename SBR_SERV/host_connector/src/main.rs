@@ -1,7 +1,7 @@
-
 use std::thread;
 
 mod rabbitmq_consumer_host;
+
 use rabbitmq_consumer_host::RabbitmqConsumerHost;
 
 
