@@ -8,6 +8,7 @@ use rabbitmq_consumer_host::RabbitmqConsumerHost;
 //=====================================================================================================
 fn main() {
 
+    // Create threads
     let rabbitmq_consumer_host: RabbitmqConsumerHost = RabbitmqConsumerHost::new();
 
     let thread_rabbitmq_consumer = thread::spawn(move || {
