@@ -15,9 +15,12 @@ use rabbitmq_producer::RabbitmqProducer;
 
 
 fn main() {
+
+    // Create channels
     let (sender_node_producer, receiver_node_producer) = channel();
     let (sender_consumer_node, receiver_consumer_node)= channel();
 
+    // Create threads
     let mut node_linux: Node = Node::new(String::from("/dev/ttyAMA0"), 460800, 3000, sender_node_producer, receiver_consumer_node);
     let mut rabbitmq_consumer: RabbitmqConsumer = RabbitmqConsumer::new(sender_consumer_node);
     let mut rabbitmq_producer: RabbitmqProducer = RabbitmqProducer::new(receiver_node_producer);
