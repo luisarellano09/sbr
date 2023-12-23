@@ -53,7 +53,7 @@ impl RabbitmqConsumerESP32 {
             },
         )?;
 
-        // Declare the exclusive
+        // Declare the queue
         let queue = channel.queue_declare(
             "Q_SBR_ESP32_TO_REDIS",
             QueueDeclareOptions {
@@ -77,7 +77,6 @@ impl RabbitmqConsumerESP32 {
         let mut redis_connection = redis_client.get_connection()?;
         println!("Redis config done");
 
-
         // Loop wait for messages
         println!("Listening for messages");
         for (_, message) in consumer.receiver().iter().enumerate() {
@@ -94,8 +93,7 @@ impl RabbitmqConsumerESP32 {
                     }
                 }
                 other => {
-                    println!("Consumer ended: {:?}", other);
-                    break;
+                    panic!("Consumer ended: {:?}", other);
                 }
             }
         }
