@@ -1,5 +1,5 @@
 
-use std::thread;
+use std::{thread, process};
 use std::sync::mpsc::channel;
 use dotenv::dotenv;
 
@@ -37,31 +37,61 @@ fn main() {
 
     let thread_robot_control = thread::spawn(move || {
         loop {
-            robot_control.run().expect("Error in Run Robot Control");
+            match robot_control.run() {
+                Ok(_) => {},
+                Err(_) => {
+                    println!("Error in Robot Control");
+                    process::exit(1);
+                }
+            }
         }
     });
 
     let thread_events_rabbitmq_commands = thread::spawn(move || {
         loop {
-            events_rabbitmq_commands.run().expect("Error in RabbitMQ Consumer Commands");
+            match events_rabbitmq_commands.run() {
+                Ok(_) => {},
+                Err(_) => {
+                    println!("Error in RabbitMQ Consumer Commands");
+                    process::exit(1);
+                }
+            }
         }
     });
 
     let thread_events_rabbitmq_esp32 = thread::spawn(move || {
         loop {
-            events_rabbitmq_esp32.run().expect("Error in RabbitMQ Consumer ESP32");
+            match events_rabbitmq_esp32.run() {
+                Ok(_) => {},
+                Err(_) => {
+                    println!("Error in RabbitMQ Consumer ESP32");
+                    process::exit(1);
+                }
+            }
         }
     });
 
     let thread_rabbitmq_heartbeats = thread::spawn(move || {
         loop {
-            rabbitmq_heartbeats.run().expect("Error in RabbitMQ Heartbeats");
+            match rabbitmq_heartbeats.run() {
+                Ok(_) => {},
+                Err(_) => {
+                    println!("Error in RabbitMQ Heartbeats");
+                    process::exit(1);
+                }
+            }
         }
     });
 
     let thread_events_heartbeats = thread::spawn(move || {
         loop {
-            events_heartbeats.run().expect("Error in Events Heartbeats");
+            match events_heartbeats.run() {
+                Ok(_) => {},
+                Err(_) => {
+                    println!("Error in Events Heartbeats");
+                    process::exit(1);
+                }
+            }
         }
     });
 
