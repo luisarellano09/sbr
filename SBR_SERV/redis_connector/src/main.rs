@@ -1,4 +1,3 @@
-
 use std::thread;
 
 mod type_message_esp32;
@@ -10,6 +9,7 @@ use rabbitmq_consumer_esp32::RabbitmqConsumerESP32;
 //=====================================================================================================
 fn main() {
 
+    // Create threads
     let mut rabbitmq_consumer_esp32: RabbitmqConsumerESP32 = RabbitmqConsumerESP32::new();
 
     let thread_rabbitmq_consumer = thread::spawn(move || {
@@ -22,7 +22,6 @@ fn main() {
             }
         }
     });
-
 
     thread_rabbitmq_consumer.join().expect("Error in thread rabbitmq consumer");
 }
