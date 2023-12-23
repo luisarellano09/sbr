@@ -73,24 +73,22 @@ impl RabbitmqConsumer {
             ..ConsumerOptions::default()
         })?;
 
-        loop{
-            for (_, message) in consumer.receiver().iter().enumerate() {
-                match message {
-                    ConsumerMessage::Delivery(delivery) => {
-                        let body = String::from_utf8_lossy(&delivery.body).to_string();
-                        match serde_json::from_str::<MessageEsp32>(&body){
-                            Ok(json) =>{
-                                self.m_sender_consumer_node.send(MessageEsp32 { name: json.name, data: json.data})?;                                
-                            }, 
-                            Err(er) => {
-                                eprintln!("{}", er);
-                            }
+        for (_, message) in consumer.receiver().iter().enumerate() {
+            match message {
+                ConsumerMessage::Delivery(delivery) => {
+                    let body = String::from_utf8_lossy(&delivery.body).to_string();
+                    match serde_json::from_str::<MessageEsp32>(&body){
+                        Ok(json) =>{
+                            self.m_sender_consumer_node.send(MessageEsp32 { name: json.name, data: json.data})?;                                
+                        }, 
+                        Err(er) => {
+                            eprintln!("{}", er);
                         }
                     }
-                    other => {
-                        println!("Consumer ended: {:?}", other);
-                        break;
-                    }
+                }
+                other => {
+                    println!("Consumer ended: {:?}", other);
+                    break;
                 }
             }
         }

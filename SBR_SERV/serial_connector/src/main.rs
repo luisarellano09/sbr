@@ -23,16 +23,42 @@ fn main() {
     let mut rabbitmq_producer: RabbitmqProducer = RabbitmqProducer::new(receiver_node_producer);
 
     let thread_node_linux = thread::spawn(move || {
-        node_linux.run().expect("Error in thread node linux");
-
+        loop {
+            match node_linux.run() {
+                Ok(_) => {},
+                Err(er) => {
+                    println!("Error in Node Linux Thread");
+                    println!("{}", er);
+                    std::process::exit(1);
+                }
+            }
+        }
     });
 
     let thread_rabbitmq_consumer = thread::spawn(move || {
-        rabbitmq_consumer.run().expect("Error in rabbitmq consumer");
+        loop {
+            match rabbitmq_consumer.run() {
+                Ok(_) => {},
+                Err(er) => {
+                    println!("Error in RabbitMQ Consumer Thread");
+                    println!("{}", er);
+                    std::process::exit(1);
+                }
+            }
+        }
     });
 
     let thread_rabbitmq_producer = thread::spawn(move || {
-        rabbitmq_producer.run().expect("Error in rabbitmq producer");
+        loop {
+            match rabbitmq_producer.run() {
+                Ok(_) => {},
+                Err(er) => {
+                    println!("Error in RabbitMQ Producer Thread");
+                    println!("{}", er);
+                    std::process::exit(1);
+                }
+            }
+        }
     });
 
     thread_node_linux.join().expect("Error in thread node linux");
