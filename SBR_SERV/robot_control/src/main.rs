@@ -1,4 +1,3 @@
-
 use std::{thread, process};
 use std::sync::mpsc::channel;
 use dotenv::dotenv;
@@ -21,14 +20,17 @@ use events_rabbitmq_esp32::EventsRabbitmqEsp32;
 use events_heartbeats::EventsHeartbeats;
 use rabbitmq_heartbeats::RabbitmqHeartbeats;
 
-
+//=====================================================================================================
 fn main() {
 
+    // Load .env file if exists
     dotenv().ok();
 
+    // Create channels
     let (sender_events, receiver_events) = channel();
     let (sender_heartbeats, receiver_heartbeats) = channel();
 
+    // Create threads   
     let mut robot_control = RobotControl::new(receiver_events);
     let mut events_rabbitmq_commands = EventsRabbitmqCommands::new(sender_events.clone());
     let mut events_rabbitmq_esp32 = EventsRabbitmqEsp32::new(sender_events.clone());
