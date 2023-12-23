@@ -39,8 +39,9 @@ fn main() {
         loop {
             match robot_control.run() {
                 Ok(_) => {},
-                Err(_) => {
+                Err(er) => {
                     println!("Error in Robot Control");
+                    println!("{}", er);
                     process::exit(1);
                 }
             }
@@ -51,8 +52,9 @@ fn main() {
         loop {
             match events_rabbitmq_commands.run() {
                 Ok(_) => {},
-                Err(_) => {
+                Err(er) => {
                     println!("Error in RabbitMQ Consumer Commands");
+                    println!("{}", er);
                     process::exit(1);
                 }
             }
@@ -63,8 +65,9 @@ fn main() {
         loop {
             match events_rabbitmq_esp32.run() {
                 Ok(_) => {},
-                Err(_) => {
+                Err(er) => {
                     println!("Error in RabbitMQ Consumer ESP32");
+                    println!("{}", er);
                     process::exit(1);
                 }
             }
@@ -75,8 +78,9 @@ fn main() {
         loop {
             match rabbitmq_heartbeats.run() {
                 Ok(_) => {},
-                Err(_) => {
+                Err(er) => {
                     println!("Error in RabbitMQ Heartbeats");
+                    println!("{}", er);
                     process::exit(1);
                 }
             }
@@ -87,8 +91,9 @@ fn main() {
         loop {
             match events_heartbeats.run() {
                 Ok(_) => {},
-                Err(_) => {
+                Err(er) => {
                     println!("Error in Events Heartbeats");
+                    println!("{}", er);
                     process::exit(1);
                 }
             }
