@@ -1,4 +1,4 @@
-use std::{sync::mpsc::Receiver, fmt};
+use std::sync::mpsc::Receiver;
 use std::error::Error;
 use ::reqwest::blocking::Client;
 use crate::type_state::{RobotState, StateStep};
