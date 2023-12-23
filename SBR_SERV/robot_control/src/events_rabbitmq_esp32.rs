@@ -61,12 +61,9 @@ impl EventsRabbitmqEsp32 {
             },
         )?;
 
-        // Queue name
-        let queue_name = "Q_SBR_ESP32_TO_ROBOT_CONTROL";
-
-        // Declare the exclusive, server-named queue 
+        // Declare the queue
         let queue = channel.queue_declare(
-            queue_name,
+            "Q_SBR_ESP32_TO_ROBOT_CONTROL",
             QueueDeclareOptions {
                 exclusive: true,
                 ..QueueDeclareOptions::default()
