@@ -148,3 +148,9 @@ export const GET_ESP32_STATUS = gql`
         }
     }
 `;
+
+export const GET_ROBOT_STATUS = gql`
+    query($endpoint: String!, $status: String!){
+        GetRobotStatus(endpoint: $endpoint, status: $status)
+    }
+`;
