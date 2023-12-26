@@ -93,5 +93,7 @@ impl RabbitmqConsumer {
                 }
             }
         }
+
+        Ok(())
     }
 }
