@@ -55,6 +55,8 @@ impl Node{
         self.watchdog()?;
         self.read_request()?;
         self.write_request()?;
+        
+        Ok(())
     }
 
 
