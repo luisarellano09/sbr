@@ -90,7 +90,6 @@ impl RabbitmqConsumerHost {
                 }
                 other => {
                     panic!("Consumer ended: {:?}", other);
-                    break;
                 }
             }
         }
