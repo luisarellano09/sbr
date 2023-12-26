@@ -184,7 +184,7 @@ RC_e ExtHandler(Request* request){
         case COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_DIRECTION_W: {
             manager->m_motionControl->m_PIDPitch->SetDirection((bool)request->data);
             manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_DIRECTION_R, manager->m_motionControl->m_PIDPitch->GetDirection());
-            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_CYCLE_R, manager->m_motionControl->m_PIDPitch->GetCycleTime());
+            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_CYCLE_R, manager->m_motionControl->m_PIDPitch->GetCycleTime() * 1000.0);
             Log.infoln("[NodeHandler::SETUP_MOTION_PID_PITCH_DIRECTION_W] Motion Control PID Pitch direction: %T", manager->m_motionControl->m_PIDPitch->GetDirection());
             break;
         }
@@ -227,7 +227,7 @@ RC_e ExtHandler(Request* request){
         case COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_DIRECTION_W: {
             manager->m_motionControl->m_PIDPosition->SetDirection((bool)request->data);
             manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_DIRECTION_R, manager->m_motionControl->m_PIDPosition->GetDirection());
-            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_CYCLE_R, manager->m_motionControl->m_PIDPosition->GetCycleTime());
+            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_CYCLE_R, manager->m_motionControl->m_PIDPosition->GetCycleTime() * 1000.0);
             Log.infoln("[NodeHandler::SETUP_MOTION_PID_POSITION_DIRECTION_W] Motion Control PID Position direction: %T", manager->m_motionControl->m_PIDPosition->GetDirection());
             break;
         }
@@ -270,7 +270,7 @@ RC_e ExtHandler(Request* request){
         case COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_DIRECTION_W: {
             manager->m_motionControl->m_PIDAngle->SetDirection((bool)request->data);
             manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_DIRECTION_R, manager->m_motionControl->m_PIDAngle->GetDirection());
-            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_CYCLE_R, manager->m_motionControl->m_PIDAngle->GetCycleTime());
+            manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_CYCLE_R, manager->m_motionControl->m_PIDAngle->GetCycleTime() * 1000.0);
             Log.infoln("[NodeHandler::SETUP_MOTION_PID_ANGLE_DIRECTION_W] Motion Control PID Angle direction: %T", manager->m_motionControl->m_PIDAngle->GetDirection());
             break;
         }
