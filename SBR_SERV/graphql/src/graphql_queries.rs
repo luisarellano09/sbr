@@ -267,7 +267,7 @@ impl Queries {
 
         let mut conn = context.redis_connection.redis_pool.get().expect("Failed getting connection from pool");
 
-        let offset: f64 = conn.get("ESP32.READ.SETUP.MOTION.FALLDOWN_OFFSET")?;
+        let offset: f64 = conn.get("ESP32.READ.SETUP.MOTION.FALLDOWN_OFFSET_R")?;
 
         Ok(offset)
     }
@@ -318,7 +318,7 @@ impl Queries {
         let motion_pid_angle_mv_min_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.MV_MIN_R")?;
         let motion_pid_angle_mv_max_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.PID_ANGLE.MV_MAX_R")?;
 
-        let motion_falldown_offset_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.FALLDOWN_OFFSET")?;
+        let motion_falldown_offset_raw: f64 = conn.get("ESP32.READ.SETUP.MOTION.FALLDOWN_OFFSET_R")?;
 
         Ok( Esp32Setup{
             motors: Esp32SetupMotors { 
