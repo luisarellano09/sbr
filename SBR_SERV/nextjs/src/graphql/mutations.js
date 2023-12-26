@@ -53,3 +53,9 @@ export const SET_ESP32_MODE_NODE1_PROGRAM = gql`
         SetEsp32ModeNode1Program
     }
 `;
+
+export const SEND_COMMAND_BOOL = gql`
+    mutation SendCommandBool($endpoint: String!, $name: String!, $value: Boolean!){
+        SendCommandBool(endpoint: $endpoint, name: $name, value: $value)
+    }
+`;
