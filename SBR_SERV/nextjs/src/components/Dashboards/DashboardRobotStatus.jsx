@@ -36,7 +36,7 @@ export default function DashboardRobotStatus() {
                             <TableRow key="1">
                                 <TableCell>State</TableCell>
                                 <TableCell className="text-right">
-                                    <Chip variant="flat" color="secondary"> <p className="w-[250px] text-right">{queryRobotState.data.GetRobotStatus}</p></Chip>
+                                    <Chip variant="flat" color="success"> <p className="w-[250px] text-right">{queryRobotState.data.GetRobotStatus}</p></Chip>
                                 </TableCell>
                             </TableRow>
                             <TableRow key="2">
