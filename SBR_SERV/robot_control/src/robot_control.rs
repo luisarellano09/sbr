@@ -254,7 +254,15 @@ impl RobotControl {
     // Event function: Command
     fn robot_event_command(&mut self, command: RobotCommand) -> Result<(), Box<dyn Error>> {
 
-        dbg!(command);
+        match command {
+            RobotCommand::RobotStop => {
+                mutation_set_esp32_mode_node1_stop(&self.graphql_client)?;
+                self.state = RobotState::ReadyToStart(StateStep::Initialization);
+            },
+            RobotCommand::RobotPause => {
+            },
+            _ => {}
+        }
 
         Ok(())
     }
