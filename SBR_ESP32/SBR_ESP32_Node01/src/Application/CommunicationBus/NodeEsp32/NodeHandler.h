@@ -61,18 +61,14 @@ RC_e ExtHandler(Request* request){
         }
         
         case COM_REQUEST_REG_ID_e::MODE_NODE1_START_W: {
-            Serial.println("Motion Mode.....");
             manager->m_motionControl->Start();
-            StartMode(Modes_e::Mode_Motion);
-            Log.infoln("[NodeHandler::MODE_NODE1_START_W] Mode Motion started");
+            Log.infoln("[NodeHandler::MODE_NODE1_START_W] Start Motion");
             break;
         }
         
         case COM_REQUEST_REG_ID_e::MODE_NODE1_STOP_W: {
-            Serial.println("Idle Mode.....");
             manager->m_motionControl->Stop();
-            StartMode(Modes_e::Mode_Idle);
-            Log.infoln("[NodeHandler::MODE_NODE1_STOP_W] Mode Idle started");
+            Log.infoln("[NodeHandler::MODE_NODE1_STOP_W] Stop Motion");
             break;
         }
         
