@@ -84,6 +84,7 @@ export const GET_DB_ESP32_SETUP = gql`
 				mvMin
 				mvMax
 			}
+            motionFalldownOffset
 		}
 	}
 `;
@@ -135,6 +136,7 @@ export const GET_ESP32_SETUP = gql`
 				mvMin
 				mvMax
 			}
+            motionFalldownOffset
 		}
 	}
 `;
