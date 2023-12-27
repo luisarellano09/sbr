@@ -392,6 +392,7 @@ RC_e PID::Reset(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
+    this->m_error = 0.0;
     this->m_prevError = 0.0;
     this->m_prevMVIntegral = 0.0;
     this->m_MV = 0.0;
