@@ -84,6 +84,7 @@ export const GET_DB_ESP32_SETUP = gql`
 				mvMin
 				mvMax
 			}
+            motionFalldownOffset
 		}
 	}
 `;
@@ -135,6 +136,7 @@ export const GET_ESP32_SETUP = gql`
 				mvMin
 				mvMax
 			}
+            motionFalldownOffset
 		}
 	}
 `;
@@ -146,5 +148,11 @@ export const GET_ESP32_STATUS = gql`
             nodeLinux,
             heartbeat
         }
+    }
+`;
+
+export const GET_ROBOT_STATUS = gql`
+    query($endpoint: String!, $status: String!){
+        GetRobotStatus(endpoint: $endpoint, status: $status)
     }
 `;

@@ -44,7 +44,7 @@ impl RabbitmqConsumer {
         // Open a channel - None says let the library choose the channel ID.
         let channel = connection.open_channel(None)?;
 
-        // Declare the exchange we will bind to.
+        // Declare the exchange
         let exchange = channel.exchange_declare(
             ExchangeType::Topic,
             "SBR_EXCH_WRITE_ESP32",
@@ -56,7 +56,7 @@ impl RabbitmqConsumer {
             },
         )?;
 
-        // Declare the exclusive, server-named queue we will use to consume.
+        // Declare the queue
         let queue = channel.queue_declare(
             "Q_SBR_WRITE_ESP32",
             QueueDeclareOptions {
@@ -68,31 +68,32 @@ impl RabbitmqConsumer {
         //Bindiing
         queue.bind(&exchange, "ESP32.WRITE.#", FieldTable::new())?;
 
+        // Start a consumer
         let consumer = queue.consume(ConsumerOptions {
             no_ack: true,
             ..ConsumerOptions::default()
         })?;
 
-        loop{
-            for (_, message) in consumer.receiver().iter().enumerate() {
-                match message {
-                    ConsumerMessage::Delivery(delivery) => {
-                        let body = String::from_utf8_lossy(&delivery.body).to_string();
-                        match serde_json::from_str::<MessageEsp32>(&body){
-                            Ok(json) =>{
-                                self.m_sender_consumer_node.send(MessageEsp32 { name: json.name, data: json.data})?;                                
-                            }, 
-                            Err(er) => {
-                                eprintln!("{}", er);
-                            }
+        // Loop wait for messages
+        for (_, message) in consumer.receiver().iter().enumerate() {
+            match message {
+                ConsumerMessage::Delivery(delivery) => {
+                    let body = String::from_utf8_lossy(&delivery.body).to_string();
+                    match serde_json::from_str::<MessageEsp32>(&body){
+                        Ok(json) =>{
+                            self.m_sender_consumer_node.send(MessageEsp32 { name: json.name, data: json.data})?;                                
+                        }, 
+                        Err(er) => {
+                            eprintln!("{}", er);
                         }
                     }
-                    other => {
-                        println!("Consumer ended: {:?}", other);
-                        break;
-                    }
+                }
+                other => {
+                    panic!("Consumer ended: {:?}", other);
                 }
             }
         }
+
+        Ok(())
     }
 }

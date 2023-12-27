@@ -1,5 +1,4 @@
-
-use std::thread;
+use std::{thread, process};
 use std::sync::mpsc::channel;
 use dotenv::dotenv;
 
@@ -10,6 +9,7 @@ mod events_rabbitmq_esp32;
 mod events_heartbeats;
 mod rabbitmq_heartbeats;
 mod type_message_esp32;
+mod type_state;
 mod type_command;
 mod type_event;
 mod type_heartbeat_message;
@@ -20,14 +20,17 @@ use events_rabbitmq_esp32::EventsRabbitmqEsp32;
 use events_heartbeats::EventsHeartbeats;
 use rabbitmq_heartbeats::RabbitmqHeartbeats;
 
-
+//=====================================================================================================
 fn main() {
 
+    // Load .env file if exists
     dotenv().ok();
 
+    // Create channels
     let (sender_events, receiver_events) = channel();
     let (sender_heartbeats, receiver_heartbeats) = channel();
 
+    // Create threads   
     let mut robot_control = RobotControl::new(receiver_events);
     let mut events_rabbitmq_commands = EventsRabbitmqCommands::new(sender_events.clone());
     let mut events_rabbitmq_esp32 = EventsRabbitmqEsp32::new(sender_events.clone());
@@ -36,31 +39,66 @@ fn main() {
 
     let thread_robot_control = thread::spawn(move || {
         loop {
-            robot_control.run().expect("Error in Run Robot Control");
+            match robot_control.run() {
+                Ok(_) => {},
+                Err(er) => {
+                    println!("Error in Robot Control Thread");
+                    println!("{}", er);
+                    process::exit(1);
+                }
+            }
         }
     });
 
     let thread_events_rabbitmq_commands = thread::spawn(move || {
         loop {
-            events_rabbitmq_commands.run().expect("Error in RabbitMQ Consumer Commands");
+            match events_rabbitmq_commands.run() {
+                Ok(_) => {},
+                Err(er) => {
+                    println!("Error in RabbitMQ Consumer Commands Thread");
+                    println!("{}", er);
+                    process::exit(1);
+                }
+            }
         }
     });
 
     let thread_events_rabbitmq_esp32 = thread::spawn(move || {
         loop {
-            events_rabbitmq_esp32.run().expect("Error in RabbitMQ Consumer ESP32");
+            match events_rabbitmq_esp32.run() {
+                Ok(_) => {},
+                Err(er) => {
+                    println!("Error in RabbitMQ Consumer ESP32 Thread");
+                    println!("{}", er);
+                    process::exit(1);
+                }
+            }
         }
     });
 
     let thread_rabbitmq_heartbeats = thread::spawn(move || {
         loop {
-            rabbitmq_heartbeats.run().expect("Error in RabbitMQ Heartbeats");
+            match rabbitmq_heartbeats.run() {
+                Ok(_) => {},
+                Err(er) => {
+                    println!("Error in RabbitMQ Heartbeats Thread");
+                    println!("{}", er);
+                    process::exit(1);
+                }
+            }
         }
     });
 
     let thread_events_heartbeats = thread::spawn(move || {
         loop {
-            events_heartbeats.run().expect("Error in Events Heartbeats");
+            match events_heartbeats.run() {
+                Ok(_) => {},
+                Err(er) => {
+                    println!("Error in Events Heartbeats Thread");
+                    println!("{}", er);
+                    process::exit(1);
+                }
+            }
         }
     });
 

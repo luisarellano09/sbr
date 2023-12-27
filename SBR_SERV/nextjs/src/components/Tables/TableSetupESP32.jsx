@@ -110,6 +110,8 @@ export default function TableSetupESP32() {
     const [dbMotionPidAngleMvMax, setDbMotionPidAngleMvMax] = useState(0);
     const [rtMotionPidAngleMvMax, setRtMotionPidAngleMvMax] = useState(0);
 
+    const [dbMotionFalldownOffset, setDbMotionFalldownOffset] = useState(0);
+    const [rtMotionFalldownOffset, setRtMotionFalldownOffset] = useState(0);
 
     useEffect(()=>{
         if(queryDB.data != undefined){
@@ -143,6 +145,7 @@ export default function TableSetupESP32() {
             setDbMotionPidAngleDirection(queryDB.data.GetDbEsp32Setup.motionPidAngle.direction);
             setDbMotionPidAngleMvMin(queryDB.data.GetDbEsp32Setup.motionPidAngle.mvMin);
             setDbMotionPidAngleMvMax(queryDB.data.GetDbEsp32Setup.motionPidAngle.mvMax);
+            setDbMotionFalldownOffset(queryDB.data.GetDbEsp32Setup.motionFalldownOffset);
         }
     }, [queryDB, render]);
 
@@ -179,6 +182,7 @@ export default function TableSetupESP32() {
             setRtMotionPidAngleDirection(queryRT.data.GetEsp32Setup.motionPidAngle.direction);
             setRtMotionPidAngleMvMin(queryRT.data.GetEsp32Setup.motionPidAngle.mvMin);
             setRtMotionPidAngleMvMax(queryRT.data.GetEsp32Setup.motionPidAngle.mvMax);
+            setRtMotionFalldownOffset(queryRT.data.GetEsp32Setup.motionFalldownOffset);
         }
     }, [queryRT, render]);
 
@@ -808,6 +812,25 @@ export default function TableSetupESP32() {
                                 </div>
                             </TableCell>
                         </TableRow>
+
+                        <TableRow>
+                            <TableCell>Motion Falldown Offset</TableCell>
+                            <TableCell>
+                                <div className="flex justify-start">
+                                    <Input size="sm" type="number" variant="faded" className="w-[80px]" value={dbMotionFalldownOffset } onValueChange={setDbMotionFalldownOffset}/>
+                                    <Button size="sm" variant="light" isIconOnly><ArrowDownCircleIcon className="w-6" onClick={()=>{ HandleSetDbESP32Setup({motionFalldownOffset: Number(dbMotionFalldownOffset)}); }}/></Button>
+                                    <Button size="sm" variant="light" isIconOnly><ArrowRightCircleIcon className="w-6" onClick={()=>{ setRtMotionFalldownOffset(dbMotionFalldownOffset); }}/></Button>
+                                </div>
+                            </TableCell>
+                            <TableCell>
+                                <div className="flex justify-start">
+                                    <Input size="sm" type="number" variant="faded" className="w-[80px]" value={rtMotionFalldownOffset} onValueChange={setRtMotionFalldownOffset}/>
+                                    <Button size="sm" variant="light" isIconOnly><ArrowDownCircleIcon className="w-6" onClick={()=>{ HandleSetRtESP32Setup({motionFalldownOffset: Number(rtMotionFalldownOffset)}); }}/></Button>
+                                    <Button size="sm" variant="light" isIconOnly><ArrowLeftCircleIcon className="w-6" onClick={()=>{ setDbMotionFalldownOffset(rtMotionFalldownOffset); }}/></Button>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+
 
                     </TableBody>
                 }

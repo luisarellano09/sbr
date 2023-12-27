@@ -52,12 +52,11 @@ impl Node{
 
     //=====================================================================================================
     pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
-
-        loop {
-            self.watchdog()?;
-            self.read_request()?;
-            self.write_request()?;
-        }
+        self.watchdog()?;
+        self.read_request()?;
+        self.write_request()?;
+        
+        Ok(())
     }
 
 

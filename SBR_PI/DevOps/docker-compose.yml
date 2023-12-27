@@ -194,6 +194,9 @@ services:
         container_name: sbr_serv_robot_control
         environment:
             GRAPHQL_HOST: "sbr_serv_graphql"
+            RABBITMQ_HOST: "sbr_rabbitmq"
+            RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
         build:
             context: ../../SBR_SERV/robot_control/
             target: dev

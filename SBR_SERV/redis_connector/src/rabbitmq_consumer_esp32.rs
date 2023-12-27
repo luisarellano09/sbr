@@ -41,7 +41,7 @@ impl RabbitmqConsumerESP32 {
         // Open a channel - None says let the library choose the channel ID.
         let channel = connection.open_channel(None)?;
 
-        // Declare the exchange we will bind to.
+        // Declare the exchange
         let exchange = channel.exchange_declare(
             ExchangeType::Topic,
             "SBR_EXCH_READ_ESP32",
@@ -53,7 +53,7 @@ impl RabbitmqConsumerESP32 {
             },
         )?;
 
-        // Declare the exclusive, server-named queue we will use to consume.
+        // Declare the queue
         let queue = channel.queue_declare(
             "Q_SBR_ESP32_TO_REDIS",
             QueueDeclareOptions {
@@ -77,7 +77,6 @@ impl RabbitmqConsumerESP32 {
         let mut redis_connection = redis_client.get_connection()?;
         println!("Redis config done");
 
-
         // Loop wait for messages
         println!("Listening for messages");
         for (_, message) in consumer.receiver().iter().enumerate() {
@@ -94,8 +93,7 @@ impl RabbitmqConsumerESP32 {
                     }
                 }
                 other => {
-                    println!("Consumer ended: {:?}", other);
-                    break;
+                    panic!("Consumer ended: {:?}", other);
                 }
             }
         }

@@ -15,24 +15,53 @@ use rabbitmq_producer::RabbitmqProducer;
 
 
 fn main() {
+
+    // Create channels
     let (sender_node_producer, receiver_node_producer) = channel();
     let (sender_consumer_node, receiver_consumer_node)= channel();
 
+    // Create threads
     let mut node_linux: Node = Node::new(String::from("/dev/ttyAMA0"), 460800, 3000, sender_node_producer, receiver_consumer_node);
     let mut rabbitmq_consumer: RabbitmqConsumer = RabbitmqConsumer::new(sender_consumer_node);
     let mut rabbitmq_producer: RabbitmqProducer = RabbitmqProducer::new(receiver_node_producer);
 
     let thread_node_linux = thread::spawn(move || {
-        node_linux.run().expect("Error in thread node linux");
-
+        loop {
+            match node_linux.run() {
+                Ok(_) => {},
+                Err(er) => {
+                    println!("Error in Node Linux Thread");
+                    println!("{}", er);
+                    std::process::exit(1);
+                }
+            }
+        }
     });
 
     let thread_rabbitmq_consumer = thread::spawn(move || {
-        rabbitmq_consumer.run().expect("Error in rabbitmq consumer");
+        loop {
+            match rabbitmq_consumer.run() {
+                Ok(_) => {},
+                Err(er) => {
+                    println!("Error in RabbitMQ Consumer Thread");
+                    println!("{}", er);
+                    std::process::exit(1);
+                }
+            }
+        }
     });
 
     let thread_rabbitmq_producer = thread::spawn(move || {
-        rabbitmq_producer.run().expect("Error in rabbitmq producer");
+        loop {
+            match rabbitmq_producer.run() {
+                Ok(_) => {},
+                Err(er) => {
+                    println!("Error in RabbitMQ Producer Thread");
+                    println!("{}", er);
+                    std::process::exit(1);
+                }
+            }
+        }
     });
 
     thread_node_linux.join().expect("Error in thread node linux");

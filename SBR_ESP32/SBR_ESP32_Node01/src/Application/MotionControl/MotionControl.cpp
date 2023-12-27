@@ -58,6 +58,9 @@ RC_e MotionControl::Run(){
         this->m_PIDAngle->Reset();
         this->m_PIDPitch->Reset();
         this->m_PIDPosition->Reset();
+
+        // Reset the Cycle Counter
+        this->m_CycleCounter = 0;
         
         vTaskDelay(2000);
     } else {

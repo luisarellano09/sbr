@@ -28,7 +28,7 @@ impl EventsRabbitmqCommands {
     
     //=====================================================================================================
     pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
-
+        
         let rabbitmq_user = env::var("RABBITMQ_USER")?;
         let rabbitmq_password = env::var("RABBITMQ_PASS")?;
         let rabbitmq_host = env::var("RABBITMQ_HOST")?;
@@ -55,12 +55,9 @@ impl EventsRabbitmqCommands {
             },
         )?;
 
-        // Queue name
-        let queue_name = "Q_SBR_COMMANDS_TO_ROBOT_CONTROL";
-
-        // Declare the exclusive, server-named queue 
+        // Declare the queue
         let queue = channel.queue_declare(
-            queue_name,
+            "Q_SBR_COMMANDS_TO_ROBOT_CONTROL",
             QueueDeclareOptions {
                 exclusive: true,
                 ..QueueDeclareOptions::default()

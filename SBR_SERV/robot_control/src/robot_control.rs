@@ -1,7 +1,8 @@
 use std::sync::mpsc::Receiver;
 use std::error::Error;
 use ::reqwest::blocking::Client;
-use crate::{graphql::{mutation_load_esp32_setup, mutation_set_esp32_mode_node1_start, mutation_set_esp32_mode_node1_sync_data, mutation_set_esp32_mode_node1_stop}, type_event::{RobotEvent, RobotCommand}};
+use crate::type_state::{RobotState, StateStep};
+use crate::{graphql::{mutation_load_esp32_setup, mutation_set_esp32_mode_node1_start, mutation_set_esp32_mode_node1_sync_data, mutation_set_esp32_mode_node1_stop, mutation_set_robot_status}, type_event::{RobotEvent, RobotCommand}};
 
 
 //=====================================================================================================
@@ -9,31 +10,10 @@ use crate::{graphql::{mutation_load_esp32_setup, mutation_set_esp32_mode_node1_s
 #[derive(Debug)]
 pub struct RobotControl {
     state: RobotState,
+    prev_state: RobotState,
+    current_event: RobotEvent,
     graphql_client: Client,
     receiver_events: Receiver<RobotEvent>,
-}
-
-//=====================================================================================================
-// Enum for the steps on the sates of the RobotControl state machine.
-#[derive(Debug, Clone, PartialEq, Eq)]
-enum StateStep {
-    Initialization,
-    Processing,
-    Termination,
-}
-
-//=====================================================================================================
-// Enum for the states of the RobotControl state machine.
-#[derive(Debug, Clone, PartialEq, Eq)]
-enum RobotState {
-    Init(StateStep),
-    LoadDataEsp32(StateStep),
-    ConfirmLoadDataEsp32(StateStep),
-    ReadyToStart(StateStep),
-    StandUp(StateStep),
-    StartMotion(StateStep),
-    OperationMode(StateStep),
-    ConnectionErrorEsp32(StateStep),
 }
 
 
@@ -47,6 +27,8 @@ impl RobotControl {
     pub fn new(receiver_events: Receiver<RobotEvent>) -> Self {
         Self { 
             state: RobotState::Init(StateStep::Initialization),
+            prev_state: RobotState::Init(StateStep::Initialization),
+            current_event: RobotEvent::None,
             graphql_client: Client::new(),
             receiver_events: receiver_events,
         }
@@ -57,13 +39,14 @@ impl RobotControl {
     // Main function for the robot control state machine.
     pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
 
-        //dbg!(&self.state);
-
         // Get the current event from the event collector.
-        let event = self.get_events()?;
+        self.current_event = self.get_events()?;
+
+        // Log the current state and event.
+        self.log()?;
     
         // Match the current state and event to the appropriate function.
-        match (&self.state, event) {
+        match (self.state.clone(), self.current_event.clone()) {
             (RobotState::Init(state_step), RobotEvent::None) => self.robot_state_init(state_step.clone())?,
             (RobotState::LoadDataEsp32(state_step), RobotEvent::None) => self.robot_state_load_data_esp32(state_step.clone())?,
             (RobotState::ConfirmLoadDataEsp32(_state_step), RobotEvent::ConfirmLoadDataEsp32) => self.robot_transition_out_confirm_load_data_esp32()?,
@@ -181,6 +164,7 @@ impl RobotControl {
     fn robot_transition_out_standup_stop(&mut self, cmd: RobotCommand) -> Result<(), Box<dyn Error>> {
 
         if cmd == RobotCommand::RobotStop {
+            mutation_set_esp32_mode_node1_stop(&self.graphql_client)?;
             self.state = RobotState::ReadyToStart(StateStep::Initialization);
         }
 
@@ -270,9 +254,37 @@ impl RobotControl {
     // Event function: Command
     fn robot_event_command(&mut self, command: RobotCommand) -> Result<(), Box<dyn Error>> {
 
-        dbg!(command);
+        match command {
+            RobotCommand::RobotStop => {
+                mutation_set_esp32_mode_node1_stop(&self.graphql_client)?;
+                self.state = RobotState::ReadyToStart(StateStep::Initialization);
+            },
+            RobotCommand::RobotPause => {
+            },
+            _ => {}
+        }
+
+        Ok(())
+    }
+
+
+    //=====================================================================================================
+    fn log(&mut self) -> Result<(), Box<dyn Error>> {
+
+        if self.state != self.prev_state {
+            println!("Robot State: {:?}", self.state);
+            mutation_set_robot_status(&self.graphql_client, "ROBOT_CONTROL".to_string(), "STATE".to_string(), self.state.to_string())?;
+        }
+
+        if self.current_event != RobotEvent::None {
+            println!("Robot Event: {:?}", self.current_event);
+            mutation_set_robot_status(&self.graphql_client, "ROBOT_CONTROL".to_string(), "EVENT".to_string(), self.current_event.to_string())?;
+        }
+
+        self.prev_state = self.state.clone();
 
         Ok(())
     }
 
 }
+
