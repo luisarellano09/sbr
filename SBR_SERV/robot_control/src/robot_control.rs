@@ -164,6 +164,7 @@ impl RobotControl {
     fn robot_transition_out_standup_stop(&mut self, cmd: RobotCommand) -> Result<(), Box<dyn Error>> {
 
         if cmd == RobotCommand::RobotStop {
+            mutation_set_esp32_mode_node1_stop(&self.graphql_client)?;
             self.state = RobotState::ReadyToStart(StateStep::Initialization);
         }
 
