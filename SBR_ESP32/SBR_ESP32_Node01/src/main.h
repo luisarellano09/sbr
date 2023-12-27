@@ -77,6 +77,9 @@ void Init(){
 
     // Set Log level
     Log.setLevel(preferences.getInt("LOG_LEVEL", LOG_LEVEL_ERROR));
+
+    // Start Motion
+    StartMode(Modes_e::Mode_Motion);
     
 }
 
