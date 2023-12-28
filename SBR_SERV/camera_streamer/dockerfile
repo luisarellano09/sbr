@@ -1,7 +1,4 @@
 FROM dustynv/jetson-inference:r35.3.1 as dev
-# RUN apt-get update
-# RUN apt install python3-pip -y
-# RUN pip install jetson-utils
 WORKDIR /camera_streamer
 
 RUN rm -rf src
