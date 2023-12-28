@@ -32,14 +32,20 @@ services:
             target: dev
         networks:
             - sbr_net_swarm
+            
     
     sbr_serv_camera_streamer:
         restart: unless-stopped
         image: sbr/sbr_serv_camera_streamer:1.0
         container_name: sbr_serv_camera_streamer
+        devices:
+            - /dev/video2:/dev/video0   # Infrared camera
+            - /dev/video4:/dev/video1   # RGB camera
         build:
             context: ../../SBR_SERV/camera_streamer/
             target: dev
+        ports:
+            - 6000:6000
         networks:
             - sbr_net_swarm
             - sbr_net_internal
