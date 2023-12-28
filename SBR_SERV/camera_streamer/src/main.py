@@ -1,9 +1,8 @@
-import sys
-from jetson_utils import videoSource, videoOutput, Log
+from jetson_utils import videoSource, videoOutput
 
 # create video sources & outputs
-input = videoSource("/dev/video1", argv=["--input-width=1280", "--input-height=720", "--input-rate=30", "--input-codec=H264"])
-output = videoOutput("rtsp://@:6000/d435/rgb", argv=[""])
+input = videoSource("/dev/video1", options={'width': 1280, 'height': 720, 'framerate': 30})
+output = videoOutput("rtsp://@:6000/d435/rgb")
 
 # capture frames until EOS or user exits
 numFrames = 0
@@ -22,7 +21,6 @@ while True:
     
     # update the title bar
     if numFrames % 50 == 0:
-        Log.Verbose(f"video-viewer:  captured {numFrames} frames ({img.width} x {img.height})")
         print(f" {img.width}x{img.height} | {output.GetFrameRate()} FPS")
 
     # exit on input/output EOS
