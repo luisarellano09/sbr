@@ -61,7 +61,7 @@ def task_camera_depth_process(streamer):
 
         numFrames += 1
 
-        print(f" {threading.current_thread().name}: {image.width}x{image.height} | {streamer.GetFrameRate()} FPS")
+        print(f" {threading.current_thread().name} ")
 
         # Render the image
         streamer.Render(color_image)
