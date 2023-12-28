@@ -45,7 +45,6 @@ services:
             context: ../../SBR_SERV/camera_streamer/
             target: dev
         ports:
-            - 6000:6000
             - 8554:8554
         networks:
             - sbr_net_swarm
