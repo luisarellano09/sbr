@@ -45,7 +45,7 @@ services:
             context: ../../SBR_SERV/camera_streamer/
             target: dev
         ports:
-            - 6000:6000/udp
+            - 6000:6000
         networks:
             - sbr_net_swarm
             - sbr_net_internal
