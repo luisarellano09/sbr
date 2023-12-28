@@ -32,7 +32,7 @@ services:
             target: dev
         networks:
             - sbr_net_swarm
-
+            
     
     sbr_serv_camera_streamer:
         restart: unless-stopped
@@ -44,7 +44,12 @@ services:
         build:
             context: ../../SBR_SERV/camera_streamer/
             target: dev
-        network_mode: "host"
+        ports:
+            - 6000:6000/udp
+        networks:
+            - sbr_net_swarm
+            - sbr_net_internal
+            - sbr_net_external
 
 
 networks:
