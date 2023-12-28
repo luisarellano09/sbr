@@ -1,6 +1,7 @@
 import threading
 from jetson_utils import videoSource, videoOutput
 import pyrealsense2 as rs
+import numpy as np
 
 # create video sources & outputs
 cameraIR = videoSource("/dev/video2")
@@ -55,10 +56,15 @@ def task_camera_depth_process(streamer):
         depth_frame = frame.get_depth_frame()
         color_frame = frame.get_color_frame()
 
+        depth_image = np.asanyarray(depth_frame.get_data())
+        color_image = np.asanyarray(color_frame.get_data())
+
         numFrames += 1
 
+        print(f" {threading.current_thread().name}: {image.width}x{image.height} | {streamer.GetFrameRate()} FPS")
+
         # Render the image
-        streamer.Render(color_frame)
+        streamer.Render(color_image)
 
 
 if __name__ == '__main__':
