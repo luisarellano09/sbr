@@ -1,28 +1,40 @@
 from jetson_utils import videoSource, videoOutput
 
 # create video sources & outputs
-input = videoSource("/dev/video0")
-output = videoOutput("rtsp://@:6000/d435/rgb")
+cameraIR = videoSource("/dev/video0")
+cameraRGB = videoSource("/dev/video1")
 
-# capture frames until EOS or user exits
-numFrames = 0
+streamerCameraIR = videoOutput("rtsp://@:6000/d435/ir")
+streamerCameraRGB = videoOutput("rtsp://@:6000/d435/rgb")
+
+numFramesIR = 0
+numFramesRGB = 0
 
 while True:
-    # capture the next image
-    img = input.Capture()
+    # capture the next images
+    imageIR = cameraIR.Capture()
+    imageRGB = cameraRGB.Capture()
 
-    if img is None: # timeout
-        continue  
+    if imageIR is not None: # timeout
+        numFramesIR += 1
 
-    numFrames += 1
-
-    # render the image
-    output.Render(img)
+        # render the image
+        streamerCameraIR.Render(imageIR)
     
-    # update the title bar
-    if numFrames % 50 == 0:
-        print(f" {img.width}x{img.height} | {output.GetFrameRate()} FPS")
+        # update the title bar
+        if numFramesIR % 50 == 0:
+            print(f" {imageIR.width}x{imageIR.height} | {imageIR.GetFrameRate()} FPS")
+
+    if imageRGB is not None: # timeout
+        numFramesRGB += 1
+
+        # render the image
+        streamerCameraRGB.Render(imageRGB)
+    
+        # update the title bar
+        if numFramesRGB % 50 == 0:
+            print(f" {imageRGB.width}x{imageRGB.height} | {imageRGB.GetFrameRate()} FPS")
 
     # exit on input/output EOS
-    if not input.IsStreaming() or not output.IsStreaming():
+    if not input.IsStreaming() or not streamerCameraIR.IsStreaming() or not streamerCameraRGB.IsStreaming():
         break
