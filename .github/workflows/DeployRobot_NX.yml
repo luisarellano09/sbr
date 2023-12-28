@@ -21,8 +21,8 @@ jobs:
       - name: Docker Compose
         working-directory: ./SBR_NX/DevOps
         run: docker compose up --build -d
-    #   - name: Delete old images
-        # run: docker image prune -f
+      - name: Delete old images
+        run: docker image prune -f
 
       - name: Copy Service
         run: sudo cp /home/sbrnx/SBR/actions-runner/_work/sbr/sbr/SBR_NX/Services/sbr_host_monitor.service /etc/systemd/system/
