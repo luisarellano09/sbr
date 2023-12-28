@@ -1,0 +1,10 @@
+FROM nvcr.io/nvidia/l4t-base:r36.2.0 as dev
+RUN apt-get update
+RUN apt install python3-pip -y
+RUN pip install jetson-utils
+WORKDIR /camera_streamer
+
+RUN rm -rf src
+COPY ./src ./src
+
+CMD ["python3", "./src/main.py"]

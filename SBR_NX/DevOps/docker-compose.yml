@@ -32,6 +32,18 @@ services:
             target: dev
         networks:
             - sbr_net_swarm
+    
+    sbr_serv_camera_stream:
+        restart: unless-stopped
+        image: sbr/sbr_serv_camera_stream:1.0
+        container_name: sbr_serv_camera_stream
+        build:
+            context: ../../SBR_SERV/camera_stream/
+            target: dev
+        networks:
+            - sbr_net_swarm
+            - sbr_net_internal
+            - sbr_net_external
 
 
 networks:
