@@ -23,7 +23,7 @@ while True:
     
         # update the title bar
         if numFramesIR % 50 == 0:
-            print(f" {imageIR.width}x{imageIR.height} | {imageIR.GetFrameRate()} FPS")
+            print(f" {imageIR.width}x{imageIR.height} | {streamerCameraIR.GetFrameRate()} FPS")
 
     if imageRGB is not None: # timeout
         numFramesRGB += 1
@@ -33,7 +33,7 @@ while True:
     
         # update the title bar
         if numFramesRGB % 50 == 0:
-            print(f" {imageRGB.width}x{imageRGB.height} | {imageRGB.GetFrameRate()} FPS")
+            print(f" {imageRGB.width}x{imageRGB.height} | {streamerCameraRGB.GetFrameRate()} FPS")
 
     # exit on input/output EOS
     if not cameraIR.IsStreaming() or not cameraRGB.IsStreaming() or  not streamerCameraIR.IsStreaming() or not streamerCameraRGB.IsStreaming():
