@@ -1,8 +1,9 @@
 name: Deploy Robot - NX
 
 on:
-  workflow_dispatch:
-  
+    workflow_dispatch:
+    push:
+    
 jobs: 
   deploy:
     runs-on: [self-hosted, sbr-nx]
