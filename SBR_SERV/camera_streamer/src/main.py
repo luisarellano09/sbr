@@ -35,7 +35,7 @@ def task_camera_process(camera, streamer):
             break
 
 
-if __mame__ == "__main__":
+if __name__ == '__main__':
 
     # Define the threads
     threadIR = threading.Thread(target=task_camera_process, args=(cameraIR, streamerCameraIR), name="IR")
