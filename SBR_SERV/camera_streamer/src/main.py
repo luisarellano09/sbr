@@ -2,7 +2,7 @@ from jetson_utils import videoSource, videoOutput
 
 # create video sources & outputs
 input = videoSource("/dev/video0")
-output = videoOutput("rtsp://@:8554/d435/rgb")
+output = videoOutput("rtsp://sbrnx:6000/d435/rgb")
 
 # capture frames until EOS or user exits
 numFrames = 0
