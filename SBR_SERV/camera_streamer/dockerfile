@@ -3,6 +3,7 @@ WORKDIR /camera_streamer
 
 RUN rm -rf src
 COPY ./src ./src
+EXPOSE 6000
 
 CMD ["python3", "-u", "./src/main.py"]
 # CMD video-viewer /dev/video1 rtsp://@:6000/d435/rgb
