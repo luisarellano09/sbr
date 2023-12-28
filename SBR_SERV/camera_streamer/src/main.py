@@ -64,7 +64,7 @@ def task_camera_depth_process(streamer):
         print(f" {threading.current_thread().name} ")
 
         # Render the image
-        streamer.Render(color_frame)
+        # streamer.Render(color_frame)
 
 
 if __name__ == '__main__':
