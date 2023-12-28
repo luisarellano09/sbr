@@ -33,12 +33,12 @@ services:
         networks:
             - sbr_net_swarm
     
-    sbr_serv_camera_stream:
+    sbr_serv_camera_streamer:
         restart: unless-stopped
-        image: sbr/sbr_serv_camera_stream:1.0
-        container_name: sbr_serv_camera_stream
+        image: sbr/sbr_serv_camera_streamer:1.0
+        container_name: sbr_serv_camera_streamer
         build:
-            context: ../../SBR_SERV/camera_stream/
+            context: ../../SBR_SERV/camera_streamer/
             target: dev
         networks:
             - sbr_net_swarm
