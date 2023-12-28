@@ -46,6 +46,7 @@ services:
             target: dev
         ports:
             - 6000:6000
+            - 8554:8554
         networks:
             - sbr_net_swarm
             - sbr_net_internal
