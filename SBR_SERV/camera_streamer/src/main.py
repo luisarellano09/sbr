@@ -1,3 +1,4 @@
+import threading
 from jetson_utils import videoSource, videoOutput
 
 # create video sources & outputs
@@ -7,34 +8,43 @@ cameraRGB = videoSource("/dev/video1")
 streamerCameraIR = videoOutput("rtsp://@:6000/d435/ir")
 streamerCameraRGB = videoOutput("rtsp://@:6000/d435/rgb")
 
-numFramesIR = 0
-numFramesRGB = 0
+def task_camera_process(camera, streamer):
+    # Number of frames captured
+    numFramesIR = 0
 
-while True:
-    # capture the next images
-    imageIR = cameraIR.Capture()
-    imageRGB = cameraRGB.Capture()
+    # process frames until the user exits
+    while True:
+        # capture the next image
+        image = camera.Capture()
 
-    if imageIR is not None: # timeout
+        # Check if there is image
+        if image is None:
+            continue
+
         numFramesIR += 1
 
-        # render the image
-        streamerCameraIR.Render(imageIR)
+        # Render the image
+        streamer.Render(image)
     
         # update the title bar
         if numFramesIR % 50 == 0:
-            print(f" {imageIR.width}x{imageIR.height} | {streamerCameraIR.GetFrameRate()} FPS")
+            print(f" {threading.current_thread().name}: {image.width}x{image.height} | {streamer.GetFrameRate()} FPS")
 
-    if imageRGB is not None: # timeout
-        numFramesRGB += 1
+        # exit on input/output EOS
+        if not camera.IsStreaming() or not streamer.IsStreaming():
+            break
 
-        # render the image
-        streamerCameraRGB.Render(imageRGB)
-    
-        # update the title bar
-        if numFramesRGB % 50 == 0:
-            print(f" {imageRGB.width}x{imageRGB.height} | {streamerCameraRGB.GetFrameRate()} FPS")
 
-    # exit on input/output EOS
-    if not cameraIR.IsStreaming() or not cameraRGB.IsStreaming() or  not streamerCameraIR.IsStreaming() or not streamerCameraRGB.IsStreaming():
-        break
+if __mame__ == "__main__":
+
+    # Define the threads
+    threadIR = threading.Thread(target=task_camera_process, args=(cameraIR, streamerCameraIR), name="IR")
+    threadRGB = threading.Thread(target=task_camera_process, args=(cameraRGB, streamerCameraRGB), name="RGB")
+
+    # start the threads
+    threadIR.start()
+    threadRGB.start()
+
+    # wait for the threads to finish
+    threadIR.join()
+    threadRGB.join()
