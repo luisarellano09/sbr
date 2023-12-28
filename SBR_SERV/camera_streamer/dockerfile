@@ -5,4 +5,4 @@ RUN rm -rf src
 COPY ./src ./src
 
 # CMD ["python3", "-u", "./src/main.py"]
-CMD ["video-viewer /dev/video4 rtsp://@:6000/d435/rgb"]
+CMD video-viewer /dev/video4 rtsp://@:6000/d435/rgb
