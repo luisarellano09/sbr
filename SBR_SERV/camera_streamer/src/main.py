@@ -2,8 +2,8 @@ import threading
 from jetson_utils import videoSource, videoOutput
 
 # create video sources & outputs
-cameraIR = videoSource("/dev/video0")
-cameraRGB = videoSource("/dev/video1")
+cameraIR = videoSource("/dev/video2")
+cameraRGB = videoSource("/dev/video4")
 
 streamerCameraIR = videoOutput("rtsp://@:6000/d435/ir")
 streamerCameraRGB = videoOutput("rtsp://@:6000/d435/rgb")
@@ -27,8 +27,8 @@ def task_camera_process(camera, streamer):
         streamer.Render(image)
     
         # update the title bar
-        if numFramesIR % 50 == 0:
-            print(f" {threading.current_thread().name}: {image.width}x{image.height} | {streamer.GetFrameRate()} FPS")
+        # if numFramesIR % 50 == 0:
+        #     print(f" {threading.current_thread().name}: {image.width}x{image.height} | {streamer.GetFrameRate()} FPS")
 
         # exit on input/output EOS
         if not camera.IsStreaming() or not streamer.IsStreaming():
