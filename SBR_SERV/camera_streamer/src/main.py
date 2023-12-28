@@ -36,5 +36,5 @@ while True:
             print(f" {imageRGB.width}x{imageRGB.height} | {imageRGB.GetFrameRate()} FPS")
 
     # exit on input/output EOS
-    if not input.IsStreaming() or not streamerCameraIR.IsStreaming() or not streamerCameraRGB.IsStreaming():
+    if not cameraIR.IsStreaming() or not cameraRGB.IsStreaming() or  not streamerCameraIR.IsStreaming() or not streamerCameraRGB.IsStreaming():
         break
