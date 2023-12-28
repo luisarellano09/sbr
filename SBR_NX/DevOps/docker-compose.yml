@@ -38,6 +38,7 @@ services:
         restart: unless-stopped
         image: sbr/sbr_serv_camera_streamer:1.0
         container_name: sbr_serv_camera_streamer
+        privileged: true
         devices:
             - /dev/video2:/dev/video0   # Infrared camera
             - /dev/video4:/dev/video1   # RGB camera
