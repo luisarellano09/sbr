@@ -62,7 +62,7 @@ def task_camera_depth_process(streamerDepth):
 
         #adjusted = cv2.cvtColor(color_image, cv2.COLOR_).astype(np.float32)
 
-        adjusted = cv2.convertScaleAbs(color_image, alpha=1.5, beta=5)
+        adjusted = cv2.convertScaleAbs(color_image, alpha=5, beta=5)
         
         gsFrameRGB = cudaFromNumpy(adjusted)
         gsFrameDepth = cudaFromNumpy(depth_image)
