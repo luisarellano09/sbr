@@ -74,16 +74,16 @@ def task_camera_depth_process(streamer):
 if __name__ == '__main__':
 
     # Define the threads
-    threadIR = threading.Thread(target=task_camera_process, args=(cameraIR, streamerCameraIR), name="IR")
+    # threadIR = threading.Thread(target=task_camera_process, args=(cameraIR, streamerCameraIR), name="IR")
     threadRGB = threading.Thread(target=task_camera_process, args=(cameraRGB, streamerCameraRGB), name="RGB")
     threadDepth = threading.Thread(target=task_camera_depth_process, args=(streamerCameraDepth,), name="Depth")
 
     # start the threads
-    threadIR.start()
+    # threadIR.start()
     threadRGB.start()
     threadDepth.start()
 
     # wait for the threads to finish
-    threadIR.join()
+    # threadIR.join()
     threadRGB.join()
     threadDepth.join()
