@@ -60,14 +60,15 @@ def task_camera_depth_process(streamerRGB ,streamerDepth):
         depth_image = np.asanyarray(depth_frame.get_data())
         color_image = np.asanyarray(color_frame.get_data())
 
-        adjustedRGB = cv2.addWeighted( color_image, 2, color_image, 0, 20)
+        adjustedRGB = cv2.addWeighted( color_image, 1, color_image, 0, 15)
+        adjustedDepth = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
         
         gsFrameRGB = cudaFromNumpy(adjustedRGB)
-        gsFrameDepth = cudaFromNumpy(depth_image)
+        gsFrameDepth = cudaFromNumpy(adjustedDepth)
 
         # Render the image
         streamerRGB.Render(gsFrameRGB)
-        #streamerDepth.Render(gsFrameDepth)
+        streamerDepth.Render(gsFrameDepth)
 
 
 if __name__ == '__main__':
