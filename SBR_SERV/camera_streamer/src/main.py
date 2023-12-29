@@ -10,7 +10,7 @@ cameraRGB = videoSource("/dev/video4")
 
 streamerCameraIR = videoOutput("rtsp://@:6000/d435/ir")
 streamerCameraRGB = videoOutput("rtsp://@:6000/d435/rgb")
-streamerCameraDepth = videoOutput("rtsp://@:6000/d435/depth ")
+streamerCameraDepth = videoOutput("rtsp://@:6000/d435/depth")
 
 def task_camera_process(camera, streamer):
     # Number of frames captured
