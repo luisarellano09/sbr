@@ -64,7 +64,7 @@ def task_camera_depth_process(streamerRGB,streamerDepth):
 
         # Render the image
         streamerRGB.Render(gsFrameRGB)
-        streamerDepth.Render(gsFrameDepth)
+        # streamerDepth.Render(gsFrameDepth)
 
 
 if __name__ == '__main__':
