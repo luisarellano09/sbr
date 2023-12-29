@@ -44,7 +44,7 @@ def task_camera_depth_process(streamerDepth):
     pipe = rs.pipeline()
     cfg  = rs.config()
 
-    cfg.enable_stream(rs.stream.color, 1280,720, rs.format.rgb8, 30)
+    cfg.enable_stream(rs.stream.color, 1280,720, rs.format.rgb8, 60)
     cfg.enable_stream(rs.stream.depth, 1280,720, rs.format.z16, 30)
 
     pipe.start(cfg)
