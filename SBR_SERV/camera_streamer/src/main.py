@@ -6,7 +6,7 @@ import cv2
 
 # Create VideoWriter object with GStreamer pipeline
 fourcc = cv2.VideoWriter_fourcc(*'H264')
-rtsp_url = 'rtsp://@:6001/test' 
+rtsp_url = 'rtsp://sbrnx:6001/test' 
 out = cv2.VideoWriter(rtsp_url, fourcc, 30.0, (1280, 720))
 
 # Create rstp streams
