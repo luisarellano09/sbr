@@ -1,5 +1,5 @@
 import threading
-from jetson_utils import videoSource, videoOutput, cudaToNumpy
+from jetson_utils import videoSource, videoOutput, cudaFromNumpy
 import pyrealsense2 as rs
 import numpy as np
 
@@ -65,7 +65,7 @@ def task_camera_depth_process(streamer):
 
         print(f" {threading.current_thread().name} ")
 
-        gsFrame = cudaToNumpy(color_frame)
+        gsFrame = cudaFromNumpy(color_image)
 
         # Render the image
         streamer.Render(gsFrame)
