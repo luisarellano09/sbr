@@ -38,6 +38,7 @@ while True:
 
 
     depth_image_3d = np.dstack((depth_image,depth_image,depth_image)) #depth image is 1 channel, color is 3 channels
+    depth_image_3d = cv2.multiply(depth_image_3d, distance_factor)
 
 
     adjustedDepth = cv2.applyColorMap(cv2.convertScaleAbs(depth_image_3d, alpha=0.03), cv2.COLORMAP_JET)
