@@ -38,7 +38,7 @@ def task_camera_process(camera, streamer):
             break
 
 
-def task_camera_depth_process(streamerRGB,streamerDepth):
+def task_camera_depth_process(streamerDepth):
 
     pipe = rs.pipeline()
     cfg  = rs.config()
@@ -63,7 +63,7 @@ def task_camera_depth_process(streamerRGB,streamerDepth):
         # gsFrameDepth = cudaFromNumpy(depth_image)
 
         # Render the image
-        streamerRGB.Render(gsFrameRGB)
+        streamerDepth.Render(gsFrameRGB)
         # streamerDepth.Render(gsFrameDepth)
 
 
@@ -72,14 +72,14 @@ if __name__ == '__main__':
     # Define the threads
     threadIR = threading.Thread(target=task_camera_process, args=(cameraIR, streamerCameraIR), name="IR")
     threadRGB = threading.Thread(target=task_camera_process, args=(cameraRGB, streamerCameraRGB), name="RGB")
-    # threadDepth = threading.Thread(target=task_camera_depth_process, args=(streamerCameraRGB, streamerCameraDepth), name="Depth")
+    threadDepth = threading.Thread(target=task_camera_depth_process, args=(streamerCameraDepth), name="Depth")
 
     # start the threads
     threadIR.start()
     threadRGB.start()
-    # threadDepth.start()
+    threadDepth.start()
 
     # wait for the threads to finish
     threadIR.join()
     threadRGB.join()
-    # threadDepth.join()
+    threadDepth.join()
