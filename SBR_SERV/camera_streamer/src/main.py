@@ -3,14 +3,11 @@ import pyrealsense2 as rs
 import numpy as np
 import cv2
 
-pipeline_str = (
-    'appsrc ! videoconvert ! x264enc ! rtph264pay ! '
-    'udpsink host=0.0.0.0 port=6001'
-)
 
 # Create VideoWriter object with GStreamer pipeline
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter(pipeline_str, fourcc, 30.0, (1280, 720), True)
+rtsp_url = 'rtsp://@:6001/test' 
+out = cv2.VideoWriter(rtsp_url, fourcc, 30.0, (1280, 720))
 
 # Create rstp streams
 streamerCameraDepth = videoOutput("rtsp://@:6000/d435/depth")
