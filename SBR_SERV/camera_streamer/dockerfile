@@ -6,7 +6,7 @@ RUN git clone --recursive --depth=1 https://github.com/dusty-nv/jetson-inference
 RUN cd jetson-inference
 RUN mkdir build
 RUN cd build
-RUN cmake ../
+RUN cmake ..
 RUN make -j$(nproc)
 RUN make install
 RUN ldconfig
