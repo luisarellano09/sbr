@@ -57,9 +57,9 @@ def task_camera_depth_process(streamerRGB,streamerDepth):
         color_frame = frame.get_color_frame()
 
         # depth_image = np.asanyarray(depth_frame.get_data())
-        # color_image = np.asanyarray(color_frame.get_data())
+        color_image = np.asanyarray(color_frame.get_data())
         
-        gsFrameRGB = cudaFromNumpy(color_frame)
+        gsFrameRGB = cudaFromNumpy(color_image)
         # gsFrameDepth = cudaFromNumpy(depth_image)
 
         # Render the image
