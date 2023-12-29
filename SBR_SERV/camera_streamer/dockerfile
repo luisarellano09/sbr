@@ -2,15 +2,17 @@ FROM nvcr.io/nvidia/l4t-ml:r36.2.0-py3 as dev
 
 RUN apt-get update -y
 RUN apt-get install -y git cmake libpython3-dev python3-numpy
+RUN cd /home
 RUN git clone --recursive --depth=1 https://github.com/dusty-nv/jetson-inference
 RUN cd jetson-inference
 RUN mkdir build
 RUN cd build
-RUN ["cmake ../"]
-RUN ["make -j$(nproc)"]"
+RUN cmake /home/jetson-inference/
+RUN make -j$(nproc)
 RUN make install
 RUN ldconfig
 RUN pip3 install pyrealsense2
+RUN cd /home
 WORKDIR /camera_streamer
 
 RUN rm -rf src
