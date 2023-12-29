@@ -24,8 +24,7 @@ depth_scale = depth_sensor.get_depth_scale()
 print("Depth Scale is: " , depth_scale)
 
 #  clipping_distance_in_meters meters away
-clipping_distance_in_meters = 1 #1 meter
-clipping_distance = clipping_distance_in_meters / depth_scale
+distance_factor = 100.0 * depth_scale   # 0.0010000000474974513
 
 while True:
     frame = pipe.wait_for_frames()
@@ -35,20 +34,16 @@ while True:
     depth_image = np.asanyarray(depth_frame.get_data())
     color_image = np.asanyarray(color_frame.get_data())
 
-     # Remove background - Set pixels further than clipping_distance to grey
-    grey_color = 153
-    depth_image_3d = np.dstack((depth_image,depth_image,depth_image)) #depth image is 1 channel, color is 3 channels
-    bg_removed = np.where((depth_image_3d > clipping_distance) | (depth_image_3d <= 0), grey_color, color_image)
 
-    # Render images:
-    #   depth align to color on left
-    #   depth on right
-    depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
-    adjustedDepth = np.hstack((bg_removed, depth_colormap))
-    
+
+
+    depth_image_3d = np.dstack((depth_image,depth_image,depth_image)) #depth image is 1 channel, color is 3 channels
+
+
+    adjustedDepth = cv2.applyColorMap(cv2.convertScaleAbs(depth_image_3d, alpha=0.03), cv2.COLORMAP_JET)
     adjustedRGB = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
-    gsFrameDepth = cudaFromNumpy(adjustedDepth)
+    gsFrameDepth = cudaFromNumpy(depth_image_3d)
     gsFrameRGB = cudaFromNumpy(adjustedRGB)
 
     # Render the image
