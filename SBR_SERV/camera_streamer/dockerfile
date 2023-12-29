@@ -6,11 +6,10 @@ RUN git clone --recursive --depth=1 https://github.com/dusty-nv/jetson-inference
 RUN cd jetson-inference
 RUN mkdir build
 RUN cd build
-RUN cmake ..
-RUN make -j$(nproc)
+RUN ["cmake ../"]
+RUN ["make -j$(nproc)"]"
 RUN make install
 RUN ldconfig
-
 RUN pip3 install pyrealsense2
 WORKDIR /camera_streamer
 
@@ -18,4 +17,3 @@ RUN rm -rf src
 COPY ./src ./src
 
 CMD ["python3", "-u", "./src/main.py"]
-# CMD video-viewer /dev/video1 rtsp://@:6000/d435/rgb
