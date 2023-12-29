@@ -1,89 +1,37 @@
-import threading
 from jetson_utils import videoSource, videoOutput, cudaFromNumpy
 import pyrealsense2 as rs
 import numpy as np
 import cv2
 
-# create video sources & outputs
-cameraIR = videoSource("/dev/video2")
-cameraRGB = videoSource("/dev/video4")
-
-streamerCameraIR = videoOutput("rtsp://@:6000/d435/ir")
-streamerCameraRGB = videoOutput("rtsp://@:6000/d435/rgb")
+# Create rstp streams
 streamerCameraDepth = videoOutput("rtsp://@:6000/d435/depth")
+streamerCameraRGB = videoOutput("rtsp://@:6000/d435/rgb")
 
-def task_camera_process(camera, streamer):
-    # Number of frames captured
-    numFrames = 0
+# Create pipeline
+pipe = rs.pipeline()
+cfg  = rs.config()
 
-    # process frames until the user exits
-    while True:
-        # capture the next image
-        image = camera.Capture()
+# Enable streams
+cfg.enable_stream(rs.stream.color, 848,480, rs.format.rgb8, 60)
+cfg.enable_stream(rs.stream.depth, 848,480, rs.format.z16, 60)
 
-        # Check if there is image
-        if image is None:
-            continue
+# Start streaming
+pipe.start(cfg)
 
-        numFrames += 1
+while True:
+    frame = pipe.wait_for_frames()
+    depth_frame = frame.get_depth_frame()
+    color_frame = frame.get_color_frame()
 
-        # Render the image
-        streamer.Render(image)
-    
-        # update the title bar
-        if numFrames % 50 == 0:
-            print(f" {threading.current_thread().name}: {image.width}x{image.height} | {streamer.GetFrameRate()} FPS")
+    depth_image = np.asanyarray(depth_frame.get_data())
+    color_image = np.asanyarray(color_frame.get_data())
 
-        # exit on input/output EOS
-        if not camera.IsStreaming() or not streamer.IsStreaming():
-            break
+    adjustedDepth = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.5), cv2.COLORMAP_JET)
+    adjustedRGB = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
+    gsFrameDepth = cudaFromNumpy(adjustedDepth)
+    gsFrameRGB = cudaFromNumpy(adjustedRGB)
 
-def task_camera_depth_process(streamerRGB ,streamerDepth):
-
-    pipe = rs.pipeline()
-    cfg  = rs.config()
-
-    cfg.enable_stream(rs.stream.color, 848,480, rs.format.rgb8, 60)
-    cfg.enable_stream(rs.stream.depth, 848,480, rs.format.z16, 60)
-
-    pipe.start(cfg)
-
-    # Number of frames captured
-    numFrames = 0
-
-    while True:
-        frame = pipe.wait_for_frames()
-        depth_frame = frame.get_depth_frame()
-        color_frame = frame.get_color_frame()
-
-        depth_image = np.asanyarray(depth_frame.get_data())
-        color_image = np.asanyarray(color_frame.get_data())
-
-        adjustedDepth = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.5), cv2.COLORMAP_JET)
-        adjustedRGB = cv2.addWeighted( color_image, 1, color_image, 0, 15)
-    
-        gsFrameDepth = cudaFromNumpy(adjustedDepth)
-        gsFrameRGB = cudaFromNumpy(adjustedRGB)
-
-        # Render the image
-        streamerDepth.Render(gsFrameDepth)
-        streamerRGB.Render(gsFrameRGB)
-
-
-if __name__ == '__main__':
-
-    # Define the threads
-    # threadIR = threading.Thread(target=task_camera_process, args=(cameraIR, streamerCameraIR), name="IR")
-    # threadRGB = threading.Thread(target=task_camera_process, args=(cameraRGB, streamerCameraRGB), name="RGB")
-    threadDepth = threading.Thread(target=task_camera_depth_process, args=(streamerCameraRGB, streamerCameraDepth,), name="Depth")
-
-    # start the threads
-    # threadIR.start()
-    # threadRGB.start()
-    threadDepth.start()
-
-    # wait for the threads to finish
-    # threadIR.join()
-    # threadRGB.join()
-    threadDepth.join()
+    # Render the image
+    streamerCameraDepth.Render(gsFrameDepth)
+    streamerCameraRGB.Render(gsFrameRGB)
