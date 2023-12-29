@@ -12,7 +12,7 @@ pipe = rs.pipeline()
 cfg  = rs.config()
 
 # Enable streams
-cfg.enable_stream(rs.stream.color, 848,480, rs.format.rgb8, 60)
+cfg.enable_stream(rs.stream.color, 848,480, rs.format.rgb8, 30)
 cfg.enable_stream(rs.stream.depth, 848,480, rs.format.z16, 60)
 
 # Start streaming
