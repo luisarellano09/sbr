@@ -2,6 +2,7 @@ import threading
 from jetson_utils import videoSource, videoOutput, cudaFromNumpy
 import pyrealsense2 as rs
 import numpy as np
+import cv2
 
 # create video sources & outputs
 cameraIR = videoSource("/dev/video2")
@@ -9,7 +10,7 @@ cameraRGB = videoSource("/dev/video4")
 
 streamerCameraIR = videoOutput("rtsp://@:6000/d435/ir")
 streamerCameraRGB = videoOutput("rtsp://@:6000/d435/rgb")
-streamerCameraDepth = videoOutput("rtsp://@:6000/d435/depth")
+streamerCameraDepth = videoOutput("rtsp://@:6000/d435/depth ")
 
 def task_camera_process(camera, streamer):
     # Number of frames captured
@@ -58,8 +59,10 @@ def task_camera_depth_process(streamerDepth):
 
         depth_image = np.asanyarray(depth_frame.get_data())
         color_image = np.asanyarray(color_frame.get_data())
+
+        temp = cv2.cvtColor(color_image, cv2.COLOR_BGR2RGBA).astype(np.float32)
         
-        gsFrameRGB = cudaFromNumpy(color_image)
+        gsFrameRGB = cudaFromNumpy(temp)
         gsFrameDepth = cudaFromNumpy(depth_image)
 
         # Render the image
