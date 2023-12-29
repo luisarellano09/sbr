@@ -38,12 +38,12 @@ def task_camera_process(camera, streamer):
             break
 
 
-def task_camera_depth_process(streamer):
+def task_camera_depth_process(streamerRGB,streamerDepth):
 
     pipe = rs.pipeline()
     cfg  = rs.config()
 
-    # cfg.enable_stream(rs.stream.color, 1280,720, rs.format.rgb8, 30)
+    cfg.enable_stream(rs.stream.color, 1280,720, rs.format.rgb8, 30)
     cfg.enable_stream(rs.stream.depth, 1280,720, rs.format.z16, 30)
 
     pipe.start(cfg)
@@ -54,36 +54,32 @@ def task_camera_depth_process(streamer):
     while True:
         frame = pipe.wait_for_frames()
         depth_frame = frame.get_depth_frame()
-        # color_frame = frame.get_color_frame()
+        color_frame = frame.get_color_frame()
 
         depth_image = np.asanyarray(depth_frame.get_data())
-        # color_image = np.asanyarray(color_frame.get_data())
-       
+        color_image = np.asanyarray(color_frame.get_data())
         
-
-        numFrames += 1
-
-        print(f" {threading.current_thread().name} ")
-
-        gsFrame = cudaFromNumpy(depth_image)
+        gsFrameRGB = cudaFromNumpy(color_image)
+        gsFrameDepth = cudaFromNumpy(depth_image)
 
         # Render the image
-        streamer.Render(gsFrame)
+        streamerRGB.Render(gsFrameRGB)
+        streamerDepth.Render(gsFrameDepth)
 
 
 if __name__ == '__main__':
 
     # Define the threads
-    threadIR = threading.Thread(target=task_camera_process, args=(cameraIR, streamerCameraIR), name="IR")
+    # threadIR = threading.Thread(target=task_camera_process, args=(cameraIR, streamerCameraIR), name="IR")
     # threadRGB = threading.Thread(target=task_camera_process, args=(cameraRGB, streamerCameraRGB), name="RGB")
-    threadDepth = threading.Thread(target=task_camera_depth_process, args=(streamerCameraDepth,), name="Depth")
+    threadDepth = threading.Thread(target=task_camera_depth_process, args=(streamerCameraRGB, streamerCameraDepth), name="Depth")
 
     # start the threads
-    threadIR.start()
+    # threadIR.start()
     # threadRGB.start()
     threadDepth.start()
 
     # wait for the threads to finish
-    threadIR.join()
+    # threadIR.join()
     # threadRGB.join()
     threadDepth.join()
