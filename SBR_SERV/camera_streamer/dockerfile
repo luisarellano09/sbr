@@ -2,10 +2,26 @@ FROM nvcr.io/nvidia/l4t-ml:r36.2.0-py3 as dev
 
 RUN apt-get update -y
 RUN apt-get install -y git cmake libpython3-dev python3-numpy
-RUN apt-get install -y gstreamer1.0-tools gstreamer1.0-alsa gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-plugins-bad gstreamer1.0-libav libgstreamer-plugins-base1.0-dev
-RUN apt-get install -y libsoup2.4-dev
+RUN apt-get install -y --no-install-recommends dialog libglew-dev glew-utils gstreamer1.0-libav gstreamer1.0-nice libgstreamer1.0-dev libgstrtspserver-1.0-dev libglib2.0-dev libsoup2.4-dev libjson-glib-dev python3-pip python3-packaging qtbase5-dev 
 
-RUN apt-get install -y libgstreamer-plugins-bad1.0-0
+RUN add-apt-repository --remove "deb https://apt.kitware.com/ubuntu/ $(lsb_release --codename --short) main" && \
+    apt-get update && \
+    apt-get purge -y '*opencv*' || echo "existing OpenCV installation not found" && \
+    apt-get install -y --no-install-recommends \
+            cmake \
+		  nano \
+		  mesa-utils \
+		  lsb-release \
+		  gstreamer1.0-tools \
+		  gstreamer1.0-libav \
+		  gstreamer1.0-rtsp \
+		  gstreamer1.0-plugins-good \
+		  gstreamer1.0-plugins-bad \
+		  gstreamer1.0-plugins-ugly \
+		  libgstreamer-plugins-base1.0-dev \
+		  libgstreamer-plugins-good1.0-dev \
+		  libgstreamer-plugins-bad1.0-dev  \
+          gstreamer1.0-plugins-rtp;
 
 WORKDIR /camera_streamer
 RUN git clone --recursive --depth=1 https://github.com/dusty-nv/jetson-inference
