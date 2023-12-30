@@ -17,7 +17,7 @@ RUN apt-get install -y --no-install-recommends \
         qtbase5-dev 
 RUN add-apt-repository --remove "deb https://apt.kitware.com/ubuntu/ $(lsb_release --codename --short) main" && \
     apt-get update && \
-    # apt-get purge -y '*opencv*' || echo "existing OpenCV installation not found" && \
+    apt-get purge -y '*opencv*' || echo "existing OpenCV installation not found" && \
     apt-get install -y --no-install-recommends \
         cmake \
         nano \
