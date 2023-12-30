@@ -1,38 +1,38 @@
-FROM dustynv/jetson-inference:r35.3.1 as dev
+FROM nvcr.io/nvidia/l4t-ml:r36.2.0-py3 as dev
 
-# # Install dependencies for jetson-utils
-# RUN apt-get update -y
-# RUN apt-get install -y \
-#         dialog libglew-dev \
-#         glew-utils \
-#         gstreamer1.0-libav \
-#         gstreamer1.0-nice \
-#         libgstreamer1.0-dev \
-#         libgstrtspserver-1.0-dev \
-#         libglib2.0-dev \
-#         libsoup2.4-dev \
-#         libjson-glib-dev \
-#         python3-pip \
-#         python3-packaging \
-#         qtbase5-dev 
-# RUN add-apt-repository --remove "deb https://apt.kitware.com/ubuntu/ $(lsb_release --codename --short) main" && \
-#     apt-get update && \
-#     # apt-get purge -y '*opencv*' || echo "existing OpenCV installation not found" && \
-#     apt-get install -y \
-#         cmake \
-#         nano \
-#         mesa-utils \
-#         lsb-release \
-#         gstreamer1.0-tools \
-#         gstreamer1.0-libav \
-#         gstreamer1.0-rtsp \
-#         gstreamer1.0-plugins-good \
-#         gstreamer1.0-plugins-bad \
-#         gstreamer1.0-plugins-ugly \
-#         libgstreamer-plugins-base1.0-dev \
-#         libgstreamer-plugins-good1.0-dev \
-#         # libgstreamer-plugins-bad1.0-dev  \
-#         gstreamer1.0-plugins-rtp
+# Install dependencies for jetson-utils
+RUN apt-get update -y
+RUN apt-get install -y \
+        dialog libglew-dev \
+        glew-utils \
+        gstreamer1.0-libav \
+        gstreamer1.0-nice \
+        libgstreamer1.0-dev \
+        libgstrtspserver-1.0-dev \
+        libglib2.0-dev \
+        libsoup2.4-dev \
+        libjson-glib-dev \
+        python3-pip \
+        python3-packaging \
+        qtbase5-dev 
+RUN add-apt-repository --remove "deb https://apt.kitware.com/ubuntu/ $(lsb_release --codename --short) main" && \
+    apt-get update && \
+    # apt-get purge -y '*opencv*' || echo "existing OpenCV installation not found" && \
+    apt-get install -y \
+        cmake \
+        nano \
+        mesa-utils \
+        lsb-release \
+        gstreamer1.0-tools \
+        gstreamer1.0-libav \
+        gstreamer1.0-rtsp \
+        gstreamer1.0-plugins-good \
+        gstreamer1.0-plugins-bad \
+        gstreamer1.0-plugins-ugly \
+        libgstreamer-plugins-base1.0-dev \
+        libgstreamer-plugins-good1.0-dev \
+        # libgstreamer-plugins-bad1.0-dev  \
+        gstreamer1.0-plugins-rtp
 
 WORKDIR /sbr
 
