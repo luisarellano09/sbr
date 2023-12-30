@@ -1,7 +1,13 @@
-from jetson_utils import videoSource, videoOutput, cudaFromNumpy
+from jetson_utils import videoOutput, cudaFromNumpy
 import pyrealsense2 as rs
 import numpy as np
 import cv2
+
+
+# Create VideoWriter object with GStreamer pipeline
+fourcc = cv2.VideoWriter_fourcc(*'H264')
+rtsp_url = 'rtsp://sbrnx:6001/test' 
+out = cv2.VideoWriter(rtsp_url, fourcc, 30.0, (1280, 720))
 
 # Create rstp streams
 streamerCameraDepth = videoOutput("rtsp://@:6000/d435/depth")
@@ -26,11 +32,21 @@ print("Depth Scale is: " , depth_scale)
 #  clipping_distance_in_meters meters away
 distance_factor = 100.0 * depth_scale   # 0.0010000000474974513
 
+# Create an align object
+# rs.align allows us to perform alignment of depth frames to others frames
+# The "align_to" is the stream type to which we plan to align depth frames.
+align_to = rs.stream.color
+align = rs.align(align_to)
+
 while True:
     # Wait for a coherent pair of frames: depth and color
     frame = pipe.wait_for_frames()
-    depth_frame = frame.get_depth_frame()
-    color_frame = frame.get_color_frame()
+    
+    # Align the depth frame to color frame
+    aligned_frame = align.process(frame)
+        
+    depth_frame = aligned_frame.get_depth_frame()
+    color_frame = aligned_frame.get_color_frame()
 
     # Convert images to numpy arrays
     depth_image = np.asanyarray(depth_frame.get_data())
@@ -51,6 +67,8 @@ while True:
     # Render the image
     streamerCameraDepth.Render(gsFrameDepth)
     streamerCameraRGB.Render(gsFrameRGB)
+    
+    out.write(adjustedRGB)
 
 
 # Info: To receive the stream use the following command
