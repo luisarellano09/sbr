@@ -4,11 +4,6 @@ import numpy as np
 import cv2
 
 
-# Create VideoWriter object with GStreamer pipeline
-fourcc = cv2.VideoWriter_fourcc(*'H264')
-rtsp_url = 'rtsp://sbrnx:6001/test' 
-out = cv2.VideoWriter(rtsp_url, fourcc, 30.0, (1280, 720))
-
 # Create rstp streams
 streamerCameraDepth = videoOutput("rtsp://@:6000/d435/depth")
 streamerCameraRGB = videoOutput("rtsp://@:6000/d435/rgb")
@@ -67,8 +62,6 @@ while True:
     # Render the image
     streamerCameraDepth.Render(gsFrameDepth)
     streamerCameraRGB.Render(gsFrameRGB)
-    
-    out.write(adjustedRGB)
 
 
 # Info: To receive the stream use the following command
