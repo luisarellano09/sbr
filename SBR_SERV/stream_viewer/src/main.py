@@ -1,4 +1,3 @@
-#from jetson_utils import videoOutput, cudaFromNumpy
 import threading
 import cv2
 
