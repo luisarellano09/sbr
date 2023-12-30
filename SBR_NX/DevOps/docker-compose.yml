@@ -44,6 +44,15 @@ services:
             target: dev
         network_mode: "host"
 
+    sbr_object_detector:
+        restart: unless-stopped
+        image: sbr/sbr_object_detector:1.0
+        container_name: sbr_object_detector
+        build:
+            context: ../../SBR_SERV/object_detector/
+            target: dev
+        network_mode: "host"
+
 
 networks:
     sbr_net_internal:
