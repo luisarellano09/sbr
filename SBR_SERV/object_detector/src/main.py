@@ -16,7 +16,6 @@ if not cam.isOpened():
 
 while True:
     _, frame = cam.read()
-    cv2.imshow("test", frame)
     frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     print(frame_gray.shape)
     
