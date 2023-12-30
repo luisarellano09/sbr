@@ -34,7 +34,7 @@ RUN add-apt-repository --remove "deb https://apt.kitware.com/ubuntu/ $(lsb_relea
         libgstreamer-plugins-bad1.0-dev  \
         gstreamer1.0-plugins-rtp
 
-WORKDIR /camera_streamer
+WORKDIR /sbr
 
 # Clone and build jetson-utils
 RUN git clone https://github.com/dusty-nv/jetson-utils
