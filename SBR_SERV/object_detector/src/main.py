@@ -1,4 +1,4 @@
-from jetson_utils import videoOutput, cudaFromNumpy
+
 import numpy as np
 import cv2
 
@@ -11,12 +11,12 @@ if not cam.isOpened():
     exit(1)
 
 # Create rstp
-streamerObject = videoOutput("rtsp://@:6001/object_detector/t1")
+#streamerObject = videoOutput("rtsp://@:6001/object_detector/t1")
 
 
 while True:
     _, frame = cam.read()
     cv2.imshow("test", frame)
     frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    gsFrame= cudaFromNumpy(frame_gray)
+    print(frame_gray.shape)
     
