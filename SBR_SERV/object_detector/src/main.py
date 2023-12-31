@@ -12,7 +12,7 @@ if not cam.isOpened():
 
 # Create rstp
 #streamerObject = videoOutput("rtsp://@:6001/object_detector/t1")
-out = cv2.VideoWriter('appsrc ! videoconvert ! video/x-raw,format=I420 ! x264enc tune=zerolatency bitrate=600 speed-preset=superfast ! video/x-h264,profile=baseline  ! rtspclientsink location=rtsp://sbrnx:6001/object_detector/t1', cv2.CAP_GSTREAMER, 0, 30, (1280, 720), True)
+out = cv2.VideoWriter('appsrc ! videoconvert ! video/x-raw,format=h264 ! x264enc tune=zerolatency bitrate=600 speed-preset=superfast key-int-max=60 ! video/x-h264,profile=baseline  ! rtspclientsink location=rtsp://sbrnx:6001/object_detector/t1', cv2.CAP_GSTREAMER, 0, 30, (1280, 720), True)
 if not out.isOpened():
     raise Exception("can't open video writer")
 
