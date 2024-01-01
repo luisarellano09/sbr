@@ -81,13 +81,14 @@ RUN cd opencv_build/opencv && \
 	-D BUILD_TIFF=ON \
 	-D BUILD_PERF_TESTS=OFF \
 	-D BUILD_TESTS=OFF \
-	../ && \
+	../ 
+
+RUN cd opencv_build/opencv/build && \
     make -j$(nproc) && \
     make install && \
     ldconfig && \
     cd / && \
     rm -rf opencv_build
-
 
 # Clone and build jetson-utils
 RUN mkdir jetson-utils_build && \ 
