@@ -17,7 +17,7 @@ RUN apt-get install -y \
         qtbase5-dev 
 RUN add-apt-repository --remove "deb https://apt.kitware.com/ubuntu/ $(lsb_release --codename --short) main" && \
     apt-get update && \
-    # apt-get purge -y '*opencv*' || echo "existing OpenCV installation not found" && \
+    apt-get purge -y '*opencv*' || echo "existing OpenCV installation not found" && \
     apt-get install -y \
         cmake \
         nano \
@@ -31,14 +31,77 @@ RUN add-apt-repository --remove "deb https://apt.kitware.com/ubuntu/ $(lsb_relea
         gstreamer1.0-plugins-ugly \
         libgstreamer-plugins-base1.0-dev \
         libgstreamer-plugins-good1.0-dev \
-        # libgstreamer-plugins-bad1.0-dev  \
+        libgstreamer-plugins-bad1.0-dev  \
         gstreamer1.0-plugins-rtp
 
-WORKDIR /sbr
+RUN mkdir -p /usr/local/include/gstreamer-1.0/gst && \
+    cp -r /usr/include/gstreamer-1.0/gst/webrtc /usr/local/include/gstreamer-1.0/gst && \
+    ls -ll /usr/local/include/ && \
+    ls -ll /usr/local/include/gstreamer-1.0/gst/webrtc
+
+
+# Install Opencv
+RUN mkdir opencv_build && \
+    cd opencv_build && \ 
+    git clone https://github.com/opencv/opencv.git && \
+    git clone https://github.com/opencv/opencv_contrib.git && \
+    cd opencv && \
+    mkdir -p build && \
+    cd build \
+    cmake \
+	-D OPENCV_ENABLE_NONFREE=ON \
+	-D CPACK_BINARY_DEB=ON \
+	-D BUILD_EXAMPLES=OFF \
+	-D BUILD_opencv_python2=OFF \
+	-D BUILD_opencv_python3=ON \
+	-D BUILD_opencv_java=OFF \
+	-D CMAKE_BUILD_TYPE=RELEASE \
+	-D CMAKE_INSTALL_PREFIX=/usr/local \
+	-D CUDA_ARCH_BIN=${CUDA_ARCH_BIN} \
+	-D CUDA_ARCH_PTX= \
+	-D CUDA_FAST_MATH=ON \
+	-D CUDNN_INCLUDE_DIR=/usr/include/$(uname -i)-linux-gnu \
+	-D EIGEN_INCLUDE_PATH=/usr/include/eigen3 \
+	-D WITH_EIGEN=ON \
+	-D ENABLE_NEON=${ENABLE_NEON} \
+	-D OPENCV_DNN_CUDA=OFF \
+	-D OPENCV_ENABLE_NONFREE=ON \
+	-D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/modules \
+	-D OPENCV_GENERATE_PKGCONFIG=ON \
+	-D WITH_CUBLAS=ON \
+	-D WITH_CUDA=OFF \
+	-D WITH_CUDNN=ON \
+	-D WITH_GSTREAMER=ON \
+	-D WITH_LIBV4L=ON \
+	-D WITH_OPENGL=ON \
+	-D WITH_OPENCL=OFF \
+	-D WITH_IPP=OFF \
+	-D WITH_TBB=ON \
+	-D BUILD_TIFF=ON \
+	-D BUILD_PERF_TESTS=OFF \
+	-D BUILD_TESTS=OFF \
+	../ && \
+    make -j$(nproc) && \
+    make install && \
+    ldconfig && \
+    cd / && \
+    rm -rf opencv_build
+
 
 # Clone and build jetson-utils
-# RUN git clone https://github.com/dusty-nv/jetson-utils
-# RUN cd jetson-utils && mkdir build && cd build && cmake ../ && make -j$(nproc) && make install && ldconfig
+RUN mkdir jetson-utils_build && \ 
+    git clone https://github.com/dusty-nv/jetson-utils && \ 
+    cd jetson-utils && \ 
+    mkdir build && \ 
+    cd build && \ 
+    cmake ../ && \ 
+    make -j$(nproc) && \ 
+    make install && \ 
+    ldconfig && \
+    cd / && \
+    rm -rf jetson-utils_build
+
+WORKDIR /sbr
 
 # Copy source code
 RUN rm -rf src
