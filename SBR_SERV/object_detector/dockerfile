@@ -44,10 +44,11 @@ RUN mkdir -p /usr/local/include/gstreamer-1.0/gst && \
 RUN mkdir opencv_build && \
     cd opencv_build && \ 
     git clone https://github.com/opencv/opencv.git && \
-    git clone https://github.com/opencv/opencv_contrib.git && \
-    cd opencv && \
+    git clone https://github.com/opencv/opencv_contrib.git
+
+RUN cd opencv_build/opencv && \
     mkdir -p build && \
-    cd build \
+    cd build && \
     cmake \
 	-D OPENCV_ENABLE_NONFREE=ON \
 	-D CPACK_BINARY_DEB=ON \
