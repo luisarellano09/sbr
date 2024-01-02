@@ -52,12 +52,12 @@ while True:
     depth_image = cv2.multiply(depth_image, distance_factor)
 
     # Adjust image
-    adjustedDepth = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
-    adjustedRGB = cv2.addWeighted( color_image, 1, color_image, 0, 15)
+    depth_image = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
+    color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
     # Render the image
     streamerCameraDepth.Render(cudaFromNumpy(depth_image))
-    streamerCameraRGB.Render(cudaFromNumpy(adjustedRGB))
+    streamerCameraRGB.Render(cudaFromNumpy(color_image))
 
 
 # Info: To receive the stream use the following command
