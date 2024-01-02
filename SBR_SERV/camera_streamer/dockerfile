@@ -56,7 +56,23 @@ RUN mkdir jetson-utils_build && \
     cd / && \
     rm -rf jetson-utils_build
 
-RUN pip3 install pyrealsense2
+# Clone pyrealsense2
+RUN mkdir pyrealsense2_build && \
+    cd pyrealsense2_build && \
+    git clone --branch v2.54.2 https://github.com/IntelRealSense/librealsense.git && \ 
+    mkdir build && \ 
+    cd build && \ 
+    cmake ../ \ 
+    -DFORCE_RSUSB_BACKEND=ON \ 
+    -DBUILD_PYTHON_BINDINGS:bool=true \ 
+    -DCMAKE_BUILD_TYPE=release \ 
+    -DBUILD_EXAMPLES=false \ 
+    -DBUILD_GRAPHICAL_EXAMPLES=false \ 
+    -DBUILD_WITH_CUDA:bool=true && \
+    make -j$(nproc) && \
+    make install && \
+    cd / && \
+    rm -rf pyrealsense2_build
 
 WORKDIR /sbr
 
