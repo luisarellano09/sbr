@@ -41,57 +41,7 @@ RUN mkdir -p /usr/local/include/gstreamer-1.0/gst && \
 
 
 # Install Opencv
-RUN mkdir opencv_build && \
-    cd opencv_build && \ 
-    git clone https://github.com/opencv/opencv.git && \
-    git clone https://github.com/opencv/opencv_contrib.git
-
-RUN cd opencv_build/opencv && \
-    mkdir -p build && \
-    cd build && \
-    cmake \
-	-D OPENCV_ENABLE_NONFREE=ON \
-    -D CPACK_BINARY_DEB=ON \
-    -D BUILD_EXAMPLES=OFF \
-    -D BUILD_opencv_python2=OFF \
-    -D BUILD_opencv_python3=ON \
-    -D BUILD_opencv_java=OFF \
-    -D CMAKE_BUILD_TYPE=RELEASE \
-    -D CMAKE_INSTALL_PREFIX=/usr/local \
-    -D CUDA_ARCH_BIN=5.3,6.2,7.2,8.7 \
-    -D CUDA_ARCH_PTX= \
-    -D CUDA_FAST_MATH=ON \
-    -D CUDNN_VERSION='8.0' \
-    -D CUDNN_INCLUDE_DIR=/usr/include/$(uname -i)-linux-gnu \
-    -D EIGEN_INCLUDE_PATH=/usr/include/eigen3 \
-    -D WITH_EIGEN=ON \
-    -D ENABLE_NEON=ON \
-    -D OPENCV_DNN_CUDA=ON \
-    -D OPENCV_ENABLE_NONFREE=ON \
-    -D OPENCV_EXTRA_MODULES_PATH=/opencv_build/opencv_contrib/modules \
-    -D OPENCV_GENERATE_PKGCONFIG=ON \
-    -D OpenGL_GL_PREFERENCE=GLVND \
-    -D WITH_CUBLAS=ON \
-    -D WITH_CUDA=ON \
-    -D WITH_CUDNN=ON \
-    -D WITH_GSTREAMER=ON \
-    -D WITH_LIBV4L=ON \
-    -D WITH_GTK=ON \
-    -D WITH_OPENGL=ON \
-    -D WITH_OPENCL=OFF \
-    -D WITH_IPP=OFF \
-    -D WITH_TBB=ON \
-    -D BUILD_TIFF=ON \
-    -D BUILD_PERF_TESTS=OFF \
-    -D BUILD_TESTS=OFF \
-    ../
-
-RUN cd opencv_build/opencv/build && \
-    make -j$(nproc) && \
-    make install && \
-    ldconfig && \
-    cd / && \
-    rm -rf opencv_build
+RUN ./opt/opencv_install.sh
 
 # Clone and build jetson-utils
 RUN mkdir jetson-utils_build && \ 
@@ -106,6 +56,7 @@ RUN mkdir jetson-utils_build && \
     cd / && \
     rm -rf jetson-utils_build
 
+# Create a directory for the app
 WORKDIR /sbr
 
 # Copy source code
