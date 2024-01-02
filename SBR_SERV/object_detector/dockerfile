@@ -56,6 +56,8 @@ RUN mkdir jetson-utils_build && \
     cd / && \
     rm -rf jetson-utils_build
 
+RUN apt-get install libgstrtspserver-1.0 libgstreamer1.0-dev
+
 # Create a directory for the app
 WORKDIR /sbr
 
