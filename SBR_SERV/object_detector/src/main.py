@@ -13,10 +13,6 @@ if not cam.isOpened():
 # Create rstp stream
 stream_path_ObjectDetector = "rtsp://sbrnx:6001/object_detector/t1"
 streamerObjectDetector = videoOutput(stream_path_ObjectDetector)
-if not streamerObjectDetector.isOpened():
-    print("Error opening stream: " + stream_path_ObjectDetector)
-    exit(1)
-
 
 while True:
     _, frame = cam.read()
