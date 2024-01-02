@@ -60,9 +60,10 @@ RUN mkdir jetson-utils_build && \
 RUN mkdir pyrealsense2_build && \
     cd pyrealsense2_build && \
     git clone --branch v2.54.2 https://github.com/IntelRealSense/librealsense.git && \ 
+    cd librealsense && \
     mkdir build && \ 
     cd build && \ 
-    cmake  \ 
+    cmake ../ \ 
     -DFORCE_RSUSB_BACKEND=ON \ 
     -DBUILD_PYTHON_BINDINGS:bool=true \ 
     -DCMAKE_BUILD_TYPE=release \ 
