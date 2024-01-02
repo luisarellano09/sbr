@@ -80,7 +80,7 @@ RUN mkdir jetson-utils_build && \
     cd jetson-utils && \ 
     mkdir build && \ 
     cd build && \ 
-    cmake ../ --DENABLE_NVMM=off && \ 
+    cmake ../ -DENABLE_NVMM=off && \ 
     make -j$(nproc) && \ 
     make install && \ 
     ldconfig && \
