@@ -35,6 +35,11 @@ RUN apt-get update && \
 # Copy Gstreamer in a temporary directory
 # RUN cp -r /usr/include/gstreamer-1.0 /tmp
 
+RUN mkdir -p /usr/local/include/gstreamer-1.0/gst && \
+    cp -r /usr/include/gstreamer-1.0/gst/webrtc /usr/local/include/gstreamer-1.0/gst && \
+    ls -ll /usr/local/include/ && \
+    ls -ll /usr/local/include/gstreamer-1.0/gst/webrtc
+
 # Install Opencv: https://github.com/dusty-nv/jetson-containers/blob/master/packages/opencv/opencv_builder/Dockerfile
 # RUN ./opt/opencv_install.sh
 
@@ -42,6 +47,9 @@ RUN apt-get update && \
 # RUN cp -r /tmp/gstreamer-1.0 /usr/include && \
 #     rm -rf /tmp/gstreamer-1.0 && \
 #     ln -s /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so.0 /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so
+
+RUN cp -r /usr/local/include/gstreamer-1.0/gst/webrtc /usr/include/gstreamer-1.0/gst && \
+    ln -s /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so.0 /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so 
 
 # Clone and build jetson-utils
 RUN mkdir jetson-utils_build && \ 
