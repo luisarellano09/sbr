@@ -1,6 +1,6 @@
 FROM nvcr.io/nvidia/l4t-ml:r36.2.0-py3 as dev
 
-# Install dependencies for jetson-utils
+# Install Gstreamer: https://github.com/dusty-nv/jetson-containers/blob/master/packages/gstreamer/Dockerfile
 RUN apt-get update && \
     apt-get purge -y '*opencv*' || echo "existing OpenCV installation not found" && \
     apt-get install -y --no-install-recommends \
@@ -25,10 +25,13 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-# Install Opencv
+# Copy Gstreamer in a temporary directory
+RUN cp -r /usr/include/gstreamer-1.0 /tmp
+
+# Install Opencv: https://github.com/dusty-nv/jetson-containers/blob/master/packages/opencv/opencv_builder/Dockerfile
 RUN ./opt/opencv_install.sh
 
-# Copy Gstreamer
+# Copy Gstreamer from the temporary directory
 RUN cp -r /tmp/gstreamer-1.0 /usr/include && \
     rm -rf /tmp/gstreamer-1.0 && \
     ln -s /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so.0 /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so
