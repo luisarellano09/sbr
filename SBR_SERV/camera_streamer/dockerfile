@@ -78,6 +78,7 @@ RUN mkdir pyrealsense2_build && \
     -DBUILD_PYTHON_BINDINGS:bool=true \ 
     -DCMAKE_BUILD_TYPE=release \ 
     -DBUILD_WITH_CUDA:bool=true && \
+    -DCHECK_FOR_UPDATES=OFF && \
     make -j$(nproc) && \
     make install && \
     cd / && \
