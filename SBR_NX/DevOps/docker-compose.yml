@@ -48,7 +48,6 @@ services:
         restart: unless-stopped
         image: sbr/sbr_object_detector:1.0
         container_name: sbr_object_detector
-        privileged: true
         build:
             context: ../../SBR_SERV/object_detector/
             target: dev
