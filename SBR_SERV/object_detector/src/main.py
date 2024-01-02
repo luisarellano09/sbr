@@ -11,7 +11,7 @@ if not cam.isOpened():
     exit(1)
 
 # Create rstp stream
-stream_path_ObjectDetector = "rtsp://sbrnx:6001/object_detector/t1"
+stream_path_ObjectDetector = "rtsp://@:6000/serv/object_detector"
 streamerObjectDetector = videoOutput(stream_path_ObjectDetector)
 
 while True:
