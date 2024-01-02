@@ -70,15 +70,15 @@ RUN apt update && \
 
 RUN mkdir pyrealsense2_build && \
     cd pyrealsense2_build && \
-    git clone --branch v2.54.2 https://github.com/IntelRealSense/librealsense.git && \ 
-    cd librealsense && \
+    git clone --branch v2.54.2 https://github.com/IntelRealSense/librealsense.git
+
+RUN cd pyrealsense2_build/librealsense && \
     mkdir build && \ 
     cd build && \ 
     cmake ../ \ 
     -DBUILD_PYTHON_BINDINGS:bool=true \ 
     -DCMAKE_BUILD_TYPE=release \ 
     -DBUILD_WITH_CUDA:bool=true && \
-    -DCHECK_FOR_UPDATES=OFF && \
     make -j$(nproc) && \
     make install && \
     cd / && \
