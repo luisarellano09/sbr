@@ -48,20 +48,16 @@ while True:
     color_image = np.asanyarray(color_frame.get_data())
 
     # Normalice depth image
-    depth_image_3d = np.dstack((depth_image,depth_image,depth_image)) #depth image is 1 channel, color is 3 channels
-    depth_image_3d = cv2.multiply(depth_image_3d, distance_factor)
+    depth_image = np.dstack((depth_image,depth_image,depth_image)) #depth image is 1 channel, color is 3 channels
+    depth_image = cv2.multiply(depth_image, distance_factor)
 
-    # Adjust color image
-    adjustedDepth = cv2.applyColorMap(cv2.convertScaleAbs(depth_image_3d, alpha=0.03), cv2.COLORMAP_JET)
+    # Adjust image
+    adjustedDepth = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
     adjustedRGB = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
-    # Convert to CUDA
-    gsFrameDepth = cudaFromNumpy(depth_image_3d)
-    gsFrameRGB = cudaFromNumpy(adjustedRGB)
-
     # Render the image
-    streamerCameraDepth.Render(gsFrameDepth)
-    streamerCameraRGB.Render(gsFrameRGB)
+    streamerCameraDepth.Render(cudaFromNumpy(depth_image))
+    streamerCameraRGB.Render(cudaFromNumpy(adjustedRGB))
 
 
 # Info: To receive the stream use the following command
