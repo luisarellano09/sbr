@@ -33,15 +33,15 @@ RUN apt-get update && \
     && apt-get clean
 
 # Copy Gstreamer in a temporary directory
-RUN cp -r /usr/include/gstreamer-1.0 /tmp
+# RUN cp -r /usr/include/gstreamer-1.0 /tmp
 
 # Install Opencv: https://github.com/dusty-nv/jetson-containers/blob/master/packages/opencv/opencv_builder/Dockerfile
-RUN ./opt/opencv_install.sh
+# RUN ./opt/opencv_install.sh
 
 # Copy Gstreamer from the temporary directory
-RUN cp -r /tmp/gstreamer-1.0 /usr/include && \
-    rm -rf /tmp/gstreamer-1.0 && \
-    ln -s /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so.0 /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so
+# RUN cp -r /tmp/gstreamer-1.0 /usr/include && \
+#     rm -rf /tmp/gstreamer-1.0 && \
+#     ln -s /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so.0 /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so
 
 # Clone and build jetson-utils
 RUN mkdir jetson-utils_build && \ 
@@ -56,7 +56,7 @@ RUN mkdir jetson-utils_build && \
     cd / && \
     rm -rf jetson-utils_build
 
-RUN apt-get install libgstrtspserver-1.0 libgstreamer1.0-dev
+# RUN apt-get install libgstrtspserver-1.0 libgstreamer1.0-dev
 
 # Create a directory for the app
 WORKDIR /sbr
