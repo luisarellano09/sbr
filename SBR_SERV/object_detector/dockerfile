@@ -1,47 +1,37 @@
 FROM nvcr.io/nvidia/l4t-ml:r36.2.0-py3 as dev
 
 # Install dependencies for jetson-utils
-RUN apt-get update -y
-RUN apt-get install -y \
-        dialog libglew-dev \
-        glew-utils \
-        gstreamer1.0-libav \
-        gstreamer1.0-nice \
-        libgstreamer1.0-dev \
-        libgstrtspserver-1.0-dev \
-        libglib2.0-dev \
-        libsoup2.4-dev \
-        libjson-glib-dev \
-        python3-pip \
-        python3-packaging \
-        qtbase5-dev 
-RUN add-apt-repository --remove "deb https://apt.kitware.com/ubuntu/ $(lsb_release --codename --short) main" && \
-    apt-get update && \
+RUN apt-get update && \
     apt-get purge -y '*opencv*' || echo "existing OpenCV installation not found" && \
-    apt-get install -y \
-        cmake \
-        nano \
-        mesa-utils \
-        lsb-release \
-        gstreamer1.0-tools \
-        gstreamer1.0-libav \
-        gstreamer1.0-rtsp \
-        gstreamer1.0-plugins-good \
-        gstreamer1.0-plugins-bad \
-        gstreamer1.0-plugins-ugly \
-        libgstreamer-plugins-base1.0-dev \
-        libgstreamer-plugins-good1.0-dev \
-        libgstreamer-plugins-bad1.0-dev  \
-        gstreamer1.0-plugins-rtp
-
-RUN mkdir -p /usr/local/include/gstreamer-1.0/gst && \
-    cp -r /usr/include/gstreamer-1.0/gst/webrtc /usr/local/include/gstreamer-1.0/gst && \
-    ls -ll /usr/local/include/ && \
-    ls -ll /usr/local/include/gstreamer-1.0/gst/webrtc
-
+    apt-get install -y --no-install-recommends \
+		  lsb-release \
+		  libgstreamer1.0-dev \
+		  gstreamer1.0-tools \
+		  gstreamer1.0-libav \
+		  gstreamer1.0-rtsp \
+		  gstreamer1.0-plugins-good \
+		  gstreamer1.0-plugins-bad \
+		  gstreamer1.0-plugins-ugly \
+		  libgstreamer-plugins-base1.0-dev \
+		  libgstreamer-plugins-good1.0-dev \
+		  libgstreamer-plugins-bad1.0-dev \
+		  libgstrtspserver-1.0-0 \
+		  python3-gi \
+		  python3-gst-1.0 && \
+    if [ `lsb_release --codename --short` != 'bionic' ]; then \
+    apt-get install -y --no-install-recommends \
+		  gstreamer1.0-plugins-rtp; \
+    else echo "skipping packages unavailable for Ubuntu 18.04"; fi \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 # Install Opencv
 RUN ./opt/opencv_install.sh
+
+# Copy Gstreamer
+RUN cp -r /tmp/gstreamer-1.0 /usr/include && \
+    rm -rf /tmp/gstreamer-1.0 && \
+    ln -s /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so.0 /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so
 
 # Clone and build jetson-utils
 RUN mkdir jetson-utils_build && \ 
