@@ -72,15 +72,17 @@ RUN mkdir pyrealsense2_build && \
     cd pyrealsense2_build && \
     git clone --branch v2.54.2 https://github.com/IntelRealSense/librealsense.git
 
+RUN apt install -y libcurl4-openssl-dev
+
 RUN cd pyrealsense2_build/librealsense && \
     mkdir build && \ 
     cd build && \ 
     cmake ../ \ 
     -DBUILD_PYTHON_BINDINGS:bool=true \ 
     -DCMAKE_BUILD_TYPE=release \ 
-    -DBUILD_WITH_CUDA:bool=true && \
-    make -j$(nproc) && \
-    make install && \
+    -DBUILD_WITH_CUDA:bool=true
+RUN cd pyrealsense2_build/librealsense/build && make -j$(nproc) 
+RUN cd pyrealsense2_build/librealsense/build && make install && \
     cd / && \
     rm -rf pyrealsense2_build
 
