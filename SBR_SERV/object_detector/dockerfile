@@ -32,6 +32,31 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
+RUN apt-get install -y --no-install-recommends \
+		dialog \
+		libglew-dev \
+		glew-utils \
+		gstreamer1.0-libav \
+		gstreamer1.0-nice \
+		libgstreamer1.0-dev \
+		libgstrtspserver-1.0-dev \
+		libglib2.0-dev \
+		libsoup2.4-dev \
+		libjson-glib-dev \
+		python3-pip \
+		python3-packaging \
+		qtbase5-dev
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+		    libglew-dev \
+		    glew-utils \
+		    libsoup2.4-dev \
+		    libjson-glib-dev \
+		    libgstrtspserver-1.0-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
 # Copy Gstreamer in a temporary directory
 # RUN cp -r /usr/include/gstreamer-1.0 /tmp
 
