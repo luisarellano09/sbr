@@ -24,13 +24,9 @@ RUN apt-get update && \
         libgstreamer-plugins-bad1.0-dev \
         libgstrtspserver-1.0-0 \
         python3-gi \
-        python3-gst-1.0 && \
-    if [ `lsb_release --codename --short` != 'bionic' ]; then \
-    apt-get install -y --no-install-recommends \
-		  gstreamer1.0-plugins-rtp; \
-    else echo "skipping packages unavailable for Ubuntu 18.04"; fi \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+        python3-gst-1.0 \
+		gstreamer1.0-plugins-rtp 
+
 
 RUN apt-get install -y --no-install-recommends \
 		dialog \
