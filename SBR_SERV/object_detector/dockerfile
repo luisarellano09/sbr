@@ -1,9 +1,10 @@
 FROM nvcr.io/nvidia/l4t-base:r36.2.0 as dev
 
-RUN apt-get update -y
+RUN apt-get update
 
 # Install dependencies: https://github.com/dusty-nv/jetson-inference/blob/master/CMakePreBuild.sh
 RUN apt-get install -y --no-install-recommends \
+        git \
 		dialog \
 		libglew-dev \
 		glew-utils \
