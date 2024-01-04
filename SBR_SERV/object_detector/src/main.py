@@ -1,3 +1,4 @@
+from jetson_utils import videoOutput, cudaFromNumpy
 import numpy as np
 import cv2
 
@@ -11,25 +12,10 @@ if not cam.isOpened():
 
 # Create rstp stream
 stream_path_ObjectDetector = "rtsp://@:6000/serv/object_detector"
-
-
-fps = 30
-width = 1280
-height = 720
-
-out = cv2.VideoWriter('appsrc ! videoconvert' + \
-    ' ! video/x-raw,format=I420' + \
-    ' ! x264enc speed-preset=ultrafast bitrate=600 key-int-max=' + str(fps * 2) + \
-    ' ! video/x-h264,profile=baseline' + \
-    ' ! rtspclientsink location=rtsp://localhost:6000/serv/object_detector',
-    cv2.CAP_GSTREAMER, 0, fps, (width, height), True)
-if not out.isOpened():
-    raise Exception("can't open video writer")
-
+streamerObjectDetector = videoOutput(stream_path_ObjectDetector)
 
 while True:
     _, frame = cam.read()
     frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    print(frame_gray.shape)
-    out.write(frame)
+    streamerObjectDetector.Render(cudaFromNumpy(frame_gray))
     
