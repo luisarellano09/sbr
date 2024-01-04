@@ -48,11 +48,6 @@ RUN apt update -y && apt upgrade -y
 # Copy Gstreamer in a temporary directory
 RUN cp -r /usr/include/gstreamer-1.0 /tmp
 
-RUN mkdir -p /usr/local/include/gstreamer-1.0/gst && \
-    cp -r /usr/include/gstreamer-1.0/gst/webrtc /usr/local/include/gstreamer-1.0/gst && \
-    ls -ll /usr/local/include/ && \
-    ls -ll /usr/local/include/gstreamer-1.0/gst/webrtc
-
 # Install Opencv: https://github.com/dusty-nv/jetson-containers/blob/master/packages/opencv/opencv_builder/Dockerfile
 RUN ./opt/opencv_install.sh
 
@@ -60,24 +55,6 @@ RUN ./opt/opencv_install.sh
 RUN cp -r /tmp/gstreamer-1.0 /usr/include && \
     rm -rf /tmp/gstreamer-1.0 && \
     ln -s /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so.0 /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so
-
-RUN cp -r /usr/local/include/gstreamer-1.0/gst/webrtc /usr/include/gstreamer-1.0/gst && \
-    ln -s -f /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so.0 /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so 
-
-# Clone and build jetson-utils
-RUN mkdir jetson-utils_build && \ 
-    git clone --depth=1 https://github.com/dusty-nv/jetson-utils && \ 
-    cd jetson-utils && \ 
-    mkdir build && \ 
-    cd build && \ 
-    cmake ../ && \ 
-    make -j$(nproc) && \ 
-    make install && \ 
-    ldconfig && \
-    cd / && \
-    rm -rf jetson-utils_build
-
-RUN apt-get install libgstrtspserver-1.0 libgstreamer1.0-dev
 
 # Create a directory for the app
 WORKDIR /sbr
