@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/l4t-base:r36.2.0 as dev
+FROM nvcr.io/nvidia/l4t-ml:r36.2.0-py3 as dev
 
 RUN apt-get update -y
 
