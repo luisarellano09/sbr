@@ -39,6 +39,7 @@ services:
         image: sbr/sbr_serv_camera_streamer:1.0
         container_name: sbr_serv_camera_streamer
         privileged: true
+        runtime: nvidia
         build:
             context: ../../SBR_SERV/camera_streamer/
             target: dev
