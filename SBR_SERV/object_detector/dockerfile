@@ -3,7 +3,7 @@ FROM nvcr.io/nvidia/l4t-ml:r36.2.0-py3 as dev
 RUN apt-get update -y
 
 # Install dependencies: https://github.com/dusty-nv/jetson-inference/blob/master/CMakePreBuild.sh
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get install -y \
         git \
 		dialog \
 		libglew-dev \
@@ -23,7 +23,7 @@ RUN apt-get install -y --no-install-recommends \
 
 # Install Gstreamer: https://github.com/dusty-nv/jetson-containers/blob/master/packages/gstreamer/Dockerfile
 RUN apt-get purge -y '*opencv*' || echo "existing OpenCV installation not found" && \
-    apt-get install -y --no-install-recommends \
+    apt-get install -y \
         cmake \
         nano \
         mesa-utils \
