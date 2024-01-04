@@ -10,6 +10,7 @@ RUN apt-get update && \
         libgl1-mesa-dev \
         libglu1-mesa-dev \
         qtcreator 
+
 ARG LIBREALSENSE_VERSION=development
 
 RUN git clone --branch ${LIBREALSENSE_VERSION} --depth=1 https://github.com/IntelRealSense/librealsense && \
@@ -17,22 +18,20 @@ RUN git clone --branch ${LIBREALSENSE_VERSION} --depth=1 https://github.com/Inte
     mkdir build && \
     cd build && \
     cmake \
-        -DBUILD_EXAMPLES=true \
-	   -DFORCE_RSUSB_BACKEND=true \
-	   -DBUILD_WITH_CUDA=true \
-	   -DCMAKE_BUILD_TYPE=release \
-	   -DBUILD_PYTHON_BINDINGS=bool:true \
-	   -DPYTHON_EXECUTABLE=/usr/bin/python3 \
-	   -DPYTHON_INSTALL_DIR=$(python3 -c 'import sys; print(f"/usr/lib/python{sys.version_info.major}.{sys.version_info.minor}/dist-packages")') \
-	   ../ && \
+        -DBUILD_EXAMPLES=false \
+        -DFORCE_RSUSB_BACKEND=true \
+        -DBUILD_WITH_CUDA=true \
+        -DCMAKE_BUILD_TYPE=release \
+        -DBUILD_PYTHON_BINDINGS=bool:true \
+        -DPYTHON_EXECUTABLE=/usr/bin/python3 \
+        -DPYTHON_INSTALL_DIR=$(python3 -c 'import sys; print(f"/usr/lib/python{sys.version_info.major}.{sys.version_info.minor}/dist-packages")') \
+        ../ && \
     make -j$(($(nproc)-1)) && \
     make install && \
     cd ../ && \
     cp ./config/99-realsense-libusb.rules /etc/udev/rules.d/ && \
     rm -rf librealsense
   
-RUN python3 -c 'import pyrealsense2'
-
 
 # Create a directory for the app
 WORKDIR /sbr
