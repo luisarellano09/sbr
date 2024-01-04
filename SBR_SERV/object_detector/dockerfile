@@ -46,7 +46,7 @@ RUN apt-get purge -y '*opencv*' || echo "existing OpenCV installation not found"
         gstreamer1.0-plugins-rtp \
         python3-gi \
 		python3-gst-1.0 \
-        libgstrtspserver-1.0-0 \
+        libgstrtspserver-1.0-0
 
 
 # Copy Gstreamer in a temporary directory
