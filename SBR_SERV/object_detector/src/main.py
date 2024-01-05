@@ -12,7 +12,7 @@ if not cam.isOpened():
 
 # Create rstp stream
 stream_path_ObjectDetector = "rtsp://@:6000/serv/object_detector"
-#streamerObjectDetector = videoOutput(stream_path_ObjectDetector)
+streamerObjectDetector = videoOutput(stream_path_ObjectDetector)
 
 while True:
     _, frame = cam.read()
