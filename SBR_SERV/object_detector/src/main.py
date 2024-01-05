@@ -12,10 +12,11 @@ if not cam.isOpened():
 
 # Create rstp stream
 stream_path_ObjectDetector = "rtsp://@:6000/serv/object_detector"
-streamerObjectDetector = videoOutput(stream_path_ObjectDetector)
+#streamerObjectDetector = videoOutput(stream_path_ObjectDetector)
 
 while True:
     _, frame = cam.read()
     frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    streamerObjectDetector.Render(cudaFromNumpy(frame))
+    print(frame_gray.shape)
+    #streamerObjectDetector.Render(cudaFromNumpy(frame))
     
