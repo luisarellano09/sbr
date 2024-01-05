@@ -40,6 +40,9 @@ services:
         container_name: sbr_serv_camera_streamer
         privileged: true
         runtime: nvidia
+        environment:
+            DISPLAY_DEVICE: "V4L2_DEVICES"
+            
         build:
             context: ../../SBR_SERV/camera_streamer/
             target: dev
