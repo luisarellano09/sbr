@@ -30,6 +30,8 @@ RUN git clone --branch ${LIBREALSENSE_VERSION} --depth=1 https://github.com/Inte
     make install && \
     cd ../ && \
     rm -rf librealsense
+
+RUN python3 -c 'import pyrealsense2'
   
 
 # Create a directory for the app
