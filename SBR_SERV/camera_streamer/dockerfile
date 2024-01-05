@@ -35,7 +35,8 @@ RUN git clone --branch ${LIBREALSENSE_VERSION} --depth=1 https://github.com/Inte
 # RUN cp librealsense/config/99-realsense-libusb.rules /etc/udev/rules.d/ 
 
 # RUN -rf librealsense
-  
+
+ENV PYTHONPATH "${PYTHONPATH}:/usr/local/lib"
 
 # Create a directory for the app
 WORKDIR /sbr
