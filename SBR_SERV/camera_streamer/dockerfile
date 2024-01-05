@@ -29,7 +29,7 @@ RUN git clone --branch ${LIBREALSENSE_VERSION} --depth=1 https://github.com/Inte
         -DPYTHON_EXECUTABLE=/usr/bin/python3 \
         -DPYTHON_INSTALL_DIR=$(python3 -c 'import sys; print(f"/usr/lib/python{sys.version_info.major}.{sys.version_info.minor}/dist-packages")') \
         ../ && \
-    make -j$(($(nproc)-1)) && \
+    make -j$(nproc) && \
     make install 
 
 # RUN cp librealsense/config/99-realsense-libusb.rules /etc/udev/rules.d/ 
