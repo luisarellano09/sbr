@@ -17,5 +17,5 @@ streamerObjectDetector = videoOutput(stream_path_ObjectDetector)
 while True:
     _, frame = cam.read()
     frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    streamerObjectDetector.Render(cudaFromNumpy(frame_gray))
+    streamerObjectDetector.Render(cudaFromNumpy(frame))
     
