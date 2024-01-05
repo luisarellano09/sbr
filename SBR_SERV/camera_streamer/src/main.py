@@ -4,34 +4,34 @@ import numpy as np
 import cv2
 
 
-# Create rstp streams
-streamerCameraDepth = videoOutput("rtsp://@:6000/d435/depth")
-streamerCameraRGB = videoOutput("rtsp://@:6000/d435/rgb")
+# # Create rstp streams
+# streamerCameraDepth = videoOutput("rtsp://@:6000/d435/depth")
+# streamerCameraRGB = videoOutput("rtsp://@:6000/d435/rgb")
 
-# Create pipeline
-pipe = rs.pipeline()
-cfg  = rs.config()
+# # Create pipeline
+# pipe = rs.pipeline()
+# cfg  = rs.config()
 
-# Enable streams
-cfg.enable_stream(rs.stream.color, 1280, 720, rs.format.rgb8, 30)
-cfg.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
+# # Enable streams
+# cfg.enable_stream(rs.stream.color, 1280, 720, rs.format.rgb8, 30)
+# cfg.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
 
-# Start streaming
-profile = pipe.start(cfg)
+# # Start streaming
+# profile = pipe.start(cfg)
 
-# Getting the depth sensor's depth scale (see rs-align example for explanation)
-depth_sensor = profile.get_device().first_depth_sensor()
-depth_scale = depth_sensor.get_depth_scale()
-print("Depth Scale is: " , depth_scale)
+# # Getting the depth sensor's depth scale (see rs-align example for explanation)
+# depth_sensor = profile.get_device().first_depth_sensor()
+# depth_scale = depth_sensor.get_depth_scale()
+# print("Depth Scale is: " , depth_scale)
 
-#  clipping_distance_in_meters meters away
-distance_factor = 100.0 * depth_scale   # 0.0010000000474974513
+# #  clipping_distance_in_meters meters away
+# distance_factor = 100.0 * depth_scale   # 0.0010000000474974513
 
-# Create an align object
-# rs.align allows us to perform alignment of depth frames to others frames
-# The "align_to" is the stream type to which we plan to align depth frames.
-align_to = rs.stream.color
-align = rs.align(align_to)
+# # Create an align object
+# # rs.align allows us to perform alignment of depth frames to others frames
+# # The "align_to" is the stream type to which we plan to align depth frames.
+# align_to = rs.stream.color
+# align = rs.align(align_to)
 
 while True:
     # Wait for a coherent pair of frames: depth and color
