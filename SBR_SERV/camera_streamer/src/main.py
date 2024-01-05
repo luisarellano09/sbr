@@ -1,5 +1,5 @@
 from jetson_utils import videoOutput, cudaFromNumpy
-import pyrealsense2 as rs
+# import pyrealsense2 as rs
 import numpy as np
 import cv2
 
