@@ -54,7 +54,7 @@ services:
         environment:
             DISPLAY_DEVICE: "V4L2_DEVICES"
         volumes:
-            - /proc/device-tree/model:/proc/device-tree:/tmp/nv_jetson_model
+            - /proc/device-tree/model:/tmp/nv_jetson_model
         build:
             context: ../../SBR_SERV/object_detector/
             target: dev
