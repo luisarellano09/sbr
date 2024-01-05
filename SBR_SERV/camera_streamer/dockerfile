@@ -9,7 +9,10 @@ RUN apt-get update && \
         libglfw3-dev \
         libgl1-mesa-dev \
         libglu1-mesa-dev \
-        qtcreator 
+        qtcreator \
+        curl \
+        libssl-dev \
+        libcurl4-openssl-dev
 
 ARG LIBREALSENSE_VERSION=development
 
