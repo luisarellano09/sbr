@@ -18,6 +18,4 @@ while True:
     _, frame = cam.read()
     frame_cv = cv2.putText(frame, "Hello World", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 10, (0, 0, 255), 2)
     streamerObjectDetector.Render(cudaFromNumpy(frame_cv))
-
-    key = cv2.waitKey(1)
     
