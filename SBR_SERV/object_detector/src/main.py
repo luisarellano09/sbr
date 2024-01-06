@@ -1,6 +1,27 @@
 from jetson_utils import videoSource, videoOutput, cudaFromNumpy, cudaAllocMapped, cudaConvertColor, cudaToNumpy, cudaDeviceSynchronize
 import cv2
 
+
+# Function to convert cuda image to cv2 image
+def cuda_to_cv2(cuda_image):
+    # Allocate new image
+    rgb_image = cudaAllocMapped(width=cuda_image.width, height=cuda_image.height, format='bgr8')
+
+    # Convert image to RGB
+    cudaConvertColor(cuda_image, rgb_image)
+
+    # Convert image to numpy (opencv format)
+    cv_rgb_image = cudaToNumpy(rgb_image)
+
+    # Synchonize Cuda
+    cudaDeviceSynchronize()
+
+    # Convert image to BGR
+    cv_image = cv2.cvtColor(cv_rgb_image, cv2.COLOR_RGB2BGR)
+
+    return cv_image
+
+
 # Main
 if __name__ == '__main__':
 
@@ -22,23 +43,3 @@ if __name__ == '__main__':
         
         # Render the image
         streamerObjectDetector.Render(cudaFromNumpy(cv_image_text))
-
-
-# Function to convert cuda image to cv2 image
-def cuda_to_cv2(cuda_image):
-    # Allocate new image
-    rgb_image = cudaAllocMapped(width=cuda_image.width, height=cuda_image.height, format='bgr8')
-
-    # Convert image to RGB
-    cudaConvertColor(cuda_image, rgb_image)
-
-    # Convert image to numpy (opencv format)
-    cv_rgb_image = cudaToNumpy(rgb_image)
-
-    # Synchonize Cuda
-    cudaDeviceSynchronize()
-
-    # Convert image to BGR
-    cv_image = cv2.cvtColor(cv_rgb_image, cv2.COLOR_RGB2BGR)
-
-    return cv_image
