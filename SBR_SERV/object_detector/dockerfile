@@ -44,7 +44,6 @@ RUN apt-get purge -y '*opencv*' || echo "existing OpenCV installation not found"
 
 RUN apt update -y && apt upgrade -y
 
-
 # Copy Gstreamer in a temporary directory
 RUN cp -r /usr/include/gstreamer-1.0 /tmp
 
