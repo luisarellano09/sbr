@@ -16,9 +16,9 @@ while True:
                           height=image.height,
 						  format='bgr8')
     
-    cudaConvertColor(image, bgr_img)
+    # cudaConvertColor(image, bgr_img)
 
     frame = cudaToNumpy(image)
-    frame = cv2.putText(frame, "Hello World", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 10, (0, 0, 255), 2)
+    frame = cv2.putText(frame, "Hello World", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 2)
     streamerObjectDetector.Render(cudaFromNumpy(frame))
     
