@@ -5,21 +5,24 @@ import cv2
 # Function to convert cuda image to cv2 image
 def cuda_to_cv2(cuda_image):
     # Allocate new image
-    rgb_image = cudaAllocMapped(width=cuda_image.width, height=cuda_image.height, format='bgr8')
+    image = cudaAllocMapped(width=cuda_image.width, height=cuda_image.height, format='bgr8')
 
     # Convert image to RGB
-    cudaConvertColor(cuda_image, rgb_image)
+    cudaConvertColor(cuda_image, image)
 
     # Convert image to numpy (opencv format)
-    cv_rgb_image = cudaToNumpy(rgb_image)
+    cv_image = cudaToNumpy(image)
 
     # Synchonize Cuda
     cudaDeviceSynchronize()
 
-    # Convert image to BGR
-    cv_image = cv2.cvtColor(cv_rgb_image, cv2.COLOR_RGB2BGR)
-
     return cv_image
+
+
+# Function to convert cv2 image to cuda image
+def cv2_to_cuda(cv_image):
+    # Convert image to cuda
+    return cudaFromNumpy(cv_image)
 
 
 # Main
