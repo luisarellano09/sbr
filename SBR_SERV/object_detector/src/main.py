@@ -1,4 +1,4 @@
-from jetson_utils import videoOutput, cudaFromNumpy
+# from jetson_utils import videoOutput, cudaFromNumpy
 import numpy as np
 import cv2
 
