@@ -12,6 +12,6 @@ streamerObjectDetector = videoOutput("rtsp://@:6001/serv/object_detector")
 while True:
     image = cameraRGB.Capture()
     frame = np.asanyarray(image)
-    cv2.putText(frame, "Hello World", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+    frame = cv2.putText(frame, "Hello World", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
     streamerObjectDetector.Render(cudaFromNumpy(frame))
     
