@@ -33,7 +33,7 @@ if __name__ == '__main__':
     # Create threads
     thread_stream_d435_rgb = threading.Thread(target=task_camera_process, args=("rtsp://sbrnx:6000/d435/rgb",))
     thread_stream_d435_depth = threading.Thread(target=task_camera_process, args=("rtsp://sbrnx:6000/d435/depth",))
-    thread_stream_object_detector = threading.Thread(target=task_camera_process, args=("rtsp://sbrnx:6000/serv/object_detector",))
+    thread_stream_object_detector = threading.Thread(target=task_camera_process, args=("rtsp://sbrnx:6001/serv/object_detector",))
     
     # Start threads
     thread_stream_d435_rgb.start()

@@ -13,5 +13,5 @@ while True:
     image = cameraRGB.Capture()
     frame = np.asanyarray(image)
     frame_flip = cv2.flip(frame, 1)
-    streamerObjectDetector.Render(cudaFromNumpy(frame_flip))
+    streamerObjectDetector.Render(cudaFromNumpy(frame))
     
