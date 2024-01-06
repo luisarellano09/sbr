@@ -5,7 +5,7 @@ import cv2
 # Function to convert cuda image to cv2 image
 def cuda_to_cv2(cuda_image):
     # Allocate new image
-    image = cudaAllocMapped(width=cuda_image.width, height=cuda_image.height, format='bgr8')
+    image = cudaAllocMapped(width=cuda_image.width, height=cuda_image.height, format='rgb8')
 
     # Convert image to RGB
     cudaConvertColor(cuda_image, image)
