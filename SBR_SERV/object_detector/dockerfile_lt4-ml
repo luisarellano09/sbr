@@ -49,6 +49,7 @@ RUN cp -r /usr/include/gstreamer-1.0 /tmp
 
 # Install Opencv: https://github.com/dusty-nv/jetson-containers/blob/master/packages/opencv/opencv_builder/Dockerfile
 # https://github.com/dusty-nv/jetson-containers/blob/master/packages/opencv/config.py
+# RUN /opt/install_opencv.sh
 RUN ./tmp/opencv_install.sh 'https://nvidia.box.com/shared/static/2hssa5g3v28ozvo3tc3qwxmn78yerca9.gz' 'OpenCV-4.5.0-aarch64.tar.gz'
 
 # Copy Gstreamer from the temporary directory
