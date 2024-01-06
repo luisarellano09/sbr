@@ -52,13 +52,6 @@ services:
         container_name: sbr_object_detector
         privileged: true
         runtime: nvidia
-        environment:
-            DISPLAY_DEVICE: "V4L2_DEVICES"
-        volumes:
-            - /proc/device-tree/model:/tmp/nv_jetson_model
-            - /tmp/argus_socket:/tmp/argus_socket
-            - /etc/enctune.conf:/etc/enctune.conf 
-            - /etc/nv_tegra_release:/etc/nv_tegra_release
         build:
             context: ../../SBR_SERV/object_detector/
             target: dev
