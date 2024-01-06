@@ -58,6 +58,7 @@ RUN cp -r /tmp/gstreamer-1.0 /usr/include && \
 
 # Clone and build jetson-utils
 RUN mkdir jetson-utils_build && \ 
+    cd jetson-utils_build && \
     git clone --depth=1 https://github.com/dusty-nv/jetson-utils && \ 
     cd jetson-utils && \ 
     mkdir build && \ 
