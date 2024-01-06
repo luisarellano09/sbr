@@ -45,16 +45,18 @@ RUN apt-get purge -y '*opencv*' || echo "existing OpenCV installation not found"
 RUN apt update -y && apt upgrade -y
 
 # Copy Gstreamer in a temporary directory
-RUN cp -r /usr/include/gstreamer-1.0 /tmp
+RUN mkdir -p /usr/local/include/gstreamer-1.0/gst && \
+    cp -r /usr/include/gstreamer-1.0/gst/webrtc /usr/local/include/gstreamer-1.0/gst && \
+    ls -ll /usr/local/include/ && \
+    ls -ll /usr/local/include/gstreamer-1.0/gst/webrtc
 
 # Install Opencv: https://github.com/dusty-nv/jetson-containers/blob/master/packages/opencv/opencv_builder/Dockerfile
 # https://github.com/dusty-nv/jetson-containers/blob/master/packages/opencv/config.py
 RUN ./tmp/opencv_install.sh 'https://nvidia.box.com/shared/static/2hssa5g3v28ozvo3tc3qwxmn78yerca9.gz' 'OpenCV-4.5.0-aarch64.tar.gz'
 
 # Copy Gstreamer from the temporary directory
-RUN cp -r /tmp/gstreamer-1.0 /usr/include && \
-    rm -rf /tmp/gstreamer-1.0 && \
-    ln -s /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so.0 /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so
+RUN cp -r /usr/local/include/gstreamer-1.0/gst/webrtc /usr/include/gstreamer-1.0/gst && \
+    ln -s -f /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so.0 /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so 
 
 # Clone and build jetson-utils
 RUN mkdir jetson-utils_build && \ 
