@@ -12,7 +12,7 @@ if not cam.isOpened():
 
 # Create rstp stream
 stream_path_ObjectDetector = "rtsp://@:6000/serv/object_detector --output-codec=h265 --output-encoder=v4l2"
-streamerObjectDetector = videoOutput("rtsp://@:6000/serv/object_detector --output-codec=h265 --output-encoder=v4l2")
+# streamerObjectDetector = videoOutput("rtsp://@:6000/serv/object_detector --output-codec=h265 --output-encoder=v4l2")
 
 while True:
     _, frame = cam.read()
