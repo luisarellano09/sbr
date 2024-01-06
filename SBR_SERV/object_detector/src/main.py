@@ -13,6 +13,5 @@ while True:
     image = cameraRGB.Capture()
     frame = np.asanyarray(image)
     frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    print(frame_gray.shape)
-    streamerObjectDetector.Render(cudaFromNumpy(frame))
+    streamerObjectDetector.Render(cudaFromNumpy(frame_gray))
     
