@@ -1,4 +1,4 @@
-from jetson_utils import videoSource, videoOutput, cudaFromNumpy, cudaAllocMapped, cudaConvertColor, cudaToNumpy
+from jetson_utils import videoSource, videoOutput, cudaFromNumpy
 import numpy as np
 import cv2
 
@@ -11,14 +11,7 @@ streamerObjectDetector = videoOutput("rtsp://@:6001/serv/object_detector")
 
 while True:
     image = cameraRGB.Capture()
-
-    bgr_img = cudaAllocMapped(width=image.width,
-                          height=image.height,
-						  format='bgr8')
-    
-    # cudaConvertColor(image, bgr_img)
-
-    frame = cudaToNumpy(image)
-    frame = cv2.putText(frame, "Hello World", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 2)
-    streamerObjectDetector.Render(cudaFromNumpy(frame))
+    frame = np.asanyarray(image)
+    frame_cv = cv2.putText(frame, "Hello World", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 10, (0, 0, 255), 2)
+    streamerObjectDetector.Render(cudaFromNumpy(frame_cv))
     
