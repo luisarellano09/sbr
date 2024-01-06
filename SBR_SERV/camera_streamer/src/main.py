@@ -20,7 +20,7 @@ if __name__ == '__main__':
     cfg  = rs.config()
 
     # Enable streams
-    cfg.enable_stream(rs.stream.color, 1280, 720, rs.format.rgb8, 30)
+    cfg.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
     cfg.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
 
     # Start streaming
@@ -60,10 +60,6 @@ if __name__ == '__main__':
         # Adjust image
         depth_image = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
         color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
-
-        # Convert to BGR
-        depth_image = cv2.cvtColor(depth_image, cv2.COLOR_RGB2BGR)
-        color_image = cv2.cvtColor(color_image, cv2.COLOR_RGB2BGR)
 
         # Render the image
         streamerCameraDepth.Render(cv2_to_cuda(depth_image))
