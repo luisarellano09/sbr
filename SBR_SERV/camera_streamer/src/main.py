@@ -31,9 +31,8 @@ if __name__ == '__main__':
     depth_scale = depth_sensor.get_depth_scale()
     print("Depth Scale is: " , depth_scale)
 
-    #  clipping_distance_in_meters meters away
-    distance_factor = 100.0 * depth_scale   # 0.0010000000474974513
-    distance_factor = 1
+    #  Factor to convert to cm
+    distance_factor = 0.1
 
 
     # Create an align object
@@ -57,7 +56,7 @@ if __name__ == '__main__':
 
         # Normalice depth image
         depth_image = np.dstack((depth_image,depth_image,depth_image)) #depth image is 1 channel, color is 3 channels
-        # depth_image = cv2.multiply(depth_image, distance_factor)
+        depth_image = cv2.multiply(depth_image, distance_factor)
 
         
 
