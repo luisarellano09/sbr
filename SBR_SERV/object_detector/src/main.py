@@ -38,6 +38,10 @@ if __name__ == '__main__':
         # Read frame from RRSP stream
         cuda_image = cameraRGB.Capture()
 
+        # Check if there is a valid image
+        if cuda_image is None:
+            continue
+
         # Convert image to numpy (opencv format)
         cv_image = cuda_to_cv2(cuda_image)
 
