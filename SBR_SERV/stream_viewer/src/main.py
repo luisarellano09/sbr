@@ -13,7 +13,8 @@ def task_camera_process(stream_path):
     
     # Create window
     cv2.namedWindow(stream_path)
-    
+
+    # Loop
     while True:
         # Read frame
         _, frame = stream.read()

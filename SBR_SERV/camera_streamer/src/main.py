@@ -56,7 +56,7 @@ if __name__ == '__main__':
         # Normalice depth image
         depth_image = cv2.multiply(depth_image, distance_factor)
 
-        # Divide the image (one channel) into 3 channels
+        # Divide the distance (one channel) into 3 channels. For example 600 => (90,255,255)
         depth_image_1 = np.where(depth_image > 255, 255, depth_image)
 
         depth_image_temp = np.add(depth_image, -255)
@@ -67,20 +67,12 @@ if __name__ == '__main__':
         depth_image_temp = np.where(depth_image_temp < 0, 0, depth_image_temp)
         depth_image_3 = np.where(depth_image_temp > 255, 255, depth_image_temp)
 
+        # Merge the 3 channels into one image
         depth_image = np.dstack((depth_image_3, depth_image_2, depth_image_1)) 
 
-        
-        # test
-        print(depth_image[360, 640])
-        depth_image_mod = cv2.circle(depth_image, (640, 360), 10, (255, 0, 0), -1)
-        
-        ##
-
-
-        # Adjust image
-        # depth_image = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
+        # Adjust image RGB
         color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
         # Render the image
-        streamerCameraDepth.Render(cv2_to_cuda(depth_image_mod))
+        streamerCameraDepth.Render(cv2_to_cuda(depth_image))
         streamerCameraRGB.Render(cv2_to_cuda(color_image))
