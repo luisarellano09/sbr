@@ -33,6 +33,8 @@ if __name__ == '__main__':
 
     #  clipping_distance_in_meters meters away
     distance_factor = 100.0 * depth_scale   # 0.0010000000474974513
+    distance_factor = 1
+    
 
     # Create an align object
     # rs.align allows us to perform alignment of depth frames to others frames
@@ -50,16 +52,16 @@ if __name__ == '__main__':
         color_frame = aligned_frame.get_color_frame()
 
         # Convert images to numpy arrays
-        depth_image_np = np.asanyarray(depth_frame.get_data())
-        color_image_np = np.asanyarray(color_frame.get_data())
+        depth_image = np.asanyarray(depth_frame.get_data())
+        color_image = np.asanyarray(color_frame.get_data())
 
         # Normalice depth image
-        depth_image_norm = np.dstack((depth_image_np,depth_image_np,depth_image_np)) #depth image is 1 channel, color is 3 channels
-        depth_image_norm = cv2.multiply(depth_image_norm, distance_factor)
+        depth_image = np.dstack((depth_image,depth_image,depth_image)) #depth image is 1 channel, color is 3 channels
+        depth_image = cv2.multiply(depth_image, distance_factor)
 
         # Adjust image
-        depth_image = cv2.applyColorMap(cv2.convertScaleAbs(depth_image_norm, alpha=0.03), cv2.COLORMAP_JET)
-        color_image = cv2.addWeighted( color_image, 1, color_image_np, 0, 15)
+        depth_image = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
+        color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
         # Render the image
         streamerCameraDepth.Render(cv2_to_cuda(depth_image))
