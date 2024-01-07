@@ -34,7 +34,6 @@ if __name__ == '__main__':
     #  Factor to convert to cm
     distance_factor = 0.1
 
-
     # Create an align object
     # rs.align allows us to perform alignment of depth frames to others frames
     # The "align_to" is the stream type to which we plan to align depth frames.
@@ -55,8 +54,9 @@ if __name__ == '__main__':
         color_image = np.asanyarray(color_frame.get_data())
 
         # Normalice depth image
-        depth_image = np.dstack((depth_image,depth_image,depth_image)) #depth image is 1 channel, color is 3 channels
         depth_image = cv2.multiply(depth_image, distance_factor)
+        depth_image = np.dstack((depth_image,depth_image,depth_image)) #depth image is 1 channel, color is 3 channels
+        
 
         
 
