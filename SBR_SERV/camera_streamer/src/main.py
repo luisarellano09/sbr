@@ -55,11 +55,21 @@ if __name__ == '__main__':
 
         # Normalice depth image
         depth_image = cv2.multiply(depth_image, distance_factor)
-        depth_image = np.dstack((depth_image,depth_image,depth_image)) #depth image is 1 channel, color is 3 channels
-        
+
+        # Divide the image (one channel) into 3 channels
+        depth_image_1 = np.where(depth_image > 255, 255, depth_image)
+
+        depth_image_temp = np.add(depth_image, -255)
+        depth_image_temp = np.where(depth_image_temp < 0, 0, depth_image_temp)
+        depth_image_2 = np.where(depth_image_temp > 255, 255, depth_image_temp)
+
+        depth_image_temp = np.add(depth_image, -510)
+        depth_image_temp = np.where(depth_image_temp < 0, 0, depth_image_temp)
+        depth_image_3 = np.where(depth_image_temp > 255, 255, depth_image_temp)
+
+        depth_image = np.dstack((depth_image_3, depth_image_2, depth_image_1)) 
 
         
-
         # test
         print(depth_image[360, 640])
         depth_image_mod = cv2.circle(depth_image, (640, 360), 10, (255, 0, 0), -1)
