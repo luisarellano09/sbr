@@ -60,7 +60,7 @@ if __name__ == '__main__':
         # depth_image = cv2.multiply(depth_image, distance_factor)
 
         # test
-        depth_image = cv2.circle(depth_image, (640, 360), 10, (255, 255, 255), -1)
+        depth_image_mod = cv2.circle(depth_image, (640, 360), 10, (255, 255, 255), -1)
         print(depth_image[360, 640])
         ##
 
@@ -70,5 +70,5 @@ if __name__ == '__main__':
         color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
         # Render the image
-        streamerCameraDepth.Render(cv2_to_cuda(depth_image))
+        streamerCameraDepth.Render(cv2_to_cuda(depth_image_mod))
         streamerCameraRGB.Render(cv2_to_cuda(color_image))
