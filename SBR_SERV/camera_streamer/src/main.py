@@ -34,7 +34,7 @@ if __name__ == '__main__':
     #  clipping_distance_in_meters meters away
     distance_factor = 100.0 * depth_scale   # 0.0010000000474974513
     distance_factor = 1
-    
+
 
     # Create an align object
     # rs.align allows us to perform alignment of depth frames to others frames
@@ -60,7 +60,7 @@ if __name__ == '__main__':
         depth_image = cv2.multiply(depth_image, distance_factor)
 
         # Adjust image
-        depth_image = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
+        # depth_image = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
         color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
         # Render the image
