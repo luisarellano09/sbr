@@ -57,7 +57,13 @@ if __name__ == '__main__':
 
         # Normalice depth image
         depth_image = np.dstack((depth_image,depth_image,depth_image)) #depth image is 1 channel, color is 3 channels
-        depth_image = cv2.multiply(depth_image, distance_factor)
+        # depth_image = cv2.multiply(depth_image, distance_factor)
+
+        # test
+        depth_image = cv2.circle(depth_image, (640, 360), 10, (255, 255, 255), -1)
+        print(depth_image[360, 640])
+        ##
+
 
         # Adjust image
         # depth_image = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
