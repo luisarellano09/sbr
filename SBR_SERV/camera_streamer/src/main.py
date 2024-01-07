@@ -60,7 +60,7 @@ if __name__ == '__main__':
         # depth_image = cv2.multiply(depth_image, distance_factor)
 
         # test
-        depth_image_mod = cv2.circle(depth_image, (640, 360), 10, (255, 255, 255), -1)
+        depth_image_mod = cv2.circle(depth_image, (640, 360), 10, (125, 125, 125), -1)
         print(depth_image[360, 640])
         ##
 
