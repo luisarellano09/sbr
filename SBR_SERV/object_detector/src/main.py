@@ -1,5 +1,6 @@
 from jetson_utils import videoSource, videoOutput, cudaFromNumpy, cudaAllocMapped, cudaConvertColor, cudaToNumpy, cudaDeviceSynchronize
 import cv2
+from ultralytics import YOLO
 
 
 # Function to convert cuda image to cv2 image
@@ -34,6 +35,8 @@ if __name__ == '__main__':
     # Create Video Output
     streamerObjectDetector = videoOutput("rtsp://@:6001/serv/object_detector")
 
+    model = YOLO('/models/yolov8n.pt')
+
     while True:
         # Read frame from RRSP stream
         cuda_image = cameraRGB.Capture()
@@ -44,6 +47,10 @@ if __name__ == '__main__':
 
         # Convert image to numpy (opencv format)
         cv_image = cuda_to_cv2(cuda_image)
+
+        results = model.predict(cv_image)
+
+        print(results)
 
         # Add text
         cv_image_text = cv2.putText(cv_image, "Hello World", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)

@@ -1,5 +1,12 @@
 FROM dustynv/jetson-inference:r35.3.1 as dev
 
+# Install ultralytics/yolov8
+RUN pip3 install matplotlib
+RUN pip3 install pyyaml
+RUN pip3 pip3 install py-cpuinfo
+RUN pip3 install tqdm
+RUN pip3 install ultralytics --no-deps
+
 # Create a directory for the app
 WORKDIR /sbr
 
