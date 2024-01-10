@@ -3,6 +3,8 @@ import jetson.inference
 import cv2
 import time
 
+
+# Init frame rate calculation
 timeStamp = time.time()
 fpsFilt = 0
 
