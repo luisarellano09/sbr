@@ -1,4 +1,4 @@
-from jetson_utils import videoOutput, cudaFromNumpy
+import jetson.utils
 import pyrealsense2 as rs
 import numpy as np
 import cv2
@@ -6,14 +6,14 @@ import cv2
 # Function to convert cv2 image to cuda image
 def cv2_to_cuda(cv_image):
     # Convert image to cuda
-    return cudaFromNumpy(cv_image)
+    return jetson.utils.cudaFromNumpy(cv_image)
 
 
 # Main
 if __name__ == '__main__':
     # Create rstp streams
-    streamerCameraDepth = videoOutput("rtsp://@:6000/d435/depth")
-    streamerCameraRGB = videoOutput("rtsp://@:6000/d435/rgb")
+    streamerCameraDepth = jetson.utils.videoOutput("rtsp://@:6000/d435/depth")
+    streamerCameraRGB = jetson.utils.videoOutput("rtsp://@:6000/d435/rgb")
 
     # Create pipeline
     pipe = rs.pipeline()
