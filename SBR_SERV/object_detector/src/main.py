@@ -5,8 +5,8 @@ import time
 
 
 # Init frame rate calculation
-timeStamp = time.time()
-fpsFilt = 0
+time_stamp = time.time()
+fps_filt = 0
 
 # Function to convert cuda image to cv2 image
 def cuda_to_cv2(cuda_image):
@@ -52,24 +52,28 @@ if __name__ == '__main__':
         if cuda_image is None:
             continue
 
+        # Convert image to numpy (opencv format)
+        cv_image = cuda_to_cv2(cuda_image)
+
         # Detect objects
         detections = net.Detect(cuda_image)
 
+        # Loop into each detection
         for detection in detections:
-            print(detection)
+            object_name = net.GetClassDesc(detection.ClassID)
+            print(object_name)
 
         # Convert image to numpy (opencv format)
         cv_image = cuda_to_cv2(cuda_image)
 
-
         # Calculate FPS
-        dt = time.time() - timeStamp
-        timeStamp = time.time()
+        dt = time.time() - time_stamp
+        time_stamp = time.time()
         fps = 1 / dt
-        fpsFilt = 0.9 * fpsFilt + 0.1 * fps
+        fps_filt = 0.9 * fps_filt + 0.1 * fps
 
         # Add text
-        cv2.putText(cv_image, str(fpsFilt),  (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+        cv2.putText(cv_image, str(fps_filt),  (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
         
         # Render the image
         streamerObjectDetector.Render(cv2_to_cuda(cv_image))
