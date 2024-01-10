@@ -51,6 +51,17 @@ services:
         image: sbr/sbr_object_detector:1.0
         container_name: sbr_object_detector
         runtime: nvidia
+        volumes:
+            - /proc/device-tree/model:/tmp/nv_jetson_model
+            - /tmp/argus_socket:/tmp/argus_socket
+            - /etc/enctune.conf:/etc/enctune.conf 
+            - /etc/nv_tegra_release:/etc/nv_tegra_release
+            - /jetson-inference/data:/jetson-inference/data
+            - /inference/python/training/classification/data:/inference/python/training/classification/data
+            - /inference/python/training/classification/models:/inference/python/training/classification/models
+            - /inference/python/training/detection/data:/inference/python/training/detection/data
+            - /inference/python/training/detection/models:/inference/python/training/detection/models
+            - /inference/python/www/recognizer:/inference/python/www/recognizer
         build:
             context: ../../SBR_SERV/object_detector/
             target: dev
