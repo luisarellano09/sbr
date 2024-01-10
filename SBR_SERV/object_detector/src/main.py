@@ -1,6 +1,9 @@
 import jetson.utils
 import jetson.inference
 import cv2
+import time
+
+timeStamp = time.time()
 
 
 # Function to convert cuda image to cv2 image
@@ -56,8 +59,15 @@ if __name__ == '__main__':
         # Convert image to numpy (opencv format)
         cv_image = cuda_to_cv2(cuda_image)
 
+
+        # Calculate FPS
+        dt = time.time() - timeStamp
+        timeStamp = time.time()
+        fps = 1 / dt
+        fpsFilt = 0.9 * fpsFilt + 0.1 * fps
+
         # Add text
-        cv2.putText(cv_image, str(net.GetNetworkFPS()),  (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+        cv2.putText(cv_image, str(fpsFilt),  (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
         
         # Render the image
         streamerObjectDetector.Render(cv2_to_cuda(cv_image))
