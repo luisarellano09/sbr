@@ -4,7 +4,7 @@ import cv2
 import time
 
 timeStamp = time.time()
-
+fpsFilt = 0
 
 # Function to convert cuda image to cv2 image
 def cuda_to_cv2(cuda_image):
