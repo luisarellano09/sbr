@@ -36,7 +36,7 @@ if __name__ == '__main__':
     streamerObjectDetector = jetson.utils.videoOutput("rtsp://@:6001/serv/object_detector")
 
     # Detector
-    net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.9)
+    net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
 
 
     while True:
