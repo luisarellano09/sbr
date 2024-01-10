@@ -36,7 +36,7 @@ if __name__ == '__main__':
     streamerObjectDetector = jetson.utils.videoOutput("rtsp://@:6001/serv/object_detector")
 
     # Detector
-    net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
+    net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.9)
 
 
     while True:
@@ -57,7 +57,7 @@ if __name__ == '__main__':
         cv_image = cuda_to_cv2(cuda_image)
 
         # Add text
-        # cv2.putText(cv_image, net.GetNetworkFPS(),  (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        cv2.putText(cv_image, str(net.GetNetworkFPS()),  (0, 0), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
         
         # Render the image
         streamerObjectDetector.Render(cv2_to_cuda(cv_image))
