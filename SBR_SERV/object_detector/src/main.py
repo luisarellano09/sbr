@@ -65,13 +65,10 @@ if __name__ == '__main__':
 
             # Get bounding box
             x1, y1, x2, y2 = int(detection.Left), int(detection.Top), int(detection.Right), int(detection.Bottom)
-            cv2.rectangle(cv_image, (x1, y1), (x2, y2), (255, 0, 0), 2)
+            cv2.rectangle(cv_image, (x1, y1), (x2, y2), (0, 255, 0), 1)
+            cv2.putText(cv_image, object_name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1)
 
             
-
-        # Convert image to numpy (opencv format)
-        cv_image = cuda_to_cv2(cuda_image)
-
         # Calculate FPS
         dt = time.time() - time_stamp
         time_stamp = time.time()
@@ -79,7 +76,7 @@ if __name__ == '__main__':
         fps_filt = 0.9 * fps_filt + 0.1 * fps
 
         # Add text
-        cv2.putText(cv_image, str(fps_filt),  (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+        cv2.putText(cv_image, str(fps_filt),  (0, 0), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
         
         # Render the image
         streamerObjectDetector.Render(cv2_to_cuda(cv_image))
