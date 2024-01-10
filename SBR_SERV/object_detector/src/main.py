@@ -57,7 +57,7 @@ if __name__ == '__main__':
         cv_image = cuda_to_cv2(cuda_image)
 
         # Add text
-        cv_image_text = cv2.putText(cv_image, net.GetNetworkFPS(),  (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        # cv2.putText(cv_image, net.GetNetworkFPS(),  (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
         
         # Render the image
-        streamerObjectDetector.Render(cv2_to_cuda(cv_image_text))
+        streamerObjectDetector.Render(cv2_to_cuda(cv_image))
