@@ -1,76 +1,78 @@
-from jetson_utils import videoOutput, cudaFromNumpy
+import jetson.utils
 import pyrealsense2 as rs
 import numpy as np
 import cv2
 
+# Function to convert cv2 image to cuda image
+def cv2_to_cuda(cv_image):
+    # Convert image to cuda
+    return jetson.utils.cudaFromNumpy(cv_image)
 
-# Create VideoWriter object with GStreamer pipeline
-fourcc = cv2.VideoWriter_fourcc(*'H264')
-rtsp_url = 'rtsp://sbrnx:6001/test' 
-out = cv2.VideoWriter(rtsp_url, fourcc, 30.0, (1280, 720))
 
-# Create rstp streams
-streamerCameraDepth = videoOutput("rtsp://@:6000/d435/depth")
-streamerCameraRGB = videoOutput("rtsp://@:6000/d435/rgb")
+# Main
+if __name__ == '__main__':
+    # Create rstp streams
+    streamerCameraDepth = jetson.utils.videoOutput("rtsp://@:6000/d435/depth")
+    streamerCameraRGB = jetson.utils.videoOutput("rtsp://@:6000/d435/rgb")
 
-# Create pipeline
-pipe = rs.pipeline()
-cfg  = rs.config()
+    # Create pipeline
+    pipe = rs.pipeline()
+    cfg  = rs.config()
 
-# Enable streams
-cfg.enable_stream(rs.stream.color, 1280, 720, rs.format.rgb8, 30)
-cfg.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
+    # Enable streams
+    cfg.enable_stream(rs.stream.color, 1280, 720, rs.format.rgb8, 30)
+    cfg.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
 
-# Start streaming
-profile = pipe.start(cfg)
+    # Start streaming
+    profile = pipe.start(cfg)
 
-# Getting the depth sensor's depth scale (see rs-align example for explanation)
-depth_sensor = profile.get_device().first_depth_sensor()
-depth_scale = depth_sensor.get_depth_scale()
-print("Depth Scale is: " , depth_scale)
+    # Getting the depth sensor's depth scale (see rs-align example for explanation)
+    depth_sensor = profile.get_device().first_depth_sensor()
+    depth_scale = depth_sensor.get_depth_scale()
+    print("Depth Scale is: " , depth_scale)
 
-#  clipping_distance_in_meters meters away
-distance_factor = 100.0 * depth_scale   # 0.0010000000474974513
+    #  Factor to convert to cm
+    distance_factor = 0.1
 
-# Create an align object
-# rs.align allows us to perform alignment of depth frames to others frames
-# The "align_to" is the stream type to which we plan to align depth frames.
-align_to = rs.stream.color
-align = rs.align(align_to)
+    # Create an align object
+    # rs.align allows us to perform alignment of depth frames to others frames
+    # The "align_to" is the stream type to which we plan to align depth frames.
+    align_to = rs.stream.color
+    align = rs.align(align_to)
 
-while True:
-    # Wait for a coherent pair of frames: depth and color
-    frame = pipe.wait_for_frames()
-    
-    # Align the depth frame to color frame
-    aligned_frame = align.process(frame)
+    while True:
+        # Wait for a coherent pair of frames: depth and color
+        frame = pipe.wait_for_frames()
         
-    depth_frame = aligned_frame.get_depth_frame()
-    color_frame = aligned_frame.get_color_frame()
+        # Align the depth frame to color frame
+        aligned_frame = align.process(frame)
+        depth_frame = aligned_frame.get_depth_frame()
+        color_frame = aligned_frame.get_color_frame()
 
-    # Convert images to numpy arrays
-    depth_image = np.asanyarray(depth_frame.get_data())
-    color_image = np.asanyarray(color_frame.get_data())
+        # Convert images to numpy arrays
+        depth_image = np.asanyarray(depth_frame.get_data())
+        color_image = np.asanyarray(color_frame.get_data())
 
-    # Normalice depth image
-    depth_image_3d = np.dstack((depth_image,depth_image,depth_image)) #depth image is 1 channel, color is 3 channels
-    depth_image_3d = cv2.multiply(depth_image_3d, distance_factor)
+        # Normalice depth image
+        depth_image = cv2.multiply(depth_image, distance_factor)
 
-    # Adjust color image
-    adjustedDepth = cv2.applyColorMap(cv2.convertScaleAbs(depth_image_3d, alpha=0.03), cv2.COLORMAP_JET)
-    adjustedRGB = cv2.addWeighted( color_image, 1, color_image, 0, 15)
+        # Divide the distance (one channel) into 3 channels. For example 600 => (90,255,255)
+        depth_image_1 = np.where(depth_image > 255, 255, depth_image)
 
-    # Convert to CUDA
-    gsFrameDepth = cudaFromNumpy(depth_image_3d)
-    gsFrameRGB = cudaFromNumpy(adjustedRGB)
+        depth_image_temp = np.add(depth_image, -255)
+        depth_image_temp = np.where(depth_image_temp < 0, 0, depth_image_temp)
+        depth_image_2 = np.where(depth_image_temp > 255, 255, depth_image_temp)
 
-    # Render the image
-    streamerCameraDepth.Render(gsFrameDepth)
-    streamerCameraRGB.Render(gsFrameRGB)
-    
-    out.write(adjustedRGB)
+        depth_image_temp = np.add(depth_image, -510)
+        depth_image_temp = np.where(depth_image_temp < 0, 0, depth_image_temp)
+        depth_image_3 = np.where(depth_image_temp > 255, 255, depth_image_temp)
 
+        # Merge the 3 channels into one image
+        depth_image = np.dstack((depth_image_3, depth_image_2, depth_image_1)) 
 
-# Info: To receive the stream use the following command
-# gst-launch-1.0 -v rtspsrc location=rtsp://sbrnx:6000/d435/depth latency=0 ! rtph264depay ! h264parse ! avdec_h264 ! autovideosink
-# gst-launch-1.0 -v rtspsrc location=rtsp://sbrnx:6000/d435/rgb latency=0 ! rtph264depay ! h264parse ! avdec_h264 ! autovideosink
+        # Adjust image RGB
+        color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
+
+        # Render the image
+        streamerCameraDepth.Render(cv2_to_cuda(depth_image))
+        streamerCameraRGB.Render(cv2_to_cuda(color_image))
