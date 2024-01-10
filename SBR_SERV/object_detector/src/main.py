@@ -1,20 +1,20 @@
-from jetson_utils import videoSource, videoOutput, cudaFromNumpy, cudaAllocMapped, cudaConvertColor, cudaToNumpy, cudaDeviceSynchronize
+import jetson.utils 
 import cv2
 
 
 # Function to convert cuda image to cv2 image
 def cuda_to_cv2(cuda_image):
     # Allocate new image
-    image = cudaAllocMapped(width=cuda_image.width, height=cuda_image.height, format='rgb8')
+    image = jetson.utils.cudaAllocMapped(width=cuda_image.width, height=cuda_image.height, format='rgb8')
 
     # Convert image to RGB
-    cudaConvertColor(cuda_image, image)
+    jetson.utils.cudaConvertColor(cuda_image, image)
 
     # Convert image to numpy (opencv format)
-    cv_image = cudaToNumpy(image)
+    cv_image = jetson.utils.cudaToNumpy(image)
 
     # Synchonize Cuda
-    cudaDeviceSynchronize()
+    jetson.utils.cudaDeviceSynchronize()
 
     return cv_image
 
@@ -22,17 +22,17 @@ def cuda_to_cv2(cuda_image):
 # Function to convert cv2 image to cuda image
 def cv2_to_cuda(cv_image):
     # Convert image to cuda
-    return cudaFromNumpy(cv_image)
+    return jetson.utils.cudaFromNumpy(cv_image)
 
 
 # Main
 if __name__ == '__main__':
 
     # Create Video Source
-    cameraRGB = videoSource("rtsp://sbrnx:6000/d435/rgb")
+    cameraRGB = jetson.utils.videoSource("rtsp://sbrnx:6000/d435/rgb")
 
     # Create Video Output
-    streamerObjectDetector = videoOutput("rtsp://@:6001/serv/object_detector")
+    streamerObjectDetector = jetson.utils.videoOutput("rtsp://@:6001/serv/object_detector")
 
 
     while True:
@@ -50,4 +50,4 @@ if __name__ == '__main__':
         cv_image_text = cv2.putText(cv_image, "Hello World", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
         
         # Render the image
-        streamerObjectDetector.Render(cudaFromNumpy(cv_image_text))
+        streamerObjectDetector.Render(cv2_to_cuda(cv_image_text))
