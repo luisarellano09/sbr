@@ -60,8 +60,14 @@ if __name__ == '__main__':
 
         # Loop into each detection
         for detection in detections:
+            # Get class name
             object_name = net.GetClassDesc(detection.ClassID)
-            print(object_name)
+
+            # Get bounding box
+            x1, y1, x2, y2 = int(detection.Left), int(detection.Top), int(detection.Right), int(detection.Bottom)
+            cv2.rectangle(cv_image, (x1, y1), (x2, y2), (255, 0, 0), 2)
+
+            
 
         # Convert image to numpy (opencv format)
         cv_image = cuda_to_cv2(cuda_image)
