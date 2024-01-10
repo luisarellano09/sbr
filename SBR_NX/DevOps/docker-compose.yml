@@ -46,10 +46,10 @@ services:
         network_mode: "host"
 
 
-    sbr_object_detector:
+    sbr_srv_object_detector:
         restart: unless-stopped
-        image: sbr/sbr_object_detector:1.0
-        container_name: sbr_object_detector
+        image: sbr/sbr_srv_object_detector:1.0
+        container_name: sbr_srv_object_detector
         runtime: nvidia
         volumes:
             - /proc/device-tree/model:/tmp/nv_jetson_model
