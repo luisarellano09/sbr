@@ -75,7 +75,7 @@ if __name__ == '__main__':
         fps_filt = 0.9 * fps_filt + 0.1 * fps
 
         # Add text
-        cv2.putText(cv_image, str(int(fps_filt)) + 'fps',  (5, 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+        cv2.putText(cv_image, str(int(fps_filt)) + 'fps',  (5, 700), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
         
         # Render the image
         streamerObjectDetector.Render(cv2_to_cuda(cv_image))
