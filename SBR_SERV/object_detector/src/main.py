@@ -1,4 +1,4 @@
-import jetson.utils
+from jetson_utils import videoSource, videoOutput, cudaFromNumpy, cudaAllocMapped, cudaConvertColor, cudaToNumpy, cudaDeviceSynchronize
 import jetson.inference
 import cv2
 import time
@@ -11,16 +11,16 @@ fps_filt = 0
 # Function to convert cuda image to cv2 image
 def cuda_to_cv2(cuda_image):
     # Allocate new image
-    image = jetson.utils.cudaAllocMapped(width=cuda_image.width, height=cuda_image.height, format='rgb8')
+    image = cudaAllocMapped(width=cuda_image.width, height=cuda_image.height, format='rgb8')
 
     # Convert image to RGB
-    jetson.utils.cudaConvertColor(cuda_image, image)
+    cudaConvertColor(cuda_image, image)
 
     # Convert image to numpy (opencv format)
-    cv_image = jetson.utils.cudaToNumpy(image)
+    cv_image = cudaToNumpy(image)
 
     # Synchonize Cuda
-    jetson.utils.cudaDeviceSynchronize()
+    cudaDeviceSynchronize()
 
     return cv_image
 
@@ -28,17 +28,17 @@ def cuda_to_cv2(cuda_image):
 # Function to convert cv2 image to cuda image
 def cv2_to_cuda(cv_image):
     # Convert image to cuda
-    return jetson.utils.cudaFromNumpy(cv_image)
+    return cudaFromNumpy(cv_image)
 
 
 # Main
 if __name__ == '__main__':
 
     # Create Video Source
-    cameraRGB = jetson.utils.videoSource("rtsp://sbrnx:6000/d435/rgb")
+    cameraRGB = videoSource("rtsp://sbrnx:6000/d435/rgb")
 
     # Create Video Output
-    streamerObjectDetector = jetson.utils.videoOutput("rtsp://@:6001/serv/object_detector")
+    streamerObjectDetector = videoOutput("rtsp://@:6001/serv/object_detector")
 
     # Detector
     net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
