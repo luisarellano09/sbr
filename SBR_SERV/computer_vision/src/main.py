@@ -96,7 +96,7 @@ def task_object_detector(queue_from_streamer_camera, queue_to_streamer_object_de
         color_image = queue_from_streamer_camera.get()
 
         # Detect objects
-        detections = net.Detect(color_image)
+        detections = net.Detect(cv2_to_cuda(color_image))
 
         # Loop into each detection
         for detection in detections:
