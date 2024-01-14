@@ -86,12 +86,14 @@ if __name__ == '__main__':
         # Render the image
         streamerCameraDepth.Render(cv2_to_cuda(depth_image))
 
-                        # get the end time
+        
+
+        streamerCameraRGB.Render(cv2_to_cuda(color_image))
+
+        # get the end time
         et = time.time()
         # get the execution time
         elapsed_time = et - st
         print('Execution time:', elapsed_time, 'seconds')
-
-        streamerCameraRGB.Render(cv2_to_cuda(color_image))
 
 
