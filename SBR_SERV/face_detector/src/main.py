@@ -80,7 +80,7 @@ if __name__ == '__main__':
 
         # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
         detect_image = cv2.cvtColor(cv_image, cv2.COLOR_RGB2BGR)
-        detect_image = cv2.resize(detect_image, (0, 0), fx=0.5, fy=0.5)
+        detect_image = cv2.resize(detect_image, (0, 0), fx=0.33, fy=0.33)
 
         # Find all the faces and face encodings in the image
         face_locations = face_recognition.face_locations(detect_image, model="cnn")
