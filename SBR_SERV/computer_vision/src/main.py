@@ -52,9 +52,9 @@ def task_read_camera(queue_streamer_camera, queue_streamer_camera_depth):
         # Normalice depth image
         depth_image = cv2.multiply(depth_image, distance_factor)
 
-        # Flip images
-        depth_image = cv2.flip(depth_image, 0)
-        color_image = cv2.flip(color_image, 0)
+        # Flip images horizontally
+        depth_image = cv2.flip(depth_image, 1)
+        color_image = cv2.flip(color_image, 1)
 
         # Adjust image RGB
         # color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
