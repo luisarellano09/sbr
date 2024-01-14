@@ -33,11 +33,11 @@ def cv2_to_cuda(cv_image):
 
 
 # Train faces
-def train_faces():
+def train_faces(path, known_faces_encoding, known_faces_name):
     # Loop into folder  and encode faces from "./faces" folder
-    for file in os.listdir("/face_detector/known_faces"):
+    for file in os.listdir(path):
         # Load face
-        face_image = face_recognition.load_image_file("/face_detector/known_faces/" + file)
+        face_image = face_recognition.load_image_file(path + "/" + file)
 
         # Encode face
         encoding = face_recognition.face_encodings(face_image)[0]
@@ -50,10 +50,6 @@ def train_faces():
         known_faces_name.append(name)
     
 
-# Create encoding list of known faces
-known_faces_encoding = []
-known_faces_name = []
-
 # Main
 if __name__ == '__main__':
 
@@ -62,6 +58,13 @@ if __name__ == '__main__':
 
     # Create Video Output
     streamerObjectDetector = videoOutput("rtsp://@:6002/serv/face_detector")
+
+    # Create encoding list of known faces
+    known_faces_encoding = []
+    known_faces_name = []
+    
+    # Train faces
+    train_faces("/face_detector/known_faces", known_faces_encoding, known_faces_name)
 
 
     while True:
