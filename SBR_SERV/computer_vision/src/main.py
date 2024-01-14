@@ -1,4 +1,5 @@
 import threading
+from queue import Queue 
 from jetson_utils import videoOutput, cudaFromNumpy
 import pyrealsense2 as rs
 import numpy as np
@@ -11,7 +12,7 @@ def cv2_to_cuda(cv_image):
     return cudaFromNumpy(cv_image)
 
 
-def task_read_camera():
+def task_read_camera(queue_streamer_camera):
      # Create pipeline
     pipe = rs.pipeline()
     cfg  = rs.config()
@@ -54,41 +55,46 @@ def task_read_camera():
         # Adjust image RGB
         color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
+        # Render the image
+        queue_streamer_camera.put(color_image)
+
         # get the end time
         et = time.time()
         # get the execution time
         elapsed_time = et - st
         print('Execution time:', elapsed_time, 'seconds')
 
-    
+
+
+def task_streamer_camera(queue_streamer_camera):
+    # Create rstp stream
+    streamerCameraRGB = videoOutput("rtsp://@:6000/d435/rgb")
+
+    while True:
+
+        # Get image from queue
+        color_image = queue_streamer_camera.get()
+
+        # Render the image
+        streamerCameraRGB.Render(cv2_to_cuda(color_image))
 
 
 # Main
 if __name__ == '__main__':
 
+    # Create queue
+    queue_streamer_camera = Queue()
+
     # Create threads
-    thread_read_camera = threading.Thread(target=task_read_camera, args=())
+    thread_read_camera = threading.Thread(target=task_read_camera, args=(queue_streamer_camera,))
+    thread_streamer_camera = threading.Thread(target=task_streamer_camera, args=(queue_streamer_camera,))
 
     # Start threads
     thread_read_camera.start()
+    thread_streamer_camera.start()
 
     # Wait threads
     thread_read_camera.join()
-
-
-    # Create rstp streams
-    # streamerCameraDepth = videoOutput("rtsp://@:6000/d435/depth")
-    # streamerCameraRGB = videoOutput("rtsp://@:6001/d435/rgb")
-
-   
-
-        
-        
-        
-    # Render the image
-    streamerCameraDepth.Render(cv2_to_cuda(depth_image))
-    streamerCameraRGB.Render(cv2_to_cuda(color_image))
-
-
+    thread_streamer_camera.join()
 
 
