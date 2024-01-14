@@ -80,7 +80,7 @@ if __name__ == '__main__':
 
         # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
         detect_image = cv2.cvtColor(cv_image, cv2.COLOR_RGB2BGR)
-        detect_image = cv2.resize(detect_image, (0, 0), fx=0.3, fy=0.3)
+        detect_image = cv2.resize(detect_image, (0, 0), fx=0.5, fy=0.5)
 
         # Find all the faces and face encodings in the image
         face_locations = face_recognition.face_locations(detect_image, model="cnn")
@@ -114,7 +114,7 @@ if __name__ == '__main__':
         fps_filt = 0.9 * fps_filt + 0.1 * fps
 
         # Add text
-        cv2.putText(detect_image, str(int(fps_filt)) + 'fps',  (5, 700), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
+        cv2.putText(detect_image, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
         
         # Render the image
         streamerObjectDetector.Render(cv2_to_cuda(detect_image))
