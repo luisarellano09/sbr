@@ -53,7 +53,7 @@ def task_read_camera(queue_streamer_camera):
         depth_image = cv2.multiply(depth_image, distance_factor)
 
         # Adjust image RGB
-        color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
+        # color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
         # Render the image
         queue_streamer_camera.put(color_image)
