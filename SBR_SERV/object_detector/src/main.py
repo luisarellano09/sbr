@@ -35,10 +35,10 @@ def cv2_to_cuda(cv_image):
 if __name__ == '__main__':
 
     # Create Video Source
-    cameraRGB = videoSource("rtsp://sbrnx:6000/d435/rgb")
+    cameraRGB = videoSource("rtsp://sbrnx:6001/d435/rgb")
 
     # Create Video Output
-    streamerObjectDetector = videoOutput("rtsp://@:6001/serv/object_detector")
+    streamerObjectDetector = videoOutput("rtsp://@:6002/serv/object_detector")
 
     # Detector
     net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)

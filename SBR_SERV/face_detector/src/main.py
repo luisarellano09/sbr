@@ -61,10 +61,10 @@ if __name__ == '__main__':
     train_faces("/face_detector/known_faces", known_faces_encoding, known_faces_name)
 
     # Create Video Source
-    cameraRGB = videoSource("rtsp://sbrnx:6000/d435/rgb")
+    cameraRGB = videoSource("rtsp://sbrnx:6001/d435/rgb")
 
     # Create Video Output
-    streamerObjectDetector = videoOutput("rtsp://@:6002/serv/face_detector")
+    streamerObjectDetector = videoOutput("rtsp://@:6003/serv/face_detector")
 
     while True:
         # Read frame from RRSP stream
