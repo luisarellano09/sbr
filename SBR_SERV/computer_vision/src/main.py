@@ -52,19 +52,9 @@ def task_read_camera(queue_streamer_camera, queue_streamer_camera_depth):
         # Normalice depth image
         depth_image = cv2.multiply(depth_image, distance_factor)
 
-         # Divide the distance (one channel) into 3 channels. For example 600 => (90,255,255)
-        depth_image_1 = np.where(depth_image > 255, 255, depth_image)
-
-        depth_image_temp = np.add(depth_image, -255)
-        depth_image_temp = np.where(depth_image_temp < 0, 0, depth_image_temp)
-        depth_image_2 = np.where(depth_image_temp > 255, 255, depth_image_temp)
-
-        depth_image_temp = np.add(depth_image, -510)
-        depth_image_temp = np.where(depth_image_temp < 0, 0, depth_image_temp)
-        depth_image_3 = np.where(depth_image_temp > 255, 255, depth_image_temp)
-
-        # Merge the 3 channels into one image
-        depth_image = np.dstack((depth_image_3, depth_image_2, depth_image_1)) 
+        # Flip images
+        depth_image = cv2.flip(depth_image, 0)
+        color_image = cv2.flip(color_image, 0)
 
         # Adjust image RGB
         # color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
@@ -102,6 +92,20 @@ def task_streamer_camera_depth(queue_streamer_camera_depth):
 
         # Get image from queue
         depth_image = queue_streamer_camera_depth.get()
+
+        # Divide the distance (one channel) into 3 channels. For example 600 => (90,255,255)
+        depth_image_1 = np.where(depth_image > 255, 255, depth_image)
+
+        depth_image_temp = np.add(depth_image, -255)
+        depth_image_temp = np.where(depth_image_temp < 0, 0, depth_image_temp)
+        depth_image_2 = np.where(depth_image_temp > 255, 255, depth_image_temp)
+
+        depth_image_temp = np.add(depth_image, -510)
+        depth_image_temp = np.where(depth_image_temp < 0, 0, depth_image_temp)
+        depth_image_3 = np.where(depth_image_temp > 255, 255, depth_image_temp)
+
+        # Merge the 3 channels into one image
+        depth_image = np.dstack((depth_image_3, depth_image_2, depth_image_1)) 
 
         # Render the image
         streamerCameraDepth.Render(cv2_to_cuda(depth_image))

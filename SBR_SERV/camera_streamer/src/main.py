@@ -58,10 +58,6 @@ if __name__ == '__main__':
         # Normalice depth image
         depth_image = cv2.multiply(depth_image, distance_factor)
 
-        # Flip images
-        depth_image = cv2.flip(depth_image, 0)
-        color_image = cv2.flip(color_image, 0)
-
         # Divide the distance (one channel) into 3 channels. For example 600 => (90,255,255)
         depth_image_1 = np.where(depth_image > 255, 255, depth_image)
 
