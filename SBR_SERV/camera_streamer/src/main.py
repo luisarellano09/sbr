@@ -13,7 +13,7 @@ def cv2_to_cuda(cv_image):
 if __name__ == '__main__':
     # Create rstp streams
     streamerCameraDepth = videoOutput("rtsp://@:6000/d435/depth")
-    streamerCameraRGB = videoOutput("rtsp://@:6000/d435/rgb --headless --output-codec=h265")
+    streamerCameraRGB = videoOutput("rtsp://@:6000/d435/rgb --output-encoder=v4l2 -- bitrate=10000000")
 
     # Create pipeline
     pipe = rs.pipeline()
