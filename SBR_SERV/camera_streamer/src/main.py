@@ -2,7 +2,7 @@ from jetson_utils import videoOutput, cudaFromNumpy
 import pyrealsense2 as rs
 import numpy as np
 import cv2
-import time
+
 
 # Function to convert cv2 image to cuda image
 def cv2_to_cuda(cv_image):
@@ -43,8 +43,6 @@ if __name__ == '__main__':
 
     while True:
 
-        st = time.time()
-
         # Wait for a coherent pair of frames: depth and color
         frame = pipe.wait_for_frames()
         
@@ -53,16 +51,12 @@ if __name__ == '__main__':
         depth_frame = aligned_frame.get_depth_frame()
         color_frame = aligned_frame.get_color_frame()
 
-        # => 0.005
-
         # Convert images to numpy arrays
         depth_image = np.asanyarray(depth_frame.get_data())
         color_image = np.asanyarray(color_frame.get_data())
 
         # Normalice depth image
         depth_image = cv2.multiply(depth_image, distance_factor)
-
-        # => 0.01
 
         # Divide the distance (one channel) into 3 channels. For example 600 => (90,255,255)
         depth_image_1 = np.where(depth_image > 255, 255, depth_image)
@@ -80,19 +74,7 @@ if __name__ == '__main__':
 
         # Adjust image RGB
         color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
-
-        
-
-                # get the end time
-        et = time.time()
-        # get the execution time
-        elapsed_time = et - st
-        print('Execution time:', elapsed_time, 'seconds')
         
         # Render the image
         streamerCameraDepth.Render(cv2_to_cuda(depth_image))
         streamerCameraRGB.Render(cv2_to_cuda(color_image))
-
-
-
-
