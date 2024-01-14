@@ -115,8 +115,8 @@ def task_streamer_camera_depth(queue_streamer_camera_depth):
 if __name__ == '__main__':
 
     # Create queue
-    queue_streamer_camera = Queue(5)
-    queue_streamer_camera_depth = Queue(5)
+    queue_streamer_camera = Queue(2)
+    queue_streamer_camera_depth = Queue(2)
 
     # Create threads
     thread_read_camera = threading.Thread(target=task_read_camera, args=(queue_streamer_camera, queue_streamer_camera_depth))
