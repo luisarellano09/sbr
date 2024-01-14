@@ -40,7 +40,7 @@ def train_faces(path, known_faces_encoding, known_faces_name):
         face_image = face_recognition.load_image_file(path + "/" + file)
 
         # Encode face
-        encoding = face_recognition.face_encodings(face_image)[0]
+        encoding = face_recognition.face_encodings(face_image, model="small")[0]
 
         # Get name
         name = os.path.splitext(file)[0]
@@ -53,12 +53,6 @@ def train_faces(path, known_faces_encoding, known_faces_name):
 # Main
 if __name__ == '__main__':
 
-    # Create Video Source
-    cameraRGB = videoSource("rtsp://sbrnx:6000/d435/rgb")
-
-    # Create Video Output
-    streamerObjectDetector = videoOutput("rtsp://@:6002/serv/face_detector")
-
     # Create encoding list of known faces
     known_faces_encoding = []
     known_faces_name = []
@@ -66,6 +60,11 @@ if __name__ == '__main__':
     # Train faces
     train_faces("/face_detector/known_faces", known_faces_encoding, known_faces_name)
 
+    # Create Video Source
+    cameraRGB = videoSource("rtsp://sbrnx:6000/d435/rgb")
+
+    # Create Video Output
+    streamerObjectDetector = videoOutput("rtsp://@:6002/serv/face_detector")
 
     while True:
         # Read frame from RRSP stream
@@ -80,11 +79,11 @@ if __name__ == '__main__':
 
         # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
         detect_image = cv2.cvtColor(cv_image, cv2.COLOR_RGB2BGR)
-        detect_image = cv2.resize(detect_image, (0, 0), fx=0.33, fy=0.33)
+        detect_image = cv2.resize(detect_image, (0, 0), fx=0.25, fy=0.25)
 
         # Find all the faces and face encodings in the image
         face_locations = face_recognition.face_locations(detect_image, model="cnn")
-        face_encodings = face_recognition.face_encodings(detect_image, face_locations)
+        face_encodings = face_recognition.face_encodings(detect_image, face_locations, model="small")
 
         # Loop into each face
         for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
@@ -99,12 +98,17 @@ if __name__ == '__main__':
                 first_match_index = matches.index(True)
                 name = known_faces_name[first_match_index]
 
+            top *= 4
+            right *= 4
+            bottom *= 4
+            left *= 4
+
             # Draw a box around the face
-            cv2.rectangle(detect_image, (left, top), (right, bottom), (0, 0, 255), 2)
+            cv2.rectangle(cv_image, (left, top), (right, bottom), (0, 0, 255), 2)
 
             # Draw a label with a name below the face
-            cv2.rectangle(detect_image, (left, bottom - 25), (right, bottom), (0, 0, 255), cv2.FILLED)
-            cv2.putText(detect_image, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+            cv2.rectangle(cv_image, (left, bottom - 25), (right, bottom), (0, 0, 255), cv2.FILLED)
+            cv2.putText(cv_image, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
 
 
         # Calculate FPS
@@ -114,7 +118,7 @@ if __name__ == '__main__':
         fps_filt = 0.9 * fps_filt + 0.1 * fps
 
         # Add text
-        cv2.putText(detect_image, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
+        cv2.putText(cv_image, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
         
         # Render the image
-        streamerObjectDetector.Render(cv2_to_cuda(detect_image))
+        streamerObjectDetector.Render(cv2_to_cuda(cv_image))
