@@ -1,6 +1,7 @@
 import threading
 from queue import Queue 
 from jetson_utils import videoOutput, cudaFromNumpy
+import jetson.inference
 import pyrealsense2 as rs
 import numpy as np
 import cv2
@@ -12,7 +13,7 @@ def cv2_to_cuda(cv_image):
     return cudaFromNumpy(cv_image)
 
 
-def task_read_camera(queue_streamer_camera, queue_streamer_camera_depth):
+def task_read_camera(queue_to_streamer_camera, queue_to_object_detector):
      # Create pipeline
     pipe = rs.pipeline()
     cfg  = rs.config()
@@ -60,8 +61,8 @@ def task_read_camera(queue_streamer_camera, queue_streamer_camera_depth):
         # color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
         # Render the image
-        queue_streamer_camera.put(color_image)
-        queue_streamer_camera_depth.put(depth_image)
+        queue_to_streamer_camera.put(color_image)
+        queue_to_object_detector.put(color_image)
 
         # get the end time
         et = time.time()
@@ -70,67 +71,73 @@ def task_read_camera(queue_streamer_camera, queue_streamer_camera_depth):
         print('Execution time:', elapsed_time, 'seconds')
 
 
-
-def task_streamer_camera(queue_streamer_camera):
+def task_streamer_camera(queue_image, streamerPath):
     # Create rstp stream
-    streamerCameraRGB = videoOutput("rtsp://@:6000/d435/rgb")
+    streamer = videoOutput(streamerPath)
 
     while True:
 
         # Get image from queue
-        color_image = queue_streamer_camera.get()
+        image = queue_image.get()
 
         # Render the image
-        streamerCameraRGB.Render(cv2_to_cuda(color_image))
+        streamer.Render(cv2_to_cuda(image))
 
 
-def task_streamer_camera_depth(queue_streamer_camera_depth):
-    # Create rstp stream
-    streamerCameraDepth = videoOutput("rtsp://@:6001/d435/depth")
+
+def task_object_detector(queue_from_streamer_camera, queue_to_streamer_object_detector):
+
+    # Detector
+    net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
 
     while True:
 
         # Get image from queue
-        depth_image = queue_streamer_camera_depth.get()
+        color_image = queue_from_streamer_camera.get()
 
-        # Divide the distance (one channel) into 3 channels. For example 600 => (90,255,255)
-        depth_image_1 = np.where(depth_image > 255, 255, depth_image)
+        # Detect objects
+        detections = net.Detect(color_image)
 
-        depth_image_temp = np.add(depth_image, -255)
-        depth_image_temp = np.where(depth_image_temp < 0, 0, depth_image_temp)
-        depth_image_2 = np.where(depth_image_temp > 255, 255, depth_image_temp)
+        # Loop into each detection
+        for detection in detections:
+            # Get class name
+            object_name = net.GetClassDesc(detection.ClassID)
 
-        depth_image_temp = np.add(depth_image, -510)
-        depth_image_temp = np.where(depth_image_temp < 0, 0, depth_image_temp)
-        depth_image_3 = np.where(depth_image_temp > 255, 255, depth_image_temp)
-
-        # Merge the 3 channels into one image
-        depth_image = np.dstack((depth_image_3, depth_image_2, depth_image_1)) 
+            # Get bounding box
+            x1, y1, x2, y2 = int(detection.Left), int(detection.Top), int(detection.Right), int(detection.Bottom)
+            cv2.rectangle(color_image, (x1, y1), (x2, y2), (0, 255, 0), 1)
+            cv2.putText(color_image, object_name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
         # Render the image
-        streamerCameraDepth.Render(cv2_to_cuda(depth_image))
-
+        queue_to_streamer_object_detector.put(color_image)
 
 # Main
 if __name__ == '__main__':
 
     # Create queue
-    queue_streamer_camera = Queue(2)
-    queue_streamer_camera_depth = Queue(2)
+    queue_streamer_camera = Queue(1)
+    queue_streamer_object_detector = Queue(1)
+    queue_object_detector = Queue(1)
 
     # Create threads
-    thread_read_camera = threading.Thread(target=task_read_camera, args=(queue_streamer_camera, queue_streamer_camera_depth))
+    thread_read_camera = threading.Thread(target=task_read_camera, args=(queue_streamer_camera, queue_object_detector,))
     thread_streamer_camera = threading.Thread(target=task_streamer_camera, args=(queue_streamer_camera,))
-    thread_streamer_camera_depth = threading.Thread(target=task_streamer_camera_depth, args=(queue_streamer_camera_depth,))
+    thread_object_detector = threading.Thread(target=task_object_detector, args=(queue_object_detector, queue_streamer_object_detector,))
+    thread_streamer_object_detector = threading.Thread(target=task_streamer_camera, args=(queue_streamer_object_detector,))
+
 
     # Start threads
     thread_read_camera.start()
     thread_streamer_camera.start()
-    thread_streamer_camera_depth.start()
+    thread_object_detector.start()
+    thread_streamer_object_detector.start()
+
 
     # Wait threads
     thread_read_camera.join()
     thread_streamer_camera.join()
-    thread_streamer_camera_depth.join()
+    thread_object_detector.join()
+    thread_streamer_object_detector.join()
+
 
 
