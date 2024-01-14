@@ -79,7 +79,7 @@ if __name__ == '__main__':
 
         # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
         detect_image = cv2.cvtColor(cv_image, cv2.COLOR_RGB2BGR)
-        detect_image = cv2.resize(detect_image, (0, 0), fx=0.25, fy=0.25)
+        detect_image = cv2.resize(detect_image, (0, 0), fx=0.5, fy=0.5)
 
         # Find all the faces and face encodings in the image
         face_locations = face_recognition.face_locations(detect_image, model="cnn")
@@ -98,10 +98,10 @@ if __name__ == '__main__':
                 first_match_index = matches.index(True)
                 name = known_faces_name[first_match_index]
 
-            top *= 4
-            right *= 4
-            bottom *= 4
-            left *= 4
+            top *= 2
+            right *= 2
+            bottom *= 2
+            left *= 2
 
             # Draw a box around the face
             cv2.rectangle(cv_image, (left, top), (right, bottom), (0, 0, 255), 2)
