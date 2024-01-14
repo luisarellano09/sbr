@@ -52,10 +52,6 @@ services:
         container_name: sbr_srv_object_detector
         runtime: nvidia
         volumes:
-            - /proc/device-tree/model:/tmp/nv_jetson_model
-            - /tmp/argus_socket:/tmp/argus_socket
-            - /etc/enctune.conf:/etc/enctune.conf 
-            - /etc/nv_tegra_release:/etc/nv_tegra_release
             - /home/sbrnx/SBR/jetson-inference/data:/jetson-inference/data
             - /home/sbrnx/SBR/jetson-inference/python/training/classification/data:/jetson-inference/python/training/classification/data
             - /home/sbrnx/SBR/jetson-inference/python/training/classification/models:/jetson-inference/python/training/classification/models
@@ -64,6 +60,19 @@ services:
             - /home/sbrnx/SBR/jetson-inference/python/www/recognizer:/jetson-inference/python/www/recognizer
         build:
             context: ../../SBR_SERV/object_detector/
+            target: dev
+        network_mode: "host"
+
+
+    sbr_srv_face_detector:
+        restart: unless-stopped
+        image: sbr/sbr_srv_face_detector:1.0
+        container_name: sbr_srv_face_detector
+        runtime: nvidia
+        volumes:
+            - /home/sbrnx/SBR/data/face_detector/known_faces:/face_detector/known_faces
+        build:
+            context: ../../SBR_SERV/face_detector/
             target: dev
         network_mode: "host"
 
