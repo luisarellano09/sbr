@@ -53,6 +53,13 @@ if __name__ == '__main__':
         depth_frame = aligned_frame.get_depth_frame()
         color_frame = aligned_frame.get_color_frame()
 
+        # get the end time
+        et = time.time()
+
+        # get the execution time
+        elapsed_time = et - st
+        print('Execution time:', elapsed_time, 'seconds')
+
         # Convert images to numpy arrays
         depth_image = np.asanyarray(depth_frame.get_data())
         color_image = np.asanyarray(color_frame.get_data())
@@ -81,9 +88,4 @@ if __name__ == '__main__':
         streamerCameraDepth.Render(cv2_to_cuda(depth_image))
         streamerCameraRGB.Render(cv2_to_cuda(color_image))
 
-        # get the end time
-        et = time.time()
 
-        # get the execution time
-        elapsed_time = et - st
-        print('Execution time:', elapsed_time, 'seconds')
