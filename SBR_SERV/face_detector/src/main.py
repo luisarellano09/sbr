@@ -1,6 +1,8 @@
 from jetson_utils import videoSource, videoOutput, cudaFromNumpy, cudaAllocMapped, cudaConvertColor, cudaToNumpy, cudaDeviceSynchronize
 import cv2
 import time
+import os
+import face_recognition
 
 
 # Init frame rate calculation
@@ -30,6 +32,28 @@ def cv2_to_cuda(cv_image):
     return cudaFromNumpy(cv_image)
 
 
+# Train faces
+def train_faces():
+    # Loop into folder  and encode faces from "./faces" folder
+    for file in os.listdir("/face_detector/known_faces"):
+        # Load face
+        face_image = face_recognition.load_image_file("/face_detector/known_faces/" + file)
+
+        # Encode face
+        encoding = face_recognition.face_encodings(face_image)[0]
+
+        # Get name
+        name = os.path.splitext(file)[0]
+
+        # Add to lists
+        known_faces_encoding.append(encoding)
+        known_faces_name.append(name)
+    
+
+# Create encoding list of known faces
+known_faces_encoding = []
+known_faces_name = []
+
 # Main
 if __name__ == '__main__':
 
@@ -51,6 +75,33 @@ if __name__ == '__main__':
         # Convert image to numpy (opencv format)
         cv_image = cuda_to_cv2(cuda_image)
 
+        # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
+        detect_image = cv2.cvtColor(cv_image, cv2.COLOR_RGB2BGR)
+
+        # Find all the faces and face encodings in the image
+        face_locations = face_recognition.face_locations(detect_image)
+        face_encodings = face_recognition.face_encodings(detect_image, face_locations)
+
+        # Loop into each face
+        for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
+            # See if the face is a match for the known face(s)
+            matches = face_recognition.compare_faces(known_faces_encoding, face_encoding)
+
+            # If no match was found in known_face_encodings, use the name "Unknown"
+            name = "Unknown"
+
+            # If a match was found in known_face_encodings, just use the first one.
+            if True in matches:
+                first_match_index = matches.index(True)
+                name = known_faces_name[first_match_index]
+
+            # Draw a box around the face
+            cv2.rectangle(detect_image, (left, top), (right, bottom), (0, 0, 255), 2)
+
+            # Draw a label with a name below the face
+            cv2.rectangle(detect_image, (left, bottom - 25), (right, bottom), (0, 0, 255), cv2.FILLED)
+            cv2.putText(detect_image, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+
 
         # Calculate FPS
         dt = time.time() - time_stamp
@@ -59,7 +110,7 @@ if __name__ == '__main__':
         fps_filt = 0.9 * fps_filt + 0.1 * fps
 
         # Add text
-        cv2.putText(cv_image, str(int(fps_filt)) + 'fps',  (5, 700), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
+        cv2.putText(detect_image, str(int(fps_filt)) + 'fps',  (5, 700), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
         
         # Render the image
-        streamerObjectDetector.Render(cv2_to_cuda(cv_image))
+        streamerObjectDetector.Render(cv2_to_cuda(detect_image))
