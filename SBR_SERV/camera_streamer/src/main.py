@@ -62,12 +62,7 @@ if __name__ == '__main__':
         # Normalice depth image
         depth_image = cv2.multiply(depth_image, distance_factor)
 
-             # get the end time
-        et = time.time()
-
-        # get the execution time
-        elapsed_time = et - st
-        print('Execution time:', elapsed_time, 'seconds')
+        # => 0.01
 
         # Divide the distance (one channel) into 3 channels. For example 600 => (90,255,255)
         depth_image_1 = np.where(depth_image > 255, 255, depth_image)
@@ -85,6 +80,12 @@ if __name__ == '__main__':
 
         # Adjust image RGB
         color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
+
+                # get the end time
+        et = time.time()
+        # get the execution time
+        elapsed_time = et - st
+        print('Execution time:', elapsed_time, 'seconds')
 
         # Render the image
         streamerCameraDepth.Render(cv2_to_cuda(depth_image))
