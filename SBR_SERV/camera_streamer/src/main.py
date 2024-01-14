@@ -53,12 +53,7 @@ if __name__ == '__main__':
         depth_frame = aligned_frame.get_depth_frame()
         color_frame = aligned_frame.get_color_frame()
 
-        # get the end time
-        et = time.time()
-
-        # get the execution time
-        elapsed_time = et - st
-        print('Execution time:', elapsed_time, 'seconds')
+        # => 0.005
 
         # Convert images to numpy arrays
         depth_image = np.asanyarray(depth_frame.get_data())
@@ -66,6 +61,13 @@ if __name__ == '__main__':
 
         # Normalice depth image
         depth_image = cv2.multiply(depth_image, distance_factor)
+
+             # get the end time
+        et = time.time()
+
+        # get the execution time
+        elapsed_time = et - st
+        print('Execution time:', elapsed_time, 'seconds')
 
         # Divide the distance (one channel) into 3 channels. For example 600 => (90,255,255)
         depth_image_1 = np.where(depth_image > 255, 255, depth_image)
