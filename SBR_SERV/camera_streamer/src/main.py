@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
     while True:
 
-        st = time.time()
+        
 
         # Wait for a coherent pair of frames: depth and color
         frame = pipe.wait_for_frames()
@@ -81,14 +81,17 @@ if __name__ == '__main__':
         # Adjust image RGB
         color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
-                # get the end time
+        st = time.time()
+        
+        # Render the image
+        streamerCameraDepth.Render(cv2_to_cuda(depth_image))
+
+                        # get the end time
         et = time.time()
         # get the execution time
         elapsed_time = et - st
         print('Execution time:', elapsed_time, 'seconds')
 
-        # Render the image
-        streamerCameraDepth.Render(cv2_to_cuda(depth_image))
         streamerCameraRGB.Render(cv2_to_cuda(color_image))
 
 
