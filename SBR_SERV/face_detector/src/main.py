@@ -62,7 +62,7 @@ if __name__ == '__main__':
     # Create encoding list of known faces
     known_faces_encoding = []
     known_faces_name = []
-    
+
     # Train faces
     train_faces("/face_detector/known_faces", known_faces_encoding, known_faces_name)
 
@@ -82,7 +82,7 @@ if __name__ == '__main__':
         detect_image = cv2.cvtColor(cv_image, cv2.COLOR_RGB2BGR)
 
         # Find all the faces and face encodings in the image
-        face_locations = face_recognition.face_locations(detect_image)
+        face_locations = face_recognition.face_locations(detect_image, model="cnn")
         face_encodings = face_recognition.face_encodings(detect_image, face_locations)
 
         # Loop into each face
