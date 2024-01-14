@@ -48,6 +48,7 @@ if [ ! -f exec01 ]; then
     mkdir SBR
     cd SBR
     mkdir data
+    cd ~/SBR/data && mkdir face_detector && cd face_detector && mkdir known_faces
 
 
     echo "****** Set Timezone ******"
