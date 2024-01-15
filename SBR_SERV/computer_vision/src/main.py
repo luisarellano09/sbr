@@ -129,6 +129,9 @@ def task_object_detector(queue_to_streamer_object_detector):
         # Get image from queue
         color_image = global_camera_image_color
 
+        if color_image is None:
+            continue
+
         # Detect objects
         detections = net.Detect(cv2_to_cuda(color_image))
 
@@ -159,7 +162,10 @@ def task_face_detector(queue_to_streamer_face_detector):
     while True:
 
         # Read frame from RRSP stream
-        image = global_camera_image_color;
+        image = global_camera_image_color
+
+        if image is None:
+            continue
 
         # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
         detect_image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
