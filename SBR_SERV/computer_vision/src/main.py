@@ -117,7 +117,7 @@ def task_streamer(queue_image, streamerPath):
 def task_object_detector(queue_from_streamer_camera, queue_to_streamer_object_detector):
 
     # Detector
-    net = jetson.inference.detectNet("peoplenet", threshold=0.5)
+    net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
 
     while True:
 
