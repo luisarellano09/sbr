@@ -204,8 +204,8 @@ if __name__ == '__main__':
     thread_streamer_camera.start()
     thread_object_detector.start()
     thread_streamer_object_detector.start()
-    # thread_face_detector.start()
-    # thread_streamer_face_detector.start()
+    thread_face_detector.start()
+    thread_streamer_face_detector.start()
 
 
     # Wait threads
@@ -213,8 +213,8 @@ if __name__ == '__main__':
     thread_streamer_camera.join()
     thread_object_detector.join()
     thread_streamer_object_detector.join()
-    # thread_face_detector.join()
-    # thread_streamer_face_detector.join()
+    thread_face_detector.join()
+    thread_streamer_face_detector.join()
 
 
 
