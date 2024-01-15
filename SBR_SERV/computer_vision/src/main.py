@@ -78,7 +78,7 @@ def task_read_camera(queue_to_streamer_camera, queue_to_object_detector, queue_t
         # color_image = cv2.flip(color_image, 1)
 
         # Adjust image RGB
-        # color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
+        color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
         # Render the image
         queue_to_streamer_camera.put(color_image)
@@ -117,7 +117,7 @@ def task_streamer(queue_image, streamerPath):
 def task_object_detector(queue_from_streamer_camera, queue_to_streamer_object_detector):
 
     # Detector
-    net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
+    net = jetson.inference.detectNet("peoplenet", threshold=0.5)
 
     while True:
 
