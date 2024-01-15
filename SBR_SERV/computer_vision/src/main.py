@@ -87,7 +87,7 @@ def task_read_camera(queue_to_streamer_camera, queue_to_object_detector, queue_t
         queue_to_face_detector.put(color_image)
 
 
-def task_streamer_camera(queue_image):
+def task_streamer_camera(queue_image_streamer_camera):
 
     time.sleep(10)
 
@@ -95,12 +95,12 @@ def task_streamer_camera(queue_image):
     fps_filt = 0
 
     # Create rstp stream
-    streamer = videoOutput("rtsp://@:6000/d435/rgb")
+    streamer_camera = videoOutput("rtsp://@:6000/d435/rgb")
 
     while True:
 
         # Get image from queue
-        image = queue_image.get()
+        image_streamer_camera = queue_image_streamer_camera.get()
 
         # Calculate FPS
         dt = time.time() - time_stamp
@@ -109,13 +109,13 @@ def task_streamer_camera(queue_image):
         fps_filt = 0.9 * fps_filt + 0.1 * fps
 
         # Add text
-        cv2.putText(image, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
+        cv2.putText(image_streamer_camera, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
 
         # Render the image
-        streamer.Render(cv2_to_cuda(image))
+        streamer_camera.Render(cv2_to_cuda(image_streamer_camera))
 
 
-def task_streamer_object_detector(queue_image):
+def task_streamer_object_detector(queue_image_streamer_object_detector):
 
     time.sleep(10)
 
@@ -123,12 +123,12 @@ def task_streamer_object_detector(queue_image):
     fps_filt = 0
 
     # Create rstp stream
-    streamer = videoOutput("rtsp://@:6002/serv/object_detector")
+    streamer_object_detector = videoOutput("rtsp://@:6002/serv/object_detector")
 
     while True:
 
         # Get image from queue
-        image = queue_image.get()
+        image_streamer_object_detector = queue_image_streamer_object_detector.get()
 
         # Calculate FPS
         dt = time.time() - time_stamp
@@ -137,38 +137,39 @@ def task_streamer_object_detector(queue_image):
         fps_filt = 0.9 * fps_filt + 0.1 * fps
 
         # Add text
-        cv2.putText(image, str(int(fps_filt)) + 'fps',  (5, 700), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
+        cv2.putText(image_streamer_object_detector, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
 
         # Render the image
-        streamer.Render(cv2_to_cuda(image))
+        streamer_object_detector.Render(cv2_to_cuda(image_streamer_object_detector))
 
 
-def task_streamer_face_detector(queue_image):
-
-    time.sleep(10)
-
-    time_stamp = time.time()
-    fps_filt = 0
-
-    # Create rstp stream
-    streamer = videoOutput("rtsp://@:6003/serv/face_detector")
-
-    while True:
-
-        # Get image from queue
-        image = queue_image.get()
-
-        # Calculate FPS
-        dt = time.time() - time_stamp
+def task_streamer_face_detector(queue_image_streamer_face_detector):
+    
+        time.sleep(10)
+    
         time_stamp = time.time()
-        fps = 1 / dt
-        fps_filt = 0.9 * fps_filt + 0.1 * fps
+        fps_filt = 0
+    
+        # Create rstp stream
+        streamer_face_detector = videoOutput("rtsp://@:6003/serv/face_detector")
+    
+        while True:
+    
+            # Get image from queue
+            image_streamer_face_detector = queue_image_streamer_face_detector.get()
+    
+            # Calculate FPS
+            dt = time.time() - time_stamp
+            time_stamp = time.time()
+            fps = 1 / dt
+            fps_filt = 0.9 * fps_filt + 0.1 * fps
+    
+            # Add text
+            cv2.putText(image_streamer_face_detector, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
+    
+            # Render the image
+            streamer_face_detector.Render(cv2_to_cuda(image_streamer_face_detector))
 
-        # Add text
-        cv2.putText(image, str(int(fps_filt)) + 'fps',  (5, 700), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
-
-        # Render the image
-        streamer.Render(cv2_to_cuda(image))
 
 
 def task_object_detector(queue_from_streamer_camera, queue_to_streamer_object_detector):
