@@ -74,11 +74,11 @@ def task_read_camera(queue_to_streamer_camera, queue_to_object_detector, queue_t
         depth_image = cv2.multiply(depth_image, distance_factor)
 
         # Flip images horizontally
-        depth_image = cv2.flip(depth_image, 1)
-        color_image = cv2.flip(color_image, 1)
+        # depth_image = cv2.flip(depth_image, 1)
+        # color_image = cv2.flip(color_image, 1)
 
         # Adjust image RGB
-        # color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
+        color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
         # Render the image
         queue_to_streamer_camera.put(color_image)
