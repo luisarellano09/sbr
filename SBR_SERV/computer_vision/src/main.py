@@ -71,7 +71,7 @@ def task_read_camera(queue_to_streamer_camera, queue_to_object_detector):
         print('Execution time:', elapsed_time, 'seconds')
 
 
-def task_streamer_camera(queue_image, streamerPath):
+def task_streamer(queue_image, streamerPath):
     # Create rstp stream
     streamer = videoOutput(streamerPath)
 
@@ -121,9 +121,9 @@ if __name__ == '__main__':
 
     # Create threads
     thread_read_camera = threading.Thread(target=task_read_camera, args=(queue_streamer_camera, queue_object_detector,))
-    thread_streamer_camera = threading.Thread(target=task_streamer_camera, args=(queue_streamer_camera,))
+    thread_streamer_camera = threading.Thread(target=task_streamer, args=(queue_streamer_camera, "rtsp://@:6000/d435/rgb",))
     thread_object_detector = threading.Thread(target=task_object_detector, args=(queue_object_detector, queue_streamer_object_detector,))
-    thread_streamer_object_detector = threading.Thread(target=task_streamer_camera, args=(queue_streamer_object_detector,))
+    thread_streamer_object_detector = threading.Thread(target=task_streamer, args=(queue_streamer_object_detector, "rtsp://@:6002/serv/object_detector",))
 
 
     # Start threads
