@@ -23,7 +23,7 @@ def train_faces(path, known_faces_encoding, known_faces_name):
         face_image = face_recognition.load_image_file(path + "/" + file)
 
         # Encode face
-        encoding = face_recognition.face_encodings(face_image, model="small")[0]
+        encoding = face_recognition.face_encodings(face_image)[0]
 
         # Get name
         name = os.path.splitext(file)[0]
@@ -74,11 +74,11 @@ def task_read_camera(queue_to_streamer_camera, queue_to_object_detector, queue_t
         depth_image = cv2.multiply(depth_image, distance_factor)
 
         # Flip images horizontally
-        depth_image = cv2.flip(depth_image, 1)
-        color_image = cv2.flip(color_image, 1)
+        # depth_image = cv2.flip(depth_image, 1)
+        # color_image = cv2.flip(color_image, 1)
 
         # Adjust image RGB
-        # color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
+        color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
         # Render the image
         queue_to_streamer_camera.put(color_image)
@@ -156,38 +156,38 @@ def task_face_detector(queue_from_streamer_camera, queue_to_streamer_face_detect
         # Read frame from RRSP stream
         image = queue_from_streamer_camera.get()
 
-        # # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
-        # detect_image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-        # detect_image = cv2.resize(detect_image, (0, 0), fx=0.5, fy=0.5)
+        # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
+        detect_image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        detect_image = cv2.resize(detect_image, (0, 0), fx=0.5, fy=0.5)
 
-        # # Find all the faces and face encodings in the image
-        # face_locations = face_recognition.face_locations(detect_image, model="cnn")
-        # face_encodings = face_recognition.face_encodings(detect_image, face_locations, model="small")
+        # Find all the faces and face encodings in the image
+        face_locations = face_recognition.face_locations(detect_image, model="cnn")
+        face_encodings = face_recognition.face_encodings(detect_image, face_locations)
 
-        # # Loop into each face
-        # for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
-        #     # See if the face is a match for the known face(s)
-        #     matches = face_recognition.compare_faces(known_faces_encoding, face_encoding)
+        # Loop into each face
+        for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
+            # See if the face is a match for the known face(s)
+            matches = face_recognition.compare_faces(known_faces_encoding, face_encoding)
 
-        #     # If no match was found in known_face_encodings, use the name "Unknown"
-        #     name = "Unknown"
+            # If no match was found in known_face_encodings, use the name "Unknown"
+            name = "Unknown"
 
-        #     # If a match was found in known_face_encodings, just use the first one.
-        #     if True in matches:
-        #         first_match_index = matches.index(True)
-        #         name = known_faces_name[first_match_index]
+            # If a match was found in known_face_encodings, just use the first one.
+            if True in matches:
+                first_match_index = matches.index(True)
+                name = known_faces_name[first_match_index]
 
-        #     top *= 2
-        #     right *= 2
-        #     bottom *= 2
-        #     left *= 2
+            top *= 2
+            right *= 2
+            bottom *= 2
+            left *= 2
 
-        #     # Draw a box around the face
-        #     cv2.rectangle(image, (left, top), (right, bottom), (0, 0, 255), 2)
+            # Draw a box around the face
+            cv2.rectangle(image, (left, top), (right, bottom), (0, 0, 255), 2)
 
-        #     # Draw a label with a name below the face
-        #     cv2.rectangle(image, (left, bottom - 25), (right, bottom), (0, 0, 255), cv2.FILLED)
-        #     cv2.putText(image, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+            # Draw a label with a name below the face
+            cv2.rectangle(image, (left, bottom - 25), (right, bottom), (0, 0, 255), cv2.FILLED)
+            cv2.putText(image, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
 
         queue_to_streamer_face_detector.put(image)
 
@@ -227,5 +227,6 @@ if __name__ == '__main__':
     thread_streamer_object_detector.join()
     thread_face_detector.join()
     thread_streamer_face_detector.join()
+
 
 
