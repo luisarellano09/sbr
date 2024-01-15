@@ -109,7 +109,7 @@ def task_streamer_camera(queue_image_streamer_camera):
         fps_filt = 0.9 * fps_filt + 0.1 * fps
 
         # Add text
-        cv2.putText(image_streamer_camera, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
+        image_streamer_camera = cv2.putText(image_streamer_camera, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
 
         # Render the image
         streamer_camera.Render(cv2_to_cuda(image_streamer_camera))
@@ -137,7 +137,7 @@ def task_streamer_object_detector(queue_image_streamer_object_detector):
         fps_filt = 0.9 * fps_filt + 0.1 * fps
 
         # Add text
-        cv2.putText(image_streamer_object_detector, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
+        image_streamer_object_detector = cv2.putText(image_streamer_object_detector, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
 
         # Render the image
         streamer_object_detector.Render(cv2_to_cuda(image_streamer_object_detector))
@@ -165,7 +165,7 @@ def task_streamer_face_detector(queue_image_streamer_face_detector):
             fps_filt = 0.9 * fps_filt + 0.1 * fps
     
             # Add text
-            cv2.putText(image_streamer_face_detector, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
+            image_streamer_face_detector = cv2.putText(image_streamer_face_detector, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
     
             # Render the image
             streamer_face_detector.Render(cv2_to_cuda(image_streamer_face_detector))
@@ -180,10 +180,10 @@ def task_object_detector(queue_from_streamer_camera, queue_to_streamer_object_de
     while True:
 
         # Get image from queue
-        color_image = queue_from_streamer_camera.get()
+        image_object_detector = queue_from_streamer_camera.get()
 
         # Detect objects
-        detections = net.Detect(cv2_to_cuda(color_image))
+        detections = net.Detect(cv2_to_cuda(image_object_detector))
 
         # Loop into each detection
         for detection in detections:
@@ -192,11 +192,11 @@ def task_object_detector(queue_from_streamer_camera, queue_to_streamer_object_de
 
             # Get bounding box
             x1, y1, x2, y2 = int(detection.Left), int(detection.Top), int(detection.Right), int(detection.Bottom)
-            cv2.rectangle(color_image, (x1, y1), (x2, y2), (0, 255, 0), 1)
-            cv2.putText(color_image, object_name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+            cv2.rectangle(image_object_detector, (x1, y1), (x2, y2), (0, 255, 0), 1)
+            cv2.putText(image_object_detector, object_name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
         # Render the image
-        queue_to_streamer_object_detector.put(color_image)
+        queue_to_streamer_object_detector.put(image_object_detector)
 
 
 def task_face_detector(queue_from_streamer_camera, queue_to_streamer_face_detector):
@@ -212,15 +212,15 @@ def task_face_detector(queue_from_streamer_camera, queue_to_streamer_face_detect
     while True:
 
         # Read frame from RRSP stream
-        image = queue_from_streamer_camera.get()
+        image_face_detector = queue_from_streamer_camera.get()
 
         # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
-        detect_image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-        detect_image = cv2.resize(detect_image, (0, 0), fx=0.5, fy=0.5)
+        image_face_detector_rgb = cv2.cvtColor(image_face_detector, cv2.COLOR_BGR2RGB)
+        image_face_detector_rgb = cv2.resize(image_face_detector_rgb, (0, 0), fx=0.5, fy=0.5)
 
         # Find all the faces and face encodings in the image
-        face_locations = face_recognition.face_locations(detect_image, model="cnn")
-        face_encodings = face_recognition.face_encodings(detect_image, face_locations)
+        face_locations = face_recognition.face_locations(image_face_detector_rgb, model="cnn")
+        face_encodings = face_recognition.face_encodings(image_face_detector_rgb, face_locations)
 
         # Loop into each face
         for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
@@ -241,13 +241,13 @@ def task_face_detector(queue_from_streamer_camera, queue_to_streamer_face_detect
             left *= 2
 
             # Draw a box around the face
-            cv2.rectangle(image, (left, top), (right, bottom), (0, 0, 255), 2)
+            cv2.rectangle(image_face_detector, (left, top), (right, bottom), (0, 0, 255), 2)
 
             # Draw a label with a name below the face
-            cv2.rectangle(image, (left, bottom - 25), (right, bottom), (0, 0, 255), cv2.FILLED)
-            cv2.putText(image, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+            cv2.rectangle(image_face_detector, (left, bottom - 25), (right, bottom), (0, 0, 255), cv2.FILLED)
+            cv2.putText(image_face_detector, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
 
-        queue_to_streamer_face_detector.put(image)
+        queue_to_streamer_face_detector.put(image_face_detector)
 
 
 
