@@ -90,6 +90,9 @@ def task_streamer(queue_image, streamerPath):
 
     time.sleep(10)
 
+    time_stamp = time.time()
+    fps_filt = 0
+
     # Create rstp stream
     streamer = videoOutput(streamerPath)
 
@@ -97,6 +100,15 @@ def task_streamer(queue_image, streamerPath):
 
         # Get image from queue
         image = queue_image.get()
+
+        # Calculate FPS
+        dt = time.time() - time_stamp
+        time_stamp = time.time()
+        fps = 1 / dt
+        fps_filt = 0.9 * fps_filt + 0.1 * fps
+
+        # Add text
+        cv2.putText(image, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
 
         # Render the image
         streamer.Render(cv2_to_cuda(image))
