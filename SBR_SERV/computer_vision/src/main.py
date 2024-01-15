@@ -87,7 +87,7 @@ def task_read_camera(queue_to_streamer_camera, queue_to_object_detector, queue_t
         queue_to_face_detector.put(color_image)
 
 
-def task_streamer(queue_image, streamerPath):
+def task_streamer_camera(queue_image):
 
     time.sleep(10)
 
@@ -95,7 +95,7 @@ def task_streamer(queue_image, streamerPath):
     fps_filt = 0
 
     # Create rstp stream
-    streamer = videoOutput(streamerPath)
+    streamer = videoOutput("rtsp://@:6000/d435/rgb")
 
     while True:
 
@@ -110,6 +110,62 @@ def task_streamer(queue_image, streamerPath):
 
         # Add text
         cv2.putText(image, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
+
+        # Render the image
+        streamer.Render(cv2_to_cuda(image))
+
+
+def task_streamer_object_detector(queue_image):
+
+    time.sleep(10)
+
+    time_stamp = time.time()
+    fps_filt = 0
+
+    # Create rstp stream
+    streamer = videoOutput("rtsp://@:6002/serv/object_detector")
+
+    while True:
+
+        # Get image from queue
+        image = queue_image.get()
+
+        # Calculate FPS
+        dt = time.time() - time_stamp
+        time_stamp = time.time()
+        fps = 1 / dt
+        fps_filt = 0.9 * fps_filt + 0.1 * fps
+
+        # Add text
+        cv2.putText(image, str(int(fps_filt)) + 'fps',  (5, 700), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
+
+        # Render the image
+        streamer.Render(cv2_to_cuda(image))
+
+
+def task_streamer_face_detector(queue_image):
+
+    time.sleep(10)
+
+    time_stamp = time.time()
+    fps_filt = 0
+
+    # Create rstp stream
+    streamer = videoOutput("rtsp://@:6003/serv/face_detector")
+
+    while True:
+
+        # Get image from queue
+        image = queue_image.get()
+
+        # Calculate FPS
+        dt = time.time() - time_stamp
+        time_stamp = time.time()
+        fps = 1 / dt
+        fps_filt = 0.9 * fps_filt + 0.1 * fps
+
+        # Add text
+        cv2.putText(image, str(int(fps_filt)) + 'fps',  (5, 700), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
 
         # Render the image
         streamer.Render(cv2_to_cuda(image))
@@ -206,11 +262,13 @@ if __name__ == '__main__':
 
     # Create threads
     thread_read_camera = threading.Thread(target=task_read_camera, args=(queue_streamer_camera, queue_object_detector, queue_face_detector,))
-    thread_streamer_camera = threading.Thread(target=task_streamer, args=(queue_streamer_camera, "rtsp://@:6000/d435/rgb",))
+    thread_streamer_camera = threading.Thread(target=task_streamer_camera, args=(queue_streamer_camera,))
+
     thread_object_detector = threading.Thread(target=task_object_detector, args=(queue_object_detector, queue_streamer_object_detector,))
-    thread_streamer_object_detector = threading.Thread(target=task_streamer, args=(queue_streamer_object_detector, "rtsp://@:6002/serv/object_detector",))
+    thread_streamer_object_detector = threading.Thread(target=task_streamer_object_detector, args=(queue_streamer_object_detector,))
+
     thread_face_detector = threading.Thread(target=task_face_detector, args=(queue_face_detector, queue_streamer_face_detector,))
-    thread_streamer_face_detector = threading.Thread(target=task_streamer, args=(queue_streamer_face_detector, "rtsp://@:6003/serv/face_detector",))
+    thread_streamer_face_detector = threading.Thread(target=task_streamer_face_detector, args=(queue_streamer_face_detector,))
 
     # Start threads
     thread_read_camera.start()
@@ -219,7 +277,6 @@ if __name__ == '__main__':
     thread_streamer_object_detector.start()
     thread_face_detector.start()
     thread_streamer_face_detector.start()
-
 
     # Wait threads
     thread_read_camera.join()
