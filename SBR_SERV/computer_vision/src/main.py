@@ -156,38 +156,38 @@ def task_face_detector(queue_from_streamer_camera, queue_to_streamer_face_detect
         # Read frame from RRSP stream
         image = queue_from_streamer_camera.get()
 
-        # # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
-        # detect_image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-        # detect_image = cv2.resize(detect_image, (0, 0), fx=0.5, fy=0.5)
+        # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
+        detect_image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        detect_image = cv2.resize(detect_image, (0, 0), fx=0.5, fy=0.5)
 
-        # # Find all the faces and face encodings in the image
-        # face_locations = face_recognition.face_locations(detect_image, model="cnn")
-        # face_encodings = face_recognition.face_encodings(detect_image, face_locations, model="small")
+        # Find all the faces and face encodings in the image
+        face_locations = face_recognition.face_locations(detect_image, model="cnn")
+        face_encodings = face_recognition.face_encodings(detect_image, face_locations, model="small")
 
-        # # Loop into each face
-        # for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
-        #     # See if the face is a match for the known face(s)
-        #     matches = face_recognition.compare_faces(known_faces_encoding, face_encoding)
+        # Loop into each face
+        for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
+            # See if the face is a match for the known face(s)
+            matches = face_recognition.compare_faces(known_faces_encoding, face_encoding)
 
-        #     # If no match was found in known_face_encodings, use the name "Unknown"
-        #     name = "Unknown"
+            # If no match was found in known_face_encodings, use the name "Unknown"
+            name = "Unknown"
 
-        #     # If a match was found in known_face_encodings, just use the first one.
-        #     if True in matches:
-        #         first_match_index = matches.index(True)
-        #         name = known_faces_name[first_match_index]
+            # If a match was found in known_face_encodings, just use the first one.
+            if True in matches:
+                first_match_index = matches.index(True)
+                name = known_faces_name[first_match_index]
 
-        #     top *= 2
-        #     right *= 2
-        #     bottom *= 2
-        #     left *= 2
+            top *= 2
+            right *= 2
+            bottom *= 2
+            left *= 2
 
-        #     # Draw a box around the face
-        #     cv2.rectangle(image, (left, top), (right, bottom), (0, 0, 255), 2)
+            # Draw a box around the face
+            cv2.rectangle(image, (left, top), (right, bottom), (0, 0, 255), 2)
 
-        #     # Draw a label with a name below the face
-        #     cv2.rectangle(image, (left, bottom - 25), (right, bottom), (0, 0, 255), cv2.FILLED)
-        #     cv2.putText(image, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+            # Draw a label with a name below the face
+            cv2.rectangle(image, (left, bottom - 25), (right, bottom), (0, 0, 255), cv2.FILLED)
+            cv2.putText(image, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
 
         queue_to_streamer_face_detector.put(image)
 
