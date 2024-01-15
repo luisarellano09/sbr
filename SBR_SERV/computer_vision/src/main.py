@@ -23,7 +23,7 @@ def train_faces(path, known_faces_encoding, known_faces_name):
         face_image = face_recognition.load_image_file(path + "/" + file)
 
         # Encode face
-        encoding = face_recognition.face_encodings(face_image, model="small")[0]
+        encoding = face_recognition.face_encodings(face_image)[0]
 
         # Get name
         name = os.path.splitext(file)[0]
@@ -78,7 +78,7 @@ def task_read_camera(queue_to_streamer_camera, queue_to_object_detector, queue_t
         # color_image = cv2.flip(color_image, 1)
 
         # Adjust image RGB
-        color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
+        # color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
         # Render the image
         queue_to_streamer_camera.put(color_image)
@@ -162,7 +162,7 @@ def task_face_detector(queue_from_streamer_camera, queue_to_streamer_face_detect
 
         # Find all the faces and face encodings in the image
         face_locations = face_recognition.face_locations(detect_image, model="cnn")
-        face_encodings = face_recognition.face_encodings(detect_image, face_locations, model="small")
+        face_encodings = face_recognition.face_encodings(detect_image, face_locations)
 
         # Loop into each face
         for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
