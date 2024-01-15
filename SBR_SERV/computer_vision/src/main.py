@@ -10,11 +10,6 @@ import time
 import os
 
 
-# gloabl
-global_camera_image_color = None
-global_camera_image_depth = None
-
-
 # Function to convert cv2 image to cuda image
 def cv2_to_cuda(cv_image):
     # Convert image to cuda
@@ -39,7 +34,7 @@ def train_faces(path, known_faces_encoding, known_faces_name):
         known_faces_name.append(name)
 
 
-def task_read_camera():
+def task_read_camera(queue_to_streamer_camera, queue_to_object_detector, queue_to_face_detector):
 
     time.sleep(10)
 
@@ -87,8 +82,9 @@ def task_read_camera():
         color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
         # Render the image
-        global_camera_image_color = color_image
-        global_camera_image_depth = depth_image
+        queue_to_streamer_camera.put(color_image)
+        queue_to_object_detector.put(color_image)
+        queue_to_face_detector.put(color_image)
 
 
 def task_streamer(queue_image, streamerPath):
@@ -119,7 +115,7 @@ def task_streamer(queue_image, streamerPath):
         streamer.Render(cv2_to_cuda(image))
 
 
-def task_object_detector(queue_to_streamer_object_detector):
+def task_object_detector(queue_from_streamer_camera, queue_to_streamer_object_detector):
 
     # Detector
     net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
@@ -127,10 +123,7 @@ def task_object_detector(queue_to_streamer_object_detector):
     while True:
 
         # Get image from queue
-        color_image = global_camera_image_color
-
-        if color_image is None:
-            continue
+        color_image = queue_from_streamer_camera.get()
 
         # Detect objects
         detections = net.Detect(cv2_to_cuda(color_image))
@@ -149,7 +142,7 @@ def task_object_detector(queue_to_streamer_object_detector):
         queue_to_streamer_object_detector.put(color_image)
 
 
-def task_face_detector(queue_to_streamer_face_detector):
+def task_face_detector(queue_from_streamer_camera, queue_to_streamer_face_detector):
 
    # Create encoding list of known faces
     known_faces_encoding = []
@@ -162,10 +155,7 @@ def task_face_detector(queue_to_streamer_face_detector):
     while True:
 
         # Read frame from RRSP stream
-        image = global_camera_image_color
-
-        if image is None:
-            continue
+        image = queue_from_streamer_camera.get()
 
         # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
         detect_image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -215,11 +205,11 @@ if __name__ == '__main__':
     queue_streamer_face_detector = Queue(1)
 
     # Create threads
-    thread_read_camera = threading.Thread(target=task_read_camera, args=())
+    thread_read_camera = threading.Thread(target=task_read_camera, args=(queue_streamer_camera, queue_object_detector, queue_face_detector,))
     thread_streamer_camera = threading.Thread(target=task_streamer, args=(queue_streamer_camera, "rtsp://@:6000/d435/rgb",))
-    thread_object_detector = threading.Thread(target=task_object_detector, args=(queue_streamer_object_detector,))
+    thread_object_detector = threading.Thread(target=task_object_detector, args=(queue_object_detector, queue_streamer_object_detector,))
     thread_streamer_object_detector = threading.Thread(target=task_streamer, args=(queue_streamer_object_detector, "rtsp://@:6002/serv/object_detector",))
-    thread_face_detector = threading.Thread(target=task_face_detector, args=(queue_streamer_face_detector,))
+    thread_face_detector = threading.Thread(target=task_face_detector, args=(queue_face_detector, queue_streamer_face_detector,))
     thread_streamer_face_detector = threading.Thread(target=task_streamer, args=(queue_streamer_face_detector, "rtsp://@:6003/serv/face_detector",))
 
     # Start threads
