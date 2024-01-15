@@ -33,6 +33,9 @@ def train_faces(path, known_faces_encoding, known_faces_name):
 
 
 def task_read_camera(queue_to_streamer_camera, queue_to_object_detector, queue_to_face_detector):
+
+    time.sleep(30)
+
      # Create pipeline
     pipe = rs.pipeline()
     cfg  = rs.config()
@@ -83,6 +86,9 @@ def task_read_camera(queue_to_streamer_camera, queue_to_object_detector, queue_t
 
 
 def task_streamer(queue_image, streamerPath):
+    
+    time.sleep(30)
+
     # Create rstp stream
     streamer = videoOutput(streamerPath)
 
