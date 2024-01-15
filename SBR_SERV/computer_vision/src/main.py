@@ -7,6 +7,7 @@ import face_recognition
 import numpy as np
 import cv2
 import time
+import os
 
 # Function to convert cv2 image to cuda image
 def cv2_to_cuda(cv_image):
@@ -86,7 +87,7 @@ def task_read_camera(queue_to_streamer_camera, queue_to_object_detector, queue_t
 
 
 def task_streamer(queue_image, streamerPath):
-    
+
     time.sleep(30)
 
     # Create rstp stream
