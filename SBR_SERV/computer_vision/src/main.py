@@ -9,6 +9,12 @@ import cv2
 import time
 import os
 
+
+# Global variables
+object_detection = []
+face_detection = []
+
+
 # Function to convert cv2 image to cuda image
 def cv2_to_cuda(cv_image):
     # Convert image to cuda
@@ -73,17 +79,13 @@ def task_read_camera(queue_to_streamer_camera, queue_to_object_detector, queue_t
         # Normalice depth image
         depth_image = cv2.multiply(depth_image, distance_factor)
 
-        # Flip images horizontally
-        # depth_image = cv2.flip(depth_image, 1)
-        # color_image = cv2.flip(color_image, 1)
-
         # Adjust image RGB
         color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
         # Render the image
-        queue_to_streamer_camera.put(color_image)
-        queue_to_object_detector.put(color_image)
-        queue_to_face_detector.put(color_image)
+        queue_to_streamer_camera.put(color_image.copy())
+        queue_to_object_detector.put(color_image.copy())
+        queue_to_face_detector.put(color_image.copy())
 
 
 def task_streamer(queue_image, streamerPath):
@@ -101,6 +103,24 @@ def task_streamer(queue_image, streamerPath):
         # Get image from queue
         image = queue_image.get()
 
+        # Object detection
+        for object_name, (x1, y1), (x2, y2) in object_detection.copy():
+            # Draw a box around the face
+            cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 2)
+
+            # Draw a label with a name below the face
+            cv2.rectangle(image, (x1, y2 - 25), (x2, y2), (0, 0, 255), cv2.FILLED)
+            cv2.putText(image, object_name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+        
+        # Face detection
+        for name, (x1, y1), (x2, y2) in face_detection.copy():
+            # Draw a box around the face
+            cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+
+            # Draw a label with a name below the face
+            cv2.rectangle(image, (x1, y2 - 25), (x2, y2), (0, 255, 0), cv2.FILLED)
+            cv2.putText(image, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+
         # Calculate FPS
         dt = time.time() - time_stamp
         time_stamp = time.time()
@@ -114,18 +134,23 @@ def task_streamer(queue_image, streamerPath):
         streamer.Render(cv2_to_cuda(image))
 
 
-def task_object_detector(queue_from_streamer_camera, queue_to_streamer_object_detector):
+def task_object_detector(queue_from_streamer_camera):
+
+    global object_detection
 
     # Detector
     net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
 
     while True:
 
+        # Temporal detection
+        object_detection_temp = []
+
         # Get image from queue
-        color_image = queue_from_streamer_camera.get()
+        image = queue_from_streamer_camera.get()
 
         # Detect objects
-        detections = net.Detect(cv2_to_cuda(color_image))
+        detections = net.Detect(cv2_to_cuda(image))
 
         # Loop into each detection
         for detection in detections:
@@ -134,14 +159,18 @@ def task_object_detector(queue_from_streamer_camera, queue_to_streamer_object_de
 
             # Get bounding box
             x1, y1, x2, y2 = int(detection.Left), int(detection.Top), int(detection.Right), int(detection.Bottom)
-            cv2.rectangle(color_image, (x1, y1), (x2, y2), (0, 255, 0), 1)
-            cv2.putText(color_image, object_name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
-        # Render the image
-        queue_to_streamer_object_detector.put(color_image)
+            # Add to list
+            object_detection_temp.append((object_name, (x1, y1), (x2, y2)))
+
+        # Copy list
+        object_detection = object_detection_temp.copy()
 
 
-def task_face_detector(queue_from_streamer_camera, queue_to_streamer_face_detector):
+
+def task_face_detector(queue_from_streamer_camera):
+
+    global face_detection
 
    # Create encoding list of known faces
     known_faces_encoding = []
@@ -182,14 +211,17 @@ def task_face_detector(queue_from_streamer_camera, queue_to_streamer_face_detect
             bottom *= 2
             left *= 2
 
-            # Draw a box around the face
-            cv2.rectangle(image, (left, top), (right, bottom), (0, 0, 255), 2)
+            x1, y1, x2, y2 = left, top, right, bottom
 
-            # Draw a label with a name below the face
-            cv2.rectangle(image, (left, bottom - 25), (right, bottom), (0, 0, 255), cv2.FILLED)
-            cv2.putText(image, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+            # Add to list
+            face_detection.append((name, (x1, y1), (x2, y2)))
 
-        queue_to_streamer_face_detector.put(image)
+            # # Draw a box around the face
+            # cv2.rectangle(image, (left, top), (right, bottom), (0, 0, 255), 2)
+
+            # # Draw a label with a name below the face
+            # cv2.rectangle(image, (left, bottom - 25), (right, bottom), (0, 0, 255), cv2.FILLED)
+            # cv2.putText(image, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
 
 
 
@@ -199,34 +231,26 @@ if __name__ == '__main__':
     # Create queue
     queue_streamer_camera = Queue(1)
     queue_object_detector = Queue(1)
-    queue_streamer_object_detector = Queue(1)
     queue_face_detector = Queue(1)
-    queue_streamer_face_detector = Queue(1)
 
     # Create threads
     thread_read_camera = threading.Thread(target=task_read_camera, args=(queue_streamer_camera, queue_object_detector, queue_face_detector,))
-    thread_streamer_camera = threading.Thread(target=task_streamer, args=(queue_streamer_camera, "rtsp://@:6000/d435/rgb",))
-    thread_object_detector = threading.Thread(target=task_object_detector, args=(queue_object_detector, queue_streamer_object_detector,))
-    thread_streamer_object_detector = threading.Thread(target=task_streamer, args=(queue_streamer_object_detector, "rtsp://@:6002/serv/object_detector",))
-    thread_face_detector = threading.Thread(target=task_face_detector, args=(queue_face_detector, queue_streamer_face_detector,))
-    thread_streamer_face_detector = threading.Thread(target=task_streamer, args=(queue_streamer_face_detector, "rtsp://@:6003/serv/face_detector",))
+    thread_streamer_camera = threading.Thread(target=task_streamer, args=(queue_streamer_camera, "rtsp://@:6000/serv/computer_vision",))
+    thread_object_detector = threading.Thread(target=task_object_detector, args=(queue_object_detector,))
+    thread_face_detector = threading.Thread(target=task_face_detector, args=(queue_face_detector,))
 
     # Start threads
     thread_read_camera.start()
     thread_streamer_camera.start()
     thread_object_detector.start()
-    thread_streamer_object_detector.start()
     thread_face_detector.start()
-    thread_streamer_face_detector.start()
 
 
     # Wait threads
     thread_read_camera.join()
     thread_streamer_camera.join()
     thread_object_detector.join()
-    thread_streamer_object_detector.join()
     thread_face_detector.join()
-    thread_streamer_face_detector.join()
 
 
 
