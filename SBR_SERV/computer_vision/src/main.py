@@ -10,19 +10,9 @@ import time
 import os
 
 
-# Object detection
-object_detector_network = detectNet("ssd-mobilenet-v2", threshold=0.5)
-
-# Create encoding list of known faces
-known_faces_encoding = []
-known_faces_name = []
-
-# Detections
+# Global variables
 object_detection = []
-person_recognition = []
-
-# Create rstp stream
-streamer = videoOutput("rtsp://@:6000/serv/computer_vision")
+person_detection = []
 
 
 # Function to convert cv2 image to cuda image
@@ -32,11 +22,7 @@ def cv2_to_cuda(cv_image):
 
 
 # Train faces
-def train_faces(path):
-
-    global known_faces_encoding
-    global known_faces_name
-
+def train_faces(path, known_faces_encoding, known_faces_name):
     # Loop into folder  and encode faces from "./faces" folder
     for file in os.listdir(path):
         # Load face
@@ -53,10 +39,9 @@ def train_faces(path):
         known_faces_name.append(name)
 
 
-# Read camera
-def loop_read_camera():
+def task_read_camera(queue_to_streamer_computer_vision, queue_to_object_detection):
 
-    # Create pipeline
+     # Create pipeline
     pipe = rs.pipeline()
     cfg  = rs.config()
 
@@ -93,131 +78,181 @@ def loop_read_camera():
         # Adjust image RGB
         color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
-        # Thread detect objects
-        threading.Thread(target=task_object_detector, args=(color_image.copy(),)).start()
-
-        # Thread streamer
-        threading.Thread(target=task_streamer, args=(color_image.copy(),)).start()
+        # Render the image
+        queue_to_streamer_computer_vision.put(color_image.copy())
+        queue_to_object_detection.put(color_image.copy())
 
 
-# Task streamer
-def task_streamer(image):
+
+def task_streamer(queue_from_streamer_camera, streamerPath):
 
     global object_detection
-    global face_detection
+    global person_detection
 
-    # Object detection
-    for object_name, (x1, y1), (x2, y2) in object_detection.copy():
-        # Draw a box around the face
-        cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 2)
+    time_stamp = time.time()
+    fps_filt = 0
 
-        # Draw a label with a name below the face
-        cv2.rectangle(image, (x1, y2 - 25), (x2, y2), (0, 0, 255), cv2.FILLED)
-        cv2.putText(image, object_name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
-    
-    # Person detection
-    for name, (x1, y1), (x2, y2) in face_detection.copy():
-        # Draw a box around the person
-        cv2.rectangle(image, (x1, y1), (x2, y2), (255, 0, 0), 2)
+    # Create rstp stream
+    streamer = videoOutput(streamerPath)
 
-        # Draw a label with a name below the person
-        cv2.rectangle(image, (x1, y2 - 25), (x2, y2), (255, 0, 0), cv2.FILLED)
-        cv2.putText(image, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+    while True:
 
-    # Render the image
-    streamer.Render(cv2_to_cuda(image))
+        # Get image from queue
+        image = queue_from_streamer_camera.get()
+
+        # Object detection
+        for object_name, x1, y1, x2, y2 in object_detection.copy():
+            # Draw a box around the face
+            cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 2)
+
+            # Draw a label with a name below the face
+            cv2.rectangle(image, (x1, y2 - 25), (x2, y2), (0, 0, 255), cv2.FILLED)
+            cv2.putText(image, object_name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+        
+        # Face detection
+        for name, x1, y1, x2, y2 in person_detection.copy():
+            # Draw a box around the face
+            cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+
+            # Draw a label with a name below the face
+            cv2.rectangle(image, (x1, y2 - 25), (x2, y2), (0, 255, 0), cv2.FILLED)
+            cv2.putText(image, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+
+        # Calculate FPS
+        dt = time.time() - time_stamp
+        time_stamp = time.time()
+        fps = 1 / dt
+        fps_filt = 0.9 * fps_filt + 0.1 * fps
+
+        # Add text
+        cv2.putText(image, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
+
+        # Render the image
+        streamer.Render(cv2_to_cuda(image))
 
 
-# Task object detector
-def task_object_detector(image):
+def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition):
 
     global object_detection
 
-    # Temporal detection
-    object_detection_temp = []
+    # Detector
+    net = detectNet("ssd-mobilenet-v2", threshold=0.5)
 
-    # List of Persons
-    persons = []
+    while True:
 
-    # Detect objects
-    detections = object_detector_network.Detect(cv2_to_cuda(image))
+        # Temporal detection
+        object_detection_temp = []
 
-    # Loop into each detection
-    for detection in detections:
-        # Get class name
-        object_name = object_detector_network.GetClassDesc(detection.ClassID)
+        # Persons
+        persons = []
 
-        # Get bounding box
-        x1, y1, x2, y2 = int(detection.Left), int(detection.Top), int(detection.Right), int(detection.Bottom)
+        # Get image from queue
+        image = queue_from_streamer_camera.get()
 
-        # Add to list
-        object_detection_temp.append((object_name, (x1, y1), (x2, y2)))
+        # Detect objects
+        detections = net.Detect(cv2_to_cuda(image))
 
-        # Person recognition
-        if object_name == "person":
-            # Add to list
-            persons.append((x1, y1, x2, y2))
+        # Loop into each detection
+        for detection in detections:
+            # Get class name
+            object_name = net.GetClassDesc(detection.ClassID)
 
-    # Copy list
-    object_detection = object_detection_temp.copy()
-
-    # Thread face detector
-    threading.Thread(target=task_face_detector, args=(image.copy(), persons)).start()
-
-
-
-def task_face_detector(image, persons):
-
-    global face_detection
-    global known_faces_encoding
-    global known_faces_name
-
-    # Temporal detection
-    face_detection_temp = []
-
-    
-    # Loop into each person
-    for x1, y1, x2, y2 in persons:
-        # Crop image
-        face_image = image[y1:y2, x1:x2]
-
-        # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
-        face_image = cv2.cvtColor(face_image, cv2.COLOR_RGB2BGR)
-        # face_image = cv2.resize(face_image, (0, 0), fx=0.5, fy=0.5)
-
-        # Find all the faces and face encodings in the image
-        face_locations = face_recognition.face_locations(face_image, model="cnn")
-        face_encodings = face_recognition.face_encodings(face_image, face_locations)
-
-        # Loop into each face
-        for face_encoding in zip(face_locations, face_encodings):
-            # See if the face is a match for the known face(s)
-            matches = face_recognition.compare_faces(known_faces_encoding, face_encoding)
-
-            # If no match was found in known_face_encodings, use the name "Unknown"
-            name = "Unknown"
-
-            # If a match was found in known_face_encodings, just use the first one.
-            if True in matches:
-                first_match_index = matches.index(True)
-                name = known_faces_name[first_match_index]
+            # Get bounding box
+            x1, y1, x2, y2 = int(detection.Left), int(detection.Top), int(detection.Right), int(detection.Bottom)
 
             # Add to list
-            face_detection_temp.append((name, (x1, y1), (x2, y2)))
+            object_detection_temp.append((object_name, x1, y1, x2, y2))
+
+            # Persons
+            if object_name == "person":
+                persons.append((x1, y1, x2, y2))
+
+        # Copy list
+        object_detection = object_detection_temp.copy()
+
+        # Face detection
+        queue_to_face_recognition.put((image.copy(), persons.copy()))
 
 
-    # Copy list
-    face_detection = face_detection_temp.copy()
+
+def task_face_recognition(queue_from_object_detection):
+
+    global person_detection
+
+   # Create encoding list of known faces
+    known_faces_encoding = []
+    known_faces_name = []
+
+    # Train faces
+    train_faces("/face_detector/known_faces", known_faces_encoding, known_faces_name)
+
+
+    while True:
+
+        # Temporal detection
+        person_detection_temp = []
+
+        # Read frame from RRSP stream
+        image, persons = queue_from_object_detection.get()
+
+        # Loop into each person
+        for x1, y1, x2, y2 in persons:
+
+            # Crop image
+            person_image = image[y1:y2, x1:x2]
+
+            # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
+            person_image = cv2.cvtColor(person_image, cv2.COLOR_RGB2BGR)
+            person_image = cv2.resize(person_image, (0, 0), fx=0.5, fy=0.5)
+
+            # Find all the faces and face encodings in the current frame of video
+            face_locations = face_recognition.face_locations(person_image, model="cnn")
+            face_encodings = face_recognition.face_encodings(person_image, face_locations)
+
+            # Loop into each face
+            for face_encoding in zip(face_locations, face_encodings):
+                # See if the face is a match for the known face(s)
+                matches = face_recognition.compare_faces(known_faces_encoding, face_encoding)
+
+                # If no match was found in known_face_encodings, use the name "Unknown"
+                name = "Unknown"
+
+                # If a match was found in known_face_encodings, just use the first one.
+                if True in matches:
+                    first_match_index = matches.index(True)
+                    name = known_faces_name[first_match_index]
+
+                # Add to list
+                person_detection_temp.append((name, x1, y1, x2, y2))
+
+        # Copy list
+        person_detection = person_detection_temp.copy()
 
 
 
 # Main
 if __name__ == '__main__':
 
-    # Train faces
-    train_faces("/face_detector/known_faces")
+    # Create queue
+    queue_from_camera_to_streamer_computer_vision = Queue(1)
+    queue_from_camera_to_object_detection = Queue(1)
+    queue_from_object_detection_to_face_recognition = Queue(1)
 
-    # Loop camera
-    loop_read_camera()
+    # Create threads
+    thread_read_camera = threading.Thread(target=task_read_camera, args=(queue_from_camera_to_streamer_computer_vision, queue_from_camera_to_object_detection,))
+    thread_streamer_computer_vision = threading.Thread(target=task_streamer, args=(queue_from_camera_to_streamer_computer_vision, "rtsp://@:6000/serv/computer_vision",))
+    thread_object_detection = threading.Thread(target=task_object_detection, args=(queue_from_camera_to_object_detection, queue_from_object_detection_to_face_recognition,))
+    thread_face_recognition = threading.Thread(target=task_face_recognition, args=(queue_from_object_detection_to_face_recognition,))
+
+    # Start threads
+    thread_read_camera.start()
+    thread_streamer_computer_vision.start()
+    thread_object_detection.start()
+    thread_face_recognition.start()
 
 
+    # Wait threads
+    thread_read_camera.join()
+    thread_streamer_computer_vision.join()
+    thread_object_detection.join()
+    thread_face_recognition.join()
