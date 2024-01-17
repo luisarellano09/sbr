@@ -182,6 +182,9 @@ def task_face_detector(queue_from_streamer_camera):
 
     while True:
 
+        # Temporal detection
+        face_detection_temp = []
+
         # Read frame from RRSP stream
         image = queue_from_streamer_camera.get()
 
@@ -214,7 +217,7 @@ def task_face_detector(queue_from_streamer_camera):
             x1, y1, x2, y2 = left, top, right, bottom
 
             # Add to list
-            face_detection.append((name, (x1, y1), (x2, y2)))
+            face_detection_temp.append((name, (x1, y1), (x2, y2)))
 
             # # Draw a box around the face
             # cv2.rectangle(image, (left, top), (right, bottom), (0, 0, 255), 2)
@@ -222,6 +225,9 @@ def task_face_detector(queue_from_streamer_camera):
             # # Draw a label with a name below the face
             # cv2.rectangle(image, (left, bottom - 25), (right, bottom), (0, 0, 255), cv2.FILLED)
             # cv2.putText(image, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+
+        # Copy list
+        face_detection = face_detection_temp.copy()
 
 
 
