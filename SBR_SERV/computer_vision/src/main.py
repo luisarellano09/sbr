@@ -90,6 +90,9 @@ def task_read_camera(queue_to_streamer_camera, queue_to_object_detector, queue_t
 
 def task_streamer(queue_image, streamerPath):
 
+    global object_detection
+    global face_detection
+
     time.sleep(10)
 
     time_stamp = time.time()
