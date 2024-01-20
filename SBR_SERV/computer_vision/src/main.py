@@ -83,7 +83,10 @@ def task_read_camera(queue_to_streamer_computer_vision, queue_to_object_detectio
         depth_image = cv2.multiply(depth_image, distance_factor)
 
         # Adjust image RGB
-        color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
+        color_image = cv2.addWeighted( color_image, 1, color_image, 0, 35)
+
+        # Improve image for night
+
 
         # Render the image
         queue_to_streamer_computer_vision.put(color_image.copy())
