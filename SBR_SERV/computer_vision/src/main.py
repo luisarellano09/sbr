@@ -21,6 +21,7 @@ def cv2_to_cuda(cv_image):
     return cudaFromNumpy(cv_image)
 
 
+
 # Train faces
 def train_faces(path, known_faces_encoding, known_faces_name):
     # Loop into folder  and encode faces from "./faces" folder
@@ -37,6 +38,7 @@ def train_faces(path, known_faces_encoding, known_faces_name):
         # Add to lists
         known_faces_encoding.append(encoding)
         known_faces_name.append(name)
+
 
 
 def task_read_camera(queue_to_streamer_computer_vision, queue_to_object_detection):
@@ -131,6 +133,7 @@ def task_streamer(queue_from_streamer_camera, streamerPath):
         streamer.Render(cv2_to_cuda(image))
 
 
+
 def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition):
 
     global object_detection
@@ -168,10 +171,10 @@ def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition)
                 persons.append((x1, y1, x2, y2))
 
         # Copy list
-        object_detection = object_detection_temp.copy()
+        #object_detection = object_detection_temp.copy()
 
         # Face detection
-        queue_to_face_recognition.put((image.copy(), persons.copy()))
+        #queue_to_face_recognition.put((image.copy(), persons.copy()))
 
 
 
@@ -249,7 +252,6 @@ if __name__ == '__main__':
     thread_streamer_computer_vision.start()
     thread_object_detection.start()
     thread_face_recognition.start()
-
 
     # Wait threads
     thread_read_camera.join()
