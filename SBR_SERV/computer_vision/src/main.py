@@ -123,7 +123,7 @@ def task_streamer(queue_from_streamer_camera, streamerPath):
 
             # Draw a label with a name below the face
             # cv2.rectangle(image, (x1, y2 - 25), (x2, y2), (0, 255, 0), cv2.FILLED)
-            cv2.putText(image, name, (x1 + 6, y2 - 20), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+            cv2.putText(image, name, (x1 + 6, y2 - 25), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
 
         # Calculate FPS
         dt = time.time() - time_stamp
@@ -146,6 +146,13 @@ def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition)
 
     # Detector
     net = detectNet("ssd-mobilenet-v2", threshold=0.5)
+
+    # Configure tracker
+    # minFrames         the number of re-identified frames for a track to be considered valid (default: 3)
+    # dropFrames        number of consecutive lost frames before a track is dropped (default: 15)
+    # overlapThreshold  how much IOU overlap is required for a bounding box to be matched (default: 0.5)
+    net.SetTrackingEnabled(True)
+    net.SetTrackingParams(minFrames=5, dropFrames=15, overlapThreshold=0.5)
 
     while True:
 
