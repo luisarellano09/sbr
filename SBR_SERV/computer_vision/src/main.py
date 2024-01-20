@@ -227,7 +227,7 @@ def task_face_recognition(queue_from_object_detection):
 
             # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
             person_image = cv2.cvtColor(person_image, cv2.COLOR_RGB2BGR)
-            person_image = cv2.resize(person_image, (0, 0), fx=0.5, fy=0.5)
+            # person_image = cv2.resize(person_image, (0, 0), fx=0.5, fy=0.5)
 
             # Find all the faces and face encodings in the current frame of video
             face_locations = face_recognition.face_locations(person_image, model="cnn")
