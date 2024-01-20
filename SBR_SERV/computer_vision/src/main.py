@@ -175,7 +175,7 @@ def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition)
                 persons.append((x1, y1, x2, y2))
 
         # Copy list
-        #object_detection = object_detection_temp.copy()
+        object_detection = object_detection_temp.copy()
 
         # Face detection
         #queue_to_face_recognition.put((image.copy(), persons.copy()))
