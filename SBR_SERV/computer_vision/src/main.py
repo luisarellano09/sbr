@@ -10,10 +10,16 @@ import time
 import os
 
 
+class person:
+    name: str
+    name_processing: str
+    matches: int
+    counter: int
+
 # Global variables
 object_detection = []
-person_detection = []
-person_recognition = []
+person_recognition = {}
+
 
 
 # Function to convert cv2 image to cuda image
@@ -117,17 +123,17 @@ def task_streamer(queue_from_streamer_camera, streamerPath):
 
             # Draw a label with a name below the face
             cv2.rectangle(image, (x1, y2 - 25), (x2, y2), (0, 0, 255), cv2.FILLED)
-            text = object_name + ": " + str(track_id)
+
+            # Check if object is a person
+            if object_name == "person":
+                # Check if person is in list
+                if track_id in person_recognition:
+                    text = object_name + ": " + str(track_id) + " (" + person_recognition[track_id].name + ")"
+            else:
+                text = object_name + ": " + str(track_id)
+
             cv2.putText(image, text, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
         
-        # Face detection
-        for name, x1, y1, x2, y2 in person_recognition.copy():
-            # Draw a box around the face
-            cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
-
-            # Draw a label with a name below the face
-            # cv2.rectangle(image, (x1, y2 - 25), (x2, y2), (0, 255, 0), cv2.FILLED)
-            cv2.putText(image, name, (x1 + 6, y2 - 25), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
 
         # Calculate FPS
         dt = time.time() - time_stamp
@@ -146,7 +152,6 @@ def task_streamer(queue_from_streamer_camera, streamerPath):
 def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition):
 
     global object_detection
-    global person_detection
 
     # Detector
     net = detectNet("ssd-mobilenet-v2", threshold=0.5)
@@ -188,22 +193,20 @@ def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition)
 
             # Persons
             if object_name == "person":
-                persons.append((x1, y1, x2, y2))
+                persons.append((track_id, x1, y1, x2, y2))
 
         # Copy lists
         object_detection = object_detection_temp.copy()
-        person_detection = persons.copy()
 
         # Face detection
-        if len(person_detection) > 0:
+        if len(persons) > 0:
             # Send image to face recognition
-            queue_to_face_recognition.put(image.copy())
+            queue_to_face_recognition.put(image.copy(), persons.copy())
 
 
 
 def task_face_recognition(queue_from_object_detection):
 
-    global person_detection
     global person_recognition
 
    # Create encoding list of known faces
@@ -216,46 +219,72 @@ def task_face_recognition(queue_from_object_detection):
 
     while True:
 
-        # Temporal recognition
-        person_recognition_temp = []
-
         # Read frame from RRSP stream
-        image = queue_from_object_detection.get()
+        image, persons = queue_from_object_detection.get()
 
         # Loop into each person
-        for x1, y1, x2, y2 in person_detection.copy():
+        for track_id, x1, y1, x2, y2 in persons:
 
-            # Crop image
-            person_image = image[y1:y2, x1:x2]
+            # Check if person is not already in list
+            if track_id not in person_recognition:
+                # Create person
+                person_recognition[track_id] = person()
+                person_recognition[track_id].name = "Unknown"
+                person_recognition[track_id].name_processing = "Unknown"
+                person_recognition[track_id].matches = 0
+                person_recognition[track_id].counter = 0
+            
+            # Check if person does not have a name
+            if person_recognition[track_id].name == "Unknown":
 
-            # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
-            person_image = cv2.cvtColor(person_image, cv2.COLOR_RGB2BGR)
-            # person_image = cv2.resize(person_image, (0, 0), fx=0.5, fy=0.5)
+                # Increase counter
+                person_recognition[track_id].counter += 1
 
-            # Find all the faces and face encodings in the current frame of video
-            face_locations = face_recognition.face_locations(person_image, model="cnn")
-            face_encodings = face_recognition.face_encodings(person_image, face_locations)
+                # Check if processing name is unknown
+                if person_recognition[track_id].counter < 20 or (person_recognition[track_id].counter > 20 and person_recognition[track_id].counter % 10 == 0):
+            
+                    # Crop image
+                    person_image = image[y1:y2, x1:x2]
 
-            # Loop into each face
-            for face_encoding in face_encodings:
-                # See if the face is a match for the known face(s)
-                matches = face_recognition.compare_faces(known_faces_encoding, face_encoding)
+                    # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
+                    person_image = cv2.cvtColor(person_image, cv2.COLOR_RGB2BGR)
 
-                # If no match was found in known_face_encodings, use the name "Unknown"
-                name = "Unknown"
+                    # Find all the faces and face encodings in the current frame of video
+                    face_locations = face_recognition.face_locations(person_image, model="cnn")
+                    face_encodings = face_recognition.face_encodings(person_image, face_locations)
 
-                # If a match was found in known_face_encodings, just use the first one.
-                if True in matches:
-                    first_match_index = matches.index(True)
-                    name = known_faces_name[first_match_index]
+                    # Loop into each face
+                    for face_encoding in face_encodings:
+                        # See if the face is a match for the known face(s)
+                        matches = face_recognition.compare_faces(known_faces_encoding, face_encoding)
 
-                # Add to list
-                person_recognition_temp.append((name, x1, y1, x2, y2))
+                        # If no match was found in known_face_encodings, use the name "Unknown"
+                        name = "Unknown"
 
-        # Copy list
-        person_recognition = person_recognition_temp.copy()
+                        # If a match was found in known_face_encodings, just use the first one.
+                        if True in matches:
+                            first_match_index = matches.index(True)
+                            name = known_faces_name[first_match_index]
 
+                        # Analyse result: When name is not unknown
+                        if name != "Unknown":
+                            
+                            if person_recognition[track_id].matches > 0 and person_recognition[track_id].name_processing == name:
+                                person_recognition[track_id].name_processing = name
+                                person_recognition[track_id].matches += 1
+                                person_recognition[track_id].counter = 0
+                            elif person_recognition[track_id].matches > 0 and person_recognition[track_id].name_processing != name:
+                                person_recognition[track_id].name_processing = name
+                                person_recognition[track_id].matches = 1
+                                person_recognition[track_id].counter = 0
+                            elif person_recognition[track_id].matches == 0:
+                                person_recognition[track_id].name_processing = name
+                                person_recognition[track_id].matches += 1
+                                person_recognition[track_id].counter = 0
 
+                            # Check if matches are reached
+                            if person_recognition[track_id].matches == 5:
+                                person_recognition[track_id].name = name
 
 # Main
 if __name__ == '__main__':
