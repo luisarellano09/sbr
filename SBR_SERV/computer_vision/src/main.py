@@ -108,13 +108,13 @@ def task_streamer(queue_from_streamer_camera, streamerPath):
         image = queue_from_streamer_camera.get()
 
         # Object detection
-        for object_name, x1, y1, x2, y2 in object_detection.copy():
+        for object_name, track_id, x1, y1, x2, y2 in object_detection.copy():
             # Draw a box around the face
             cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
             # Draw a label with a name below the face
             cv2.rectangle(image, (x1, y2 - 25), (x2, y2), (0, 0, 255), cv2.FILLED)
-            cv2.putText(image, object_name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+            cv2.putText(image, object_name + ": " + track_id, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
         
         # Face detection
         for name, x1, y1, x2, y2 in person_recognition.copy():
