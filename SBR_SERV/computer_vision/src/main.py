@@ -173,11 +173,14 @@ def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition)
             # Get class name
             object_name = net.GetClassDesc(detection.ClassID)
 
+            # Get TrackID
+            track_id = detection.TrackID
+
             # Get bounding box
             x1, y1, x2, y2 = int(detection.Left), int(detection.Top), int(detection.Right), int(detection.Bottom)
 
             # Add to list
-            object_detection_temp.append((object_name, x1, y1, x2, y2))
+            object_detection_temp.append((object_name, track_id, x1, y1, x2, y2))
 
             # Persons
             if object_name == "person":
