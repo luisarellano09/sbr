@@ -129,6 +129,8 @@ def task_streamer(queue_from_streamer_camera, streamerPath):
                 # Check if person is in list
                 if track_id in person_recognition:
                     text = object_name + ": " + str(track_id) + " (" + person_recognition[track_id].name + ")"
+                else:
+                    text = object_name + ": " + str(track_id) + " (Unknown)"
             else:
                 text = object_name + ": " + str(track_id)
 
