@@ -13,6 +13,7 @@ import os
 # Global variables
 object_detection = []
 person_detection = []
+person_recognition = []
 
 
 # Function to convert cv2 image to cuda image
@@ -93,7 +94,7 @@ def task_read_camera(queue_to_streamer_computer_vision, queue_to_object_detectio
 def task_streamer(queue_from_streamer_camera, streamerPath):
 
     global object_detection
-    global person_detection
+    global person_recognition
 
     time_stamp = time.time()
     fps_filt = 0
@@ -116,7 +117,7 @@ def task_streamer(queue_from_streamer_camera, streamerPath):
             cv2.putText(image, object_name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
         
         # Face detection
-        for name, x1, y1, x2, y2 in person_detection.copy():
+        for name, x1, y1, x2, y2 in person_recognition.copy():
             # Draw a box around the face
             cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
@@ -141,6 +142,7 @@ def task_streamer(queue_from_streamer_camera, streamerPath):
 def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition):
 
     global object_detection
+    global person_detection
 
     # Detector
     net = detectNet("ssd-mobilenet-v2", threshold=0.5)
@@ -174,17 +176,19 @@ def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition)
             if object_name == "person":
                 persons.append((x1, y1, x2, y2))
 
-        # Copy list
+        # Copy lists
         object_detection = object_detection_temp.copy()
+        person_detection = persons.copy()
 
         # Face detection
-        #queue_to_face_recognition.put((image.copy(), persons.copy()))
+        queue_to_face_recognition.put(image.copy())
 
 
 
 def task_face_recognition(queue_from_object_detection):
 
     global person_detection
+    global person_recognition
 
    # Create encoding list of known faces
     known_faces_encoding = []
@@ -196,14 +200,14 @@ def task_face_recognition(queue_from_object_detection):
 
     while True:
 
-        # Temporal detection
-        person_detection_temp = []
+        # Temporal recognition
+        person_recognition_temp = []
 
         # Read frame from RRSP stream
-        image, persons = queue_from_object_detection.get()
+        image = queue_from_object_detection.get()
 
         # Loop into each person
-        for x1, y1, x2, y2 in persons:
+        for x1, y1, x2, y2 in person_detection.copy():
 
             # Crop image
             person_image = image[y1:y2, x1:x2]
@@ -230,10 +234,10 @@ def task_face_recognition(queue_from_object_detection):
                     name = known_faces_name[first_match_index]
 
                 # Add to list
-                person_detection_temp.append((name, x1, y1, x2, y2))
+                person_recognition_temp.append((name, x1, y1, x2, y2))
 
         # Copy list
-        person_detection = person_detection_temp.copy()
+        person_recognition = person_recognition_temp.copy()
 
 
 
