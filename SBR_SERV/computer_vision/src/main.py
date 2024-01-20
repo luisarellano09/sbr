@@ -62,8 +62,12 @@ def task_read_camera(queue_to_streamer_computer_vision, queue_to_object_detectio
     align = rs.align(align_to)
 
     while True:
-        # Wait for a coherent pair of frames: depth and color
-        frame = pipe.wait_for_frames()
+
+        try:
+            # Wait for a coherent pair of frames: depth and color
+            frame = pipe.wait_for_frames()
+        except:
+            exit(1)
         
         # Align the depth frame to color frame
         aligned_frame = align.process(frame)
