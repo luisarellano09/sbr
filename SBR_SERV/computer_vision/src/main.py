@@ -181,7 +181,9 @@ def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition)
         person_detection = persons.copy()
 
         # Face detection
-        queue_to_face_recognition.put(image.copy())
+        if len(person_detection) > 0:
+            # Send image to face recognition
+            queue_to_face_recognition.put(image.copy())
 
 
 
