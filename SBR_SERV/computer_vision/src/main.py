@@ -153,7 +153,7 @@ def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition)
     # dropFrames        number of consecutive lost frames before a track is dropped (default: 15)
     # overlapThreshold  how much IOU overlap is required for a bounding box to be matched (default: 0.5)
     net.SetTrackingEnabled(True)
-    net.SetTrackingParams(minFrames=10, dropFrames=50, overlapThreshold=0.5)
+    net.SetTrackingParams(minFrames=10, dropFrames=30, overlapThreshold=0.7)
 
     while True:
 
