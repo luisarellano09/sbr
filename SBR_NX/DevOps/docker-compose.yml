@@ -58,49 +58,6 @@ services:
         network_mode: "host"
             
     
-    # sbr_serv_camera_streamer:
-    #     restart: unless-stopped
-    #     image: sbr/sbr_serv_camera_streamer:1.0
-    #     container_name: sbr_serv_camera_streamer
-    #     privileged: true
-    #     runtime: nvidia
-    #     build:
-    #         context: ../../SBR_SERV/camera_streamer/
-    #         target: dev
-    #     network_mode: "host"
-
-
-    # sbr_srv_object_detector:
-    #     restart: unless-stopped
-    #     image: sbr/sbr_srv_object_detector:1.0
-    #     container_name: sbr_srv_object_detector
-    #     runtime: nvidia
-    #     volumes:
-    #         - /home/sbrnx/SBR/jetson-inference/data:/jetson-inference/data
-    #         - /home/sbrnx/SBR/jetson-inference/python/training/classification/data:/jetson-inference/python/training/classification/data
-    #         - /home/sbrnx/SBR/jetson-inference/python/training/classification/models:/jetson-inference/python/training/classification/models
-    #         - /home/sbrnx/SBR/jetson-inference/python/training/detection/data:/jetson-inference/python/training/detection/data
-    #         - /home/sbrnx/SBR/jetson-inference/python/training/detection/models:/jetson-inference/python/training/detection/models
-    #         - /home/sbrnx/SBR/jetson-inference/python/www/recognizer:/jetson-inference/python/www/recognizer
-    #     build:
-    #         context: ../../SBR_SERV/object_detector/
-    #         target: dev
-    #     network_mode: "host"
-
-
-    # sbr_srv_face_detector:
-    #     restart: unless-stopped
-    #     image: sbr/sbr_srv_face_detector:1.0
-    #     container_name: sbr_srv_face_detector
-    #     runtime: nvidia
-    #     volumes:
-    #         - /home/sbrnx/SBR/data/face_detector/known_faces:/face_detector/known_faces
-    #     build:
-    #         context: ../../SBR_SERV/face_detector/
-    #         target: dev
-    #     network_mode: "host"
-
-
 networks:
     sbr_net_internal:
         driver: bridge
