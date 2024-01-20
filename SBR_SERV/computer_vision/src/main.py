@@ -268,3 +268,4 @@ if __name__ == '__main__':
     thread_streamer_computer_vision.join()
     thread_object_detection.join()
     thread_face_recognition.join()
+    
