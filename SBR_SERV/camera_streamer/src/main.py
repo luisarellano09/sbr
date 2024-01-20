@@ -3,6 +3,7 @@ import pyrealsense2 as rs
 import numpy as np
 import cv2
 
+
 # Function to convert cv2 image to cuda image
 def cv2_to_cuda(cv_image):
     # Convert image to cuda
@@ -41,6 +42,7 @@ if __name__ == '__main__':
     align = rs.align(align_to)
 
     while True:
+
         # Wait for a coherent pair of frames: depth and color
         frame = pipe.wait_for_frames()
         
@@ -72,7 +74,7 @@ if __name__ == '__main__':
 
         # Adjust image RGB
         color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
-
+        
         # Render the image
         streamerCameraDepth.Render(cv2_to_cuda(depth_image))
         streamerCameraRGB.Render(cv2_to_cuda(color_image))
