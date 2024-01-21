@@ -57,7 +57,7 @@ class person:
 object_detection = []
 person_recognition = {}
 frame_number = 0
-
+semaphore = threading.Semaphore()
 
 # ==================================================================================================
 # Functions
@@ -120,7 +120,9 @@ def task_read_camera(queue_to_streamer_computer_vision, queue_to_object_detectio
             frame = pipe.wait_for_frames()
 
             # Increase frame number
+            semaphore.acquire()
             frame_number += 1
+            semaphore.release()
 
             # Align the depth frame to color frame
             aligned_frame = align.process(frame)
@@ -168,8 +170,13 @@ def task_streamer(queue_from_streamer_camera):
             # Get image from queue
             frame_id, image = queue_from_streamer_camera.get()
 
+            # Get object_detection
+            semaphore.acquire()
+            object_detection_copy = object_detection.copy()
+            semaphore.release()
+
             # Object detection
-            for frame_id_obj, object_class, track_id, x1, y1, x2, y2 in object_detection.copy():
+            for frame_id_obj, object_class, track_id, x1, y1, x2, y2 in object_detection_copy:
                 # Draw a box around the face
                 cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
@@ -178,9 +185,15 @@ def task_streamer(queue_from_streamer_camera):
 
                 # Check if object is a person
                 if object_class == "person":
+
+                    # Get person_recognition
+                    semaphore.acquire()
+                    person_recognition_copy = person_recognition.copy()
+                    semaphore.release()
+
                     # Check if person is in list
-                    if track_id in person_recognition:
-                        text = object_class + ": " + str(track_id) + " (" + person_recognition[track_id].name + ")"
+                    if track_id in person_recognition_copy:
+                        text = object_class + ": " + str(track_id) + " (" + person_recognition_copy[track_id].name + ")"
                     else:
                         text = object_class + ": " + str(track_id) + " (Unknown)"
                 else:
@@ -258,7 +271,9 @@ def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition)
                     persons.append((track_id, x1, y1, x2, y2))
 
             # Copy lists
+            semaphore.acquire()
             object_detection = object_detection_temp.copy()
+            semaphore.release()
 
             # Face detection
             if len(persons) > 0:
@@ -296,17 +311,21 @@ def task_face_recognition(queue_from_object_detection):
                 # Check if person is not already in list
                 if track_id not in person_recognition:
                     # Create person
+                    semaphore.acquire()
                     person_recognition[track_id] = person()
                     person_recognition[track_id].name = "Unknown"
                     person_recognition[track_id].name_processing = "Unknown"
                     person_recognition[track_id].matches = 0
                     person_recognition[track_id].counter = 0
+                    semaphore.release()
                 
                 # Check if person does not have a name
                 if person_recognition[track_id].name == "Unknown":
 
                     # Increase counter
+                    semaphore.acquire()
                     person_recognition[track_id].counter += 1
+                    semaphore.release()
 
                     # Check counter
                     if person_recognition[track_id].counter < FACE_RECOGNITION_CONTINUOUS_FRAMES or (person_recognition[track_id].counter > FACE_RECOGNITION_CONTINUOUS_FRAMES and person_recognition[track_id].counter % FACE_RECOGNITION_RECHECK_FRAMES == 0):
@@ -336,6 +355,8 @@ def task_face_recognition(queue_from_object_detection):
 
                             # Analyse result: When name is not unknown
                             if name != "Unknown":
+                                semaphore.acquire()
+
                                 if person_recognition[track_id].matches > 0 and person_recognition[track_id].name_processing == name:
                                     person_recognition[track_id].name_processing = name
                                     person_recognition[track_id].matches += 1
@@ -352,6 +373,8 @@ def task_face_recognition(queue_from_object_detection):
                                 # Check if matches are reached
                                 if person_recognition[track_id].matches == FACE_RECOGNITION_CONTINUOUS_MATCHES:
                                     person_recognition[track_id].name = name
+                                
+                                semaphore.release()
 
     except Exception as e:
         print(e)
@@ -449,12 +472,16 @@ def task_rabbitmq_publisher_objects():
         while True:
             
             # Get current frame number
+            semaphore.acquire()
             current_frame_number = frame_number
+            semaphore.release()
             
             if current_frame_number != previous_frame_number:
                 # Get objects
+                semaphore.acquire()
                 objects = object_detection.copy()
                 persons = person_recognition.copy()
+                semaphore.release()
 
                 # Check if objetcs is not empty
                 if len(objects) > 0:
