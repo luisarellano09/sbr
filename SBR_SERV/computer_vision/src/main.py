@@ -513,6 +513,7 @@ if __name__ == '__main__':
         thread_object_detection = threading.Thread(target=task_object_detection, args=(queue_from_camera_to_object_detection, queue_from_object_detection_to_face_recognition,))
         thread_face_recognition = threading.Thread(target=task_face_recognition, args=(queue_from_object_detection_to_face_recognition,))
         thread_heartbeat = threading.Thread(target=task_heartbeat)
+        thread_rabbitmq_publisher_objects = threading.Thread(target=task_rabbitmq_publisher_objects)
 
         # Start threads
         thread_read_camera.start()
@@ -520,6 +521,7 @@ if __name__ == '__main__':
         thread_object_detection.start()
         thread_face_recognition.start()
         thread_heartbeat.start()
+        thread_rabbitmq_publisher_objects.start()
 
         # Wait threads
         thread_read_camera.join()
@@ -527,6 +529,7 @@ if __name__ == '__main__':
         thread_object_detection.join()
         thread_face_recognition.join()
         thread_heartbeat.join()
+        thread_rabbitmq_publisher_objects.join()
 
     except Exception as e:
         print(e)
