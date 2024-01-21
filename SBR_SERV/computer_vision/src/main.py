@@ -34,6 +34,7 @@ FACE_RECOGNITION_TOLERANCE = 0.7
 
 THREAD_QUEUE_CAPACITY = 1
 
+
 # ==================================================================================================
 # Global definitions
 # ==================================================================================================
@@ -326,7 +327,10 @@ def task_face_recognition(queue_from_object_detection):
                             if person_recognition[track_id].matches == FACE_RECOGNITION_CONTINUOUS_MATCHES:
                                 person_recognition[track_id].name = name
 
-# Main
+
+# ==================================================================================================
+# Main function
+# ==================================================================================================
 if __name__ == '__main__':
 
     # Create queue
