@@ -387,7 +387,7 @@ def task_heartbeat():
             # Get current frame number
             previous_frame_number = frame_number
 
-            print("Heartbeat: " + str(frame_number))
+            print("[Heartbeat]: " + str(frame_number))
 
             # Delay 1s
             time.sleep(1)
