@@ -496,7 +496,7 @@ def task_rabbitmq_publisher_objects():
             previous_frame_number = frame_number
 
     except Exception as e:
-        print(e)
+        print("[RabbitMQ]: " + str(e))
         exit(1)
 
 # ==================================================================================================
