@@ -447,8 +447,11 @@ def task_rabbitmq_publisher_objects():
 
         # Loop
         while True:
-            print("[RabbitMQ]: Loop")
-            if frame_number != -1: #previous_frame_number:
+            
+            # Get current frame number
+            current_frame_number = frame_number
+            
+            if current_frame_number != previous_frame_number:
                 # Get objects
                 objects = object_detection.copy()
                 persons = person_recognition.copy()
@@ -456,7 +459,6 @@ def task_rabbitmq_publisher_objects():
                 # Check if objetcs is not empty
                 if len(objects) > 0:
                     object_frame_id = objects[0][0]
-                    print("[RabbitMQ]: object_frame_id " + str(object_frame_id))
 
                     # Check if frame id has changed
                     if object_frame_id != previous_object_frame_id:
@@ -492,11 +494,12 @@ def task_rabbitmq_publisher_objects():
                                 channel.basic_publish(exchange='SBR_EXCH_COMPUTER_VISION', routing_key='OBJECTS', body=json.dumps(message))
 
                             print("[RabbitMQ]: sending message " + str(message))
+                            
                         # Save previous object frame id
                         previous_object_frame_id = object_frame_id
                 
             # Save previous frame number
-            previous_frame_number = frame_number
+            previous_frame_number = current_frame_number
 
     except Exception as e:
         print("[RabbitMQ]: " + str(e))
