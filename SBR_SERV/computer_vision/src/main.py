@@ -493,8 +493,6 @@ def task_rabbitmq_publisher_objects():
                             else:
                                 channel.basic_publish(exchange='SBR_EXCH_COMPUTER_VISION', routing_key='OBJECTS', body=json.dumps(message))
 
-                            print("[RabbitMQ]: sending message " + str(message))
-                            
                         # Save previous object frame id
                         previous_object_frame_id = object_frame_id
                 
