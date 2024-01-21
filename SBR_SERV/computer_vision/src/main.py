@@ -419,9 +419,13 @@ def task_rabbitmq_publisher_objects():
         rabbitmq_user = os.environ['RABBITMQ_USER']
         rabbitmq_pass = os.environ['RABBITMQ_PASS']
 
+        print("[RabbitMQ]: " + rabbitmq_host + " - " + rabbitmq_user + " - " + rabbitmq_pass)
+
         # Create connection
-        connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, credentials=pika.PlainCredentials(rabbitmq_user, rabbitmq_pass)))
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, port= 5672, credentials=pika.PlainCredentials(rabbitmq_user, rabbitmq_pass)))
         channel = connection.channel()
+
+        print("[RabbitMQ]: Connected")
 
         # Declare exchange
         channel.exchange_declare(
