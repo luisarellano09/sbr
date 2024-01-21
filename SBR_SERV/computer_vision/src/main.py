@@ -50,6 +50,7 @@ class person:
 # ==================================================================================================
 object_detection = []
 person_recognition = {}
+frame_number = 0
 
 
 # ==================================================================================================
@@ -87,6 +88,8 @@ def task_read_camera(queue_to_streamer_computer_vision, queue_to_object_detectio
 
     try:
 
+        global frame_number
+
         # Create pipeline
         pipe = rs.pipeline()
         cfg  = rs.config()
@@ -109,6 +112,9 @@ def task_read_camera(queue_to_streamer_computer_vision, queue_to_object_detectio
 
             # Wait for a coherent pair of frames: depth and color
             frame = pipe.wait_for_frames()
+
+            # Increase frame number
+            frame_number += 1
 
             # Align the depth frame to color frame
             aligned_frame = align.process(frame)
@@ -343,6 +349,54 @@ def task_face_recognition(queue_from_object_detection):
 
 
 # ==================================================================================================
+# Task Heartbeat
+# ==================================================================================================
+def task_heartbeat():
+    try:
+
+        global frame_number
+
+        # Delay 15s
+        time.sleep(30)
+
+        # Max time without image
+        maxTime = 3
+
+        # Time without image
+        timeWithoutImage = 0
+
+        # Get current frame number
+        previous_frame_number = 0
+
+        while True:
+            # Check if frame number has changed
+            if previous_frame_number == frame_number:
+                # Increase time without image
+                timeWithoutImage += 1
+
+                # Check if time without image is greater than max time
+                if timeWithoutImage > maxTime:
+                    print("Error: No image received")
+                    # Exit program
+                    exit(1)
+            else:
+                
+                # Reset time without image
+                timeWithoutImage = 0
+
+            # Get current frame number
+            previous_frame_number = frame_number
+
+            print("Heartbeat: " + str(frame_number))
+
+            # Delay 1s
+            time.sleep(1)
+
+    except Exception as e:
+        print(e)
+        exit(1)    
+
+# ==================================================================================================
 # Main function
 # ==================================================================================================
 if __name__ == '__main__':
@@ -359,18 +413,21 @@ if __name__ == '__main__':
         thread_streamer_computer_vision = threading.Thread(target=task_streamer, args=(queue_from_camera_to_streamer_computer_vision,))
         thread_object_detection = threading.Thread(target=task_object_detection, args=(queue_from_camera_to_object_detection, queue_from_object_detection_to_face_recognition,))
         thread_face_recognition = threading.Thread(target=task_face_recognition, args=(queue_from_object_detection_to_face_recognition,))
+        thread_heartbeat = threading.Thread(target=task_heartbeat)
 
         # Start threads
         thread_read_camera.start()
         thread_streamer_computer_vision.start()
         thread_object_detection.start()
         thread_face_recognition.start()
+        thread_heartbeat.start()
 
         # Wait threads
         thread_read_camera.join()
         thread_streamer_computer_vision.join()
         thread_object_detection.join()
         thread_face_recognition.join()
+        thread_heartbeat.join()
 
     except Exception as e:
         print(e)
