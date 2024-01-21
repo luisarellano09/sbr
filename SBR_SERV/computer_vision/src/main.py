@@ -161,6 +161,9 @@ def task_streamer(queue_from_streamer_camera):
         # Create rstp stream
         streamer = videoOutput(STREAMER_COMPUTER_VISION_PATH)
 
+        # Initial frame id
+        frame_id_obj = 0
+
         while True:
             # Get image from queue
             frame_id, image = queue_from_streamer_camera.get()
