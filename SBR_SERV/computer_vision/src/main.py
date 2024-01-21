@@ -10,17 +10,56 @@ import time
 import os
 
 
-# Global variables
-object_detection = []
-person_detection = []
-person_recognition = []
+# ==================================================================================================
+# Parameters
+# ==================================================================================================
+COLOR_IMAGE_WIDTH = 1280
+COLOR_IMAGE_HEIGHT = 720
+COLOR_IMAGE_FPS = 30
+DEPTH_IMAGE_WIDTH = 1280
+DEPTH_IMAGE_HEIGHT = 720
+DEPTH_IMAGE_FPS = 30
 
+STREAMER_COMPUTER_VISION_PATH = "rtsp://@:6000/serv/computer_vision"
+
+OBJECT_DETECTION_THRESHOLD = 0.5
+OBJECT_DETECTION_TRACKING_MIN_FRAMES = 10
+OBJECT_DETECTION_TRACKING_DROP_FRAMES = 25
+
+FACE_RECOGNITION_TRAINING_PATH = "/face_detector/known_faces"
+FACE_RECOGNITION_CONTINUOUS_FRAMES = 10
+FACE_RECOGNITION_RECHECK_FRAMES = 10
+FACE_RECOGNITION_CONTINUOUS_MATCHES = 5
+FACE_RECOGNITION_TOLERANCE = 0.7
+
+THREAD_QUEUE_CAPACITY = 1
+
+
+# ==================================================================================================
+# Global definitions
+# ==================================================================================================
+class person:
+    name: str
+    name_processing: str
+    matches: int
+    counter: int
+
+
+# ==================================================================================================
+# Global variables
+# ==================================================================================================
+object_detection = []
+person_recognition = {}
+
+
+# ==================================================================================================
+# Functions
+# ==================================================================================================
 
 # Function to convert cv2 image to cuda image
 def cv2_to_cuda(cv_image):
     # Convert image to cuda
     return cudaFromNumpy(cv_image)
-
 
 
 # Train faces
@@ -41,7 +80,9 @@ def train_faces(path, known_faces_encoding, known_faces_name):
         known_faces_name.append(name)
 
 
-
+# ==================================================================================================
+# Task Read Camera
+# ==================================================================================================
 def task_read_camera(queue_to_streamer_computer_vision, queue_to_object_detection):
 
      # Create pipeline
@@ -49,8 +90,8 @@ def task_read_camera(queue_to_streamer_computer_vision, queue_to_object_detectio
     cfg  = rs.config()
 
     # Enable streams
-    cfg.enable_stream(rs.stream.color, 1280, 720, rs.format.rgb8, 30)
-    cfg.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
+    cfg.enable_stream(rs.stream.color, COLOR_IMAGE_WIDTH, COLOR_IMAGE_HEIGHT, rs.format.rgb8, COLOR_IMAGE_FPS)
+    cfg.enable_stream(rs.stream.depth, DEPTH_IMAGE_WIDTH, DEPTH_IMAGE_HEIGHT, rs.format.z16, DEPTH_IMAGE_FPS)
 
     # Start streaming
     pipe.start(cfg)
@@ -85,13 +126,18 @@ def task_read_camera(queue_to_streamer_computer_vision, queue_to_object_detectio
         # Adjust image RGB
         color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
+        # Improve image for night
+
+
         # Render the image
         queue_to_streamer_computer_vision.put(color_image.copy())
         queue_to_object_detection.put(color_image.copy())
 
 
-
-def task_streamer(queue_from_streamer_camera, streamerPath):
+# ==================================================================================================
+# Task Streamer
+# ==================================================================================================
+def task_streamer(queue_from_streamer_camera):
 
     global object_detection
     global person_recognition
@@ -100,7 +146,7 @@ def task_streamer(queue_from_streamer_camera, streamerPath):
     fps_filt = 0
 
     # Create rstp stream
-    streamer = videoOutput(streamerPath)
+    streamer = videoOutput(STREAMER_COMPUTER_VISION_PATH)
 
     while True:
 
@@ -108,22 +154,25 @@ def task_streamer(queue_from_streamer_camera, streamerPath):
         image = queue_from_streamer_camera.get()
 
         # Object detection
-        for object_name, x1, y1, x2, y2 in object_detection.copy():
+        for object_name, track_id, x1, y1, x2, y2 in object_detection.copy():
             # Draw a box around the face
             cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
             # Draw a label with a name below the face
             cv2.rectangle(image, (x1, y2 - 25), (x2, y2), (0, 0, 255), cv2.FILLED)
-            cv2.putText(image, object_name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
-        
-        # Face detection
-        for name, x1, y1, x2, y2 in person_recognition.copy():
-            # Draw a box around the face
-            cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
-            # Draw a label with a name below the face
-            cv2.rectangle(image, (x1, y2 - 25), (x2, y2), (0, 255, 0), cv2.FILLED)
-            cv2.putText(image, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+            # Check if object is a person
+            if object_name == "person":
+                # Check if person is in list
+                if track_id in person_recognition:
+                    text = object_name + ": " + str(track_id) + " (" + person_recognition[track_id].name + ")"
+                else:
+                    text = object_name + ": " + str(track_id) + " (Unknown)"
+            else:
+                text = object_name + ": " + str(track_id)
+
+            cv2.putText(image, text, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+        
 
         # Calculate FPS
         dt = time.time() - time_stamp
@@ -138,14 +187,22 @@ def task_streamer(queue_from_streamer_camera, streamerPath):
         streamer.Render(cv2_to_cuda(image))
 
 
-
+# ==================================================================================================
+# Task Object Detection
+# ==================================================================================================
 def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition):
 
     global object_detection
-    global person_detection
 
     # Detector
-    net = detectNet("ssd-mobilenet-v2", threshold=0.5)
+    net = detectNet("ssd-mobilenet-v2", threshold=OBJECT_DETECTION_THRESHOLD)
+
+    # Configure tracker
+    # minFrames         the number of re-identified frames for a track to be considered valid (default: 3)
+    # dropFrames        number of consecutive lost frames before a track is dropped (default: 15)
+    # overlapThreshold  how much IOU overlap is required for a bounding box to be matched (default: 0.5)
+    net.SetTrackingEnabled(True)
+    net.SetTrackingParams(minFrames=OBJECT_DETECTION_TRACKING_MIN_FRAMES, dropFrames=OBJECT_DETECTION_TRACKING_DROP_FRAMES, overlapThreshold=OBJECT_DETECTION_THRESHOLD)
 
     while True:
 
@@ -166,30 +223,34 @@ def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition)
             # Get class name
             object_name = net.GetClassDesc(detection.ClassID)
 
+            # Get TrackID
+            track_id = detection.TrackID
+
             # Get bounding box
             x1, y1, x2, y2 = int(detection.Left), int(detection.Top), int(detection.Right), int(detection.Bottom)
 
             # Add to list
-            object_detection_temp.append((object_name, x1, y1, x2, y2))
+            object_detection_temp.append((object_name, track_id, x1, y1, x2, y2))
 
             # Persons
             if object_name == "person":
-                persons.append((x1, y1, x2, y2))
+                persons.append((track_id, x1, y1, x2, y2))
 
         # Copy lists
         object_detection = object_detection_temp.copy()
-        person_detection = persons.copy()
 
         # Face detection
-        if len(person_detection) > 0:
+        if len(persons) > 0:
             # Send image to face recognition
-            queue_to_face_recognition.put(image.copy())
+            queue_to_face_recognition.put((image.copy(), persons.copy()))
 
 
 
+# ==================================================================================================
+# Task Face Recognition
+# ==================================================================================================
 def task_face_recognition(queue_from_object_detection):
 
-    global person_detection
     global person_recognition
 
    # Create encoding list of known faces
@@ -197,63 +258,89 @@ def task_face_recognition(queue_from_object_detection):
     known_faces_name = []
 
     # Train faces
-    train_faces("/face_detector/known_faces", known_faces_encoding, known_faces_name)
-
+    train_faces(FACE_RECOGNITION_TRAINING_PATH, known_faces_encoding, known_faces_name)
 
     while True:
-
-        # Temporal recognition
-        person_recognition_temp = []
-
         # Read frame from RRSP stream
-        image = queue_from_object_detection.get()
+        image, persons = queue_from_object_detection.get()
 
         # Loop into each person
-        for x1, y1, x2, y2 in person_detection.copy():
+        for track_id, x1, y1, x2, y2 in persons:
 
-            # Crop image
-            person_image = image[y1:y2, x1:x2]
+            # Check if person is not already in list
+            if track_id not in person_recognition:
+                # Create person
+                person_recognition[track_id] = person()
+                person_recognition[track_id].name = "Unknown"
+                person_recognition[track_id].name_processing = "Unknown"
+                person_recognition[track_id].matches = 0
+                person_recognition[track_id].counter = 0
+            
+            # Check if person does not have a name
+            if person_recognition[track_id].name == "Unknown":
 
-            # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
-            person_image = cv2.cvtColor(person_image, cv2.COLOR_RGB2BGR)
-            person_image = cv2.resize(person_image, (0, 0), fx=0.5, fy=0.5)
+                # Increase counter
+                person_recognition[track_id].counter += 1
 
-            # Find all the faces and face encodings in the current frame of video
-            face_locations = face_recognition.face_locations(person_image, model="cnn")
-            face_encodings = face_recognition.face_encodings(person_image, face_locations)
+                # Check counter
+                if person_recognition[track_id].counter < FACE_RECOGNITION_CONTINUOUS_FRAMES or (person_recognition[track_id].counter > FACE_RECOGNITION_CONTINUOUS_FRAMES and person_recognition[track_id].counter % FACE_RECOGNITION_RECHECK_FRAMES == 0):
+            
+                    # Crop image
+                    person_image = image[y1:y2, x1:x2]
 
-            # Loop into each face
-            for face_encoding in face_encodings:
-                # See if the face is a match for the known face(s)
-                matches = face_recognition.compare_faces(known_faces_encoding, face_encoding)
+                    # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
+                    person_image = cv2.cvtColor(person_image, cv2.COLOR_RGB2BGR)
 
-                # If no match was found in known_face_encodings, use the name "Unknown"
-                name = "Unknown"
+                    # Find all the faces and face encodings in the current frame of video
+                    face_locations = face_recognition.face_locations(person_image, model="cnn")
+                    face_encodings = face_recognition.face_encodings(person_image, face_locations)
 
-                # If a match was found in known_face_encodings, just use the first one.
-                if True in matches:
-                    first_match_index = matches.index(True)
-                    name = known_faces_name[first_match_index]
+                    # Loop into each face
+                    for face_encoding in face_encodings:
+                        # See if the face is a match for the known face(s)
+                        matches = face_recognition.compare_faces(known_faces_encoding, face_encoding, FACE_RECOGNITION_TOLERANCE)
 
-                # Add to list
-                person_recognition_temp.append((name, x1, y1, x2, y2))
+                        # If no match was found in known_face_encodings, use the name "Unknown"
+                        name = "Unknown"
 
-        # Copy list
-        person_recognition = person_recognition_temp.copy()
+                        # If a match was found in known_face_encodings, just use the first one.
+                        if True in matches:
+                            first_match_index = matches.index(True)
+                            name = known_faces_name[first_match_index]
+
+                        # Analyse result: When name is not unknown
+                        if name != "Unknown":
+                            if person_recognition[track_id].matches > 0 and person_recognition[track_id].name_processing == name:
+                                person_recognition[track_id].name_processing = name
+                                person_recognition[track_id].matches += 1
+                                person_recognition[track_id].counter = 0
+                            elif person_recognition[track_id].matches > 0 and person_recognition[track_id].name_processing != name:
+                                person_recognition[track_id].name_processing = name
+                                person_recognition[track_id].matches = 1
+                                person_recognition[track_id].counter = 0
+                            elif person_recognition[track_id].matches == 0:
+                                person_recognition[track_id].name_processing = name
+                                person_recognition[track_id].matches += 1
+                                person_recognition[track_id].counter = 0
+
+                            # Check if matches are reached
+                            if person_recognition[track_id].matches == FACE_RECOGNITION_CONTINUOUS_MATCHES:
+                                person_recognition[track_id].name = name
 
 
-
-# Main
+# ==================================================================================================
+# Main function
+# ==================================================================================================
 if __name__ == '__main__':
 
     # Create queue
-    queue_from_camera_to_streamer_computer_vision = Queue(1)
-    queue_from_camera_to_object_detection = Queue(1)
-    queue_from_object_detection_to_face_recognition = Queue(1)
+    queue_from_camera_to_streamer_computer_vision = Queue(THREAD_QUEUE_CAPACITY)
+    queue_from_camera_to_object_detection = Queue(THREAD_QUEUE_CAPACITY)
+    queue_from_object_detection_to_face_recognition = Queue(THREAD_QUEUE_CAPACITY)
 
     # Create threads
     thread_read_camera = threading.Thread(target=task_read_camera, args=(queue_from_camera_to_streamer_computer_vision, queue_from_camera_to_object_detection,))
-    thread_streamer_computer_vision = threading.Thread(target=task_streamer, args=(queue_from_camera_to_streamer_computer_vision, "rtsp://@:6000/serv/computer_vision",))
+    thread_streamer_computer_vision = threading.Thread(target=task_streamer, args=(queue_from_camera_to_streamer_computer_vision,))
     thread_object_detection = threading.Thread(target=task_object_detection, args=(queue_from_camera_to_object_detection, queue_from_object_detection_to_face_recognition,))
     thread_face_recognition = threading.Thread(target=task_face_recognition, args=(queue_from_object_detection_to_face_recognition,))
 
