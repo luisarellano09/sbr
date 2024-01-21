@@ -143,7 +143,7 @@ def task_read_camera(queue_to_streamer_computer_vision, queue_to_object_detectio
 
     except Exception as e:
         print(e)
-        exit(1)
+        os._exit(1)
 
 
 # ==================================================================================================
@@ -203,7 +203,7 @@ def task_streamer(queue_from_streamer_camera):
 
     except Exception as e:
         print(e)
-        exit(1)
+        os._exit(1)
 
 
 # ==================================================================================================
@@ -267,7 +267,7 @@ def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition)
 
     except Exception as e:
         print(e)
-        exit(1)
+        os._exit(1)
 
 
 # ==================================================================================================
@@ -355,7 +355,7 @@ def task_face_recognition(queue_from_object_detection):
 
     except Exception as e:
         print(e)
-        exit(1)
+        os._exit(1)
 
 
 # ==================================================================================================
@@ -385,7 +385,7 @@ def task_heartbeat():
                 if timeWithoutImage > HEARTBEAT_MAX_TIME_WITHOUT_IMAGE:
                     print("Error: No image received")
                     # Exit program
-                    exit(1)
+                    os._exit(1)
             else:
                 
                 # Reset time without image
@@ -401,7 +401,7 @@ def task_heartbeat():
 
     except Exception as e:
         print(e)
-        exit(1)    
+        os._exit(1)    
 
 
 # ==================================================================================================
@@ -501,7 +501,7 @@ def task_rabbitmq_publisher_objects():
 
     except Exception as e:
         print("[RabbitMQ]: " + str(e))
-        exit(1)
+        os._exit(1)
 
 # ==================================================================================================
 # Main function
@@ -541,5 +541,5 @@ if __name__ == '__main__':
 
     except Exception as e:
         print(e)
-        exit(1)
+        os._exit(1)
     
