@@ -45,6 +45,3 @@ jobs:
         run: /home/sbrnx/SBR/actions-runner/_work/sbr/sbr/SBR_NX/Scripts/install_sbr.sh
       - name: Start Docker Monitor in host
         run: sudo touch /home/sbrnx/SBR/data/host_connector/requests/START_DOCKER_MONITOR
-
-      - name: Restart docker sbr_srv_computer_vision
-        run: docker restart sbr_srv_computer_vision
