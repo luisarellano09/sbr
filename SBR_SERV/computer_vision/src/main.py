@@ -13,6 +13,9 @@ import os
 # ==================================================================================================
 # Parameters
 # ==================================================================================================
+
+THREAD_QUEUE_CAPACITY = 1
+
 COLOR_IMAGE_WIDTH = 1280
 COLOR_IMAGE_HEIGHT = 720
 COLOR_IMAGE_FPS = 30
@@ -32,7 +35,8 @@ FACE_RECOGNITION_RECHECK_FRAMES = 50
 FACE_RECOGNITION_CONTINUOUS_MATCHES = 3
 FACE_RECOGNITION_TOLERANCE = 0.6
 
-THREAD_QUEUE_CAPACITY = 1
+HEARTBEAT_INITIAL_DELAY = 30
+HEARTBEAT_MAX_TIME_WITHOUT_IMAGE = 3
 
 
 # ==================================================================================================
@@ -356,11 +360,8 @@ def task_heartbeat():
 
         global frame_number
 
-        # Delay 15s
-        time.sleep(30)
-
-        # Max time without image
-        maxTime = 3
+        # Initial delay
+        time.sleep(HEARTBEAT_INITIAL_DELAY)
 
         # Time without image
         timeWithoutImage = 0
@@ -375,7 +376,7 @@ def task_heartbeat():
                 timeWithoutImage += 1
 
                 # Check if time without image is greater than max time
-                if timeWithoutImage > maxTime:
+                if timeWithoutImage > HEARTBEAT_MAX_TIME_WITHOUT_IMAGE:
                     print("Error: No image received")
                     # Exit program
                     exit(1)
@@ -395,6 +396,12 @@ def task_heartbeat():
     except Exception as e:
         print(e)
         exit(1)    
+
+
+# ==================================================================================================
+# Task Heartbeat
+# ==================================================================================================
+
 
 # ==================================================================================================
 # Main function
