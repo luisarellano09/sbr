@@ -170,6 +170,9 @@ if [ ! -f exec03 ]; then
     sudo swapon /home/sbrnx/nvme/swapfile
     sudo swapon -s
     echo "/home/sbrnx/nvme/swapfile swap swap defaults 0 0" | sudo tee -a /etc/fstab
+
+    # activate jetson_clocks
+    sudo jetson_clocks
     
     
     # create a flag file to check if we are resuming from reboot.
