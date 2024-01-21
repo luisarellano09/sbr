@@ -52,6 +52,10 @@ services:
             - /home/sbrnx/SBR/jetson-inference/python/training/detection/models:/jetson-inference/python/training/detection/models
             - /home/sbrnx/SBR/jetson-inference/python/www/recognizer:/jetson-inference/python/www/recognizer
             - /home/sbrnx/SBR/data/face_detector/known_faces:/face_detector/known_faces
+        environment:
+            RABBITMQ_HOST: "sbrpi"
+            RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
         build:
             context: ../../SBR_SERV/computer_vision/
             target: dev
