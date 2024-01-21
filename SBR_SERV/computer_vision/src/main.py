@@ -1,9 +1,11 @@
+import json
 import threading
 from queue import Queue 
 from jetson_utils import videoOutput, cudaFromNumpy
 from jetson_inference import detectNet
 import pyrealsense2 as rs
 import face_recognition
+import pika
 import numpy as np
 import cv2
 import time
@@ -136,8 +138,8 @@ def task_read_camera(queue_to_streamer_computer_vision, queue_to_object_detectio
             color_image = cv2.addWeighted( color_image, 1, color_image, 0, 15)
 
             # Render the image
-            queue_to_streamer_computer_vision.put(color_image.copy())
-            queue_to_object_detection.put(color_image.copy())
+            queue_to_streamer_computer_vision.put((frame_number, color_image.copy()))
+            queue_to_object_detection.put((frame_number, color_image.copy()))
 
     except Exception as e:
         print(e)
@@ -161,10 +163,10 @@ def task_streamer(queue_from_streamer_camera):
 
         while True:
             # Get image from queue
-            image = queue_from_streamer_camera.get()
+            frame_id, image = queue_from_streamer_camera.get()
 
             # Object detection
-            for object_name, track_id, x1, y1, x2, y2 in object_detection.copy():
+            for frame_id_obj, object_class, track_id, x1, y1, x2, y2 in object_detection.copy():
                 # Draw a box around the face
                 cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
@@ -172,14 +174,14 @@ def task_streamer(queue_from_streamer_camera):
                 cv2.rectangle(image, (x1, y2 - 25), (x2, y2), (0, 0, 255), cv2.FILLED)
 
                 # Check if object is a person
-                if object_name == "person":
+                if object_class == "person":
                     # Check if person is in list
                     if track_id in person_recognition:
-                        text = object_name + ": " + str(track_id) + " (" + person_recognition[track_id].name + ")"
+                        text = object_class + ": " + str(track_id) + " (" + person_recognition[track_id].name + ")"
                     else:
-                        text = object_name + ": " + str(track_id) + " (Unknown)"
+                        text = object_class + ": " + str(track_id) + " (Unknown)"
                 else:
-                    text = object_name + ": " + str(track_id)
+                    text = object_class + ": " + str(track_id)
 
                 cv2.putText(image, text, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
             
@@ -190,7 +192,8 @@ def task_streamer(queue_from_streamer_camera):
             fps_filt = 0.9 * fps_filt + 0.1 * fps
 
             # Add text
-            cv2.putText(image, str(int(fps_filt)) + 'fps',  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
+            text_info = "FPS: " + str(int(fps_filt)) + " - Frame: " + str(frame_id_obj) + "/" + str(frame_id)
+            cv2.putText(image, text_info,  (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
 
             # Render the image
             streamer.Render(cv2_to_cuda(image))
@@ -228,7 +231,7 @@ def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition)
             persons = []
 
             # Get image from queue
-            image = queue_from_streamer_camera.get()
+            frame_id, image = queue_from_streamer_camera.get()
 
             # Detect objects
             detections = net.Detect(cv2_to_cuda(image))
@@ -236,7 +239,7 @@ def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition)
             # Loop into each detection
             for detection in detections:
                 # Get class name
-                object_name = net.GetClassDesc(detection.ClassID)
+                object_class = net.GetClassDesc(detection.ClassID)
 
                 # Get TrackID
                 track_id = detection.TrackID
@@ -245,10 +248,10 @@ def task_object_detection(queue_from_streamer_camera, queue_to_face_recognition)
                 x1, y1, x2, y2 = int(detection.Left), int(detection.Top), int(detection.Right), int(detection.Bottom)
 
                 # Add to list
-                object_detection_temp.append((object_name, track_id, x1, y1, x2, y2))
+                object_detection_temp.append((frame_id, object_class, track_id, x1, y1, x2, y2))
 
                 # Persons
-                if object_name == "person":
+                if object_class == "person":
                     persons.append((track_id, x1, y1, x2, y2))
 
             # Copy lists
@@ -399,9 +402,95 @@ def task_heartbeat():
 
 
 # ==================================================================================================
-# Task Heartbeat
+# Task RabbitMQ Publisher
 # ==================================================================================================
+def task_rabbitmq_publisher_objects():
+    try:
 
+        global frame_number
+        global object_detection
+        global person_recognition
+
+        # Get environment variables
+        rabbitmq_host = os.environ['RABBITMQ_HOST']
+        rabbitmq_user = os.environ['RABBITMQ_USER']
+        rabbitmq_pass = os.environ['RABBITMQ_PASS']
+
+        # Create connection
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, credentials=pika.PlainCredentials(rabbitmq_user, rabbitmq_pass)))
+        channel = connection.channel()
+
+        # Declare exchange
+        channel.exchange_declare(
+            exchange='SBR_EXCH_COMPUTER_VISION', 
+            exchange_type='topic',
+            durable=False,
+            auto_delete=False,
+            internal=False,
+        )
+
+        # Declare queue
+        channel.queue_declare(queue='Q_SBR_FROM_COMPUTER_VISION_OBJECTS', exclusive=True)
+
+        # Previous frame number
+        previous_frame_number = 0
+
+        # Previous object frame id
+        previous_object_frame_id = 0
+
+        # Loop
+        while True:
+            if frame_number != previous_frame_number:
+                # Get objects
+                objects = object_detection.copy()
+                persons = person_recognition.copy()
+
+                # Check if objetcs is not empty
+                if len(objects) > 0:
+                    object_frame_id = objects[0][0]
+
+                    # Check if frame id has changed
+                    if object_frame_id != previous_object_frame_id:
+                        # On each object
+                        for frame_id, object_class, track_id, x1, y1, x2, y2 in objects:
+                            # Check if object is a person
+                            if object_class == "person":
+                                # Check if person is in list
+                                if track_id in persons:
+                                    name = persons[track_id].name
+                                else:
+                                    name = "Unknown"
+                            else:
+                                name = object_class
+                            
+                            # Create message
+                            message = {
+                                "frame_id": frame_id,
+                                "object_class": object_class,
+                                "track_id": track_id,
+                                "x1": x1,
+                                "y1": y1,
+                                "x2": x2,
+                                "y2": y2,
+                                "name": name
+                            }
+
+                            # Publish message persons
+                            if object_class == "person":
+                                routing_key = "PERSONS." + name
+                                channel.basic_publish(exchange='SBR_EXCH_COMPUTER_VISION', routing_key=routing_key, body=json.dumps(message))
+                            else:
+                                channel.basic_publish(exchange='SBR_EXCH_COMPUTER_VISION', routing_key='OBJECTS', body=json.dumps(message))
+
+                        # Save previous object frame id
+                        previous_object_frame_id = object_frame_id
+                
+            # Save previous frame number
+            previous_frame_number = frame_number
+
+    except Exception as e:
+        print(e)
+        exit(1)
 
 # ==================================================================================================
 # Main function
