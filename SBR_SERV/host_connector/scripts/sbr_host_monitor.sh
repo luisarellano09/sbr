@@ -25,6 +25,10 @@ echo $directory
 # Start Runner: Create a file named START_RUNNER in the directory
 sudo touch /home/$user/SBR/data/host_connector/requests/START_RUNNER
 
+# Activate jetson_clocks
+if [ "$hostname" == "sbrnx" ]; then
+    sudo jetson_clocks
+fi
 
 # Task Monitor Files
 task_monitor_files() {
