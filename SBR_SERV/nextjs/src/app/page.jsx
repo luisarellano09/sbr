@@ -19,7 +19,7 @@ export default function Home() {
                 <DashboardRobotStatus />
                 <ControlRobotCcommand />
             </div>
-            <iframe src={"https://sbrnx.local:8554"} className="p-5 w-full h-[70%] max-w-[1350px]"/>
+            <iframe src={"https://sbrnx:8554"} className="p-5 w-full h-[70%] max-w-[1350px]"/>
         </div>
     );
 }
