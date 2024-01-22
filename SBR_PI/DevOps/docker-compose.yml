@@ -142,6 +142,7 @@ services:
             RABBITMQ_HOST: "sbr_rabbitmq"
             RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
             RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
+            REDIS_HOST: "sbr_redis"
         build:
             context: ../../SBR_SERV/redis_connector/
             target: dev
