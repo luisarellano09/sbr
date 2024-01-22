@@ -12,7 +12,7 @@ fn main() {
     // Create threads
     let mut rabbitmq_consumer_esp32: RabbitmqConsumerESP32 = RabbitmqConsumerESP32::new();
 
-    let thread_rabbitmq_consumer = thread::spawn(move || {
+    let thread_rabbitmq_consumer_esp32 = thread::spawn(move || {
         match rabbitmq_consumer_esp32.run() {
             Ok(_) => {},
             Err(er) => {
@@ -23,5 +23,5 @@ fn main() {
         }
     });
 
-    thread_rabbitmq_consumer.join().expect("Error in thread rabbitmq consumer");
+    thread_rabbitmq_consumer_esp32.join().expect("Error in thread rabbitmq consumer ESP32");
 }
