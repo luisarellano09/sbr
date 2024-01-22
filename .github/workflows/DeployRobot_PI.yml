@@ -1,7 +1,8 @@
 name: Deploy Robot - PI
 
 on:
-  workflow_dispatch:
+    workflow_dispatch:
+    push:
   
 jobs: 
   deploy:
