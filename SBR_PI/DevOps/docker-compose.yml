@@ -117,7 +117,6 @@ services:
         tty: true
         image: sbr/sbr_serv_serial_connector:1.0
         container_name: sbr_serv_serial_connector
-        privileged: true
         devices:
             - /dev/ttyAMA0:/dev/ttyAMA0
         environment:
@@ -142,6 +141,7 @@ services:
             RABBITMQ_HOST: "sbr_rabbitmq"
             RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
             RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
+            REDIS_HOST: "sbr_redis"
         build:
             context: ../../SBR_SERV/redis_connector/
             target: dev
@@ -244,6 +244,7 @@ services:
                 condition: service_healthy
         networks:
             - sbr_net_internal
+
 
 networks:
     sbr_net_internal:

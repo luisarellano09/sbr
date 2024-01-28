@@ -6,8 +6,8 @@ use std::env;
 
 
 //=====================================================================================================
-const URL: &str = "amqp://RABBITMQ_USER:RABBITMQ_PASS@RABBITMQ_HOST:5672/";
-
+const URL_RABBITMQ: &str = "amqp://RABBITMQ_USER:RABBITMQ_PASS@RABBITMQ_HOST:5672/";
+const URL_REDIS: &str = "redis://REDIS_HOST:6379";
 
 //=====================================================================================================
 pub struct RabbitmqConsumerESP32 {}
@@ -31,7 +31,7 @@ impl RabbitmqConsumerESP32 {
         let rabbitmq_password = env::var("RABBITMQ_PASS")?;
         let rabbitmq_host = env::var("RABBITMQ_HOST")?;
 
-        let url = URL.replace("RABBITMQ_HOST", &rabbitmq_host);
+        let url = URL_RABBITMQ.replace("RABBITMQ_HOST", &rabbitmq_host);
         let url = url.replace("RABBITMQ_USER", &rabbitmq_user);
         let url = url.replace("RABBITMQ_PASS", &rabbitmq_password);
 
@@ -73,7 +73,9 @@ impl RabbitmqConsumerESP32 {
         println!("Rabbitmq config done");
 
         //Redis connection
-        let redis_client = redis::Client::open("redis://sbr_redis:6379")?;
+        let redis_host = env::var("REDIS_HOST").expect("env variable missing");
+        let url = URL_REDIS.replace("REDIS_HOST", &redis_host);
+        let redis_client = redis::Client::open(url)?;
         let mut redis_connection = redis_client.get_connection()?;
         println!("Redis config done");
 

@@ -29,7 +29,6 @@ RUN pip3 install pika
 
 # RUN export PYTHONPATH=$PYTHONPATH:/usr/local/lib
 
-
 # Create a directory for the app
 WORKDIR /sbr
 
