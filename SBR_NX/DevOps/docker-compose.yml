@@ -56,8 +56,6 @@ services:
             RABBITMQ_HOST: "sbrpi"
             RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
             RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
-            SSL_KEY: /jetson-inference/data/key.pem
-            SSL_CERT: /jetson-inference/data/cert.pem
         build:
             context: ../../SBR_SERV/computer_vision/
             target: dev
