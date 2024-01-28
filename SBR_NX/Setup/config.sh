@@ -172,18 +172,17 @@ if [ ! -f exec03 ]; then
     echo "/home/sbrnx/nvme/swapfile swap swap defaults 0 0" | sudo tee -a /etc/fstab   
 
 
-
     echo "****** Install Jetson Inference ******"
     cd ~/SBR
     git clone --recursive --depth=1 https://github.com/dusty-nv/jetson-inference
 
-    # Inside of the docker container
+    # Start the docker container
+    cd jetson-inference
+    docker/run.sh
+
+    # Inside of the docker container: 
     cd tools
     ./download-models.sh
-
-    # Create ssl for webrtc
-    cd ~/SBR/jetson-inference/data
-    openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 365 -nodes -subj '/CN=localhost'
 
     # create a flag file to check if we are resuming from reboot.
     cd
