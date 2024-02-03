@@ -32,7 +32,7 @@ if [ $? -eq 0 ]; then
             sudo journalctl -fu sbr_host_monitor.service
             ;;
         "Start Runner")
-            cd /home/pi/SBR/actions-runner
+            cd /home/sbrpi/SBR/actions-runner
             sudo chmod +x svc.sh
             sudo ./svc.sh start
             ;;

@@ -2,7 +2,7 @@
 Description=SBR Host Monitor
 
 [Service]
-ExecStart=/home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_SERV/host_connector/scripts/sbr_host_monitor.sh
+ExecStart=/home/sbrpi/SBR/actions-runner/_work/sbr/sbr/SBR_SERV/host_connector/scripts/sbr_host_monitor.sh
 Type=simple
 Restart=always
 

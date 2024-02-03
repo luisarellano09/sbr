@@ -20,7 +20,7 @@ jobs:
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> ./.env
         shell: bash
       - name: Stop Docker Monitor in host
-        run: sudo touch /home/pi/SBR/data/host_connector/requests/STOP_DOCKER_MONITOR
+        run: sudo touch /home/sbrpi/SBR/data/host_connector/requests/STOP_DOCKER_MONITOR
       - name: Docker Compose
         working-directory: ./SBR_PI/DevOps
         run: docker compose up --build -d
@@ -31,9 +31,9 @@ jobs:
         run: docker image prune -f
 
       - name: Copy Service
-        run: sudo cp /home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/Services/sbr_host_monitor.service /etc/systemd/system/
+        run: sudo cp /home/sbrpi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/Services/sbr_host_monitor.service /etc/systemd/system/
       - name: Permisison
-        run: chmod +x /home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_SERV/host_connector/scripts/sbr_host_monitor.sh
+        run: chmod +x /home/sbrpi/SBR/actions-runner/_work/sbr/sbr/SBR_SERV/host_connector/scripts/sbr_host_monitor.sh
       - name: Reload Systemd
         run: sudo systemctl daemon-reload
       - name: Enable the Service
@@ -46,8 +46,8 @@ jobs:
         run: sudo systemctl status sbr_host_monitor.service
 
       - name: Permisison Install SBR Script
-        run: chmod +x /home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/Scripts/install_sbr.sh
+        run: chmod +x /home/sbrpi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/Scripts/install_sbr.sh
       - name: Install SBR Script
-        run: /home/pi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/Scripts/install_sbr.sh
+        run: /home/sbrpi/SBR/actions-runner/_work/sbr/sbr/SBR_PI/Scripts/install_sbr.sh
       - name: Start Docker Monitor in host
-        run: sudo touch /home/pi/SBR/data/host_connector/requests/START_DOCKER_MONITOR
+        run: sudo touch /home/sbrpi/SBR/data/host_connector/requests/START_DOCKER_MONITOR

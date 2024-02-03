@@ -29,7 +29,7 @@
 #
 
 # In Host
-# ssh-copy-id pi@sbrpi.local
+# ssh-copy-id sbrpi@sbrpi.local
 
 
 clear
@@ -66,12 +66,13 @@ sudo apt install libudev-dev
 
 echo "****** Setup Docker ******"
 sudo apt-get update
-sudo apt-get install ca-certificates curl gnupg
+sudo apt-get install ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
 echo \
-  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
@@ -82,27 +83,19 @@ sudo systemctl enable containerd.service
 
 
 echo "****** Create SSL Certificates ******"
-cd /home/pi/SBR/data
+cd /home/sbrpi/SBR/data
 mkdir certs
 cd certs
 sudo openssl req -newkey rsa:4096 -nodes -keyout domain.key -x509 -days 800 -out domain.crt
 
 
 echo "****** Set eth0 IP ******"
-# Edit in: sudo nano /etc/dhcpcd.conf
-# interface eth0
-# metric 20100
-# static ip_address=172.168.10.10/24
-# static routers=172.168.10.1
-### Check with: 'ip route' that the metric of ethetnet is higher than wlan0
-sudo systemctl enable systemd-resolved
-sudo systemctl start systemd-resolved
-systemd-resolve --status
-sudo systemctl restart dhcpcd
+sudo nmcli con mod "Wired connection 1" ipv4.method manual ipv4.addr 172.168.10.10/24 ipv4.route-metric 20100
 
 
 echo "****** Docker Swarm ******"
 docker swarm init --advertise-addr 172.168.10.10
+# see status: docker node ls
 # After adding the swarm in sbrnx
 docker node promote sbrnx
 
@@ -110,5 +103,6 @@ docker node promote sbrnx
 echo "****** Disable GUI ******"
 sudo systemctl set-default multi-user.target
 #sudo systemctl set-default graphical.target    # Enable
+
 
 exit 0

@@ -21,7 +21,7 @@ if [ $? -eq 0 ]; then
             sudo apt autoremove -y
             ;;
         "ssh pi")
-            ssh pi@sbrpi.local
+            ssh sbrpi@sbrpi.local
             ;;
         "ssh nx")
             ssh sbrnx@sbrnx.local
