@@ -6,7 +6,7 @@ on:
   
 jobs: 
   deploy:
-    runs-on: [self-hosted, sbr-pi]
+    runs-on: [self-hosted, sbrpi]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
