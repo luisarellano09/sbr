@@ -31,78 +31,73 @@ fi
 # Task Monitor Files
 task_monitor_files() {
 
-    # Check if an IP address is assigned
-    if [ -n "$ip_address" ]; then
+    # Check if the directory exists
+    if [ -d "$directory" ]; then
 
-        # Check if the directory exists
-        if [ -d "$directory" ]; then
+        # Iterate over the files in the directory
+        for file in "$directory"/*; do
 
-            # Iterate over the files in the directory
-            for file in "$directory"/*; do
+            # Get the filename
+            filename=$(basename "$file")
 
-                # Get the filename
-                filename=$(basename "$file")
+            # Check if the filename exists
+            if [ "$filename" != "*" ]; then
 
-                # Check if the filename exists
-                if [ "$filename" != "*" ]; then
+                echo "File: $filename"
 
-                    echo "File: $filename"
+                # Delete the file
+                sudo rm -f "$file"
 
-                    # Delete the file
-                    sudo rm -f "$file"
+                if [ "$filename" == "SHUTDOWN" ]; then
+                    echo "Shutting Down"
+                    sleep 10
+                    sudo shutdown now
 
-                    if [ "$filename" == "SHUTDOWN" ]; then
-                        echo "Shutting Down"
-                        sleep 10
-                        sudo shutdown now
+                elif [ "$filename" == "RESTART" ]; then
+                    echo "Restarting"
+                    sleep 10
+                    sudo reboot
 
-                    elif [ "$filename" == "RESTART" ]; then
-                        echo "Restarting"
-                        sleep 10
-                        sudo reboot
+                elif [ "$filename" == "UPDATE" ]; then
+                    echo "Updating"
+                    sudo apt update -y
+                    sudo apt upgrade -y
+                    sudo apt dist-upgrade -y
+                    sudo apt autoremove -y
 
-                    elif [ "$filename" == "UPDATE" ]; then
-                        echo "Updating"
-                        sudo apt update -y
-                        sudo apt upgrade -y
-                        sudo apt dist-upgrade -y
-                        sudo apt autoremove -y
+                elif [ "$filename" == "PRUNE" ]; then
+                    echo "Docker Prune"
+                    docker image prune -f
 
-                    elif [ "$filename" == "PRUNE" ]; then
-                        echo "Docker Prune"
-                        docker image prune -f
+                elif [ "$filename" == "STOP_RUNNER" ]; then
+                    echo "Stop Runner"
+                    cd /home/$user/SBR/actions-runner
+                    sudo chmod +x svc.sh
+                    sudo ./svc.sh stop
 
-                    elif [ "$filename" == "STOP_RUNNER" ]; then
-                        echo "Stop Runner"
-                        cd /home/$user/SBR/actions-runner
-                        sudo chmod +x svc.sh
-                        sudo ./svc.sh stop
+                elif [ "$filename" == "START_RUNNER" ]; then
+                    echo "Start Runner"
+                    cd /home/$user/SBR/actions-runner
+                    sudo chmod +x svc.sh
+                    sudo ./svc.sh start
 
-                    elif [ "$filename" == "START_RUNNER" ]; then
-                        echo "Start Runner"
-                        cd /home/$user/SBR/actions-runner
-                        sudo chmod +x svc.sh
-                        sudo ./svc.sh start
+                elif [ "$filename" == "STOP_DOCKER_MONITOR" ]; then
+                    echo "Stop Docker Monitor"
+                    stop_docker_monitor=1
+                
+                elif [ "$filename" == "START_DOCKER_MONITOR" ]; then
+                    echo "Start Docker Monitor"
+                    stop_docker_monitor=0
 
-                    elif [ "$filename" == "STOP_DOCKER_MONITOR" ]; then
-                        echo "Stop Docker Monitor"
-                        stop_docker_monitor=1
-                    
-                    elif [ "$filename" == "START_DOCKER_MONITOR" ]; then
-                        echo "Start Docker Monitor"
-                        stop_docker_monitor=0
-
-                    else
-                        echo "Command not found"
-                    fi
-
+                else
+                    echo "Command not found"
                 fi
 
-            done
-        else
-            echo "Directory does not exist: $directory"
-        fi
+            fi
 
+        done
+    else
+        echo "Directory does not exist: $directory"
     fi
 }
 
