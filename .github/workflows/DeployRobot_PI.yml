@@ -23,7 +23,7 @@ jobs:
         run: sudo touch /home/sbrpi/SBR/data/host_connector/requests/STOP_DOCKER_MONITOR
       - name: Docker Compose
         working-directory: ./SBR_PI/DevOps
-        run: docker compose up --build -d
+        run: DOCKER_DEFAULT_PLATFORM=linux/aarch64 docker compose up --build -d
       - name: Restart NGINX
         working-directory: ./SBR_PI/DevOps
         run: docker compose restart sbr_nginx
