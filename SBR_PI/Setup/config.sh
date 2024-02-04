@@ -88,6 +88,8 @@ cd /home/sbrpi/SBR/data
 mkdir certs
 cd certs
 sudo openssl req -newkey rsa:4096 -nodes -keyout domain.key -x509 -days 800 -out domain.crt
+sudo chmod a+rw domain.key
+sudo chmod a+rw domain.crt
 
 
 echo "****** Set eth0 IP ******"
