@@ -58,6 +58,7 @@ sudo timedatectl set-ntp true
 echo "****** Installing Applications ******"
 sudo apt install htop
 sudo apt install nano
+sudo apt install screen 
 
 
 echo "****** Installing Serial lib ******"
