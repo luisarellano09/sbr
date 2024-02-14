@@ -66,16 +66,19 @@ RC_e MotionControl::Run(){
     } else {
 
         // Reduce the call cycle 
+        if (m_CycleCounter %4 == 0){
+            // PID Position
+            this->m_PIDPosition->SetSP(this->m_SPPos);
+            this->m_PIDPosition->SetPV(this->m_odometry->GetDistance());
+            this->m_PIDPosition->Run();
+        }
+
+        // Reduce the call cycle 
         if (m_CycleCounter %10 == 0){
             // PID Angle
             this->m_PIDAngle->SetSP(this->m_SPAngle);
             this->m_PIDAngle->SetPV(this->m_odometry->GetAngle());
             this->m_PIDAngle->Run();
-
-            // PID Position
-            this->m_PIDPosition->SetSP(this->m_SPPos);
-            this->m_PIDPosition->SetPV(this->m_odometry->GetDistance());
-            this->m_PIDPosition->Run();
         }
 
         // PID Pitch
@@ -84,8 +87,11 @@ RC_e MotionControl::Run(){
         this->m_PIDPitch->Run();
         
         // Assign speed to Motors
-        this->m_motorLeft->SetSpeed(this->m_PIDPitch->GetMV()*0.8 + this->m_PIDAngle->GetMV()*0.2) ;
+        this->m_motorLeft->SetSpeed(this->m_PIDPitch->GetMV()*0.8 + this->m_PIDAngle->GetMV()*0.2);
         this->m_motorRight->SetSpeed(this->m_PIDPitch->GetMV()*0.8 - this->m_PIDAngle->GetMV()*0.2);
+
+        // this->m_motorLeft->SetSpeed(this->m_PIDPitch->GetMV()*0.8 + this->steer*0.2);
+        // this->m_motorRight->SetSpeed(this->m_PIDPitch->GetMV()*0.8 - this->steer*0.2);
     }
 
     return retCode;

@@ -33,6 +33,7 @@ public:
     PID* m_PIDPitch = NULL;         /**@brief Instance for PID Pitch. */
     PID* m_PIDPosition = NULL;      /**@brief Instance for PID Position. */
     PID* m_PIDAngle = NULL;         /**@brief Instance for PID Angle. */
+    double steer = 0.0;
 
     /**
      * @brief Construct a new Motion Control object

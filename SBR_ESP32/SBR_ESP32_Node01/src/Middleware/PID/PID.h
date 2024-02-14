@@ -231,6 +231,14 @@ public:
      * @return double MV max range
      */
     double GetMVRangeMax();
+
+    /**
+     * @brief Set the Hysteres
+     * 
+     * @param hysteresis Hysteresis
+     * @return RC_e Result code
+     */
+    RC_e SetHysteresis(double hysteresis);
     
     /**
      * @brief Print
@@ -263,6 +271,7 @@ private:
     double m_mvRangeMax = 100.0;    /**@brief Manipulated Variable Range Max */ 
     double m_prevMVIntegral = 0.0;  /**@brief Previous MV Integral part */
     double m_prevError = 0.0;       /**@brief Previous Error */
+    double m_hysteresis = 0.0;      /**@brief Hysteresis */
 };
 
 #endif // PID_H

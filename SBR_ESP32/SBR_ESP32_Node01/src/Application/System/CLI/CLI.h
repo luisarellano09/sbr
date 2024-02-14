@@ -1494,21 +1494,24 @@ void F_CLI_Test(){
 //=====================================================================================================
 
 void F_CLI_Test_Test1(){
-    
+    manager->m_motionControl->steer++;
+    Serial.println("Steer: " + String(manager->m_motionControl->steer));
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Test_Test2(){
-
+    manager->m_motionControl->steer--;
+    Serial.println("Steer: " + String(manager->m_motionControl->steer));
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Test_Test3(){
-
+    manager->m_motionControl->steer=0.0;
+    Serial.println("Steer: " + String(manager->m_motionControl->steer));
 }
 
 
