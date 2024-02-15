@@ -2,7 +2,7 @@
 
 # Define menu options
 OPTIONS=(
-    "Update" "Update/Upgrade System"
+    "Update" "Update/Upgrade System Now"
     "Host Monitor" "Monitor the service: sbr_host_monitor.service"
     "Start Runner" "Start the GitHub Actions Runner"
     "Serial Node Manager" "Serial connection with Manager (exit: Ctrl-A k)"
