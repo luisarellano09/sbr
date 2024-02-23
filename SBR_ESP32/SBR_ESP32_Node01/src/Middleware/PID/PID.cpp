@@ -46,6 +46,11 @@ RC_e PID::Run(){
     if (this->m_mode == PIDMode::PID_START){
         // Error
         this->m_error = this->m_SP - this->m_PV;
+
+        // Hysteresis
+        if (abs(this->m_error) < this->m_hysteresis){
+            this->m_error = 0.0;
+        }
         
         // Proportional
         mvP = this->m_Kp * this->m_error;
@@ -112,6 +117,9 @@ RC_e PID::Stop(){
     RC_e retCode = RC_e::SUCCESS;
 
     this->m_mode = PIDMode::PID_STOP;
+    this->m_prevError = 0.0;
+    this->m_prevMVIntegral = 0.0;
+    this->m_MV = 0.0;
     Log.traceln("[PID::Stop] PID stopped");
 
     return retCode;
@@ -361,6 +369,20 @@ double PID::GetMVRangeMax(){
 
 //=====================================================================================================
 
+RC_e PID::SetHysteresis(double hysteresis){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_hysteresis = hysteresis;
+
+    Log.traceln("[PID::SetHysteresis] Hysteresis setted: %D", this->m_hysteresis);
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
 RC_e PID::Print(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
@@ -390,6 +412,7 @@ RC_e PID::Reset(){
     // Result code
     RC_e retCode = RC_e::SUCCESS;
 
+    this->m_error = 0.0;
     this->m_prevError = 0.0;
     this->m_prevMVIntegral = 0.0;
     this->m_MV = 0.0;

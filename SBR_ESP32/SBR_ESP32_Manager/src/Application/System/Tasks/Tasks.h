@@ -74,11 +74,9 @@ void TaskCLI(void *parameter){
 
     F_CLI_Hello();
     F_CLI_Info();
-    
-    TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
-        vTaskDelayUntil(&xLastWakeTime, TimerTaskCLI);
         RunCLI();
+        vTaskDelay(TimerTaskCLI);
     }
 }
 
@@ -87,10 +85,9 @@ void TaskCLI(void *parameter){
 
 void TaskGetValueCLI(void *parameter){
     
-    TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
-        vTaskDelayUntil(&xLastWakeTime, TimerTaskCLI);
         GetValueCLI();
+        vTaskDelay(TimerTaskCLI);
     }
 }
 
@@ -98,10 +95,10 @@ void TaskGetValueCLI(void *parameter){
 //=====================================================================================================
 
 void TaskOTA(void *parameter){
-    TickType_t xLastWakeTime = xTaskGetTickCount();
+
     while(true) {
-        vTaskDelayUntil(&xLastWakeTime, TimerTaskOTA);
         manager->m_wifiManager->RunOTA();
+        vTaskDelay(TimerTaskOTA);
     }
 }
 

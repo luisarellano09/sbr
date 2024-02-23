@@ -1,38 +1,76 @@
 version: "3.8"
 
 services:
-
-    portainer:
+    sbr_portainer_nx:
         restart: unless-stopped
-        image: portainer/portainer-ce
-        container_name: sbr_portainer
+        image: portainer/portainer-ce:latest
+        container_name: sbr_portainer_nx
         volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
+            - /etc/localtime:/etc/localtime:ro
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - /home/sbrnx/SBR/data/portainer/portainer-data:/data
         ports:
             - 9000:9000
-
-    sbr_rabbitmq:
-        restart: unless-stopped
-        image: rabbitmq:management-alpine
-        container_name: sbr_rabbitmq
-        hostname: sbr_rabbitmq
-        environment:
-            RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
-            RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
-            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
-        ports:
-            - 5672:5672
-            - 15672:15672
         networks:
-            - sbr_net_internal
             - sbr_net_external
+            - sbr_net_swarm
 
+
+    sbr_serv_host_connector:
+        restart: unless-stopped
+        image: sbr/sbr_serv_host_connector:1.0
+        container_name: sbr_serv_host_connector
+        volumes:
+            - /home/sbrnx/SBR/data/host_connector/requests:/app
+        environment:
+            RABBITMQ_HOST: "sbr_rabbitmq"
+            RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
+            HOST: "NX"
+        build:
+            context: ../../SBR_SERV/host_connector/
+            target: dev
+        networks:
+            - sbr_net_swarm
+
+
+    sbr_srv_computer_vision:
+        restart: unless-stopped
+        image: sbr/sbr_srv_computer_vision:1.0
+        container_name: sbr_srv_computer_vision
+        privileged: true
+        runtime: nvidia
+        volumes:
+            - /proc/device-tree/model:/tmp/nv_jetson_model
+            - /tmp/argus_socket:/tmp/argus_socket
+            - /etc/enctune.conf:/etc/enctune.conf 
+            - /etc/nv_tegra_release:/etc/nv_tegra_release
+            - /home/sbrnx/SBR/jetson-inference/data:/jetson-inference/data
+            - /home/sbrnx/SBR/jetson-inference/python/training/classification/data:/jetson-inference/python/training/classification/data
+            - /home/sbrnx/SBR/jetson-inference/python/training/classification/models:/jetson-inference/python/training/classification/models
+            - /home/sbrnx/SBR/jetson-inference/python/training/detection/data:/jetson-inference/python/training/detection/data
+            - /home/sbrnx/SBR/jetson-inference/python/training/detection/models:/jetson-inference/python/training/detection/models
+            - /home/sbrnx/SBR/jetson-inference/python/www/recognizer:/jetson-inference/python/www/recognizer
+            - /home/sbrnx/SBR/data/face_detector/known_faces:/face_detector/known_faces
+        environment:
+            RABBITMQ_HOST: "172.168.10.10"
+            RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
+        build:
+            context: ../../SBR_SERV/computer_vision/
+            target: dev
+        network_mode: "host"
             
+    
 networks:
-    sbr_net_internal: 
+    sbr_net_internal:
         driver: bridge
         internal: true
-    
+
     sbr_net_external:
         driver: bridge
-            
+
+    sbr_net_swarm:
+        driver: overlay
+        attachable: true
+

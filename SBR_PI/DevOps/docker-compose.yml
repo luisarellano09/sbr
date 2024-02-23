@@ -1,28 +1,30 @@
 version: "3.8"
 
 services:
-
-    sbr_portainer:
+    sbr_portainer_pi:
         restart: unless-stopped
-        image: portainer/portainer-ce
-        container_name: sbr_portainer
+        image: portainer/portainer-ce:latest
+        container_name: sbr_portainer_pi
         volumes:
             - /etc/localtime:/etc/localtime:ro
             - /var/run/docker.sock:/var/run/docker.sock:ro
-            - ~SBR/data/portainer/portainer-data:/data
+            - /home/sbrpi/SBR/data/portainer/portainer-data:/data
         ports:
             - 9000:9000
+        networks:
+            - sbr_net_internal
+            - sbr_net_external
 
 
     sbr_rabbitmq:
         restart: unless-stopped
-        image: rabbitmq:management-alpine
+        image: rabbitmq:management
         container_name: sbr_rabbitmq
         hostname: sbr_rabbitmq
         environment:
-          RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
-          RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
-          RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+            RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
+            RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
         ports:
             - 5672:5672
             - 15672:15672
@@ -30,7 +32,11 @@ services:
             test: rabbitmq-diagnostics -q ping
             interval: 60s
             timeout: 60s
-            retries: 5
+            retries: 10
+        networks:
+            - sbr_net_internal
+            - sbr_net_external
+            - sbr_net_swarm
 
 
     sbr_redis:
@@ -44,6 +50,9 @@ services:
             interval: 1s
             timeout: 3s
             retries: 5
+        networks:
+            - sbr_net_internal
+            - sbr_net_external
 
 
     sbr_postgres:
@@ -51,17 +60,56 @@ services:
         image: postgres:alpine
         container_name: sbr_postgres
         environment:
-          - POSTGRES_USER=${POSTGRES_USER}
-          - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
         ports:
-          - '5432:5432'
-        volumes: 
-            - ~SBR/data/postgresql/db:/var/lib/postgresql/data
+            - "5432:5432"
+        volumes:
+            - /home/sbrpi/SBR/data/postgresql/db:/var/lib/postgresql/data
         healthcheck:
             test: ["CMD-SHELL", "pg_isready -U postgres"]
             interval: 5s
             timeout: 5s
             retries: 5
+        networks:
+            - sbr_net_internal
+            - sbr_net_external
+
+
+    sbr_nginx:
+        restart: unless-stopped
+        image: nginx:stable-alpine
+        container_name: sbr_nginx
+        hostname: sbrpi
+        volumes:
+            - ../../SBR_SERV/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+            - /home/sbrpi/SBR/data/certs:/etc/nginx/certs
+        ports:
+            - 80:80
+            - 443:443
+        networks:
+            - sbr_net_internal
+            - sbr_net_external
+            - sbr_net_swarm
+        depends_on:
+            sbr_serv_nextjs:
+                condition: service_started
+            sbr_portainer_pi:
+                condition: service_started
+            sbr_rabbitmq:
+                condition: service_healthy
+            sbr_serv_graphql:
+                condition: service_started
+
+
+    sbr_webssh:
+        restart: unless-stopped
+        image: niruix/sshwifty:latest
+        container_name: sbr_webssh
+        volumes:
+            - /home/sbrpi/SBR/data/certs/domain.key:/tmp/certkey
+            - /home/sbrpi/SBR/data/certs/domain.crt:/tmp/cert
+        network_mode: "host"
 
 
     sbr_serv_serial_connector:
@@ -69,22 +117,32 @@ services:
         tty: true
         image: sbr/sbr_serv_serial_connector:1.0
         container_name: sbr_serv_serial_connector
-        privileged: true
-        devices: 
+        devices:
             - /dev/ttyAMA0:/dev/ttyAMA0
-        build: 
+        environment:
+            RABBITMQ_HOST: "sbr_rabbitmq"
+            RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
+        build:
             context: ../../SBR_SERV/serial_connector/
             target: dev
         depends_on:
             sbr_rabbitmq:
                 condition: service_healthy
-  
+        networks:
+            - sbr_net_internal
+
 
     sbr_serv_redis_connector:
         restart: unless-stopped
         image: sbr/sbr_serv_redis_connector:1.0
         container_name: sbr_serv_redis_connector
-        build: 
+        environment:
+            RABBITMQ_HOST: "sbr_rabbitmq"
+            RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
+            REDIS_HOST: "sbr_redis"
+        build:
             context: ../../SBR_SERV/redis_connector/
             target: dev
         depends_on:
@@ -94,17 +152,27 @@ services:
                 condition: service_healthy
             sbr_serv_serial_connector:
                 condition: service_started
-            
+        networks:
+            - sbr_net_internal
+
 
     sbr_serv_graphql:
         restart: unless-stopped
         image: sbr/sbr_serv_graphql:1.0
         container_name: sbr_serv_graphql
-        build: 
+        environment:
+            POSTGRES_HOST: "sbr_postgres"
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            RABBITMQ_HOST: "sbr_rabbitmq"
+            RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
+            REDIS_HOST: "sbr_redis"
+        build:
             context: ../../SBR_SERV/graphql/
             target: dev
         ports:
-          - 4000:4000
+            - 4000:4000
         depends_on:
             sbr_rabbitmq:
                 condition: service_healthy
@@ -114,13 +182,22 @@ services:
                 condition: service_started
             sbr_serv_redis_connector:
                 condition: service_started
-            
+        networks:
+            - sbr_net_internal
+            - sbr_net_external
+            - sbr_net_swarm
+
 
     sbr_serv_robot_control:
         restart: unless-stopped
         image: sbr/sbr_serv_robot_control:1.0
         container_name: sbr_serv_robot_control
-        build: 
+        environment:
+            GRAPHQL_HOST: "sbr_serv_graphql"
+            RABBITMQ_HOST: "sbr_rabbitmq"
+            RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
+        build:
             context: ../../SBR_SERV/robot_control/
             target: dev
         depends_on:
@@ -128,4 +205,55 @@ services:
                 condition: service_healthy
             sbr_serv_graphql:
                 condition: service_started
-            
+        networks:
+            - sbr_net_internal
+
+
+    sbr_serv_nextjs:
+        restart: unless-stopped
+        image: sbr/sbr_serv_nextjs:1.0
+        container_name: sbr_serv_nextjs
+        build:
+            context: ../../SBR_SERV/nextjs/
+            target: dev
+        ports:
+            - 5000:5000
+        depends_on:
+            sbr_serv_graphql:
+                condition: service_started
+        networks:
+            - sbr_net_internal
+
+
+    sbr_serv_host_connector:
+        restart: unless-stopped
+        image: sbr/sbr_serv_host_connector:1.0
+        container_name: sbr_serv_host_connector
+        volumes:
+            - /home/sbrpi/SBR/data/host_connector/requests:/app
+        environment:
+            RABBITMQ_HOST: "sbr_rabbitmq"
+            RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
+            HOST: "PI"
+        build:
+            context: ../../SBR_SERV/host_connector/
+            target: dev
+        depends_on:
+            sbr_rabbitmq:
+                condition: service_healthy
+        networks:
+            - sbr_net_internal
+
+
+networks:
+    sbr_net_internal:
+        driver: bridge
+        internal: true
+
+    sbr_net_external:
+        driver: bridge
+
+    sbr_net_swarm:
+        driver: overlay
+        attachable: true

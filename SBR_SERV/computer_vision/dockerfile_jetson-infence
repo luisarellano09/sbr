@@ -1,0 +1,11 @@
+FROM dustynv/jetson-inference:r35.3.1 as dev
+
+# Create a directory for the app
+WORKDIR /sbr
+
+# Copy source code
+RUN rm -rf src
+COPY ./src ./src
+
+# Run main.py
+CMD ["python3", "-u", "./src/main.py"]

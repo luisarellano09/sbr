@@ -999,6 +999,7 @@ void F_CLI_Modules_Motion_PIDPitchParam_Kp(){
     if (!insertedValueCLI.equals("")){
         res = insertedValueCLI.toFloat();
         manager->m_motionControl->m_PIDPitch->SetKp(res);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_KP_R, manager->m_motionControl->m_PIDPitch->GetKp() * 1000);
         Serial.println("PID Pitch Kp value: " + String(manager->m_motionControl->m_PIDPitch->GetKp()));
     }
 }
@@ -1013,6 +1014,7 @@ void F_CLI_Modules_Motion_PIDPitchParam_Ki(){
     if (!insertedValueCLI.equals("")){
         res = insertedValueCLI.toFloat();
         manager->m_motionControl->m_PIDPitch->SetKi(res);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_KI_R, manager->m_motionControl->m_PIDPitch->GetKi() * 1000);
         Serial.println("PID Pitch Ki value: " + String(manager->m_motionControl->m_PIDPitch->GetKi()));
     }
 }
@@ -1027,6 +1029,7 @@ void F_CLI_Modules_Motion_PIDPitchParam_Kd(){
     if (!insertedValueCLI.equals("")){
         res = insertedValueCLI.toFloat();
         manager->m_motionControl->m_PIDPitch->SetKd(res);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_KD_R, manager->m_motionControl->m_PIDPitch->GetKd() * 1000);
         Serial.println("PID Pitch Kd value: " + String(manager->m_motionControl->m_PIDPitch->GetKd()));
     }
 }
@@ -1041,6 +1044,7 @@ void F_CLI_Modules_Motion_PIDPitchParam_MVmin(){
     if (!insertedValueCLI.equals("")){
         res = insertedValueCLI.toFloat();
         manager->m_motionControl->m_PIDPitch->SetMVRangeMin(res);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_MV_MIN_R, manager->m_motionControl->m_PIDPitch->GetMVRangeMin() * 100);
         Serial.println("PID Pitch MV min value: " + String(manager->m_motionControl->m_PIDPitch->GetMVRangeMin()));
     }
 }
@@ -1055,6 +1059,7 @@ void F_CLI_Modules_Motion_PIDPitchParam_MVmax(){
     if (!insertedValueCLI.equals("")){
         res = insertedValueCLI.toFloat();
         manager->m_motionControl->m_PIDPitch->SetMVRangeMax(res);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_PITCH_MV_MAX_R, manager->m_motionControl->m_PIDPitch->GetMVRangeMax() * 100);
         Serial.println("PID Pitch MV max value: " + String(manager->m_motionControl->m_PIDPitch->GetMVRangeMax()));
     }
 }
@@ -1083,6 +1088,7 @@ void F_CLI_Modules_Motion_PIDPosParam_Kp(){
     if (!insertedValueCLI.equals("")){
         res = insertedValueCLI.toFloat();
         manager->m_motionControl->m_PIDPosition->SetKp(res);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_KP_R, manager->m_motionControl->m_PIDPosition->GetKp() * 1000);
         Serial.println("PID Position Kp value: " + String(manager->m_motionControl->m_PIDPosition->GetKp()));
     }
 }
@@ -1097,6 +1103,7 @@ void F_CLI_Modules_Motion_PIDPosParam_Ki(){
     if (!insertedValueCLI.equals("")){
         res = insertedValueCLI.toFloat();
         manager->m_motionControl->m_PIDPosition->SetKi(res);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_KI_R, manager->m_motionControl->m_PIDPosition->GetKi() * 1000);
         Serial.println("PID Position Ki value: " + String(manager->m_motionControl->m_PIDPosition->GetKi()));
     }
 }
@@ -1111,6 +1118,7 @@ void F_CLI_Modules_Motion_PIDPosParam_Kd(){
     if (!insertedValueCLI.equals("")){
         res = insertedValueCLI.toFloat();
         manager->m_motionControl->m_PIDPosition->SetKd(res);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_KD_R, manager->m_motionControl->m_PIDPosition->GetKd() * 1000);
         Serial.println("PID Position Kd value: " + String(manager->m_motionControl->m_PIDPosition->GetKd()));
     }
 }
@@ -1125,6 +1133,7 @@ void F_CLI_Modules_Motion_PIDPosParam_MVmin(){
     if (!insertedValueCLI.equals("")){
         res = insertedValueCLI.toFloat();
         manager->m_motionControl->m_PIDPosition->SetMVRangeMin(res);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_MV_MIN_R, manager->m_motionControl->m_PIDPosition->GetMVRangeMin() * 100);
         Serial.println("PID Position MV min value: " + String(manager->m_motionControl->m_PIDPosition->GetMVRangeMin()));
     }
 }
@@ -1139,6 +1148,7 @@ void F_CLI_Modules_Motion_PIDPosParam_MVmax(){
     if (!insertedValueCLI.equals("")){
         res = insertedValueCLI.toFloat();
         manager->m_motionControl->m_PIDPosition->SetMVRangeMax(res);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_POSITION_MV_MAX_R, manager->m_motionControl->m_PIDPosition->GetMVRangeMax() * 100);
         Serial.println("PID Position MV max value: " + String(manager->m_motionControl->m_PIDPosition->GetMVRangeMax()));
     }
 }
@@ -1167,6 +1177,7 @@ void F_CLI_Modules_Motion_PIDAngleParam_Kp(){
     if (!insertedValueCLI.equals("")){
         res = insertedValueCLI.toFloat();
         manager->m_motionControl->m_PIDAngle->SetKp(res);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_KP_R, manager->m_motionControl->m_PIDAngle->GetKp() * 1000);
         Serial.println("PID Angle Kp value: " + String(manager->m_motionControl->m_PIDAngle->GetKp()));
     }
 }
@@ -1181,6 +1192,7 @@ void F_CLI_Modules_Motion_PIDAngleParam_Ki(){
     if (!insertedValueCLI.equals("")){
         res = insertedValueCLI.toFloat();
         manager->m_motionControl->m_PIDAngle->SetKi(res);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_KI_R, manager->m_motionControl->m_PIDAngle->GetKi() * 1000);
         Serial.println("PID Angle Ki value: " + String(manager->m_motionControl->m_PIDAngle->GetKi()));
     }
 }
@@ -1195,6 +1207,7 @@ void F_CLI_Modules_Motion_PIDAngleParam_Kd(){
     if (!insertedValueCLI.equals("")){
         res = insertedValueCLI.toFloat();
         manager->m_motionControl->m_PIDAngle->SetKd(res);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_KD_R, manager->m_motionControl->m_PIDAngle->GetKd() * 1000);
         Serial.println("PID Angle Kd value: " + String(manager->m_motionControl->m_PIDAngle->GetKd()));
     }
 }
@@ -1209,6 +1222,7 @@ void F_CLI_Modules_Motion_PIDAngleParam_MVmin(){
     if (!insertedValueCLI.equals("")){
         res = insertedValueCLI.toFloat();
         manager->m_motionControl->m_PIDAngle->SetMVRangeMin(res);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_MV_MIN_R, manager->m_motionControl->m_PIDAngle->GetMVRangeMin() * 100);
         Serial.println("PID Angle MV min value: " + String(manager->m_motionControl->m_PIDAngle->GetMVRangeMin()));
     }
 }
@@ -1223,6 +1237,7 @@ void F_CLI_Modules_Motion_PIDAngleParam_MVmax(){
     if (!insertedValueCLI.equals("")){
         res = insertedValueCLI.toFloat();
         manager->m_motionControl->m_PIDAngle->SetMVRangeMax(res);
+        manager->m_nodeESP32->UpdateRegister(COM_REQUEST_REG_ID_e::SETUP_MOTION_PID_ANGLE_MV_MAX_R, manager->m_motionControl->m_PIDAngle->GetMVRangeMax() * 100);
         Serial.println("PID Angle MV max value: " + String(manager->m_motionControl->m_PIDAngle->GetMVRangeMax()));
     }
 }
@@ -1246,6 +1261,7 @@ void F_CLI_Debug_GetLogLevel(){
 
 void F_CLI_Debug_SetLogLevelFatal(){
     Log.setLevel(LOG_LEVEL_FATAL);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_FATAL);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -1254,6 +1270,7 @@ void F_CLI_Debug_SetLogLevelFatal(){
 
 void F_CLI_Debug_SetLogLevelError(){
     Log.setLevel(LOG_LEVEL_ERROR);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_ERROR);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -1262,6 +1279,7 @@ void F_CLI_Debug_SetLogLevelError(){
 
 void F_CLI_Debug_SetLogLevelWarning(){
     Log.setLevel(LOG_LEVEL_WARNING);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_WARNING);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -1270,6 +1288,7 @@ void F_CLI_Debug_SetLogLevelWarning(){
 
 void F_CLI_Debug_SetLogLevelInfo(){
     Log.setLevel(LOG_LEVEL_INFO);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_INFO);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -1278,6 +1297,7 @@ void F_CLI_Debug_SetLogLevelInfo(){
 
 void F_CLI_Debug_SetLogLevelTrace(){
     Log.setLevel(LOG_LEVEL_TRACE);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_TRACE);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -1286,6 +1306,7 @@ void F_CLI_Debug_SetLogLevelTrace(){
 
 void F_CLI_Debug_SetLogLevelVerbose(){
     Log.setLevel(LOG_LEVEL_VERBOSE);
+    preferences.putInt("LOG_LEVEL", LOG_LEVEL_VERBOSE);
     F_CLI_Debug_GetLogLevel();
 }
 
@@ -1459,24 +1480,6 @@ void F_CLI_Profile_Profile1(){
 
 void F_CLI_Profile_Profile2(){
 
-    manager->m_IMU->SetPitchOffset(0.0);
-
-    manager->m_motionControl->m_PIDPitch->SetCycleTime(0.01);
-    manager->m_motionControl->m_PIDPitch->SetParameters(11.0, 3.0, 0.04);
-    manager->m_motionControl->m_PIDPitch->SetMVRange(-100.0, 100.0);
-
-    manager->m_motionControl->m_PIDPosition->SetCycleTime(0.01);
-    manager->m_motionControl->m_PIDPosition->SetParameters(1.0, 1.0, 0.8);
-    manager->m_motionControl->m_PIDPosition->SetMVRange(-10.0, 10.0);
-    
-    manager->m_motionControl->m_PIDAngle->SetCycleTime(0.01);
-    manager->m_motionControl->m_PIDAngle->SetParameters(11.0, 2.0, 0.02);
-    manager->m_motionControl->m_PIDAngle->SetMVRange(-100.0, 100.0);
-
-    manager->m_motionControl->m_PIDPitch->Print();
-    manager->m_motionControl->m_PIDPosition->Print();
-    manager->m_motionControl->m_PIDAngle->Print();
-
     Serial.println("Profle2 loaded");
 }
 
@@ -1491,39 +1494,24 @@ void F_CLI_Test(){
 //=====================================================================================================
 
 void F_CLI_Test_Test1(){
-    
+    manager->m_motionControl->steer++;
+    Serial.println("Steer: " + String(manager->m_motionControl->steer));
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Test_Test2(){
-
-    manager->m_IMU->SetPitchOffset(0.0);
-
-    manager->m_motionControl->m_PIDPitch->SetCycleTime(0.01);
-    manager->m_motionControl->m_PIDPitch->SetParameters(11.0, 3.0, 0.04);
-    manager->m_motionControl->m_PIDPitch->SetMVRange(-100.0, 100.0);
-
-    manager->m_motionControl->m_PIDPosition->SetCycleTime(0.01);
-    manager->m_motionControl->m_PIDPosition->SetParameters(1.0, 1.0, 0.8);
-    manager->m_motionControl->m_PIDPosition->SetMVRange(-10.0, 10.0);
-    
-    manager->m_motionControl->m_PIDAngle->SetCycleTime(0.01);
-    manager->m_motionControl->m_PIDAngle->SetParameters(11.0, 2.0, 0.02);
-    manager->m_motionControl->m_PIDAngle->SetMVRange(-100.0, 100.0);
-
-    manager->m_motionControl->m_PIDPitch->Print();
-    manager->m_motionControl->m_PIDPosition->Print();
-    manager->m_motionControl->m_PIDAngle->Print();
-    Serial.println("Profle2 loaded");
+    manager->m_motionControl->steer--;
+    Serial.println("Steer: " + String(manager->m_motionControl->steer));
 }
 
 
 //=====================================================================================================
 
 void F_CLI_Test_Test3(){
-
+    manager->m_motionControl->steer=0.0;
+    Serial.println("Steer: " + String(manager->m_motionControl->steer));
 }
 
 
@@ -1531,13 +1519,6 @@ void F_CLI_Test_Test3(){
 
 void F_CLI_Test_Test4(){
 
-    StartMode(Modes_e::Mode_Motion);
-
-    manager->m_motionControl->Start();
-
-    manager->m_motionControl->m_PIDPitch->Print();
-    manager->m_motionControl->m_PIDPosition->Print();
-    manager->m_motionControl->m_PIDAngle->Print();
 }
 
 

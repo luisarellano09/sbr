@@ -1,4 +1,3 @@
-
 use juniper::{EmptySubscription, RootNode};
 use crate::graphql_queries::Queries;
 use crate::graphql_mutations::Mutations;

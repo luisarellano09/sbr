@@ -33,6 +33,7 @@ public:
     PID* m_PIDPitch = NULL;         /**@brief Instance for PID Pitch. */
     PID* m_PIDPosition = NULL;      /**@brief Instance for PID Position. */
     PID* m_PIDAngle = NULL;         /**@brief Instance for PID Angle. */
+    double steer = 0.0;
 
     /**
      * @brief Construct a new Motion Control object
@@ -84,6 +85,36 @@ public:
     double GetSPAngle();
 
     /**
+     * @brief Set Falldown Offset
+     * 
+     * @param offset Falldown Offset
+     * @return RC_e Result Code
+     */
+    RC_e SetFalldownOffset(double offset);
+
+    /**
+     * @brief Get Falldown Offset
+     * 
+     * @return double Falldown Offset
+     */
+    double GetFalldownOffset();
+
+    /**
+     * @brief Is Falldown
+     * 
+     * @return true Falldown
+     * @return false Not Falldown
+     */
+    bool IsFalldown();
+
+    /**
+     * @brief Calculate the Falldown
+     * 
+     * @return RC_e Result Code
+     */
+    RC_e CalculateFalldown();
+
+    /**
      * @brief Start the Motion control
      * 
      * @return RC_e Result Code.
@@ -107,6 +138,8 @@ private:
     double m_SPAngle = 0.0;         /**@brief Angle SP. */
     double m_SPPos = 0.0;           /**@brief Position SP. */
     long m_CycleCounter = 0;        /**@brief Cycle counter. */
+    double m_FalldownOffset = 45.0; /**@brief Falldown offset. */
+    bool m_Falldown = true;         /**@brief Falldown flag. */
 };
 
 #endif // MOTIONCONTROL_H

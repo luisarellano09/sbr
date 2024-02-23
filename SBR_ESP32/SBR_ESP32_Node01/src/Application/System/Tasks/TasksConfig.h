@@ -28,8 +28,7 @@ TaskHandle_t TaskIMUHandle;                     /**@brief Handle of Task IMU */
 TaskHandle_t TaskOdometryHandle;                /**@brief Handle of Task Odometry */
 TaskHandle_t TaskMotionControlHandle;           /**@brief Handle of Task Motion */
 TaskHandle_t TaskDatalogHandle;                 /**@brief Handle of Task Datalog */
-TaskHandle_t TaskRegistersUpdateFastHandle;     /**@brief Handle of Task Registers Update Fast */
-TaskHandle_t TaskRegistersUpdateSlowHandle;     /**@brief Handle of Task Registers Update */
+TaskHandle_t TaskRegistersUpdateRTHandle;       /**@brief Handle of Task Registers Update in Runtime */
 
 TickType_t TimerTaskCLI = 500 / portTICK_PERIOD_MS;                     /**@brief Timer of Task CLI */
 TickType_t TimerTaskOTA = 2000 / portTICK_PERIOD_MS;                    /**@brief Timer of Task OTA */
@@ -39,8 +38,7 @@ TickType_t TimerTaskIMU = 5 / portTICK_PERIOD_MS;                       /**@brie
 TickType_t TimerTaskOdometry = 10 / portTICK_PERIOD_MS;                 /**@brief Timer of Task Odometry */
 TickType_t TimerTaskMotionControl = 10 / portTICK_PERIOD_MS;            /**@brief Timer of Task Motion */
 TickType_t TimerTaskDatalog = 100 / portTICK_PERIOD_MS;                 /**@brief Timer of Task Datalog */
-TickType_t TimerTaskRegistersUpdateFast = 100 / portTICK_PERIOD_MS;     /**@brief Timer of Task Registers Update Fast */
-TickType_t TimerTaskRegistersUpdateSlow = 5000 / portTICK_PERIOD_MS;    /**@brief Timer of Task Registers Update Slow */
+TickType_t TimerTaskRegistersUpdateRT = 100 / portTICK_PERIOD_MS;       /**@brief Timer of Task Registers Update in Runtime */
 
 
 /*******************************************************************************************************************************************
@@ -140,14 +138,7 @@ void TaskDatalog(void *parameter);
  * 
  * @param parameter Parameter
  */
-void TaskRegistersUpdateFast(void *parameter);
-
-/**
- * @brief Task Registers Update Slow
- * 
- * @param parameter Parameter
- */
-void TaskRegistersUpdateSlow(void *parameter);
+void TaskRegistersUpdateRT(void *parameter);
 
 
 #endif // TASKSCONFIG_H

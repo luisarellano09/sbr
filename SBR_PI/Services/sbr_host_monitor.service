@@ -1,0 +1,10 @@
+[Unit]
+Description=SBR Host Monitor
+
+[Service]
+ExecStart=/home/sbrpi/SBR/actions-runner/_work/sbr/sbr/SBR_SERV/host_connector/scripts/sbr_host_monitor.sh
+Type=simple
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

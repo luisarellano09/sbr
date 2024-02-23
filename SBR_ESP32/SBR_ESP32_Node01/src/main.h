@@ -48,7 +48,7 @@ void Init(){
     preferences.begin("SBR", false);
 
     // Logging
-    Log.begin(LOG_LEVEL_INFO, &Serial);
+    Log.begin(LOG_LEVEL_ERROR, &Serial);
 
     // Manager Instance
     manager = new Manager();
@@ -74,6 +74,13 @@ void Init(){
     //ActivateDataset(Datasets_e::DATASET_IMU);
     //ActivateDataset(Datasets_e::DATASET_ODOMETRY);
     ActivateDataset(Datasets_e::DATASET_MOTION_CONTROL);
+
+    // Set Log level
+    Log.setLevel(preferences.getInt("LOG_LEVEL", LOG_LEVEL_ERROR));
+
+    // Start Motion
+    StartMode(Modes_e::Mode_Motion);
+    
 }
 
 

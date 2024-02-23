@@ -1,0 +1,35 @@
+FROM rust:1.71.0 as build
+RUN apt-get update
+RUN apt-get install -y libssl-dev 
+RUN USER=root cargo new --bin host_connector
+WORKDIR /host_connector
+
+COPY ./Cargo.toml ./Cargo.toml
+RUN cargo build --release
+RUN rm -rf src
+
+COPY ./src ./src
+RUN rm ./target/release/deps/host_connector*
+RUN cargo build --release
+
+
+FROM rust:1.71.0 as prod
+COPY --from=build /host_connector/target/release/host_connector .
+CMD ["./host_connector"]
+
+
+FROM rust:1.71.0 as dev
+RUN apt-get update
+RUN apt-get install -y libssl-dev 
+RUN USER=root cargo new --bin host_connector
+WORKDIR /host_connector
+
+COPY ./Cargo.toml ./Cargo.toml
+RUN cargo build --release
+RUN rm -rf src
+
+COPY ./src ./src
+RUN rm ./target/release/deps/host_connector*
+RUN cargo build --release
+
+CMD ["./target/release/host_connector"]

@@ -1,10 +1,13 @@
-#![allow(dead_code)]
-
 use std::error::Error;
 use amiquip::{Connection, ExchangeDeclareOptions, ExchangeType, QueueDeclareOptions, FieldTable, ConsumerOptions, ConsumerMessage};
 use redis::Commands;
-use crate::message_esp32::MessageEsp32;
+use crate::type_message_esp32::MessageEsp32;
+use std::env;
 
+
+//=====================================================================================================
+const URL_RABBITMQ: &str = "amqp://RABBITMQ_USER:RABBITMQ_PASS@RABBITMQ_HOST:5672/";
+const URL_REDIS: &str = "redis://REDIS_HOST:6379";
 
 //=====================================================================================================
 pub struct RabbitmqConsumerESP32 {}
@@ -23,13 +26,22 @@ impl RabbitmqConsumerESP32 {
     
     //=====================================================================================================
     pub fn run(&mut self)  -> Result<(), Box<dyn Error>> {
+        
+        let rabbitmq_user = env::var("RABBITMQ_USER")?;
+        let rabbitmq_password = env::var("RABBITMQ_PASS")?;
+        let rabbitmq_host = env::var("RABBITMQ_HOST")?;
+
+        let url = URL_RABBITMQ.replace("RABBITMQ_HOST", &rabbitmq_host);
+        let url = url.replace("RABBITMQ_USER", &rabbitmq_user);
+        let url = url.replace("RABBITMQ_PASS", &rabbitmq_password);
+
         // Open connection.
-        let mut connection = Connection::insecure_open("amqp://rabbitmq:La123456.@sbr_rabbitmq:5672/")?;
+        let mut connection = Connection::insecure_open(url.as_str())?;
 
         // Open a channel - None says let the library choose the channel ID.
         let channel = connection.open_channel(None)?;
 
-        // Declare the exchange we will bind to.
+        // Declare the exchange
         let exchange = channel.exchange_declare(
             ExchangeType::Topic,
             "SBR_EXCH_READ_ESP32",
@@ -41,7 +53,7 @@ impl RabbitmqConsumerESP32 {
             },
         )?;
 
-        // Declare the exclusive, server-named queue we will use to consume.
+        // Declare the queue
         let queue = channel.queue_declare(
             "Q_SBR_ESP32_TO_REDIS",
             QueueDeclareOptions {
@@ -61,10 +73,11 @@ impl RabbitmqConsumerESP32 {
         println!("Rabbitmq config done");
 
         //Redis connection
-        let redis_client = redis::Client::open("redis://sbr_redis:6379")?;
+        let redis_host = env::var("REDIS_HOST").expect("env variable missing");
+        let url = URL_REDIS.replace("REDIS_HOST", &redis_host);
+        let redis_client = redis::Client::open(url)?;
         let mut redis_connection = redis_client.get_connection()?;
         println!("Redis config done");
-
 
         // Loop wait for messages
         println!("Listening for messages");
@@ -82,8 +95,7 @@ impl RabbitmqConsumerESP32 {
                     }
                 }
                 other => {
-                    println!("Consumer ended: {:?}", other);
-                    break;
+                    panic!("Consumer ended: {:?}", other);
                 }
             }
         }

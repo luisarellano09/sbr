@@ -1,5 +1,4 @@
-
-use juniper::{GraphQLObject, GraphQLEnum};
+use juniper::{GraphQLObject, GraphQLEnum, GraphQLInputObject};
 
 
 //=====================================================================================================
@@ -20,7 +19,7 @@ pub struct Esp32Mode{
 
 
 //=====================================================================================================
-#[derive(Debug, Clone, Default, GraphQLObject)]
+#[derive(Debug, Clone, Copy, Default, GraphQLObject)]
 pub struct Esp32SetupMotors{
     pub motor_left_offset: f64,
     pub motor_right_offset: f64,
@@ -30,7 +29,7 @@ pub struct Esp32SetupMotors{
 
 
 //=====================================================================================================
-#[derive(Debug, Clone, Default, GraphQLObject)]
+#[derive(Debug, Clone, Copy, Default, GraphQLObject)]
 pub struct Esp32SetupIMU{
     pub invert_pitch: bool,
     pub invert_roll: bool,
@@ -40,7 +39,7 @@ pub struct Esp32SetupIMU{
 
 
 //=====================================================================================================
-#[derive(Debug, Clone, Default, GraphQLObject)]
+#[derive(Debug, Clone, Copy, Default, GraphQLObject)]
 pub struct Esp32SetupEncoders{
     pub encoder_left_direction: bool,
     pub encoder_right_direction: bool,
@@ -48,7 +47,7 @@ pub struct Esp32SetupEncoders{
 
 
 //=====================================================================================================
-#[derive(Debug, Clone, Default, GraphQLObject)]
+#[derive(Debug, Clone, Copy, Default, GraphQLObject)]
 pub struct Esp32SetupOdometry{
     pub wheel_radio: f64,
     pub distance_wheels: f64,
@@ -56,7 +55,7 @@ pub struct Esp32SetupOdometry{
 
 
 //=====================================================================================================
-#[derive(Debug, Clone, Default, GraphQLObject)]
+#[derive(Debug, Clone, Copy, Default, GraphQLObject)]
 pub struct Esp32SetupMotionPID{
     pub kp: f64,
     pub ki: f64,
@@ -64,7 +63,7 @@ pub struct Esp32SetupMotionPID{
     pub cycle: f64,
     pub direction: bool,
     pub mv_min: f64,
-    pub mv_max: f64
+    pub mv_max: f64,
 }
 
 
@@ -121,8 +120,55 @@ pub struct Esp32Setup{
     pub motion_pid_pitch: Esp32SetupMotionPID,
     pub motion_pid_position: Esp32SetupMotionPID,
     pub motion_pid_angle: Esp32SetupMotionPID,
+    pub motion_falldown_offset: f64,
 }
 
+
+//=====================================================================================================
+#[derive(Debug, Clone, Default, GraphQLInputObject)]
+pub struct Esp32SetupInput{
+    pub motor_left_offset: Option<f64>,
+    pub motor_right_offset: Option<f64>,
+    pub motor_left_direction: Option<bool>,
+    pub motor_right_direction: Option<bool>,
+
+    pub encoder_left_direction: Option<bool>,
+    pub encoder_right_direction: Option<bool>,
+
+    pub imu_invert_pitch: Option<bool>,
+    pub imu_invert_roll: Option<bool>,
+    pub imu_invert_yaw: Option<bool>,
+    pub imu_offset_pitch: Option<f64>,
+
+    pub odometry_wheel_radio: Option<f64>,
+    pub odometry_distance_wheels: Option<f64>,
+
+    pub motion_pid_pitch_kp: Option<f64>,
+    pub motion_pid_pitch_ki: Option<f64>,
+    pub motion_pid_pitch_kd: Option<f64>,
+    pub motion_pid_pitch_cycle: Option<f64>,
+    pub motion_pid_pitch_direction: Option<bool>,
+    pub motion_pid_pitch_mv_min: Option<f64>,
+    pub motion_pid_pitch_mv_max: Option<f64>,
+
+    pub motion_pid_position_kp: Option<f64>,
+    pub motion_pid_position_ki: Option<f64>,
+    pub motion_pid_position_kd: Option<f64>,
+    pub motion_pid_position_cycle: Option<f64>,
+    pub motion_pid_position_direction: Option<bool>,
+    pub motion_pid_position_mv_min: Option<f64>,
+    pub motion_pid_position_mv_max: Option<f64>,
+
+    pub motion_pid_angle_kp: Option<f64>,
+    pub motion_pid_angle_ki: Option<f64>,
+    pub motion_pid_angle_kd: Option<f64>,
+    pub motion_pid_angle_cycle: Option<f64>,
+    pub motion_pid_angle_direction: Option<bool>,
+    pub motion_pid_angle_mv_min: Option<f64>,
+    pub motion_pid_angle_mv_max: Option<f64>,
+
+    pub motion_falldown_offset: Option<f64>,
+}
 
 //=====================================================================================================
 #[derive(GraphQLEnum)]

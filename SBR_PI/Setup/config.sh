@@ -29,17 +29,20 @@
 #
 
 # In Host
-# ssh-copy-id pi@sbrpi.local
+# ssh-copy-id sbrpi@sbrpi.local
 
 
 clear
 
+
 echo "This script install all the dependencies of the system"
+
 
 echo "****** Updating ******"
 sudo apt update
 sudo apt upgrade
 sudo apt dist-upgrade
+
 
 echo "****** Creating Folders ******"
 mkdir SBR
@@ -47,22 +50,62 @@ cd SBR
 mkdir data
 
 
-echo "****** Installing Docker ******"
-sudo apt-get install \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release
+echo "****** Set Timezone ******"
+sudo timedatectl set-timezone Europe/Berlin
+sudo timedatectl set-ntp true
 
-curl -sSL https://get.docker.com | sh
 
+echo "****** Installing Applications ******"
+sudo apt install htop
+sudo apt install nano
+sudo apt install screen 
+
+
+echo "****** Installing Serial lib ******"
+sudo apt install libudev-dev
+
+
+echo "****** Setup Docker ******"
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo groupadd docker
 sudo usermod -aG docker $USER
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
 
-sudo apt-get install -y libffi-dev libssl-dev
-sudo apt-get install -y python3 python3-pip
-sudo apt-get remove python-configparser
-sudo pip3 -v install docker-compose
+
+echo "****** Create SSL Certificates ******"
+cd /home/sbrpi/SBR/data
+mkdir certs
+cd certs
+sudo openssl req -newkey rsa:4096 -nodes -keyout domain.key -x509 -days 800 -out domain.crt
+sudo chmod a+rw domain.key
+sudo chmod a+rw domain.crt
+
+
+echo "****** Set eth0 IP ******"
+sudo nmcli con mod "Wired connection 1" ipv4.method manual ipv4.addr 172.168.10.10/24 ipv4.route-metric 20100
+
+
+echo "****** Docker Swarm ******"
+docker swarm init --advertise-addr 172.168.10.10
+# see status: docker node ls
+# After adding the swarm in sbrnx
+docker node promote sbrnx
+
+
+echo "****** Disable GUI ******"
+sudo systemctl set-default multi-user.target
+#sudo systemctl set-default graphical.target    # Enable
 
 
 exit 0

@@ -12,7 +12,8 @@ mod postgres_connection;
 mod graphql_types;
 mod graphql_queries;
 mod graphql_mutations;
-mod message_esp32;
+mod type_message_esp32;
+mod type_command;
 
 use graphql_schema::{create_schema, Schema};
 use graphql_context::ContextGraphQL;

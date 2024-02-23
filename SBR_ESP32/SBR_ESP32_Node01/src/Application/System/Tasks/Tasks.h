@@ -52,8 +52,7 @@ void InitTasks(){
     xTaskCreatePinnedToCore(TaskMotionControl,          "TaskMotionControl",        2000,   NULL,   1,      &TaskMotionControlHandle,           1);         
     xTaskCreatePinnedToCore(TaskModes,                  "TaskModes",                10000,  NULL,   1,      &TaskModesHandle,                   1);
     xTaskCreatePinnedToCore(TaskDatalog,                "TaskDatalog",              3000,   NULL,   1,      &TaskDatalogHandle,                 1);
-    xTaskCreatePinnedToCore(TaskRegistersUpdateFast,    "TaskRegistersUpdateFast",  3000,   NULL,   1,      &TaskRegistersUpdateFastHandle,     1);
-    xTaskCreatePinnedToCore(TaskRegistersUpdateSlow,    "TaskRegistersUpdateSlow",  3000,   NULL,   1,      &TaskRegistersUpdateSlowHandle,     1);
+    xTaskCreatePinnedToCore(TaskRegistersUpdateRT,      "TaskRegistersUpdateRT",    3000,   NULL,   1,      &TaskRegistersUpdateRTHandle,       1);
 }
 
 
@@ -76,8 +75,7 @@ void MonitorTasks(){
     PrintTaskInfo(&TaskMotionControlHandle);
     PrintTaskInfo(&TaskModesHandle);
     PrintTaskInfo(&TaskDatalogHandle);
-    PrintTaskInfo(&TaskRegistersUpdateFastHandle);
-    PrintTaskInfo(&TaskRegistersUpdateSlowHandle);
+    PrintTaskInfo(&TaskRegistersUpdateRTHandle);
 }
 
 
@@ -94,11 +92,9 @@ void TaskCLI(void *parameter){
     vTaskDelay(1000);
     F_CLI_Hello();
     F_CLI_Info();
-    
-    TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
-        vTaskDelayUntil(&xLastWakeTime, TimerTaskCLI);
         RunCLI();
+        vTaskDelay(TimerTaskCLI);
     }
 }
 
@@ -107,10 +103,9 @@ void TaskCLI(void *parameter){
 
 void TaskGetValueCLI(void *parameter){
     vTaskDelay(1000);
-    TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
-        vTaskDelayUntil(&xLastWakeTime, TimerTaskCLI);
         GetValueCLI();
+        vTaskDelay(TimerTaskCLI);
     }
 }
 
@@ -119,10 +114,9 @@ void TaskGetValueCLI(void *parameter){
 
 void TaskOTA(void *parameter){
     vTaskDelay(1000);
-    TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
-        vTaskDelayUntil(&xLastWakeTime, TimerTaskOTA);
         manager->m_wifiManager->RunOTA();
+        vTaskDelay(TimerTaskOTA);
     }
 }
 
@@ -141,10 +135,10 @@ void TaskNodeESP32(void *parameter){
 //=====================================================================================================
 
 void TaskIMU(void *parameter){
-    TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
-        vTaskDelayUntil(&xLastWakeTime, TimerTaskIMU);
         manager->m_IMU->Run();
+        manager->m_motionControl->CalculateFalldown();
+        vTaskDelay(TimerTaskIMU);
     }
 }
 
@@ -152,10 +146,9 @@ void TaskIMU(void *parameter){
 //=====================================================================================================
 
 void TaskOdometry(void *parameter){
-    TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
-        vTaskDelayUntil(&xLastWakeTime, TimerTaskOdometry);
         manager->m_odometry->Run();
+        vTaskDelay(TimerTaskOdometry);
     }
 }
 
@@ -164,10 +157,9 @@ void TaskOdometry(void *parameter){
 
 void TaskMotionControl(void *parameter){
     vTaskDelay(1000);
-    TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
-        vTaskDelayUntil(&xLastWakeTime, TimerTaskMotionControl);
         manager->m_motionControl->Run();
+        vTaskDelay(TimerTaskMotionControl);
     }
 }
 
@@ -186,35 +178,22 @@ void TaskModes(void *parameter){
 
 void TaskDatalog(void *parameter){
     vTaskDelay(1000);
-    TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
-        vTaskDelayUntil(&xLastWakeTime, TimerTaskDatalog);
         Datalog();
+        vTaskDelay(TimerTaskDatalog);
     }
 }
 
 
 //=====================================================================================================
 
-void TaskRegistersUpdateFast(void *parameter){
+void TaskRegistersUpdateRT(void *parameter){
     vTaskDelay(1000);
-    TickType_t xLastWakeTime = xTaskGetTickCount();
     while(true) {
-        vTaskDelayUntil(&xLastWakeTime, TimerTaskRegistersUpdateFast);
-        UpdateRegistersFast();
+        UpdateRegistersRT();
+        vTaskDelay(TimerTaskRegistersUpdateRT);
     }
 }
 
-
-//=====================================================================================================
-
-void TaskRegistersUpdateSlow(void *parameter){
-    vTaskDelay(1000);
-    TickType_t xLastWakeTime = xTaskGetTickCount();
-    while(true) {
-        vTaskDelayUntil(&xLastWakeTime, TimerTaskRegistersUpdateSlow);
-        UpdateRegistersSlow();
-    }
-}
 
 #endif // TASKS_H

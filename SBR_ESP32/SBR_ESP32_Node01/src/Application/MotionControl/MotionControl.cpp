@@ -43,18 +43,35 @@ RC_e MotionControl::Run(){
 
     this->m_CycleCounter++;
 
-    // Check if the Robot is down
-    if (this->m_IMU->GetPitch() > 45.0 || this->m_IMU->GetPitch() < -45.0) {
+    // Check if the Robot is falldown
+    if (this->IsFalldown()) {
+        // Stop the motors
         this->m_motorLeft->Stop();
         this->m_motorRight->Stop();
+
+        // Reset the Odometry
         this->m_odometry->Reset();
+
+        // Reset the PID
         this->SetSPPos(0.0);
         this->SetSPAngle(0.0);
         this->m_PIDAngle->Reset();
         this->m_PIDPitch->Reset();
         this->m_PIDPosition->Reset();
-        vTaskDelay(1000);
+
+        // Reset the Cycle Counter
+        this->m_CycleCounter = 0;
+        
+        vTaskDelay(2000);
     } else {
+
+        // Reduce the call cycle 
+        if (m_CycleCounter %4 == 0){
+            // PID Position
+            this->m_PIDPosition->SetSP(this->m_SPPos);
+            this->m_PIDPosition->SetPV(this->m_odometry->GetDistance());
+            this->m_PIDPosition->Run();
+        }
 
         // Reduce the call cycle 
         if (m_CycleCounter %10 == 0){
@@ -62,11 +79,6 @@ RC_e MotionControl::Run(){
             this->m_PIDAngle->SetSP(this->m_SPAngle);
             this->m_PIDAngle->SetPV(this->m_odometry->GetAngle());
             this->m_PIDAngle->Run();
-
-            // PID Position
-            this->m_PIDPosition->SetSP(this->m_SPPos);
-            this->m_PIDPosition->SetPV(this->m_odometry->GetDistance());
-            this->m_PIDPosition->Run();
         }
 
         // PID Pitch
@@ -75,8 +87,11 @@ RC_e MotionControl::Run(){
         this->m_PIDPitch->Run();
         
         // Assign speed to Motors
-        this->m_motorLeft->SetSpeed(this->m_PIDPitch->GetMV()*0.8 + this->m_PIDAngle->GetMV()*0.2) ;
+        this->m_motorLeft->SetSpeed(this->m_PIDPitch->GetMV()*0.8 + this->m_PIDAngle->GetMV()*0.2);
         this->m_motorRight->SetSpeed(this->m_PIDPitch->GetMV()*0.8 - this->m_PIDAngle->GetMV()*0.2);
+
+        // this->m_motorLeft->SetSpeed(this->m_PIDPitch->GetMV()*0.8 + this->steer*0.2);
+        // this->m_motorRight->SetSpeed(this->m_PIDPitch->GetMV()*0.8 - this->steer*0.2);
     }
 
     return retCode;
@@ -118,6 +133,47 @@ RC_e MotionControl::SetSPAngle(double spAngle){
 
 double MotionControl::GetSPAngle(){
     return this->m_SPAngle;
+}
+
+
+//=====================================================================================================
+
+RC_e MotionControl::SetFalldownOffset(double offset){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    this->m_FalldownOffset = offset;
+
+    return retCode;
+}
+
+
+//=====================================================================================================
+
+double MotionControl::GetFalldownOffset(){
+    return this->m_FalldownOffset;
+}
+
+
+//=====================================================================================================
+bool MotionControl::IsFalldown(){
+    return this->m_Falldown;
+}
+
+
+//=====================================================================================================
+
+RC_e MotionControl::CalculateFalldown(){
+    // Result code
+    RC_e retCode = RC_e::SUCCESS;
+
+    if (abs(this->m_IMU->GetPitch()) > this->m_FalldownOffset) {
+        this->m_Falldown = true;
+    } else {
+        this->m_Falldown = false;
+    }
+
+    return retCode;
 }
 
 

@@ -157,6 +157,10 @@ RC_e Odometry::Reset(){
     this->m_angle = 0.0;
     this->m_x = 0;
     this->m_y = 0;
+    this->m_encoderLeft->SetCount(0);
+    this->m_encoderRight->SetCount(0);
+    this->m_prevEncoderLeftCount = 0;
+    this->m_prevEncoderRightCount = 0;
 
     return retCode;
 }
