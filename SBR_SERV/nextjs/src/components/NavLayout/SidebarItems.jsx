@@ -61,7 +61,8 @@ export default function SidebarItems({ collapsed }) {
                     <Link href={"http://sbrnx.local:9000"} target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Portainer NX</p> </Link>
                     <Link href={"http://" + hostName + ":15672"} target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">Rabbitmq</p> </Link>
                     <Link href={"https://" + hostName + "/sbr_serv_graphql_playground"} target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">GraphQL</p> </Link>
-                    <Link href={"http://sbrnx:8554"} target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">ComputerVision</p> </Link>
+                    <Link href={"http://sbrnx.local:8554"} target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">ComputerVision</p> </Link>
+                    <Link href={"https://" + hostName + ":8182"} target="_blank"> <p className=" px-2 rounded-lg hover:bg-[#697083]">SSH</p> </Link>
 				</AccordionItem>
 
 			</Accordion>
